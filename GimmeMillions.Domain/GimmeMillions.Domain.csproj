@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Articles\Article.cs" />
     <Compile Include="Articles\Byline.cs" />
+    <Compile Include="Articles\FilterQuery.cs" />
     <Compile Include="Articles\Headline.cs" />
     <Compile Include="Articles\IArticleAccessService.cs" />
     <Compile Include="Articles\IArticleRepository.cs" />

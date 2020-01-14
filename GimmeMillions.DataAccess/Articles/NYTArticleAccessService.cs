@@ -8,7 +8,7 @@ namespace GimmeMillions.DataAccess.Articles
     public class NYTArticleAccessService : IArticleAccessService
     {
 
-        public Result<IEnumerable<Article>> GetArticles(DateTime dateTime)
+        public Result<IEnumerable<Article>> GetArticles(DateTime dateTime, IEnumerable<FilterQuery> filterQueries)
         {
             var articles = new List<Article>();
             return Result.Ok<IEnumerable<Article>>(articles);
