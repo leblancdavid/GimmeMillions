@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GimmeMillions.Domain.Articles
 {
     public class Article
     {
+        public DateTime Date { get; set; }
         public string Abstract { get; set; }
         public string WebUrl { get; set; }
         public string Snippet { get; set; }
