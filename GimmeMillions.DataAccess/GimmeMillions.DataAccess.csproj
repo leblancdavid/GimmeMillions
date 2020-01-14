@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{33C44D32-3FE7-4B05-9D8D-0E3018F608C5}</ProjectGuid>
+    <ProjectGuid>{437B1FA4-2D43-44B8-B1D9-63006A0D1612}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GimmeMillions.Domain</RootNamespace>
-    <AssemblyName>GimmeMillions.Domain</AssemblyName>
+    <RootNamespace>GimmeMillions.DataAccess</RootNamespace>
+    <AssemblyName>GimmeMillions.DataAccess</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -44,18 +44,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Articles\Article.cs" />
-    <Compile Include="Articles\Byline.cs" />
-    <Compile Include="Articles\Headline.cs" />
-    <Compile Include="Articles\IArticleAccessService.cs" />
-    <Compile Include="Articles\IArticleRepository.cs" />
-    <Compile Include="Articles\Keyword.cs" />
-    <Compile Include="Articles\Multimedia.cs" />
-    <Compile Include="Articles\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GimmeMillions.Domain\GimmeMillions.Domain.csproj">
+      <Project>{33c44d32-3fe7-4b05-9d8d-0e3018f608c5}</Project>
+      <Name>GimmeMillions.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Articles\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
