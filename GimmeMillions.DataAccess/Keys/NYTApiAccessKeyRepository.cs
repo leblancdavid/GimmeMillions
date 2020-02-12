@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace GimmeMillions.DataAccess.Keys
 {
@@ -31,20 +32,7 @@ namespace GimmeMillions.DataAccess.Keys
 
         public IEnumerable<AccessKey> GetActiveKeys()
         {
-            var accessKeys = new List<AccessKey>();
-            var keyFiles = Directory.GetFiles(_pathToKeys);
-
-            foreach(var keyFile in keyFiles)
-            {
-                var jsonKey = File.ReadAllText(keyFile);
-                var key = JsonConvert.DeserializeObject<AccessKey>(jsonKey);
-                if(key.Status.ToLower() == "active")
-                {
-                    accessKeys.Add(key);
-                }
-            }
-
-            return accessKeys;
+            return GetKeys().Where(x => x.Status.ToLower() == "active");
         }
 
         public Result<AccessKey> GetKey(string key)
@@ -58,9 +46,19 @@ namespace GimmeMillions.DataAccess.Keys
             return Result.Ok(JsonConvert.DeserializeObject<AccessKey>(jsonKey));
         }
 
-        public Result UpdateKeyStatus(string key, string status)
+        public IEnumerable<AccessKey> GetKeys()
         {
-            return AddOrUpdateKey(new AccessKey(key, status));
+            var accessKeys = new List<AccessKey>();
+            var keyFiles = Directory.GetFiles(_pathToKeys);
+
+            foreach (var keyFile in keyFiles)
+            {
+                var jsonKey = File.ReadAllText(keyFile);
+                var key = JsonConvert.DeserializeObject<AccessKey>(jsonKey);
+                accessKeys.Add(key);
+            }
+
+            return accessKeys;
         }
     }
 }

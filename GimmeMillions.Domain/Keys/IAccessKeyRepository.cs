@@ -11,7 +11,7 @@ namespace GimmeMillions.Domain.Keys
     {
         Result AddOrUpdateKey(AccessKey key);
         IEnumerable<AccessKey> GetActiveKeys();
+        IEnumerable<AccessKey> GetKeys();
         Result<AccessKey> GetKey(string key);
-        Result UpdateKeyStatus(string key, string status);
     }
 }
