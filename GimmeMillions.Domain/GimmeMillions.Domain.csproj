@@ -53,6 +53,8 @@
     <Compile Include="Articles\Keyword.cs" />
     <Compile Include="Articles\Multimedia.cs" />
     <Compile Include="Articles\Person.cs" />
+    <Compile Include="Keys\AccessKey.cs" />
+    <Compile Include="Keys\IAccessKeyRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

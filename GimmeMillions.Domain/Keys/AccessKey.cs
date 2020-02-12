@@ -10,5 +10,16 @@ namespace GimmeMillions.Domain.Keys
     {
         public string Key { get; set; }
         public string Status { get; set; }
+
+        public AccessKey()
+        {
+            Status = "inactive";
+        }
+
+        public AccessKey(string key, string status)
+        {
+            Key = key;
+            Status = status;
+        }
     }
 }

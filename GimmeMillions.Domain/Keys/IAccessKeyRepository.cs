@@ -9,7 +9,7 @@ namespace GimmeMillions.Domain.Keys
 {
     public interface IAccessKeyRepository
     {
-        Result AddKey(AccessKey key);
+        Result AddOrUpdateKey(AccessKey key);
         IEnumerable<AccessKey> GetActiveKeys();
         Result<AccessKey> GetKey(string key);
         Result UpdateKeyStatus(string key, string status);
