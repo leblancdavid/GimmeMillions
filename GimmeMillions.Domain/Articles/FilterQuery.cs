@@ -10,5 +10,9 @@ namespace GimmeMillions.Domain.Articles
     {
         public string Field { get; set; }
         public List<string> Values { get; set; }
+        public string ToQueryString()
+        {
+            return $"{Field}:({string.Join(",", Values.Select(x => $"\"{x}\""))})";
+        }
     }
 }
