@@ -12,17 +12,17 @@ namespace GimmeMillions.DataAccess.Articles
 {
     public class NYTArticleRepository : IArticleRepository
     {
-        private string _pathToKeys;
-        public NYTArticleRepository(string pathToKeys)
+        private string _pathToArticles;
+        public NYTArticleRepository(string pathToArticles)
         {
-            _pathToKeys = pathToKeys;
+            _pathToArticles = pathToArticles;
         }
 
         public Result AddOrUpdate(Article article)
         {
             try
             {
-                string directory =  $"{_pathToKeys}/{article.Date.ToString("yyyy/MM/dd")}";
+                string directory =  $"{_pathToArticles}/{article.Date.ToString("yyyy/MM/dd")}";
                 if (!Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);
@@ -38,9 +38,14 @@ namespace GimmeMillions.DataAccess.Articles
             }
         }
 
+        public bool ArticleExists(string id)
+        {
+            return GetArticle(id).IsSuccess;
+        }
+
         public bool ContainsArticles(DateTime dateTime)
         {
-            string directory = $"{_pathToKeys}/{dateTime.ToString("yyyy/MM/dd")}";
+            string directory = $"{_pathToArticles}/{dateTime.ToString("yyyy/MM/dd")}";
             if (!Directory.Exists(directory))
             {
                 return false;
@@ -55,11 +60,39 @@ namespace GimmeMillions.DataAccess.Articles
             return true;
         }
 
+        public Result<Article> GetArticle(string id)
+        {
+            var yearDirectories = Directory.GetFiles(_pathToArticles);
+            foreach(var year in yearDirectories)
+            {
+                var monthDirectories = Directory.GetFiles($"{_pathToArticles}/{year}");
+                foreach(var month in monthDirectories)
+                {
+                    var dayDirectories = Directory.GetFiles($"{_pathToArticles}/{year}/{month}");
+                    foreach(var day in dayDirectories)
+                    {
+                        var articleFiles = Directory.GetFiles($"{_pathToArticles}/{year}/{month}/{day}");
+                        foreach(var articleFile in articleFiles)
+                        {
+                            var articleId = Path.GetFileNameWithoutExtension(articleFile);
+                            if(articleId == id)
+                            {
+                                var jsonArticle = File.ReadAllText(articleFile);
+                                return Result.Ok(JsonConvert.DeserializeObject<Article>(jsonArticle));
+                            }
+                        }
+                    }
+                }
+            }
+
+            return Result.Failure<Article>($"Unable to find article with ID '{id}'");
+        }
+
         public IEnumerable<Article> GetArticles(DateTime dateTime)
         {
             var articles = new List<Article>();
 
-            string directory = $"{_pathToKeys}/{dateTime.ToString("yyyy/MM/dd")}";
+            string directory = $"{_pathToArticles}/{dateTime.ToString("yyyy/MM/dd")}";
             if (!Directory.Exists(directory))
             {
                 return articles;
@@ -68,9 +101,33 @@ namespace GimmeMillions.DataAccess.Articles
             var files = Directory.GetFiles(directory);
             foreach(var file in files)
             {
-                var jsonKey = File.ReadAllText(file);
-                var key = JsonConvert.DeserializeObject<Article>(jsonKey);
-                articles.Add(key);
+                var jsonArticle = File.ReadAllText(file);
+                articles.Add(JsonConvert.DeserializeObject<Article>(jsonArticle));
+            }
+
+            return articles;
+        }
+
+        public IEnumerable<Article> GetArticles()
+        {
+            var articles = new List<Article>();
+            var yearDirectories = Directory.GetFiles(_pathToArticles);
+            foreach (var year in yearDirectories)
+            {
+                var monthDirectories = Directory.GetFiles($"{_pathToArticles}/{year}");
+                foreach (var month in monthDirectories)
+                {
+                    var dayDirectories = Directory.GetFiles($"{_pathToArticles}/{year}/{month}");
+                    foreach (var day in dayDirectories)
+                    {
+                        var articleFiles = Directory.GetFiles($"{_pathToArticles}/{year}/{month}/{day}");
+                        foreach (var articleFile in articleFiles)
+                        {
+                            var jsonArticle = File.ReadAllText(articleFile);
+                            articles.Add(JsonConvert.DeserializeObject<Article>(jsonArticle));
+                        }
+                    }
+                }
             }
 
             return articles;

@@ -8,6 +8,9 @@ namespace GimmeMillions.Domain.Articles
     {
         Result AddOrUpdate(Article article);
         IEnumerable<Article> GetArticles(DateTime dateTime);
+        IEnumerable<Article> GetArticles();
         bool ContainsArticles(DateTime dateTime);
+        bool ArticleExists(string id);
+        Result<Article> GetArticle(string id);
     }
 }
