@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Articles\NYTArticleAccessService.cs" />
+    <Compile Include="Articles\NYTArticleRepository.cs" />
     <Compile Include="Keys\NYTApiAccessKeyRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

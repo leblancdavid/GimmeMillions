@@ -72,6 +72,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Articles\NYTArticleRepositoryTests.cs" />
     <Compile Include="Keys\NYTApiAccessKeyRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
