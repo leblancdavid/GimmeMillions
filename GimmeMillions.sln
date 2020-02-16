@@ -1,19 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.757
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GimmeMillions.Domain", "GimmeMillions.Domain\GimmeMillions.Domain.csproj", "{33C44D32-3FE7-4B05-9D8D-0E3018F608C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GimmeMillions.DataAccess", "GimmeMillions.DataAccess\GimmeMillions.DataAccess.csproj", "{437B1FA4-2D43-44B8-B1D9-63006A0D1612}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GimmeMillions.JsonRepository", "GimmeMillions.JsonRepository\GimmeMillions.JsonRepository.csproj", "{6EB3B4D8-86E5-45FA-8A04-256A23549264}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B0E16F1D-5F27-4C13-9117-2D625BB588F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GimmeMillions.DataAccess.Tests", "Tests\GimmeMillions.DataAccess.Tests\GimmeMillions.DataAccess.Tests.csproj", "{8232078D-B9A6-4FA0-B067-36CA49025271}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{5FAA7DF8-5798-4D9B-83D6-258CAD95FD94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +25,6 @@ Global
 		{437B1FA4-2D43-44B8-B1D9-63006A0D1612}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{437B1FA4-2D43-44B8-B1D9-63006A0D1612}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{437B1FA4-2D43-44B8-B1D9-63006A0D1612}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6EB3B4D8-86E5-45FA-8A04-256A23549264}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6EB3B4D8-86E5-45FA-8A04-256A23549264}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6EB3B4D8-86E5-45FA-8A04-256A23549264}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6EB3B4D8-86E5-45FA-8A04-256A23549264}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8232078D-B9A6-4FA0-B067-36CA49025271}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8232078D-B9A6-4FA0-B067-36CA49025271}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8232078D-B9A6-4FA0-B067-36CA49025271}.Release|Any CPU.ActiveCfg = Release|Any CPU
