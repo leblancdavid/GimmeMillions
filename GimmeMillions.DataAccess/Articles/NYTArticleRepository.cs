@@ -4,9 +4,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimmeMillions.DataAccess.Articles
 {
@@ -62,16 +59,16 @@ namespace GimmeMillions.DataAccess.Articles
 
         public Result<Article> GetArticle(string id)
         {
-            var yearDirectories = Directory.GetFiles(_pathToArticles);
+            var yearDirectories = Directory.GetDirectories(_pathToArticles);
             foreach(var year in yearDirectories)
             {
-                var monthDirectories = Directory.GetFiles($"{_pathToArticles}/{year}");
+                var monthDirectories = Directory.GetDirectories($"{year}");
                 foreach(var month in monthDirectories)
                 {
-                    var dayDirectories = Directory.GetFiles($"{_pathToArticles}/{year}/{month}");
+                    var dayDirectories = Directory.GetDirectories($"{month}");
                     foreach(var day in dayDirectories)
                     {
-                        var articleFiles = Directory.GetFiles($"{_pathToArticles}/{year}/{month}/{day}");
+                        var articleFiles = Directory.GetFiles($"{day}");
                         foreach(var articleFile in articleFiles)
                         {
                             var articleId = Path.GetFileNameWithoutExtension(articleFile);
@@ -111,16 +108,16 @@ namespace GimmeMillions.DataAccess.Articles
         public IEnumerable<Article> GetArticles()
         {
             var articles = new List<Article>();
-            var yearDirectories = Directory.GetFiles(_pathToArticles);
+            var yearDirectories = Directory.GetDirectories(_pathToArticles);
             foreach (var year in yearDirectories)
             {
-                var monthDirectories = Directory.GetFiles($"{_pathToArticles}/{year}");
+                var monthDirectories = Directory.GetDirectories($"{year}");
                 foreach (var month in monthDirectories)
                 {
-                    var dayDirectories = Directory.GetFiles($"{_pathToArticles}/{year}/{month}");
+                    var dayDirectories = Directory.GetDirectories($"{month}");
                     foreach (var day in dayDirectories)
                     {
-                        var articleFiles = Directory.GetFiles($"{_pathToArticles}/{year}/{month}/{day}");
+                        var articleFiles = Directory.GetFiles($"{day}");
                         foreach (var articleFile in articleFiles)
                         {
                             var jsonArticle = File.ReadAllText(articleFile);
