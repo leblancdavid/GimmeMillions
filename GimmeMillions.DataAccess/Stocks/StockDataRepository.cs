@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace GimmeMillions.DataAccess.Tests.Stocks
+namespace GimmeMillions.DataAccess.Stocks
 {
     public class StockDataRepository : IStockRepository
     {
@@ -28,7 +28,7 @@ namespace GimmeMillions.DataAccess.Tests.Stocks
             file.ReadLine(); //First line is the header
             while ((line = file.ReadLine()) != null)
             {
-                var fields = line.Split(';');
+                var fields = line.Split(',');
                 stocks.Add(new StockData(symbol,
                     DateTime.Parse(fields[0]),
                     decimal.Parse(fields[1]),

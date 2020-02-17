@@ -56,6 +56,7 @@
     <Compile Include="Articles\NYTArticleResponse.cs" />
     <Compile Include="Keys\NYTApiAccessKeyRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stocks\StockDataRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GimmeMillions.Domain\GimmeMillions.Domain.csproj">
