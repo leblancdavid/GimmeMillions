@@ -1,0 +1,62 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Derek Jeter’s hit to left Sunday against the Oakland Athletics was his 3,155th to push him past George Brett for sole possession of 14th on the career list.",
+  "WebUrl": "https://bats.blogs.nytimes.com/2012/05/27/with-a-single-in-the-first-jeter-passes-brett/",
+  "Snippet": "Derek Jeter’s hit to left Sunday against the Oakland Athletics was his 3,155th to push him past George Brett for sole possession of 14th on the career list.",
+  "LeadParagraph": "OAKLAND, Calif. — Derek Jeter singled to left field in the first inning of Sunday’s game against the Oakland Athletics for his 3,155th hit, passing George Brett for sole possession of 14th on the career list.",
+  "PrintSection": null,
+  "PrintPage": null,
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T23:02:02+0000",
+  "DocumentType": "article",
+  "NewsDesk": "",
+  "SectionName": "Sports",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/0dbbb4ae-cb28-5809-a9ae-a2142f99c8e3",
+  "WordCount": 263,
+  "Headline": {
+    "Main": "With a Single in the First, Jeter Passes Brett",
+    "Kicker": "Bats",
+    "ContentKicker": null,
+    "PrintHeadline": null,
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Baseball",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Jeter, Derek",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "New York Yankees",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By David Waldstein",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "David",
+        "MiddleName": null,
+        "LastName": "Waldstein",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

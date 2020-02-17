@@ -1,0 +1,74 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Every year in the lead up to Memorial Day, one veteran of the Iraq War ponders the loss of his comrades and how to let go.",
+  "WebUrl": "https://atwar.blogs.nytimes.com/2012/05/27/honoring-the-exchange-of-life-for-life/",
+  "Snippet": "Every year in the lead up to Memorial Day, one veteran of the Iraq War ponders the loss of his comrades and how to let go.",
+  "LeadParagraph": "The face never comes into view in my dreams, but I know it’s him. The twisted mouth is agape, molded in an eternal gasp of shock. The lower half of his body is gone, and there’s a black hole where his guts should have been. When Chevy was blown from the Stryker hatch, he took flight for an incalculable measure of time before landing on the slat armor of his vehicle. His uniform was blown off, which never happens in the movies. But he was whole, as complete and pure as the day he was born, I’m told. I never got the chance to see for myself before he disappeared into a body bag. The continuing ambush prevented that.",
+  "PrintSection": null,
+  "PrintPage": null,
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T12:01:07+0000",
+  "DocumentType": "article",
+  "NewsDesk": "",
+  "SectionName": "World",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/0b76d1ce-c557-5c80-be96-42060b492a5a",
+  "WordCount": 704,
+  "Headline": {
+    "Main": "Honoring the Exchange of Life for Life",
+    "Kicker": "At War",
+    "ContentKicker": null,
+    "PrintHeadline": null,
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Iraq War (2003-11)",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Memorial Day",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "United States Defense and Military Forces",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Veterans",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Iraq",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Alex Horton",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Alex",
+        "MiddleName": null,
+        "LastName": "Horton",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Romney’s supporters explain their past attacks on the Republican candidate.",
+  "WebUrl": "https://thecaucus.blogs.nytimes.com/2012/05/27/romney-backers-explain-past-criticism-of-him/",
+  "Snippet": "Romney’s supporters explain their past attacks on the Republican candidate.",
+  "LeadParagraph": "Republicans have been assailing President Obama and his re-election team for days for pointedly – and they say unfairly — questioning the private equity experience of Mitt Romney. But on Sunday, three prominent Republicans were called to answer for their own past criticisms of the former Massachusetts governor.",
+  "PrintSection": null,
+  "PrintPage": null,
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T16:36:02+0000",
+  "DocumentType": "article",
+  "NewsDesk": "",
+  "SectionName": "U.S.",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/768cd582-8a0a-5d08-bcf9-b0f3968b8be0",
+  "WordCount": 643,
+  "Headline": {
+    "Main": "Romney Backers Explain Past Criticism of Him",
+    "Kicker": "The Caucus",
+    "ContentKicker": null,
+    "PrintHeadline": null,
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Presidential Election of 2012",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Private Equity",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Booker, Cory A",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Gibbs, Robert L",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Gingrich, Newt",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Giuliani, Rudolph W",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "McCain, John",
+      "Rank": 7,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Obama, Barack",
+      "Rank": 8,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Romney, Mitt",
+      "Rank": 9,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Bain Capital",
+      "Rank": 10,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Republican Party",
+      "Rank": 11,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Massachusetts",
+      "Rank": 12,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Brian Knowlton",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Brian",
+        "MiddleName": null,
+        "LastName": "Knowlton",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

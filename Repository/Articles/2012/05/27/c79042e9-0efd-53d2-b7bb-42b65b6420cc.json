@@ -1,0 +1,62 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Pep Guardiola's teams at Barcelona not only won, they won with style and grace.",
+  "WebUrl": "https://www.nytimes.com/2012/05/28/sports/soccer/28iht-soccer28.html",
+  "Snippet": "Pep Guardiola's teams at Barcelona not only won, they won with style and grace.",
+  "LeadParagraph": "LONDON — The statistics do not lie. In the four years of Pep Guardiola’s short but unrivalled era as its coach, Barcelona accumulated 14 of the 19 trophies open to it at the highest level of soccer. ",
+  "PrintSection": null,
+  "PrintPage": null,
+  "Source": "International Herald Tribune",
+  "PubDate": "2012-05-27T20:24:11+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Sports",
+  "SectionName": "Sports",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/c79042e9-0efd-53d2-b7bb-42b65b6420cc",
+  "WordCount": 850,
+  "Headline": {
+    "Main": "For Guardiola, Success Meant More Than Victories",
+    "Kicker": "Global Soccer",
+    "ContentKicker": null,
+    "PrintHeadline": "For Guardiola, Success Meant More Than Victories",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "organizations",
+      "Value": "Barcelona (Soccer Team)",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Soccer",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Chelsea (Soccer Team)",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Rob Hughes",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Rob",
+        "MiddleName": null,
+        "LastName": "Hughes",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

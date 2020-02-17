@@ -1,0 +1,157 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Takuma Sato hit the wall on the last lap in a challenge for the lead, and Dario Franchitti won an Indy 500 that had a race-record 35 lead changes.",
+  "WebUrl": "https://www.nytimes.com/2012/05/28/sports/autoracing/franchitti-wins-indianapolis-500-for-a-third-time.html",
+  "Snippet": "Takuma Sato hit the wall on the last lap in a challenge for the lead, and Dario Franchitti won an Indy 500 that had a race-record 35 lead changes.",
+  "LeadParagraph": "INDIANAPOLIS — The back seat of the convertible was just wide enough for a third passenger to join Dario Franchitti, the 39-year-old Scotsman who had just won his third Indianapolis 500 on Sunday, and Franchiti’s wife, the actress Ashley Judd.",
+  "PrintSection": "D",
+  "PrintPage": "1",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T20:14:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Sports",
+  "SectionName": "Sports",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/d254ce5b-f0c6-5fe6-83b2-13e2dc639610",
+  "WordCount": 961,
+  "Headline": {
+    "Main": "Rival’s Gamble Ends in Crash, and Third Win for Franchitti",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Rival’s Gamble Ends in Crash, And Third Win For Franchitti",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Indianapolis 500 (Auto Race)",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Sato, Takuma",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Franchitti, Dario",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Automobile Racing",
+      "Rank": 4,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "blog480",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/indy/indy-blog480.jpg",
+      "Height": 381,
+      "Width": 480,
+      "CropName": "blog480"
+    },
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/indy/indy-jumbo.jpg",
+      "Height": 812,
+      "Width": 1024,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/indy/indy-popup.jpg",
+      "Height": 516,
+      "Width": 650,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/indy/indy-superJumbo.jpg",
+      "Height": 1625,
+      "Width": 2048,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/indy/indy-articleInline.jpg",
+      "Height": 151,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "sfSpan",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/indy/indy-sfSpan.jpg",
+      "Height": 313,
+      "Width": 395,
+      "CropName": "sfSpan"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/indy/indy-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/indy/indy-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": "By Dave Caldwell",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Dave",
+        "MiddleName": null,
+        "LastName": "Caldwell",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

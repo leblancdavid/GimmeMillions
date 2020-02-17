@@ -1,0 +1,56 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "The Golf Buddy Voice, a tiny GPS device, measures the appropriate yardage on the holes of more than 40,000 courses and provides the information audibly and visually.",
+  "WebUrl": "https://onpar.blogs.nytimes.com/2012/05/27/a-caddie-in-your-pocket-or-on-your-belt/",
+  "Snippet": "The Golf Buddy Voice, a tiny GPS device, measures the appropriate yardage on the holes of more than 40,000 courses and provides the information audibly and visually.",
+  "LeadParagraph": "Not many of us get to play with a caddie, which is too bad because it is a great, productive pleasure — the confluence of two trying to master a golf course together.",
+  "PrintSection": null,
+  "PrintPage": null,
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T14:00:17+0000",
+  "DocumentType": "article",
+  "NewsDesk": "",
+  "SectionName": "Sports",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/9c5c2bd6-b727-54d2-9d9c-6f516d30eaea",
+  "WordCount": 362,
+  "Headline": {
+    "Main": "A Caddie in Your Pocket, or on Your Belt",
+    "Kicker": "On Par",
+    "ContentKicker": null,
+    "PrintHeadline": null,
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Global Positioning System",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Golf",
+      "Rank": 2,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Bill Pennington",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Bill",
+        "MiddleName": null,
+        "LastName": "Pennington",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

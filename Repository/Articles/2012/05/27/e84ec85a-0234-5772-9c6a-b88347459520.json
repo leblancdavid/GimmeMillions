@@ -1,0 +1,181 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "The United Nations action over a massacre this weekend of at least 108 villagers was the strongest yet allowed by Russia, which has blocked criticism of Syria’s president.",
+  "WebUrl": "https://www.nytimes.com/2012/05/28/world/middleeast/syria-denies-responsibility-in-brutal-attack.html",
+  "Snippet": "The United Nations action over a massacre this weekend of at least 108 villagers was the strongest yet allowed by Russia, which has blocked criticism of Syria’s president.",
+  "LeadParagraph": "BEIRUT, Lebanon — The United Nations Security Council on Sunday unanimously condemned the Syrian government for its role in the massacre of at least 108 villagers, with new details emerging from international observers that appeared to prompt rare Russian cooperation in criticizing its ally in Damascus. ",
+  "PrintSection": "A",
+  "PrintPage": "1",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T12:13:03+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Foreign",
+  "SectionName": "World",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/e84ec85a-0234-5772-9c6a-b88347459520",
+  "WordCount": 1379,
+  "Headline": {
+    "Main": "U.N. Security Council Issues Condemnation of Syria Attack",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Security Council Condemns Syria Over Massacre",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Civilian Casualties",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Russia",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Middle East and North Africa Unrest (2010- )",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "United Nations",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Defense and Military Forces",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Syria",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Assad, Bashar al-",
+      "Rank": 7,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Houla (Syria)",
+      "Rank": 8,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "blog480",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/world/middleeast/28syria-1/28syria-1-blog480.jpg",
+      "Height": 360,
+      "Width": 480,
+      "CropName": "blog480"
+    },
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/world/middleeast/28syria-1/28syria-1-jumbo.jpg",
+      "Height": 768,
+      "Width": 1024,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/world/middleeast/28syria-1/28syria-1-popup.jpg",
+      "Height": 488,
+      "Width": 650,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/world/middleeast/28syria-1/28syria-1-superJumbo.jpg",
+      "Height": 1536,
+      "Width": 2048,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/world/middleeast/28syria-1/28syria-1-articleInline.jpg",
+      "Height": 145,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "sfSpan",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/world/middleeast/28syria-1/28syria-1-sfSpan.jpg",
+      "Height": 296,
+      "Width": 395,
+      "CropName": "sfSpan"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/world/middleeast/28syria-1/28syria-1-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/world/middleeast/28syria-1/28syria-1-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": "By Neil MacFarquhar",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Neil",
+        "MiddleName": null,
+        "LastName": "MacFarquhar",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

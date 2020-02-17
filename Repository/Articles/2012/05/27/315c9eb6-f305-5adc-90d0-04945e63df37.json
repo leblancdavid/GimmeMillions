@@ -1,0 +1,129 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "The couple will marry in Boston.",
+  "WebUrl": "https://www.nytimes.com/2012/05/27/fashion/weddings/payal-agrawal-sanjay-divakaran-weddings.html",
+  "Snippet": "The couple will marry in Boston.",
+  "LeadParagraph": "Payal Agrawal, a daughter of Kusum Agrawal and Subhash Agrawal of Dracut, Mass., is to be married Sunday to Dr. Sanjay Divakaran, a son of Maria D. Divakaran and Dr. Diva Divakaran of East Meadow, N.Y. Pandit Srinivasa Shastri, a Hindu priest, is to officiate at the Seaport World Trade Center in Boston. ",
+  "PrintSection": "ST",
+  "PrintPage": "14",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T05:03:30+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Society",
+  "SectionName": "Fashion & Style",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/315c9eb6-f305-5adc-90d0-04945e63df37",
+  "WordCount": 181,
+  "Headline": {
+    "Main": "Payal Agrawal, Sanjay Divakaran",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Payal Agrawal, Sanjay Divakaran",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Weddings and Engagements",
+      "Rank": 1,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27AGRAWALJPG/27AGRAWALJPG-jumbo.jpg",
+      "Height": 1024,
+      "Width": 683,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27AGRAWALJPG/27AGRAWALJPG-popup.jpg",
+      "Height": 500,
+      "Width": 333,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27AGRAWALJPG/27AGRAWALJPG-superJumbo.jpg",
+      "Height": 2048,
+      "Width": 1365,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "square320",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27AGRAWALJPG/27AGRAWALJPG-square320.jpg",
+      "Height": 320,
+      "Width": 320,
+      "CropName": "square320"
+    },
+    {
+      "Rank": 0,
+      "SubType": "square640",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27AGRAWALJPG/27AGRAWALJPG-square640.jpg",
+      "Height": 640,
+      "Width": 640,
+      "CropName": "square640"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27AGRAWALJPG/27AGRAWALJPG-articleInline.jpg",
+      "Height": 126,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27AGRAWALJPG/27AGRAWALJPG-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27AGRAWALJPG/27AGRAWALJPG-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": null,
+    "Organization": null,
+    "Person": []
+  }
+}

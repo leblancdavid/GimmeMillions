@@ -1,0 +1,43 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Fuhgeddaboudit.",
+  "WebUrl": "https://krugman.blogs.nytimes.com/2012/05/27/the-jersey-comeback/",
+  "Snippet": "Fuhgeddaboudit.",
+  "LeadParagraph": "One real problem with living in New Jersey is that the state’s two major cities are, of course, New York and Philadelphia — which means that even if you live here, policy and politics reporting tends to be sparse. So it wasn’t until the latest budget fiasco surfaced that I even knew that Christie was running on the theme of the “Jersey Comeback”.",
+  "PrintSection": null,
+  "PrintPage": null,
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T19:30:12+0000",
+  "DocumentType": "article",
+  "NewsDesk": "",
+  "SectionName": "Opinion",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/9e5fd811-b780-5e0f-9533-cb7d98f1fe18",
+  "WordCount": 148,
+  "Headline": {
+    "Main": "The Jersey Comeback",
+    "Kicker": "Paul Krugman",
+    "ContentKicker": null,
+    "PrintHeadline": null,
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Paul Krugman",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Paul",
+        "MiddleName": null,
+        "LastName": "Krugman",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

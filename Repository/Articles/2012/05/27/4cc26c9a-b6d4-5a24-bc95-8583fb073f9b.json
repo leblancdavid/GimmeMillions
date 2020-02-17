@@ -1,0 +1,86 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "At the Cannes Film Festival, the filmmaker Carlos Reygadas defends his film “Post Tenebras Lux” after boisterous boos greet one screening.",
+  "WebUrl": "https://artsbeat.blogs.nytimes.com/2012/05/27/cannes-film-festival-loud-boos-dont-faze-carlos-reygadas/",
+  "Snippet": "At the Cannes Film Festival, the filmmaker Carlos Reygadas defends his film “Post Tenebras Lux” after boisterous boos greet one screening.",
+  "LeadParagraph": "CANNES, France — At 40, Carlos Reygadas is firmly established as the leading enfant terrible of Mexican cinema and a favored son of the Cannes Film Festival. All four of his features, starting with his 2002 debut, “Japón,” have been shown here; on his previous trip, in 2007, he won the Jury Prize (the equivalent of third place) for the Dreyer-inspired “Silent Light.” ",
+  "PrintSection": null,
+  "PrintPage": null,
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T12:00:52+0000",
+  "DocumentType": "article",
+  "NewsDesk": "",
+  "SectionName": "Arts",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/4cc26c9a-b6d4-5a24-bc95-8583fb073f9b",
+  "WordCount": 1451,
+  "Headline": {
+    "Main": "Cannes Film Festival: Loud Boos Don’t Faze Carlos Reygadas",
+    "Kicker": "ArtsBeat",
+    "ContentKicker": null,
+    "PrintHeadline": null,
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Cannes International Film Festival",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Carax, Leos",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Loznitsa, Sergei",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Reygadas, Carlos",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Seidl, Ulrich",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Cannes (France)",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Mexico",
+      "Rank": 7,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Dennis Lim",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Dennis",
+        "MiddleName": null,
+        "LastName": "Lim",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

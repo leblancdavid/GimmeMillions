@@ -1,0 +1,140 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "The couple, who work for Congressional committees, are to be married in Massachusetts.",
+  "WebUrl": "https://www.nytimes.com/2012/05/27/fashion/weddings/lauren-belive-jeffrey-zubricki-weddings.html",
+  "Snippet": "The couple, who work for Congressional committees, are to be married in Massachusetts.",
+  "LeadParagraph": "Lauren Elizabeth Belive and Jeffrey Ryan Zubricki are to be married Sunday evening at the Wequassett Resort and Golf Club in Chatham, Mass. The Rev. James F. David, a priest with the Ecumenical Catholic Diocese of America, is to perform the ceremony. ",
+  "PrintSection": "ST",
+  "PrintPage": "12",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T05:03:02+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Society",
+  "SectionName": "Fashion & Style",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/417dde12-32cc-5be5-af3b-29300cebc415",
+  "WordCount": 204,
+  "Headline": {
+    "Main": "Lauren Belive, Jeffrey Zubricki",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Lauren Belive, Jeffrey Zubricki",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Weddings and Engagements",
+      "Rank": 1,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "blog480",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27BELIVEjpg/27BELIVEjpg-blog480.jpg",
+      "Height": 320,
+      "Width": 480,
+      "CropName": "blog480"
+    },
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27BELIVEjpg/27BELIVEjpg-jumbo.jpg",
+      "Height": 683,
+      "Width": 1024,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27BELIVEjpg/27BELIVEjpg-popup.jpg",
+      "Height": 434,
+      "Width": 650,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27BELIVEjpg/27BELIVEjpg-superJumbo.jpg",
+      "Height": 1367,
+      "Width": 2048,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "square320",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27BELIVEjpg/27BELIVEjpg-square320.jpg",
+      "Height": 320,
+      "Width": 320,
+      "CropName": "square320"
+    },
+    {
+      "Rank": 0,
+      "SubType": "square640",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27BELIVEjpg/27BELIVEjpg-square640.jpg",
+      "Height": 640,
+      "Width": 640,
+      "CropName": "square640"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27BELIVEjpg/27BELIVEjpg-articleInline.jpg",
+      "Height": 126,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27BELIVEjpg/27BELIVEjpg-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27BELIVEjpg/27BELIVEjpg-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": null,
+    "Organization": null,
+    "Person": []
+  }
+}

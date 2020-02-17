@@ -1,0 +1,204 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "“Hemingway & Gellhorn,” starring Clive Owen and Nicole Kidman as the title characters, has its premiere on HBO.",
+  "WebUrl": "https://www.nytimes.com/2012/05/28/arts/television/hemingway-gellhorn-has-its-premiere-on-hbo.html",
+  "Snippet": "“Hemingway & Gellhorn,” starring Clive Owen and Nicole Kidman as the title characters, has its premiere on HBO.",
+  "LeadParagraph": "Philip Kaufman’s midcareer run of great films, released from the late 1970s through 1990, can be seen as an examination of the varieties of heroism: physical and psychological (“The Right Stuff”), moral and political (“The Unbearable Lightness of Being”), artistic (“Henry & June”), existential (“Invasion of the Body Snatchers”).",
+  "PrintSection": "C",
+  "PrintPage": "1",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T22:40:55+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Culture",
+  "SectionName": "Arts",
+  "TypeOfMaterial": "Review",
+  "Uri": "nyt://article/ee35bdf7-c7cb-52f4-bdc0-f1bb45ff9a9d",
+  "WordCount": 964,
+  "Headline": {
+    "Main": "Literary Lions Stalk Each Other Through Wars and Across the World",
+    "Kicker": "Television Review",
+    "ContentKicker": null,
+    "PrintHeadline": "Literary Lions Stalk Each Other",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Books and Literature",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Kaufman, Philip",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Gellhorn, Martha",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Television",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Stahl, Jerry",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Hemingway, Ernest",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Kidman, Nicole",
+      "Rank": 7,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Turner, Barbara",
+      "Rank": 8,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Owen, Clive",
+      "Rank": 9,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Movies",
+      "Rank": 10,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "xlarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/ALTHEMINGWAY/ALTHEMINGWAY-articleLarge.jpg",
+      "Height": 330,
+      "Width": 600,
+      "CropName": "articleLarge"
+    },
+    {
+      "Rank": 0,
+      "SubType": "blog480",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/ALTHEMINGWAY/ALTHEMINGWAY-blog480.jpg",
+      "Height": 303,
+      "Width": 480,
+      "CropName": "blog480"
+    },
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/ALTHEMINGWAY/ALTHEMINGWAY-jumbo.jpg",
+      "Height": 647,
+      "Width": 1024,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/ALTHEMINGWAY/ALTHEMINGWAY-popup.jpg",
+      "Height": 410,
+      "Width": 650,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/ALTHEMINGWAY/ALTHEMINGWAY-superJumbo.jpg",
+      "Height": 1293,
+      "Width": 2048,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/ALTHEMINGWAY/ALTHEMINGWAY-articleInline.jpg",
+      "Height": 120,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "sfSpan",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/ALTHEMINGWAY/ALTHEMINGWAY-sfSpan.jpg",
+      "Height": 249,
+      "Width": 395,
+      "CropName": "sfSpan"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/ALTHEMINGWAY/ALTHEMINGWAY-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/ALTHEMINGWAY/ALTHEMINGWAY-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": "By Mike Hale",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Mike",
+        "MiddleName": null,
+        "LastName": "Hale",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

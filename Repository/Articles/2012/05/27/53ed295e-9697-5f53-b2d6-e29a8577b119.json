@@ -1,0 +1,135 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Landon Donovan scored three goals in his first game for the United States since September.",
+  "WebUrl": "https://www.nytimes.com/2012/05/27/sports/soccer/landon-donovans-hat-trick-leads-us-over-scotland.html",
+  "Snippet": "Landon Donovan scored three goals in his first game for the United States since September.",
+  "LeadParagraph": "JACKSONVILLE, Fla. — A Landon Donovan hat trick was the highlight of a masterly performance by the United States national team as it cruised to a 5-1 win over Scotland on Saturday to extend its winning streak to four games with the start of World Cup qualifying fast approaching.",
+  "PrintSection": "SP",
+  "PrintPage": "7",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T03:39:07+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Sports",
+  "SectionName": "Sports",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/53ed295e-9697-5f53-b2d6-e29a8577b119",
+  "WordCount": 702,
+  "Headline": {
+    "Main": "U.S. Begins Three Weeks Full of Games by Watching Donovan Collect a Net Full of Goals",
+    "Kicker": "U.S. 5, Scotland 1",
+    "ContentKicker": null,
+    "PrintHeadline": "U.S. Begins Three Weeks Full of Games by Watching Donovan Collect a Net Full of Goals",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Soccer",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Scotland",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "United States Men's National Soccer Team",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Donovan, Landon",
+      "Rank": 4,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/sports/soccer/27soccer-donovan-image/27soccer-donovan-image-jumbo.jpg",
+      "Height": 1024,
+      "Width": 900,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/sports/soccer/27soccer-donovan-image/27soccer-donovan-image-popup.jpg",
+      "Height": 500,
+      "Width": 440,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/sports/soccer/27soccer-donovan-image/27soccer-donovan-image-superJumbo.jpg",
+      "Height": 2048,
+      "Width": 1800,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/sports/soccer/27soccer-donovan-image/27soccer-donovan-image-articleInline.jpg",
+      "Height": 216,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/sports/soccer/27soccer-donovan-image/27soccer-donovan-image-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/sports/soccer/27soccer-donovan-image/27soccer-donovan-image-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": "By Brian Sciaretta",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Brian",
+        "MiddleName": null,
+        "LastName": "Sciaretta",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace GimmeMillions.DataAccess.Articles
 {
@@ -25,7 +26,8 @@ namespace GimmeMillions.DataAccess.Articles
                     Directory.CreateDirectory(directory);
                 }
 
-                string fileName = $"{directory}/{article.Uri}.json";
+                string uniqueId = article.Uri.Split('/').Last();
+                string fileName = $"{directory}/{uniqueId}.json";
                 File.WriteAllText(fileName, JsonConvert.SerializeObject(article, Formatting.Indented));
                 return Result.Ok();
             }

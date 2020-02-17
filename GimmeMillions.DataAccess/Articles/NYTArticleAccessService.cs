@@ -35,6 +35,10 @@ namespace GimmeMillions.DataAccess.Articles
                 }
 
                 articles.AddRange(articlesGetResult.Value);
+                foreach(var article in articles)
+                {
+                    _articleRepository.AddOrUpdate(article);
+                }
             }
 
             return Result.Ok<IEnumerable<Article>>(articles);
@@ -44,9 +48,9 @@ namespace GimmeMillions.DataAccess.Articles
         {
             var keys = _accessKeyRepository.GetKeys().ToList();
             var articles = new List<Article>();
-            int currentPage = 0, totalPages = 100;
+            int currentPage = 0, totalArticles = int.MaxValue;
             bool articlesRetrieved = true;
-            while (currentPage < totalPages && articlesRetrieved)
+            while (articles.Count < totalArticles && articlesRetrieved)
             {
                 articlesRetrieved = false;
                 foreach (var key in keys)
@@ -58,11 +62,17 @@ namespace GimmeMillions.DataAccess.Articles
                     var response = client.Execute<NYTArticleResponse>(new RestRequest());
                     if(response.StatusCode == HttpStatusCode.OK)
                     {
+                        foreach(var article in response.Data.Response.Docs)
+                        {
+                            //Just make sure we update the current date
+                            article.Date = dateTime;
+                        }
+
                         articles.AddRange(response.Data.Response.Docs);
-                        totalPages = response.Data.Response.Meta.Hits;
+                        totalArticles = response.Data.Response.Meta.Hits;
                         currentPage++;
                         articlesRetrieved = true;
-                        if(currentPage >= totalPages)
+                        if(articles.Count >= totalArticles)
                         {
                             break;
                         }

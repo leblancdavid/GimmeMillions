@@ -1,0 +1,140 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "A wedding on Martha’s Vineyard.",
+  "WebUrl": "https://www.nytimes.com/2012/05/27/fashion/weddings/weddings.html",
+  "Snippet": "A wedding on Martha’s Vineyard.",
+  "LeadParagraph": "Abigail Rose Solomon and Jason Birkestrand Teuscher are to be married Sunday in Chilmark, Mass. Rabbi Carol Davidson is to officiate at the Captain R. Flanders House, an inn on Martha’s Vineyard. ",
+  "PrintSection": "ST",
+  "PrintPage": "14",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T04:47:32+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Society",
+  "SectionName": "Fashion & Style",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/7d6d8df1-e77e-59ee-893f-03af9befd6b8",
+  "WordCount": 333,
+  "Headline": {
+    "Main": "Abigail Solomon, Jason Teuscher",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Abigail Solomon, Jason Teuscher",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Weddings and Engagements",
+      "Rank": 1,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "blog480",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27SOLOMONjpg/27SOLOMONjpg-blog480.jpg",
+      "Height": 320,
+      "Width": 480,
+      "CropName": "blog480"
+    },
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27SOLOMONjpg/27SOLOMONjpg-jumbo.jpg",
+      "Height": 683,
+      "Width": 1024,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27SOLOMONjpg/27SOLOMONjpg-popup.jpg",
+      "Height": 433,
+      "Width": 650,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27SOLOMONjpg/27SOLOMONjpg-superJumbo.jpg",
+      "Height": 1365,
+      "Width": 2048,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "square320",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27SOLOMONjpg/27SOLOMONjpg-square320.jpg",
+      "Height": 320,
+      "Width": 320,
+      "CropName": "square320"
+    },
+    {
+      "Rank": 0,
+      "SubType": "square640",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27SOLOMONjpg/27SOLOMONjpg-square640.jpg",
+      "Height": 640,
+      "Width": 640,
+      "CropName": "square640"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27SOLOMONjpg/27SOLOMONjpg-articleInline.jpg",
+      "Height": 126,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27SOLOMONjpg/27SOLOMONjpg-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27SOLOMONjpg/27SOLOMONjpg-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": null,
+    "Organization": null,
+    "Person": []
+  }
+}

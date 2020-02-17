@@ -1,0 +1,101 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Jennifer Sheehan’s cabaret show at Feinstein’s at Loews Regency revives the sprightlier elements of music from the 1960s.",
+  "WebUrl": "https://www.nytimes.com/2012/05/28/arts/music/jennifer-sheehan-at-feinsteins-at-loews-regency.html",
+  "Snippet": "Jennifer Sheehan’s cabaret show at Feinstein’s at Loews Regency revives the sprightlier elements of music from the 1960s.",
+  "LeadParagraph": "Were my eyes deceiving me? Or was Jessica Paré of “Mad Men” a last-minute substitute for Jennifer Sheehan at Feinstein’s at Loews Regency on Wednesday evening? I had to blink twice. But no, it wasn’t Ms. Paré but Ms. Sheehan, the rising cabaret star transformed into Ms. Paré’s doppelgänger for her effervescent new show, “I Know a Place,” an anthology of 1960s songs that takes its title from the Petula Clark hit that led off the evening. ",
+  "PrintSection": "C",
+  "PrintPage": "2",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T20:39:57+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Culture",
+  "SectionName": "Arts",
+  "TypeOfMaterial": "Review",
+  "Uri": "nyt://article/d093a8c9-123d-5555-8657-165d126a09c4",
+  "WordCount": 364,
+  "Headline": {
+    "Main": "Bacharach and the Beatles: The Sunny Side of the ’60s",
+    "Kicker": "Music Review",
+    "ContentKicker": null,
+    "PrintHeadline": "Bacharach and the Beatles: The Sunny Side of the ’60s",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "persons",
+      "Value": "Sheehan, Jennifer",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Music",
+      "Rank": 2,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/altsheehan/altsheehan-jumbo.jpg",
+      "Height": 1024,
+      "Width": 709,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/altsheehan/altsheehan-popup.jpg",
+      "Height": 500,
+      "Width": 346,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/altsheehan/altsheehan-superJumbo.jpg",
+      "Height": 2048,
+      "Width": 1417,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/altsheehan/altsheehan-articleInline.jpg",
+      "Height": 275,
+      "Width": 190,
+      "CropName": "articleInline"
+    }
+  ],
+  "Byline": {
+    "Original": "By Stephen Holden",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Stephen",
+        "MiddleName": null,
+        "LastName": "Holden",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

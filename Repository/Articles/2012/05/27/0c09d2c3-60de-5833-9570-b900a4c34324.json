@@ -1,0 +1,107 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "So far this month, 33 NATO service members have been killed in Afghanistan, about half as many as died in May 2011.",
+  "WebUrl": "https://www.nytimes.com/2012/05/28/world/asia/afghanistan-explosions-kill-four-nato-soldiers.html",
+  "Snippet": "So far this month, 33 NATO service members have been killed in Afghanistan, about half as many as died in May 2011.",
+  "LeadParagraph": "KABUL, Afghanistan — Both President Hamid Karzai and NATO commanders ordered an investigation on Sunday into reports that a family of eight had been killed in a coalition airstrike in eastern Afghanistan. ",
+  "PrintSection": "A",
+  "PrintPage": "8",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T05:09:06+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Foreign",
+  "SectionName": "World",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/0c09d2c3-60de-5833-9570-b900a4c34324",
+  "WordCount": 534,
+  "Headline": {
+    "Main": "Inquiry Ordered Into Deaths of Afghan Family",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Afghan and NATO Inquiries Begin on Reported Killing of Family in an Airstrike",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Civilian Casualties",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Deaths (Fatalities)",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "International Security Assistance Force",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "North Atlantic Treaty Organization",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "AFGHANISTAN",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Afghanistan War (2001- )",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Karzai, Hamid",
+      "Rank": 7,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Bombs and Explosives",
+      "Rank": 8,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Haqqani Network",
+      "Rank": 9,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Alissa J. Rubin and Rod Nordland",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Alissa",
+        "MiddleName": "J.",
+        "LastName": "Rubin",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      },
+      {
+        "FirstName": "Rod",
+        "MiddleName": null,
+        "LastName": "Nordland",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 2
+      }
+    ]
+  }
+}

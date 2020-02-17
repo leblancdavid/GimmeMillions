@@ -1,0 +1,169 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "A federal judge ordered that a mobile home park in Thermal, Calif., be shut down, but there is now no money to build its replacement.",
+  "WebUrl": "https://www.nytimes.com/2012/05/28/us/california-farmworkers-community-hurt-by-budget-crisis.html",
+  "Snippet": "A federal judge ordered that a mobile home park in Thermal, Calif., be shut down, but there is now no money to build its replacement.",
+  "LeadParagraph": "THERMAL, Calif. — To understand the conditions at the Duroville mobile-home park here, a half-hour drive from Palm Springs, Calif., just look at the windows. Dotting the walls are stretches of plywood, cardboard, blankets and even tinfoil. Replacing the glass just costs too much for many of the residents to consider. ",
+  "PrintSection": "A",
+  "PrintPage": "9",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T21:04:36+0000",
+  "DocumentType": "article",
+  "NewsDesk": "National",
+  "SectionName": "U.S.",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/822185b5-93e6-5694-ac56-ae4ef338402b",
+  "WordCount": 1138,
+  "Headline": {
+    "Main": "Budget Crisis Takes Toll on Community for California Farmworkers",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Enduring Dust and Decay as California Budget Woes Delay a Move",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Mobile Homes and Trailers",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Budgets and Budgeting",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Agriculture and Farming",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Riverside County (Calif)",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Affordable Housing",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "California",
+      "Rank": 6,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "xlarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/us/20120527thermal-slide-GMZH/20120527thermal-slide-GMZH-articleLarge.jpg",
+      "Height": 391,
+      "Width": 600,
+      "CropName": "articleLarge"
+    },
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/us/20120527thermal-slide-GMZH/20120527thermal-slide-GMZH-jumbo.jpg",
+      "Height": 683,
+      "Width": 1024,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/us/20120527thermal-slide-GMZH/20120527thermal-slide-GMZH-articleLarge.jpg",
+      "Height": 391,
+      "Width": 600,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "slide",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/us/20120527thermal-slide-GMZH/20120527thermal-slide-GMZH-slide.jpg",
+      "Height": 400,
+      "Width": 600,
+      "CropName": "slide"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/us/20120527thermal-slide-GMZH/20120527thermal-slide-GMZH-superJumbo.jpg",
+      "Height": 1365,
+      "Width": 2048,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "sfSpan",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/us/20120527thermal-slide-GMZH/20120527thermal-slide-GMZH-sfSpan.jpg",
+      "Height": 250,
+      "Width": 395,
+      "CropName": "sfSpan"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/us/20120527thermal-slide-GMZH/20120527thermal-slide-GMZH-thumbStandard-v2.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/us/20120527thermal-slide-GMZH/20120527thermal-slide-GMZH-thumbLarge-v2.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": "By Jennifer Medina",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Jennifer",
+        "MiddleName": null,
+        "LastName": "Medina",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

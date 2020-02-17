@@ -1,0 +1,163 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Ryder Hesjedal became the first Canadian to win the Giro d’Italia after overtaking the leader in the final time trial.",
+  "WebUrl": "https://www.nytimes.com/2012/05/28/sports/cycling/ryder-hesjadal-of-canada-wins-giro.html",
+  "Snippet": "Ryder Hesjedal became the first Canadian to win the Giro d’Italia after overtaking the leader in the final time trial.",
+  "LeadParagraph": "Perhaps it was consolation for Canada’s absence from the Stanley Cup finals. On Sunday, Ryder Hesjedal became the first Canadian to win the Giro d’Italia, or any of cycling’s three major tours. ",
+  "PrintSection": "D",
+  "PrintPage": "8",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T17:24:26+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Sports",
+  "SectionName": "Sports",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/e9ab29c8-f981-5e59-af66-4e4856533c10",
+  "WordCount": 870,
+  "Headline": {
+    "Main": "Former Mountain Biker From Canada Wins Giro",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Canadian Breaks Through With His Country’s First Victory in Giro d’Italia",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Giro d'Italia (Bicycle Race)",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Records and Achievements",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Canada",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Hesjedal, Ryder",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Bicycles and Bicycling",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "blog480",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/cycling/28cycling-1/28cycling-1-blog480.jpg",
+      "Height": 320,
+      "Width": 480,
+      "CropName": "blog480"
+    },
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/cycling/28cycling-1/28cycling-1-jumbo.jpg",
+      "Height": 683,
+      "Width": 1024,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/cycling/28cycling-1/28cycling-1-popup.jpg",
+      "Height": 433,
+      "Width": 650,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/cycling/28cycling-1/28cycling-1-superJumbo.jpg",
+      "Height": 1365,
+      "Width": 2048,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/cycling/28cycling-1/28cycling-1-articleInline.jpg",
+      "Height": 140,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "sfSpan",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/cycling/28cycling-1/28cycling-1-sfSpan.jpg",
+      "Height": 263,
+      "Width": 395,
+      "CropName": "sfSpan"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/cycling/28cycling-1/28cycling-1-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/sports/cycling/28cycling-1/28cycling-1-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": "By Ian Austen",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Ian",
+        "MiddleName": null,
+        "LastName": "Austen",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

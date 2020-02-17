@@ -1,0 +1,74 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Despite sweeping education reform in Abu Dhabi and massive education funding in Doha, dropout rates for high school boys remain alarmingly high.",
+  "WebUrl": "https://www.nytimes.com/2012/05/28/world/middleeast/28iht-educlede28.html",
+  "Snippet": "Despite sweeping education reform in Abu Dhabi and massive education funding in Doha, dropout rates for high school boys remain alarmingly high.",
+  "LeadParagraph": "DUBAI — For his final project at Dubai Men’s College , Suqrat bin Bisher chose a topic that made his family and friends a little uneasy.",
+  "PrintSection": null,
+  "PrintPage": null,
+  "Source": "International Herald Tribune",
+  "PubDate": "2012-05-27T20:42:04+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Foreign",
+  "SectionName": "World",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/3695748a-3574-5b06-9e5e-449bd5f7a767",
+  "WordCount": 1253,
+  "Headline": {
+    "Main": "In the Gulf, Boys Falling Behind in School",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "In the Gulf, Boys Falling Behind in School",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Education (Secondary)",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Education",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Dubai (United Arab Emirates)",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "United Arab Emirates",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Men and Boys",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Sara Hamdan",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Sara",
+        "MiddleName": null,
+        "LastName": "Hamdan",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

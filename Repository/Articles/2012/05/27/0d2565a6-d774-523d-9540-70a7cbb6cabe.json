@@ -1,0 +1,86 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "In her return to the sport, the reigning Olympic champion in the all-around makes a strong case for a spot on the U.S. Olympic team.",
+  "WebUrl": "https://london2012.blogs.nytimes.com/2012/05/26/liukin-is-back-in-the-mix/",
+  "Snippet": "In her return to the sport, the reigning Olympic champion in the all-around makes a strong case for a spot on the U.S. Olympic team.",
+  "LeadParagraph": "CHICAGO — As her signature pink leotard sparkled under the lights and her tuft of blond hair bobbled atop her head, Nastia Liukin hopped onto the balance beam at the U.S. Classic on Saturday and walked right back into the mix for the U.S. Olympic team that will compete in London.",
+  "PrintSection": null,
+  "PrintPage": null,
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T01:57:26+0000",
+  "DocumentType": "article",
+  "NewsDesk": "",
+  "SectionName": "Sports",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/0d2565a6-d774-523d-9540-70a7cbb6cabe",
+  "WordCount": 354,
+  "Headline": {
+    "Main": "Liukin Is Back in the Mix",
+    "Kicker": "2012 London Olympics",
+    "ContentKicker": null,
+    "PrintHeadline": null,
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Gymnastics",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Olympic Games",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Olympic Games (2012)",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Liukin, Nastia",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Chicago (Ill)",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "London (England)",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "United States",
+      "Rank": 7,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Juliet Macur",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Juliet",
+        "MiddleName": null,
+        "LastName": "Macur",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

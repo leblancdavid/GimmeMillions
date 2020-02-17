@@ -1,0 +1,68 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "The modern design guide Dwell will introduce an annual publication with New York magazine tied to a weeklong design festival.",
+  "WebUrl": "https://mediadecoder.blogs.nytimes.com/2012/05/27/from-2-divergent-magazines-a-special-design-issue/",
+  "Snippet": "The modern design guide Dwell will introduce an annual publication with New York magazine tied to a weeklong design festival.",
+  "LeadParagraph": "Combining content from two different magazines can make for interesting, sometimes awkward matchups. Consider the risk in joining a magazine that offers readers design tips like how to avoid tripping over a lamp’s electric cord with a magazine that recently ran a 5,600-word cover article on the heart-wrenching decline of an aging parent.",
+  "PrintSection": null,
+  "PrintPage": null,
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T22:27:19+0000",
+  "DocumentType": "article",
+  "NewsDesk": "",
+  "SectionName": "Business Day",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/3889e173-226e-5b26-8920-79c32d95325a",
+  "WordCount": 341,
+  "Headline": {
+    "Main": "From 2 Dissimilar Magazines, a Special Design Issue",
+    "Kicker": "Media Decoder",
+    "ContentKicker": null,
+    "PrintHeadline": null,
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Design",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Magazines",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Dwell (Magazine)",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "New York (Magazine)",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Christine Haughney",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Christine",
+        "MiddleName": null,
+        "LastName": "Haughney",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

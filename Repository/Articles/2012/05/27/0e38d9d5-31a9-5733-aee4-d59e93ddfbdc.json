@@ -1,0 +1,74 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Beaches in Florida, Georgia and South Carolina braced for the arrival of Tropical Storm Beryl, which made landfall late Sunday.",
+  "WebUrl": "https://www.nytimes.com/2012/05/28/us/tropical-storm-beryl-threatens-the-southeast.html",
+  "Snippet": "Beaches in Florida, Georgia and South Carolina braced for the arrival of Tropical Storm Beryl, which made landfall late Sunday.",
+  "LeadParagraph": "Beaches along the southern Atlantic coast were closed on Sunday, and visitors and residents in some low-lying regions were told to seek higher ground as Tropical Storm Beryl threatened to upset holiday weekend plans for thousands of beachgoers.",
+  "PrintSection": "A",
+  "PrintPage": "11",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T23:24:35+0000",
+  "DocumentType": "article",
+  "NewsDesk": "National",
+  "SectionName": "U.S.",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/0e38d9d5-31a9-5733-aee4-d59e93ddfbdc",
+  "WordCount": 350,
+  "Headline": {
+    "Main": "Tropical Storm Interrupts Holiday Plans in Southeast",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Tropical Storm Interrupts Holiday Plans in Southeast",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Travel and Vacations",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Weather",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Memorial Day",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Hurricanes and Tropical Storms",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Southern States (US)",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Michael Schwirtz",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Michael",
+        "MiddleName": null,
+        "LastName": "Schwirtz",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

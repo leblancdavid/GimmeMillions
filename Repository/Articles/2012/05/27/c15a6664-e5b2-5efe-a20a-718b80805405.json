@@ -1,0 +1,58 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "In Tania James’s stories, a chimpanzee and a ghost are among the characters entangled in sticky human relationships.",
+  "WebUrl": "https://india.blogs.nytimes.com/2012/05/27/family-secrets/",
+  "Snippet": "In Tania James’s stories, a chimpanzee and a ghost are among the characters entangled in sticky human relationships.",
+  "LeadParagraph": "“Tania James is a warmhearted writer,” Emily Cooke writes in The Sunday Book Review section of the New York Times, about the author of “Aerogrammes.” ",
+  "PrintSection": null,
+  "PrintPage": null,
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T05:45:02+0000",
+  "DocumentType": "article",
+  "NewsDesk": "",
+  "SectionName": "World",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/c15a6664-e5b2-5efe-a20a-718b80805405",
+  "WordCount": 212,
+  "Headline": {
+    "Main": "Family Secrets",
+    "Kicker": "India Ink",
+    "ContentKicker": null,
+    "PrintHeadline": null,
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Books and Literature",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Writing and Writers",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "James, Tania",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "London (England)",
+      "Rank": 4,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By The New York Times",
+    "Organization": "The New York Times",
+    "Person": []
+  }
+}

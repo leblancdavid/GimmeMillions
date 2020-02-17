@@ -1,0 +1,163 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "The Austrian director Michael Haneke won the Palme d’Or at the 65th Cannes Film Festival on Sunday for “Amour,” a story of love and death focusing on an elderly Parisian couple.",
+  "WebUrl": "https://www.nytimes.com/2012/05/28/movies/amour-by-michael-haneke-wins-palme-dor-at-cannes.html",
+  "Snippet": "The Austrian director Michael Haneke won the Palme d’Or at the 65th Cannes Film Festival on Sunday for “Amour,” a story of love and death focusing on an elderly Parisian couple.",
+  "LeadParagraph": "CANNES, France — Heavy rain dampened the final day of the 65th Cannes Film Festival, but it mattered not at all when the Palme d’Or was awarded to “Amour.” Brilliantly directed with an atypically tender touch by the Austrian director Michael Haneke, this story about an octogenarian husband and wife facing their mortality — beautifully played by the French actors Jean-Louis Trintignant and Emmanuelle Riva — had left audiences stunned with its artistry and depth of feeling.",
+  "PrintSection": "C",
+  "PrintPage": "1",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T19:54:56+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Culture",
+  "SectionName": "Movies",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/e1a2bf60-cdff-59fe-8899-0b2855db5147",
+  "WordCount": 1358,
+  "Headline": {
+    "Main": "‘Amour,’ a Wrenching Love Story, Wins at Cannes",
+    "Kicker": "Critic's Notebook ",
+    "ContentKicker": null,
+    "PrintHeadline": "‘Amour,’ a Wrenching Love Story, Wins at Cannes",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "creative_works",
+      "Value": "Amour (Movie)",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Haneke, Michael",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Awards, Decorations and Honors",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Cannes International Film Festival",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Movies",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "blog480",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/cannes/cannes-blog480.jpg",
+      "Height": 377,
+      "Width": 480,
+      "CropName": "blog480"
+    },
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/cannes/cannes-jumbo.jpg",
+      "Height": 804,
+      "Width": 1024,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/cannes/cannes-popup.jpg",
+      "Height": 510,
+      "Width": 650,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/cannes/cannes-superJumbo.jpg",
+      "Height": 1608,
+      "Width": 2048,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/cannes/cannes-articleInline.jpg",
+      "Height": 149,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "sfSpan",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/cannes/cannes-sfSpan.jpg",
+      "Height": 310,
+      "Width": 395,
+      "CropName": "sfSpan"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/cannes/cannes-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/cannes/cannes-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": "By Manohla Dargis",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Manohla",
+        "MiddleName": null,
+        "LastName": "Dargis",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

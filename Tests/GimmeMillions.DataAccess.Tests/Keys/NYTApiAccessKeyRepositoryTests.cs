@@ -42,6 +42,18 @@ namespace GimmeMillions.DataAccess.Tests.Keys
             repo.AddOrUpdateKey(new AccessKey("0df9aGwP0rwRy1oPNp6eHQk6Yi4kmlsm", "JDlNkBUox0JJBhKg", "active"));
             repo.AddOrUpdateKey(new AccessKey("IkOymJo2Gqk0idkLmP0jfYs2X3sXZZ0k", "Qbj0Ah7j59ip1C8b", "active"));
             repo.AddOrUpdateKey(new AccessKey("OaLjqH6bay4bUhv3xY40hXbznePIPeEv", "IdcjZ42umnNyeN8W", "active"));
+            repo.AddOrUpdateKey(new AccessKey("UZLfavf08pXAl02HMuJKnnhzYeecAHlz", "o07n6HRxLIpoRTc3", "active"));
+            repo.AddOrUpdateKey(new AccessKey("paxi2jaNcnTKVnstoFSXCRM1iuzaM7gr", "qSA8fO9R69fzhCBB", "active"));
+            repo.AddOrUpdateKey(new AccessKey("WAvaand0xV9UKwVszbl6rP4EFkbgLQR9", "0WdANB4O20hTOTYh", "active"));
+            repo.AddOrUpdateKey(new AccessKey("8eW93pi2niAaLGInC92i5Y0PdYbx3Cv9", "Rx5N2EpxCihND0es", "active"));
+            repo.AddOrUpdateKey(new AccessKey("5n18BZJK8aaCpRb22Cj0N0ogkM05wO4s", "Rx5N2EpxCihND0es", "active"));
+            repo.AddOrUpdateKey(new AccessKey("xtOt3zdo2606bhvknjHgkDhDnzpn1G1P", "IdK00CrB65NY07OL", "active"));
+            repo.AddOrUpdateKey(new AccessKey("kZ0rTWrOHWVPUjWCmpVMxDVRr35MqW0A", "EL13ib6mkhHH22Rf", "active"));
+            repo.AddOrUpdateKey(new AccessKey("f1801Q7cVDeTpBENNcib0FaRvkBZ65WS", "8UYBYTc5LHOT23nX", "active"));
+            repo.AddOrUpdateKey(new AccessKey("uoS0deURqHlbXAP932KjY40TVMGfr30v", "IFAHFHOxyQ3uyzqa", "active"));
+            repo.AddOrUpdateKey(new AccessKey("U0NXddALlxO6HfWwTNXpcBdDJL8BJ8WM", "OoDjAQ1TISkaetUj", "active"));
+            repo.AddOrUpdateKey(new AccessKey("lC6rUHjXO8HZp3S1ial0kQQnFEOxHMIz", "90dpdw8KdT0mBD8T", "active"));
+            repo.AddOrUpdateKey(new AccessKey("uq43KaTozKJ3mvQwEFMVF36kdFZPDFqt", "GWpdWhOHUM2h0KBp", "active"));
         }
 
         [Fact]

@@ -1,0 +1,150 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Mr. Ho is a developer of trials for cancer drugs, and Mr. Stuart is a corporate retirement director.",
+  "WebUrl": "https://www.nytimes.com/2012/05/27/fashion/weddings/william-ho-bruce-stuart-weddings.html",
+  "Snippet": "Mr. Ho is a developer of trials for cancer drugs, and Mr. Stuart is a corporate retirement director.",
+  "LeadParagraph": "Dr. William Yew-Wai Ho and Bruce Steven Stuart were married Friday at the American Hotel in Sharon Springs, N.Y. Douglas C. Plummer, a minister of the Universal Life Church, officiated.",
+  "PrintSection": "ST",
+  "PrintPage": "14",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T05:03:20+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Society",
+  "SectionName": "Fashion & Style",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/88e3a7a8-2797-50b3-926b-daa2ccfc0608",
+  "WordCount": 346,
+  "Headline": {
+    "Main": "William Ho, Bruce Stuart",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "William Ho, Bruce Stuart",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Weddings and Engagements",
+      "Rank": 1,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "blog480",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27HOjpg/27HOjpg-blog480.jpg",
+      "Height": 360,
+      "Width": 480,
+      "CropName": "blog480"
+    },
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27HOjpg/27HOjpg-jumbo.jpg",
+      "Height": 768,
+      "Width": 1024,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27HOjpg/27HOjpg-popup.jpg",
+      "Height": 488,
+      "Width": 650,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27HOjpg/27HOjpg-superJumbo.jpg",
+      "Height": 1536,
+      "Width": 2048,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "square320",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27HOjpg/27HOjpg-square320.jpg",
+      "Height": 320,
+      "Width": 320,
+      "CropName": "square320"
+    },
+    {
+      "Rank": 0,
+      "SubType": "square640",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27HOjpg/27HOjpg-square640.jpg",
+      "Height": 640,
+      "Width": 640,
+      "CropName": "square640"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27HOjpg/27HOjpg-articleInline.jpg",
+      "Height": 126,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27HOjpg/27HOjpg-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27HOjpg/27HOjpg-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": "By Nina Reyes",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Nina",
+        "MiddleName": null,
+        "LastName": "Reyes",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

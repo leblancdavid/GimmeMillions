@@ -1,0 +1,68 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Animal welfare campaigners and egg producers embrace Senate legislation aiding hens.",
+  "WebUrl": "https://dotearth.blogs.nytimes.com/2012/05/27/something-to-cluck-about-a-bill-endorsed-by-egg-producers-and-animal-campaigners/",
+  "Snippet": "Animal welfare campaigners and egg producers embrace Senate legislation aiding hens.",
+  "LeadParagraph": "I love moments when common interests create accord between factions in our society that are otherwise deeply divided. Here’s some news along these lines in a joint release from the United Egg Producers and the Humane Society of the United States about a Senate bill that would, among other things, double the space allotted for each hen in the country’s massive egg industry:",
+  "PrintSection": null,
+  "PrintPage": null,
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T20:34:01+0000",
+  "DocumentType": "article",
+  "NewsDesk": "",
+  "SectionName": "Opinion",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/e46919c0-6e56-5d80-977d-166ac28fdb74",
+  "WordCount": 300,
+  "Headline": {
+    "Main": "Something to Cluck About – A Bill Endorsed by Egg Producers and Animal Campaigners",
+    "Kicker": "Dot Earth",
+    "ContentKicker": null,
+    "PrintHeadline": null,
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Eggs",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "AGRICULTURE DEPARTMENT",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "FOOD",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Humane Society of the United States",
+      "Rank": 4,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Andrew C. Revkin",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Andrew",
+        "MiddleName": "C.",
+        "LastName": "Revkin",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

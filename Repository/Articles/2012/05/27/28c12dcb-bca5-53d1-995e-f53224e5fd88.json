@@ -1,0 +1,140 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "The bride is a senior counsel at a company that develops cancer drugs; the bridegroom is an oncology fellow in San Francisco.",
+  "WebUrl": "https://www.nytimes.com/2012/05/27/fashion/weddings/caroline-vu-edward-cha-weddings.html",
+  "Snippet": "The bride is a senior counsel at a company that develops cancer drugs; the bridegroom is an oncology fellow in San Francisco.",
+  "LeadParagraph": "Caroline Vu and Edward Namserk Cha were married Saturday at St. Thomas Aquinas Church in Palo Alto, Calif. The Rev. Matthew D. Stanley, a Roman Catholic priest and the church’s pastor, performed the ceremony. ",
+  "PrintSection": "ST",
+  "PrintPage": "14",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T05:03:17+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Society",
+  "SectionName": "Fashion & Style",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/28c12dcb-bca5-53d1-995e-f53224e5fd88",
+  "WordCount": 174,
+  "Headline": {
+    "Main": "Caroline Vu, Edward Cha",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Caroline Vu, Edward Cha",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Weddings and Engagements",
+      "Rank": 1,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "blog480",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27VU/27VU-blog480.jpg",
+      "Height": 314,
+      "Width": 480,
+      "CropName": "blog480"
+    },
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27VU/27VU-jumbo.jpg",
+      "Height": 670,
+      "Width": 1024,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27VU/27VU-popup.jpg",
+      "Height": 425,
+      "Width": 650,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27VU/27VU-superJumbo.jpg",
+      "Height": 1341,
+      "Width": 2048,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "square320",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27VU/27VU-square320.jpg",
+      "Height": 320,
+      "Width": 320,
+      "CropName": "square320"
+    },
+    {
+      "Rank": 0,
+      "SubType": "square640",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27VU/27VU-square640.jpg",
+      "Height": 640,
+      "Width": 640,
+      "CropName": "square640"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27VU/27VU-articleInline.jpg",
+      "Height": 126,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27VU/27VU-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27VU/27VU-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": null,
+    "Organization": null,
+    "Person": []
+  }
+}

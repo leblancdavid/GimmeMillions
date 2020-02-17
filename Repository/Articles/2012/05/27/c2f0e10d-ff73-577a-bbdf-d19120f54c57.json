@@ -1,0 +1,79 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "The world’s most successful single-session charity bridge tournament, the UJA-Federation of New York’s Women’s Philanthropy pro-am, was played on Tuesday at the Harmonie Club in Manhattan.",
+  "WebUrl": "https://www.nytimes.com/2012/05/28/crosswords/bridge/in-bridge-uja-federation-of-new-yorks-womens-philanthropy.html",
+  "Snippet": "The world’s most successful single-session charity bridge tournament, the UJA-Federation of New York’s Women’s Philanthropy pro-am, was played on Tuesday at the Harmonie Club in Manhattan.",
+  "LeadParagraph": "The world’s most successful single-session charity bridge tournament, the UJA-Federation of New York’s Women’s Philanthropy pro-am, was played on Tuesday at the Harmonie Club in Manhattan. Organized by Marci Miron, Nancy Brown, Jennifer Hoine and Jacqui Weidman, the 49th such event raised over $115,000.",
+  "PrintSection": "C",
+  "PrintPage": "4",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T21:13:05+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Culture",
+  "SectionName": "Crosswords & Games",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/c2f0e10d-ff73-577a-bbdf-d19120f54c57",
+  "WordCount": 287,
+  "Headline": {
+    "Main": "In Bridge, UJA-Federation of New York’s Women’s Philanthropy",
+    "Kicker": "Bridge",
+    "ContentKicker": null,
+    "PrintHeadline": null,
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Bridge (Card Game)",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Cards and Card Games",
+      "Rank": 2,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/crosswords/bridge/28card/28card-popup.gif",
+      "Height": 500,
+      "Width": 251,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/crosswords/bridge/28card/28card-articleInline.gif",
+      "Height": 378,
+      "Width": 190,
+      "CropName": "articleInline"
+    }
+  ],
+  "Byline": {
+    "Original": "By Phillip Alder",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Phillip",
+        "MiddleName": null,
+        "LastName": "Alder",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

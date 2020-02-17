@@ -1,0 +1,68 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Nastia Liukin hopped onto the balance beam at the U.S. Classic in Chicago on Saturday and walked right back into the mix for the American Olympic team that will compete in London.",
+  "WebUrl": "https://www.nytimes.com/2012/05/27/sports/olympics/nastia-liukin-progresses-in-comeback-bid.html",
+  "Snippet": "Nastia Liukin hopped onto the balance beam at the U.S. Classic in Chicago on Saturday and walked right back into the mix for the American Olympic team that will compete in London.",
+  "LeadParagraph": "Nastia Liukin hopped onto the balance beam at the U.S. Classic in Chicago on Saturday and walked right back into the mix for the American Olympic team that will compete in London. Liukin, the reigning Olympic champion in the all-around, gracefully flipped, twisted and split-jumped above the four-inch beam, receiving a score of 14.9, good enough to tie for third with Sarah Finnegan. Alexandra Raisman and Jordyn Wieber tied for first, with 15 points each. Liukin said she was thrilled with her performance after taking nearly three years off from the sport. More at nytimes.com. ",
+  "PrintSection": "SP",
+  "PrintPage": "9",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T04:29:03+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Sports",
+  "SectionName": "Sports",
+  "TypeOfMaterial": "Brief",
+  "Uri": "nyt://article/67ec5399-0d25-5b17-bf4b-41effa7cb73f",
+  "WordCount": 98,
+  "Headline": {
+    "Main": "Liukin Progresses in Comeback Bid",
+    "Kicker": "Sports Briefing | Gymnastics",
+    "ContentKicker": null,
+    "PrintHeadline": "Liukin Progresses in Comeback Bid",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "Chicago (Ill)",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Liukin, Nastia",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Olympic Games",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Gymnastics",
+      "Rank": 4,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Juliet Macur",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Juliet",
+        "MiddleName": null,
+        "LastName": "Macur",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

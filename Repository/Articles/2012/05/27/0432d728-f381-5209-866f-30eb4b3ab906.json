@@ -1,0 +1,147 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Moments from the campaign trail this week, including President Obama’s commencement address at the United States Air Force Academy and Mitt Romney’s visit to Pennsylvania.",
+  "WebUrl": "https://www.nytimes.com/slideshow/2012/05/27/us/politics/0527wip.html",
+  "Snippet": "Moments from the campaign trail this week, including President Obama’s commencement address at the United States Air Force Academy and Mitt Romney’s visit to Pennsylvania.",
+  "LeadParagraph": "Moments from the campaign trail this week, including President Obama’s commencement address at the United States Air Force Academy and Mitt Romney’s visit to Pennsylvania.",
+  "PrintSection": null,
+  "PrintPage": null,
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T23:41:02+0000",
+  "DocumentType": "multimedia",
+  "NewsDesk": "U.S.",
+  "SectionName": "U.S.",
+  "TypeOfMaterial": "Slideshow",
+  "Uri": "nyt://slideshow/0432d728-f381-5209-866f-30eb4b3ab906",
+  "WordCount": 0,
+  "Headline": {
+    "Main": "The Week in Political Pictures: May 20-May 26",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": null,
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "persons",
+      "Value": "Obama, Barack",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Romney, Mitt",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Presidential Election of 2012",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "United States Politics and Government",
+      "Rank": 4,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "wide",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/us/0527wip-slide-9XHY/0527wip-slide-9XHY-thumbWide.jpg",
+      "Height": 126,
+      "Width": 190,
+      "CropName": "thumbWide"
+    },
+    {
+      "Rank": 0,
+      "SubType": "blog480",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/us/0527wip-slide-9XHY/0527wip-slide-9XHY-blog480.jpg",
+      "Height": 319,
+      "Width": 480,
+      "CropName": "blog480"
+    },
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/us/0527wip-slide-9XHY/0527wip-slide-9XHY-jumbo.jpg",
+      "Height": 681,
+      "Width": 1024,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "slide",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/us/0527wip-slide-9XHY/0527wip-slide-9XHY-slide.jpg",
+      "Height": 399,
+      "Width": 600,
+      "CropName": "slide"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/us/0527wip-slide-9XHY/0527wip-slide-9XHY-superJumbo.jpg",
+      "Height": 1363,
+      "Width": 2048,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/us/0527wip-slide-9XHY/0527wip-slide-9XHY-articleInline.jpg",
+      "Height": 190,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/us/0527wip-slide-9XHY/0527wip-slide-9XHY-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/us/0527wip-slide-9XHY/0527wip-slide-9XHY-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": null,
+    "Organization": null,
+    "Person": []
+  }
+}

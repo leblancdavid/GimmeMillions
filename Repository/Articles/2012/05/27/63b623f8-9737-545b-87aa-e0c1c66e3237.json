@@ -1,0 +1,58 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Winning numbers for New York, New Jersey and Connecticut for May 26, 2012.",
+  "WebUrl": "https://www.nytimes.com/2012/05/27/nyregion/lottery-numbers-for-new-york-new-jersey-and-connecticut.html",
+  "Snippet": "Winning numbers for New York, New Jersey and Connecticut for May 26, 2012.",
+  "LeadParagraph": "May 26, 2012",
+  "PrintSection": "A",
+  "PrintPage": "18",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T02:54:26+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Metro",
+  "SectionName": "New York",
+  "TypeOfMaterial": "List",
+  "Uri": "nyt://article/63b623f8-9737-545b-87aa-e0c1c66e3237",
+  "WordCount": 167,
+  "Headline": {
+    "Main": "Lottery Numbers",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Lottery Numbers",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Lotteries",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Connecticut",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "New Jersey",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "New York State",
+      "Rank": 4,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": null,
+    "Organization": null,
+    "Person": []
+  }
+}

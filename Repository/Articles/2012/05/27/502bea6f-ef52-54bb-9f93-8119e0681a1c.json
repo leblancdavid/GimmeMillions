@@ -1,0 +1,175 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Aided by Rajon Rondo’s late-game scoring, Boston defeated Philadelphia and will finally have another chance at LeBron James and the Miami Heat in the Eastern Conference finals.",
+  "WebUrl": "https://www.nytimes.com/2012/05/27/sports/basketball/celtics-gain-rematch-against-james-and-heat.html",
+  "Snippet": "Aided by Rajon Rondo’s late-game scoring, Boston defeated Philadelphia and will finally have another chance at LeBron James and the Miami Heat in the Eastern Conference finals.",
+  "LeadParagraph": "BOSTON — The chant started in the final minute. Boston Celtics fans could sense the moment, and they know what awaits them this week. “Beat the Heat!” came from one pocket of the crowd before spreading throughout the arena. A sign on the video screen read, “Bring on LeBron.” The message was clear. Boston is ready for Goliath.",
+  "PrintSection": "SP",
+  "PrintPage": "7",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T03:24:07+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Sports",
+  "SectionName": "Sports",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/502bea6f-ef52-54bb-9f93-8119e0681a1c",
+  "WordCount": 776,
+  "Headline": {
+    "Main": "Celtics Gain Rematch Against James and Heat",
+    "Kicker": "Game 7: Celtics 85, Sixers 75",
+    "ContentKicker": null,
+    "PrintHeadline": "Celtics Gain Rematch Against James and Heat",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Basketball",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Philadelphia 76ers",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Boston Celtics",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Miami Heat",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Rondo, Rajon",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "James, LeBron",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Playoff Games",
+      "Rank": 7,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "blog480",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/sports/basketball/27celtics-rondoimage-1/27celtics-rondoimage-1-blog480.jpg",
+      "Height": 349,
+      "Width": 480,
+      "CropName": "blog480"
+    },
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/sports/basketball/27celtics-rondoimage-1/27celtics-rondoimage-1-jumbo.jpg",
+      "Height": 745,
+      "Width": 1024,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/sports/basketball/27celtics-rondoimage-1/27celtics-rondoimage-1-popup.jpg",
+      "Height": 473,
+      "Width": 650,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/sports/basketball/27celtics-rondoimage-1/27celtics-rondoimage-1-superJumbo.jpg",
+      "Height": 1490,
+      "Width": 2048,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/sports/basketball/27celtics-rondoimage-1/27celtics-rondoimage-1-articleInline.jpg",
+      "Height": 138,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "sfSpan",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/sports/basketball/27celtics-rondoimage-1/27celtics-rondoimage-1-sfSpan.jpg",
+      "Height": 287,
+      "Width": 395,
+      "CropName": "sfSpan"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/sports/basketball/27celtics-rondoimage-1/27celtics-rondoimage-1-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/sports/basketball/27celtics-rondoimage-1/27celtics-rondoimage-1-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": "By Zach Berman",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Zach",
+        "MiddleName": null,
+        "LastName": "Berman",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

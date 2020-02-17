@@ -1,0 +1,140 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "The couple met during student orientation at the University of Pennsylvania.",
+  "WebUrl": "https://www.nytimes.com/2012/05/27/fashion/weddings/jennifer-lane-kennedy-gachiri-weddings.html",
+  "Snippet": "The couple met during student orientation at the University of Pennsylvania.",
+  "LeadParagraph": "Jennifer Alyse Lane and Kennedy Kiminda Gachiri were married Saturday in Huntsville, Ala. The Rev. James Lane, a Southern Baptist minister and the paternal grandfather of the bride, performed the ceremony at his church, Taylor’s Chapel Primitive Baptist Church. In December, the bridegroom’s family is to host a celebration of the wedding in Nairobi, Kenya.",
+  "PrintSection": "ST",
+  "PrintPage": "15",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T04:47:20+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Society",
+  "SectionName": "Fashion & Style",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/337dece6-d65c-5137-ad0e-96c17035d662",
+  "WordCount": 237,
+  "Headline": {
+    "Main": "Jennifer Lane and Kennedy Gachiri",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Jennifer Lane, Kennedy Gachiri",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Weddings and Engagements",
+      "Rank": 1,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "blog480",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27LANEjpg/27LANEjpg-blog480.jpg",
+      "Height": 286,
+      "Width": 480,
+      "CropName": "blog480"
+    },
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27LANEjpg/27LANEjpg-jumbo.jpg",
+      "Height": 611,
+      "Width": 1024,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27LANEjpg/27LANEjpg-popup.jpg",
+      "Height": 388,
+      "Width": 650,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27LANEjpg/27LANEjpg-superJumbo.jpg",
+      "Height": 1221,
+      "Width": 2048,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "square320",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27LANEjpg/27LANEjpg-square320.jpg",
+      "Height": 320,
+      "Width": 320,
+      "CropName": "square320"
+    },
+    {
+      "Rank": 0,
+      "SubType": "square640",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27LANEjpg/27LANEjpg-square640.jpg",
+      "Height": 640,
+      "Width": 640,
+      "CropName": "square640"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27LANEjpg/27LANEjpg-articleInline.jpg",
+      "Height": 126,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27LANEjpg/27LANEjpg-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/fashion/weddings/27LANEjpg/27LANEjpg-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": null,
+    "Organization": null,
+    "Person": []
+  }
+}

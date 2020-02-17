@@ -1,0 +1,174 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "Mr. Gordon also came up with jokes for the Smothers Brothers, Flip Wilson and Carol Channing.",
+  "WebUrl": "https://www.nytimes.com/2012/05/27/arts/television/al-gordon-skit-writer-for-jack-benny-and-carol-burnett-dies-at-89.html",
+  "Snippet": "Mr. Gordon also came up with jokes for the Smothers Brothers, Flip Wilson and Carol Channing.",
+  "LeadParagraph": "Al Gordon, an Emmy Award-winning comedy writer whose fast-paced material helped Jack Benny make the transition from radio to television in the 1950s and was later a staple of the Smothers Brothers, Flip Wilson and Carol Burnett comedy shows in the 1960s and ’70s, died on Wednesday in Los Angeles. He was 89. His death was confirmed by a spokesman for Cedars-Sinai Medical Center.",
+  "PrintSection": "A",
+  "PrintPage": "22",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T03:07:38+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Culture",
+  "SectionName": "Arts",
+  "TypeOfMaterial": "Obituary (Obit)",
+  "Uri": "nyt://article/2910b480-a755-5bd8-bacf-6ee4526c83d7",
+  "WordCount": 750,
+  "Headline": {
+    "Main": "Al Gordon, Skit Writer for Benny and Burnett, Dies at 89",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Al Gordon, 89, Skit Writer For Benny and Burnett",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Writing and Writers",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Benny, Jack",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Comedy and Humor",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Deaths (Obituaries)",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Gordon, Al (1923-2012)",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "xlarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/arts/dog-GORDON-obit/dog-GORDON-obit-articleLarge.jpg",
+      "Height": 350,
+      "Width": 600,
+      "CropName": "articleLarge"
+    },
+    {
+      "Rank": 0,
+      "SubType": "blog480",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/arts/dog-GORDON-obit/dog-GORDON-obit-blog480.jpg",
+      "Height": 346,
+      "Width": 480,
+      "CropName": "blog480"
+    },
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/arts/dog-GORDON-obit/dog-GORDON-obit-jumbo.jpg",
+      "Height": 737,
+      "Width": 1024,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/arts/dog-GORDON-obit/dog-GORDON-obit-popup.jpg",
+      "Height": 468,
+      "Width": 650,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/arts/dog-GORDON-obit/dog-GORDON-obit-superJumbo.jpg",
+      "Height": 1474,
+      "Width": 2048,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/arts/dog-GORDON-obit/dog-GORDON-obit-articleInline.jpg",
+      "Height": 137,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "sfSpan",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/arts/dog-GORDON-obit/dog-GORDON-obit-sfSpan.jpg",
+      "Height": 284,
+      "Width": 395,
+      "CropName": "sfSpan"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/arts/dog-GORDON-obit/dog-GORDON-obit-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/27/arts/dog-GORDON-obit/dog-GORDON-obit-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": "By Paul Vitello",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Paul",
+        "MiddleName": null,
+        "LastName": "Vitello",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

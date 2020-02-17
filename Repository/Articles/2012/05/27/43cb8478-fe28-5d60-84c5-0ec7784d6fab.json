@@ -1,0 +1,216 @@
+{
+  "Date": "2012-05-27T00:00:00",
+  "Abstract": "The Los Angeles Philharmonic’s three-year Mozart/Da Ponte trilogy begins with Gustavo Dudamel conducting “Don Giovanni” in a presentation featuring stage design by Frank Gehry and costumes by the Rodarte designers Kate and Laura Mulleavy.",
+  "WebUrl": "https://www.nytimes.com/2012/05/28/arts/music/don-giovanni-los-angeles-philharmonic-and-gustavo-dudamel.html",
+  "Snippet": "The Los Angeles Philharmonic’s three-year Mozart/Da Ponte trilogy begins with Gustavo Dudamel conducting “Don Giovanni” in a presentation featuring stage design by Frank Gehry and costumes by the Rodarte designers Kate and Laura Mulleavy.",
+  "LeadParagraph": "LOS ANGELES — Maybe it’s because the movies provide this city with more than enough Wagnerian Gesamtkunstwerk. Whatever the reason, even though Puccini’s “Bohème” had its American premiere here in 1897, Los Angeles has never really been an opera town.",
+  "PrintSection": "C",
+  "PrintPage": "1",
+  "Source": "The New York Times",
+  "PubDate": "2012-05-27T22:36:41+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Culture",
+  "SectionName": "Arts",
+  "TypeOfMaterial": "Review",
+  "Uri": "nyt://article/43cb8478-fe28-5d60-84c5-0ec7784d6fab",
+  "WordCount": 878,
+  "Headline": {
+    "Main": "Mozart’s ‘Don,’ in a Lunar Landscape, Haunts Gehry’s Hall in Los Angeles",
+    "Kicker": "Music Review",
+    "ContentKicker": null,
+    "PrintHeadline": "Mozart’s ‘Don’ Haunts Gehry’s Hall",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Opera",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Mozart, Wolfgang Amadeus",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Rodarte",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Gehry, Frank",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "creative_works",
+      "Value": "Don Giovanni (Opera)",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Los Angeles Philharmonic",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Mulleavy, Kate",
+      "Rank": 7,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Classical Music",
+      "Rank": 8,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Los Angeles (Calif)",
+      "Rank": 9,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Music",
+      "Rank": 10,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Mulleavy, Laura",
+      "Rank": 11,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Dudamel, Gustavo",
+      "Rank": 12,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [
+    {
+      "Rank": 0,
+      "SubType": "xlarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/jpdon1/jpdon1-articleLarge.jpg",
+      "Height": 416,
+      "Width": 600,
+      "CropName": "articleLarge"
+    },
+    {
+      "Rank": 0,
+      "SubType": "blog480",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/jpdon1/jpdon1-blog480.jpg",
+      "Height": 342,
+      "Width": 480,
+      "CropName": "blog480"
+    },
+    {
+      "Rank": 0,
+      "SubType": "jumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/jpdon1/jpdon1-jumbo.jpg",
+      "Height": 729,
+      "Width": 1024,
+      "CropName": "jumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "popup",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/jpdon1/jpdon1-popup.jpg",
+      "Height": 463,
+      "Width": 650,
+      "CropName": "popup"
+    },
+    {
+      "Rank": 0,
+      "SubType": "superJumbo",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/jpdon1/jpdon1-superJumbo.jpg",
+      "Height": 1458,
+      "Width": 2048,
+      "CropName": "superJumbo"
+    },
+    {
+      "Rank": 0,
+      "SubType": "articleInline",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/jpdon1/jpdon1-articleInline.jpg",
+      "Height": 135,
+      "Width": 190,
+      "CropName": "articleInline"
+    },
+    {
+      "Rank": 0,
+      "SubType": "sfSpan",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/jpdon1/jpdon1-sfSpan.jpg",
+      "Height": 281,
+      "Width": 395,
+      "CropName": "sfSpan"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbnail",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/jpdon1/jpdon1-thumbStandard.jpg",
+      "Height": 75,
+      "Width": 75,
+      "CropName": "thumbStandard"
+    },
+    {
+      "Rank": 0,
+      "SubType": "thumbLarge",
+      "Caption": null,
+      "Credit": null,
+      "Type": "image",
+      "Url": "images/2012/05/28/arts/jpdon1/jpdon1-thumbLarge.jpg",
+      "Height": 150,
+      "Width": 150,
+      "CropName": "thumbLarge"
+    }
+  ],
+  "Byline": {
+    "Original": "By Zachary Woolfe",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Zachary",
+        "MiddleName": null,
+        "LastName": "Woolfe",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}
