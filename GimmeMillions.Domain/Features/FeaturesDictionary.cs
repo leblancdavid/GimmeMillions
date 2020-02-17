@@ -32,31 +32,30 @@ namespace GimmeMillions.Domain.Features
             _featureSet = new Dictionary<string, int>();
         }
 
-        public void AddArticle(Article article)
+        public void AddArticle(Article article, ITextProcessor textProcessor)
         {
-            ProcessFeatureString(article.Abstract);
-            ProcessFeatureString(article.Snippet);
-            ProcessFeatureString(article.LeadParagraph);
+            ProcessFeatureString(article.Abstract, textProcessor);
+            ProcessFeatureString(article.Snippet, textProcessor);
+            ProcessFeatureString(article.LeadParagraph, textProcessor);
         }
 
-        private void ProcessFeatureString(string feature)
+        private void ProcessFeatureString(string text, ITextProcessor textProcessor)
         {
-            var onlyLetters = Regex.Replace(feature.ToLower(), @"[^a-z]+", " ");
-            var words = onlyLetters.Split(' ');
-            foreach(var word in words)
+            var features = textProcessor.Process(text);
+            foreach(var f in features)
             {
-                if(string.IsNullOrEmpty(word))
+                if(string.IsNullOrEmpty(f))
                 {
                     continue;
                 }
 
-                if(_featureSet.ContainsKey(word))
+                if(_featureSet.ContainsKey(f))
                 {
-                    _featureSet[word]++;
+                    _featureSet[f]++;
                 }
                 else
                 {
-                    _featureSet[word] = 1;
+                    _featureSet[f] = 1;
                 }
             }
         }
