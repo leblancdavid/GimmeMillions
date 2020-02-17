@@ -65,16 +65,13 @@ namespace GimmeMillions.DataAccess.Tests.Keys
             repo.AddOrUpdateKey(new AccessKey("bTrt0eq0003wPQzT2BCY84TfwHpaeKsZ", "WbxkQmVw7U3MRoSE", "active"));
             repo.AddOrUpdateKey(new AccessKey("LSSxGWAqUxk3RhuveWKbwJB3MayeTeZZ", "pfGzdgZT3iBpaG0O", "active"));
             repo.AddOrUpdateKey(new AccessKey("00pbpyjW1D2vgAADQD2vNryQquMqLJGT", "eEA5Xj6iOgPXWhV8", "active"));
-            repo.AddOrUpdateKey(new AccessKey("00pbpyjW1D2vgAADQD2vNryQquMqLJGT", "eEA5Xj6iOgPXWhV8", "active"));
-            repo.AddOrUpdateKey(new AccessKey("00pbpyjW1D2vgAADQD2vNryQquMqLJGT", "eEA5Xj6iOgPXWhV8", "active"));
-            repo.AddOrUpdateKey(new AccessKey("00pbpyjW1D2vgAADQD2vNryQquMqLJGT", "eEA5Xj6iOgPXWhV8", "active"));
-            repo.AddOrUpdateKey(new AccessKey("00pbpyjW1D2vgAADQD2vNryQquMqLJGT", "eEA5Xj6iOgPXWhV8", "active"));
-            repo.AddOrUpdateKey(new AccessKey("00pbpyjW1D2vgAADQD2vNryQquMqLJGT", "eEA5Xj6iOgPXWhV8", "active"));
-            repo.AddOrUpdateKey(new AccessKey("00pbpyjW1D2vgAADQD2vNryQquMqLJGT", "eEA5Xj6iOgPXWhV8", "active"));
-            repo.AddOrUpdateKey(new AccessKey("00pbpyjW1D2vgAADQD2vNryQquMqLJGT", "eEA5Xj6iOgPXWhV8", "active"));
-            repo.AddOrUpdateKey(new AccessKey("00pbpyjW1D2vgAADQD2vNryQquMqLJGT", "eEA5Xj6iOgPXWhV8", "active"));
-            repo.AddOrUpdateKey(new AccessKey("00pbpyjW1D2vgAADQD2vNryQquMqLJGT", "eEA5Xj6iOgPXWhV8", "active"));
-            repo.AddOrUpdateKey(new AccessKey("00pbpyjW1D2vgAADQD2vNryQquMqLJGT", "eEA5Xj6iOgPXWhV8", "active"));
+            repo.AddOrUpdateKey(new AccessKey("oFD6mfXFojMZ7BfvltWRwR1dEKgKojO0", "6yo1i8r1L9POdoKv", "active"));
+            repo.AddOrUpdateKey(new AccessKey("vmWtcQEZ20cJaXTt0H7TfHru0OjMteuF", "BqhwDZuAOa0D80bC", "active"));
+            repo.AddOrUpdateKey(new AccessKey("sy4B374NQz6WtzUCROzVy5yZcvSB2je8", "wCAz0hgfR5vq29p5", "active"));
+            repo.AddOrUpdateKey(new AccessKey("F30p3StLbSBL10z2kF0Yh6p0YhLKCeuG", "6Cgpg3BwzVSxw5Of", "active"));
+            repo.AddOrUpdateKey(new AccessKey("Jtjf4em7w1gC4VJaJN0vQKSXsVQ9RTsY", "zOyLPWSgU1mOEtS4", "active"));
+            repo.AddOrUpdateKey(new AccessKey("igitoweoBroXNMy05bwxeYfe1Avqo9V9", "AtfSJeWx69XRgn2m", "active"));
+            repo.AddOrUpdateKey(new AccessKey("xUyBscLb0FeCQDQ0BfpFmHHWCCzMjfi4", "dMVE100ujlHbHgoP", "active"));
         }
 
         [Fact]
