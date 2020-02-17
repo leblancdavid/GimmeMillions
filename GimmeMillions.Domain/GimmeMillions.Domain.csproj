@@ -53,6 +53,7 @@
     <Compile Include="Articles\Keyword.cs" />
     <Compile Include="Articles\Multimedia.cs" />
     <Compile Include="Articles\Person.cs" />
+    <Compile Include="Features\FeaturesDictionary.cs" />
     <Compile Include="Keys\AccessKey.cs" />
     <Compile Include="Keys\IAccessKeyRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,5 +63,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
