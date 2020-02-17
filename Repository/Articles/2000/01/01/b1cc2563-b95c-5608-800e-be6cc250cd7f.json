@@ -1,0 +1,74 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Bernard Holland says Einstein on the Beach, with music by Philip Glass and stage pictures by Robert Wilson, is unlikely to survive its time; photo (S)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/visions-great-hits-headed-for-the-attic-000620.html",
+  "Snippet": "Bernard Holland says Einstein on the Beach, with music by Philip Glass and stage pictures by Robert Wilson, is unlikely to survive its time; photo (S)",
+  "LeadParagraph": "The challenge put to The Times's critics was direct: Name a 20th-century work considered ''timeless'' today that you think will be all but forgotten in 100 years. Their selections:",
+  "PrintSection": "E",
+  "PrintPage": "4",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/b1cc2563-b95c-5608-800e-be6cc250cd7f",
+  "WordCount": 176,
+  "Headline": {
+    "Main": "Great Hits Headed for The Attic",
+    "Kicker": "VISIONS",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS; Great Hits Headed for The Attic",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "persons",
+      "Value": "Glass, Philip",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Wilson, Robert",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Forecasts",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Opera",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "creative_works",
+      "Value": "Einstein on the Beach (Opera)",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Bernard Holland",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Bernard",
+        "MiddleName": null,
+        "LastName": "Holland",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

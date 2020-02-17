@@ -1,0 +1,74 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Ray Lucas, former backup quarterback on New York Jets, will start against Seattle Seahawks, while Glenn Foley, former starting quarterback for Jets, will be backup for Seahawks; photo (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/sports/pro-football-a-quarterback-reverse-lucas-stars-as-foley-sits.html",
+  "Snippet": "Ray Lucas, former backup quarterback on New York Jets, will start against Seattle Seahawks, while Glenn Foley, former starting quarterback for Jets, will be backup for Seahawks; photo (M)",
+  "LeadParagraph": "In a final twist to the regular season, which shows just how unpredictable pro football has become, a former backup quarterback on the Jets will start Sunday against Seattle, while a former starting quarterback for the Jets will be the backup for the Seahawks.",
+  "PrintSection": "D",
+  "PrintPage": "2",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Sports Desk",
+  "SectionName": "Sports",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/14e21e75-e1ca-5210-8e3d-30bfacfbc13a",
+  "WordCount": 868,
+  "Headline": {
+    "Main": "A Quarterback Reverse: Lucas Stars as Foley Sits",
+    "Kicker": "PRO FOOTBALL",
+    "ContentKicker": null,
+    "PrintHeadline": "PRO FOOTBALL; A Quarterback Reverse: Lucas Stars as Foley Sits",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "organizations",
+      "Value": "New York Jets",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Seattle Seahawks",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Foley, Glenn",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Lucas, Ray",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Football",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Gerald Eskenazi",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Gerald",
+        "MiddleName": null,
+        "LastName": "Eskenazi",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

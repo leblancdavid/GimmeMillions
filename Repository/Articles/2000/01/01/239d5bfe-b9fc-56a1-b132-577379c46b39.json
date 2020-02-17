@@ -1,0 +1,56 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Pam Belluck article on prospects for extending life expectancy in the next century; drawing (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/visions-biology-genetic-future-both-tantalizing-disturbing-will-longer-lives-be.html",
+  "Snippet": "Pam Belluck article on prospects for extending life expectancy in the next century; drawing (M)",
+  "LeadParagraph": "IT was an exciting day in the life of a 2-month-old -- or at least it was exciting for her mother.",
+  "PrintSection": "E",
+  "PrintPage": "7",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/239d5bfe-b9fc-56a1-b132-577379c46b39",
+  "WordCount": 1302,
+  "Headline": {
+    "Main": "Will Longer Lives Be Different Lives? And Better Ones?",
+    "Kicker": "VISIONS: BIOLOGY: A GENETIC FUTURE BOTH TANTALIZING AND DISTURBING",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS: BIOLOGY: A GENETIC FUTURE BOTH TANTALIZING AND DISTURBING; Will Longer Lives Be Different Lives? And Better Ones?",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Longevity",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Forecasts",
+      "Rank": 2,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Pam Belluck",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Pam",
+        "MiddleName": null,
+        "LastName": "Belluck",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

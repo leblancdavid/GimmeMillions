@@ -1,0 +1,56 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Anna Kisselgoff article says The Nutcracker, the ballet rather than the Tchaikovsky score, will fall out of favor in next century; photo (S)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/visions-great-hits-headed-for-the-attic-000590.html",
+  "Snippet": "Anna Kisselgoff article says The Nutcracker, the ballet rather than the Tchaikovsky score, will fall out of favor in next century; photo (S)",
+  "LeadParagraph": "The challenge put to The Times's critics was direct: Name a 20th-century work considered ''timeless'' today that you think will be all but forgotten in 100 years. Their selections:",
+  "PrintSection": "E",
+  "PrintPage": "4",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/5ff0d54b-07d3-5d93-ad9b-967b0d1d64b9",
+  "WordCount": 171,
+  "Headline": {
+    "Main": "Great Hits Headed for The Attic",
+    "Kicker": "VISIONS",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS; Great Hits Headed for The Attic",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Forecasts",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Dancing",
+      "Rank": 2,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Anna Kisselgoff",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Anna",
+        "MiddleName": null,
+        "LastName": "Kisselgoff",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

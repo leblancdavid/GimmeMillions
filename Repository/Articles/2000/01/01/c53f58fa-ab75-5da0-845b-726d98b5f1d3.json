@@ -1,0 +1,62 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Prof Sam Shapiro, health care analyst and biostatistician whose studies proved that mammograms save women's lives, dies at age of 85; photo (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/us/sam-shapiro-68-pioneer-in-use-of-mammograms.html",
+  "Snippet": "Prof Sam Shapiro, health care analyst and biostatistician whose studies proved that mammograms save women's lives, dies at age of 85; photo (M)",
+  "LeadParagraph": "Sam Shapiro, a health care analyst and biostatistician whose studies in the 1960's proved that mammograms saved women's lives by catching breast cancers at an early, treatable stage, died on Thursday at his home in Baltimore. He was 85.",
+  "PrintSection": "B",
+  "PrintPage": "7",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "National Desk",
+  "SectionName": "U.S.",
+  "TypeOfMaterial": "Obituary; Biography",
+  "Uri": "nyt://article/c53f58fa-ab75-5da0-845b-726d98b5f1d3",
+  "WordCount": 359,
+  "Headline": {
+    "Main": "Sam Shapiro, 68, Pioneer in Use of Mammograms",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Sam Shapiro, 68, Pioneer in Use of Mammograms",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "persons",
+      "Value": "Shapiro, Sam",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Biographical Information",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Deaths (Obituaries)",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Wolfgang Saxon",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Wolfgang",
+        "MiddleName": null,
+        "LastName": "Saxon",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

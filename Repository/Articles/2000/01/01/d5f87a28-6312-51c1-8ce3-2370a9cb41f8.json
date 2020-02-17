@@ -1,0 +1,92 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Thomas George, in Sports of The Times column, predicts that Mike Ditka of New Orleans Saints, Pete Carroll of New England Patriots and several other NFL coaches who failed to lead their teams into playoffs will be dismissed; photos (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/sports/sports-of-the-times-for-some-end-of-season-is-end-of-line.html",
+  "Snippet": "Thomas George, in Sports of The Times column, predicts that Mike Ditka of New Orleans Saints, Pete Carroll of New England Patriots and several other NFL coaches who failed to lead their teams into playoffs will be dismissed; photos (M)",
+  "LeadParagraph": "THE 2000 National Football League playoff field becomes crystalline late tomorrow afternoon. Then we learn which 12 teams will compete for a chance at Super Bowl XXXIV on Jan. 30 at the Georgia Dome in Atlanta.",
+  "PrintSection": "D",
+  "PrintPage": "1",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Sports Desk",
+  "SectionName": "Sports",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/d5f87a28-6312-51c1-8ce3-2370a9cb41f8",
+  "WordCount": 950,
+  "Headline": {
+    "Main": "Sports of The Times; For Some, End of Season Is End of Line",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Sports of The Times; For Some, End of Season Is End of Line",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "organizations",
+      "Value": "New England Patriots",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "New Orleans Saints",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Carroll, Pete",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Ditka, Mike",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Suspensions, Dismissals and Resignations",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Coaches and Managers",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Football",
+      "Rank": 7,
+      "Major": "N"
+    },
+    {
+      "Name": "creative_works",
+      "Value": "SPORTS OF THE TIMES (TIMES COLUMN)",
+      "Rank": 8,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Thomas George",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Thomas",
+        "MiddleName": null,
+        "LastName": "George",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "American teenagers feel pressure to succeed at dawn of new century; photos (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/visions-identity-a-generation-s-anthem-smells-like-teen-pressure.html",
+  "Snippet": "American teenagers feel pressure to succeed at dawn of new century; photos (M)",
+  "LeadParagraph": "YOUNG, hip and smart, Casey Collier seems to glide from one peak to the next, knocking out A's, winning student council elections and starring in the school play.",
+  "PrintSection": "E",
+  "PrintPage": "22",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/facb5bde-7a37-538a-8bb4-41bd322f59db",
+  "WordCount": 1036,
+  "Headline": {
+    "Main": "A Generation's Anthem: 'Smells Like Teen Pressure'",
+    "Kicker": "VISIONS: IDENTITY",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS: IDENTITY; A Generation's Anthem: 'Smells Like Teen Pressure'",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Children and Youth",
+      "Rank": 1,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Dirk Johnson",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Dirk",
+        "MiddleName": null,
+        "LastName": "Johnson",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

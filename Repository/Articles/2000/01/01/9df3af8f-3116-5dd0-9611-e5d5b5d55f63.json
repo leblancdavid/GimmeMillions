@@ -1,0 +1,62 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Michael Kimmelman article says Picasso's Guernica, the most famous painting of 20th century, is due for major downgrading in next century; photo (S)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/visions-great-hits-headed-for-the-attic-000574.html",
+  "Snippet": "Michael Kimmelman article says Picasso's Guernica, the most famous painting of 20th century, is due for major downgrading in next century; photo (S)",
+  "LeadParagraph": "The challenge put to The Times's critics was direct: Name a 20th-century work considered ''timeless'' today that you think will be all but forgotten in 100 years. Their selections:",
+  "PrintSection": "E",
+  "PrintPage": "3",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/9df3af8f-3116-5dd0-9611-e5d5b5d55f63",
+  "WordCount": 204,
+  "Headline": {
+    "Main": "Great Hits Headed for The Attic",
+    "Kicker": "VISIONS",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS; Great Hits Headed for The Attic",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "persons",
+      "Value": "Picasso, Pablo",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Forecasts",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Art",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Michael Kimmelman",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Michael",
+        "MiddleName": null,
+        "LastName": "Kimmelman",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

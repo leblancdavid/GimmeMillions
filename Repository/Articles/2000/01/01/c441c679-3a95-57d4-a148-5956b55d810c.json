@@ -1,0 +1,50 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "William Safire column on the possibility of greatly extending human life in next century (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/opinion/essay-why-die.html",
+  "Snippet": "William Safire column on the possibility of greatly extending human life in next century (M)",
+  "LeadParagraph": "Of all the instincts in animals, the strongest is the will to survive. In the human animal, that inborn defense is sometimes overcome by the maternal instinct, by love of country or comrades in battle, or by an illness like depression. But in most of us, nothing makes the weak strong or the fearful brave as much as our bodies' innate drive to stay alive.",
+  "PrintSection": "A",
+  "PrintPage": "31",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Editorial Desk",
+  "SectionName": "Opinion",
+  "TypeOfMaterial": "Op-Ed",
+  "Uri": "nyt://article/c441c679-3a95-57d4-a148-5956b55d810c",
+  "WordCount": 829,
+  "Headline": {
+    "Main": "Essay; Why Die?",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Essay; Why Die?",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Longevity",
+      "Rank": 1,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By William Safire",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "William",
+        "MiddleName": null,
+        "LastName": "Safire",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

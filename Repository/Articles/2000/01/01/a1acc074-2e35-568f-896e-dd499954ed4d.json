@@ -1,0 +1,68 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Steven Lee Myers article on transformation of warfare by technology in the 21st century; says trends already well set raise question of whether the military may one day be able to dispense with combat troops entirely; photo (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/technology/visions-power-on-empty-battlefields-the-shadows-of-cyberwarriors.html",
+  "Snippet": "Steven Lee Myers article on transformation of warfare by technology in the 21st century; says trends already well set raise question of whether the military may one day be able to dispense with combat troops entirely; photo (M)",
+  "LeadParagraph": "AS commandant of the Army War College, Maj. Gen. Robert H. Scales Jr. regularly leads students, politicians, foreign officers and other visitors on tours through the landmarks of the battlefield here: Devil's Den, Little Round Top, Cemetery Ridge. Though the Battle of Gettysburg was fought 136 years ago, General Scales thinks it still offers lessons on the art of war. At the same time, it is getting harder and harder to see them.",
+  "PrintSection": "E",
+  "PrintPage": "2",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Technology",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/a1acc074-2e35-568f-896e-dd499954ed4d",
+  "WordCount": 827,
+  "Headline": {
+    "Main": "On Empty Battlefields, the Shadows of Cyberwarriors",
+    "Kicker": "VISIONS: POWER",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS: POWER; On Empty Battlefields, the Shadows of Cyberwarriors",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "War and Revolution",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "ARMAMENT, DEFENSE AND MILITARY FORCES",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Science and Technology",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Computers and the Internet",
+      "Rank": 4,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Steven Lee Myers",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Steven",
+        "MiddleName": "Lee",
+        "LastName": "Myers",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Ray Hubbard, television producer and broadcasting executive, dies at age of 75 (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/nyregion/ray-hubbard-75-executive-and-pioneer-in-broadcasting.html",
+  "Snippet": "Ray Hubbard, television producer and broadcasting executive, dies at age of 75 (M)",
+  "LeadParagraph": "Ray Hubbard, a television producer and broadcasting executive and a pioneer in the medium, died on Monday in Kenwood, Calif. He was 75 and had been suffering from Parkinson's disease.",
+  "PrintSection": "B",
+  "PrintPage": "7",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Metropolitan Desk",
+  "SectionName": "New York",
+  "TypeOfMaterial": "Obituary; Biography",
+  "Uri": "nyt://article/de616631-ac4e-528f-92c0-464dcb1102c2",
+  "WordCount": 327,
+  "Headline": {
+    "Main": "Ray Hubbard, 75, Executive And Pioneer in Broadcasting",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Ray Hubbard, 75, Executive And Pioneer in Broadcasting",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "persons",
+      "Value": "Hubbard, Ray",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Biographical Information",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Deaths (Obituaries)",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": null,
+    "Organization": null,
+    "Person": []
+  }
+}

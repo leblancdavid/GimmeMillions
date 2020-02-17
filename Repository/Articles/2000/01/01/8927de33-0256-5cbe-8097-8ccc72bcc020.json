@@ -1,0 +1,56 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Malcolm W Browne article says simplest explanation for man's failure to detect extraterrestrial life is that there is nothing out there to find; photo (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/visions-come-out-come-out-wherever-you-are-left-the-light-on-but-nobody-came.html",
+  "Snippet": "Malcolm W Browne article says simplest explanation for man's failure to detect extraterrestrial life is that there is nothing out there to find; photo (M)",
+  "LeadParagraph": "IN 1939, the physicist Enrico Fermi posed his famous paradox: If life is common in our galaxy, why have we never seen extraterrestrial visitors on Earth?",
+  "PrintSection": "E",
+  "PrintPage": "3",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/8927de33-0256-5cbe-8097-8ccc72bcc020",
+  "WordCount": 531,
+  "Headline": {
+    "Main": "Left the Light on, But Nobody Came",
+    "Kicker": "VISIONS: COME OUT, COME OUT, WHEREVER YOU ARE",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS: COME OUT, COME OUT, WHEREVER YOU ARE; Left the Light on, But Nobody Came",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Life, Extraterrestrial",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Space",
+      "Rank": 2,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Malcolm W. Browne",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Malcolm",
+        "MiddleName": "W.",
+        "LastName": "Browne",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

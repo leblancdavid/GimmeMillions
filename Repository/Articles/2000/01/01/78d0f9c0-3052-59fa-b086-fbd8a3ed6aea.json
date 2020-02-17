@@ -1,0 +1,62 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Jennifer Dunning reviews Eliot Feld Ballet's performance of Aurora I and The Gods Amused; photo (S)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/arts/dance-review-two-idealized-worlds-with-contrasting-moods.html",
+  "Snippet": "Jennifer Dunning reviews Eliot Feld Ballet's performance of Aurora I and The Gods Amused; photo (S)",
+  "LeadParagraph": "The glorious athletes of Eliot Feld's ''Aurora I'' might seem to inhabit a different universe from the sacred and profane gods of Mr. Feld's ''Gods Amused.'' But the two dissimilar sets of characters share an airy, idealized world, or so it seemed when the pieces were performed on the same program, presented by Ballet Tech on Wednesday night at the Joyce Theater.",
+  "PrintSection": "F",
+  "PrintPage": "10",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Arts/Cultural Desk",
+  "SectionName": "Arts",
+  "TypeOfMaterial": "Review",
+  "Uri": "nyt://article/78d0f9c0-3052-59fa-b086-fbd8a3ed6aea",
+  "WordCount": 330,
+  "Headline": {
+    "Main": "Two Idealized Worlds With Contrasting Moods",
+    "Kicker": "DANCE REVIEW",
+    "ContentKicker": null,
+    "PrintHeadline": "DANCE REVIEW; Two Idealized Worlds With Contrasting Moods",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "organizations",
+      "Value": "FELD, ELIOT, BALLET",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Reviews",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Dancing",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Jennifer Dunning",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Jennifer",
+        "MiddleName": null,
+        "LastName": "Dunning",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

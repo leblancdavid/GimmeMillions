@@ -1,0 +1,74 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Many Moscovites are happy or seem not to care that Pres Boris N Yeltsin is resigning after eight years of topsy-turvy economics and countless maneuvers that made little difference to their daily lives; are not prepared to commit themselves to Vladimir V Putin, his handpicked successor; photo (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/world/yeltsin-resigns-in-moscow-yeltsin-leaves-russians-glad-or-uninterested.html",
+  "Snippet": "Many Moscovites are happy or seem not to care that Pres Boris N Yeltsin is resigning after eight years of topsy-turvy economics and countless maneuvers that made little difference to their daily lives; are not prepared to commit themselves to Vlad...",
+  "LeadParagraph": "If Boris N. Yeltsin really meant it about being forgiven for his mistakes when he made the stunning announcement of his resignation today, as far as many people on the streets of Moscow were concerned, he needn't have bothered.",
+  "PrintSection": "A",
+  "PrintPage": "18",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Foreign Desk",
+  "SectionName": "World",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/86de2c6e-4642-5783-a9b8-9172699e1b30",
+  "WordCount": 973,
+  "Headline": {
+    "Main": "Yeltsin Leaves Russians Glad or Uninterested",
+    "Kicker": "YELTSIN RESIGNS: IN MOSCOW",
+    "ContentKicker": null,
+    "PrintHeadline": "YELTSIN RESIGNS: IN MOSCOW; Yeltsin Leaves Russians Glad or Uninterested",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "Russia",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Yeltsin, Boris N",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Putin, Vladimir V",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Suspensions, Dismissals and Resignations",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Politics and Government",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Alison Smale",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Alison",
+        "MiddleName": null,
+        "LastName": "Smale",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

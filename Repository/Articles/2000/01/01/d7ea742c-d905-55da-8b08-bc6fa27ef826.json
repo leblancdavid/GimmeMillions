@@ -1,0 +1,46 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Editorial on the legacy that people alive at beginning of the new millennium should leave to succeeding generations",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/opinion/2000-and-beyond-the-shape-of-an-age-to-come.html",
+  "Snippet": "Editorial on the legacy that people alive at beginning of the new millennium should leave to succeeding generations",
+  "LeadParagraph": "So now at last begins the year 2000, a juncture in time so long anticipated it is hard to believe it has arrived, disguised as a mere Saturday. The year is so utterly new, all four digits overturned at once, that simply seeing the date in print jars the eye.",
+  "PrintSection": "A",
+  "PrintPage": "30",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Editorial Desk",
+  "SectionName": "Opinion",
+  "TypeOfMaterial": "Editorial",
+  "Uri": "nyt://article/d7ea742c-d905-55da-8b08-bc6fa27ef826",
+  "WordCount": 1708,
+  "Headline": {
+    "Main": "2000 and Beyond -- The Shape of an Age to Come",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "2000 and Beyond -- The Shape of an Age to Come",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Editorials",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "TWO THOUSAND (YEAR)",
+      "Rank": 2,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": null,
+    "Organization": null,
+    "Person": []
+  }
+}

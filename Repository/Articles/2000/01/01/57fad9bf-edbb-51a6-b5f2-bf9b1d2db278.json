@@ -1,0 +1,52 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Sol Gittleman letter, commenting on Dec 22 editorial, says 21st century could well be the German century; drawing",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/opinion/l-on-this-first-day-a-fanfare-for-the-new-era-a-german-century-165689.html",
+  "Snippet": "Sol Gittleman letter, commenting on Dec 22 editorial, says 21st century could well be the German century; drawing",
+  "LeadParagraph": "To the Editor:",
+  "PrintSection": "A",
+  "PrintPage": "30",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Editorial Desk",
+  "SectionName": "Opinion",
+  "TypeOfMaterial": "Letter",
+  "Uri": "nyt://article/57fad9bf-edbb-51a6-b5f2-bf9b1d2db278",
+  "WordCount": 147,
+  "Headline": {
+    "Main": "On This First Day, a Fanfare for the New Era; A German Century?",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "On This First Day, a Fanfare for the New Era; A German Century?",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "Germany",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Gittleman, Sol",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Forecasts",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": null,
+    "Organization": null,
+    "Person": []
+  }
+}

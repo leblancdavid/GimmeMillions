@@ -1,0 +1,62 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Ann Powers Critic's Notebook recap of 1999 music scene, featuring fluff, smut and letting off steam on ethnic, gender and other issues of new generation; photos (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/arts/critic-s-notebook-a-year-of-fluff-smut-and-letting-go.html",
+  "Snippet": "Ann Powers Critic's Notebook recap of 1999 music scene, featuring fluff, smut and letting off steam on ethnic, gender and other issues of new generation; photos (M)",
+  "LeadParagraph": "Ask any critic to comment upon this final year of the Century of American Music, and you're likely to hear a heavy sigh. The year 1999 gave us fluff and smut, the inflatable sweethearts of the teenage market and the foul-mouthed bullies of hip-hop and rock. Releases from aspiring legends like Nine Inch Nails, R. Kelly and Mary J. Blige failed to make the anticipated cultural impact, while previously dismissed artists like Limp Bizkit and Kid Rock rose to rule the Zeitgeist. People actually looked to Cher, rising again with her smash ''Believe,'' as a beacon of artistic integrity.",
+  "PrintSection": "F",
+  "PrintPage": "1",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Arts/Cultural Desk",
+  "SectionName": "Arts",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/45db27f5-ade1-59c5-94ca-6a29371a175d",
+  "WordCount": 916,
+  "Headline": {
+    "Main": "A Year Of Fluff, Smut and Letting Go",
+    "Kicker": "CRITIC'S NOTEBOOK",
+    "ContentKicker": null,
+    "PrintHeadline": "CRITIC'S NOTEBOOK; A Year Of Fluff, Smut and Letting Go",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Music",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "NINETEEN HUNDRED NINETY-NINE",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Reviews",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Ann Powers",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Ann",
+        "MiddleName": null,
+        "LastName": "Powers",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

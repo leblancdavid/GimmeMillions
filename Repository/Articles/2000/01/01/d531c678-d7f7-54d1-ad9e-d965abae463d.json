@@ -1,0 +1,74 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Police say Keith Lucas, carjacking suspect, was shot three times in exchange of gunfire with team of plainclothes police officers who stopped car theft on Bronx street; say Lucas shot at occupant of car, then at police; Lucas undergoes surgery and is listed in stable condition; he is charged with robbery, attempted murder, criminal possession of weapon and other charges; none of officers or occupants of car are injured (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/nyregion/suspect-is-shot-as-bronx-police-and-carjackers-exchange-fire.html",
+  "Snippet": "Police say Keith Lucas, carjacking suspect, was shot three times in exchange of gunfire with team of plainclothes police officers who stopped car theft on Bronx street; say Lucas shot at occupant of car, then at police; Lucas undergoes surgery and...",
+  "LeadParagraph": "A carjacking suspect was shot three times early yesterday in an exchange of gunfire with a team of plainclothes police officers who stopped the car theft on a Bronx street, the police said.",
+  "PrintSection": "B",
+  "PrintPage": "3",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Metropolitan Desk",
+  "SectionName": "New York",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/d531c678-d7f7-54d1-ad9e-d965abae463d",
+  "WordCount": 280,
+  "Headline": {
+    "Main": "Suspect Is Shot As Bronx Police And Carjackers Exchange Fire",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Suspect Is Shot As Bronx Police And Carjackers Exchange Fire",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "New York City",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Lucas, Keith",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Robberies and Thefts",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Attacks on Police",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Automobiles",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By C. J. Chivers",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "C.",
+        "MiddleName": "J.",
+        "LastName": "Chivers",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "What will the weather be like in 2100?     Don't laugh. While forecasting the next century in any field is a dicey exercise, climate experts have more tools than most prognosticators.  ",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/visions-biology-turning-up-the-heat-two-forecasts-for-earth-2100.html",
+  "Snippet": "",
+  "LeadParagraph": "What will the weather be like in 2100?",
+  "PrintSection": "E",
+  "PrintPage": "10",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/62c56bc4-fb5f-5389-aa77-f02424cb2542",
+  "WordCount": 332,
+  "Headline": {
+    "Main": "Visions: Biology; Turning Up the Heat: Two Forecasts for Earth 2100",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Visions: Biology; Turning Up the Heat: Two Forecasts for Earth 2100",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By William K. Stevens",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "William",
+        "MiddleName": "K.",
+        "LastName": "Stevens",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

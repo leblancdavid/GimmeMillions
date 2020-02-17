@@ -1,0 +1,33 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "In percent              Previous   Year       Yesterday   Day   Ago               Prime rate   8.50   8.50   8.50       Discount rate   5.00   5.00   5.00       Federal funds   5.75   4.88   4.07       3-month T-bills   5.16   5.02   4.45       6-month T-bills   5.48   5.41   4.53       10-yr. T-infl.   4.32   4.32   3.88       10-yr. T-note   6.43   6.36   4.65       30-yr. T-bond   6.48   6.42   5.09       Telephone bd.   8.30   8.30   6.75       Municipal bds.   6.22   6.22   5.16          (Sources: Salomon Smith Barney; Telerate; The Bond Buyer)  ",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/business/the-markets-key-rates.html",
+  "Snippet": "",
+  "LeadParagraph": "In percent",
+  "PrintSection": "C",
+  "PrintPage": "6",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Business/Financial Desk",
+  "SectionName": "Business Day",
+  "TypeOfMaterial": "Statistics",
+  "Uri": "nyt://article/dacb82d5-0bfb-5850-9d82-3932272645b8",
+  "WordCount": 118,
+  "Headline": {
+    "Main": "Key Rates",
+    "Kicker": "THE MARKETS",
+    "ContentKicker": null,
+    "PrintHeadline": "THE MARKETS; Key Rates",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [],
+  "Multimedia": [],
+  "Byline": {
+    "Original": null,
+    "Organization": null,
+    "Person": []
+  }
+}

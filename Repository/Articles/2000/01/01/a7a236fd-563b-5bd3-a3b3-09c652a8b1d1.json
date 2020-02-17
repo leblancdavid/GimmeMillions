@@ -1,0 +1,62 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Sheryl Gay Stolberg article on how life may be changed for good or ill through biotechnology in the century ahead; drawing (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/visions-biology-genetic-future-both-tantalizing-disturbing-small-leap-designer.html",
+  "Snippet": "Sheryl Gay Stolberg article on how life may be changed for good or ill through biotechnology in the century ahead; drawing (M)",
+  "LeadParagraph": "UNLIKE the sheep named Dolly, the mouse named Lucy has barely made a ripple in the news. Lucy, born on Oct. 26, 1998, is the creation of scientists at Chromos Molecular Systems, a biotechnology company in Vancouver, British Columbia. She has black-brown fur and is not unlike mice bred in laboratories around the world, the company says, with one exception: Lucy has an artificial chromosome that she has passed to her offspring.",
+  "PrintSection": "E",
+  "PrintPage": "7",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/a7a236fd-563b-5bd3-a3b3-09c652a8b1d1",
+  "WordCount": 951,
+  "Headline": {
+    "Main": "A Small Leap To Designer Babies",
+    "Kicker": "VISIONS: BIOLOGY: A GENETIC FUTURE BOTH TANTALIZING AND DISTURBING",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS: BIOLOGY: A GENETIC FUTURE BOTH TANTALIZING AND DISTURBING; A Small Leap To Designer Babies",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Genetics and Heredity",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Forecasts",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Genetic Engineering",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Sheryl Gay Stolberg",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Sheryl",
+        "MiddleName": "Gay",
+        "LastName": "Stolberg",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

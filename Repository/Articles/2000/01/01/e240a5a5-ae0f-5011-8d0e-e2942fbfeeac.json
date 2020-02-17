@@ -1,0 +1,74 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Italian government reports budget deficit declined by almost half, to $16.4 billion, after tax evaders were forced to pay up (S)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/business/world-business-briefing-europe-italy-deficit-shrinks.html",
+  "Snippet": "Italian government reports budget deficit declined by almost half, to $16.4 billion, after tax evaders were forced to pay up (S)",
+  "LeadParagraph": "Italy's budget deficit declined by almost half this year as tax evaders were forced to pay up, the government said. The deficit dropped to 31.6 trillion lire ($16.4 billion) from 58.34 trillion lire in 1998, the Treasury announced. The decline was partly because of a December surplus of some 25 trillion lire. ''The result was better than expected, and Italians have good reason to be satisfied,'' Treasury Minister Giuliano Amato said.",
+  "PrintSection": "C",
+  "PrintPage": "4",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Business/Financial Desk",
+  "SectionName": "Business Day",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/e240a5a5-ae0f-5011-8d0e-e2942fbfeeac",
+  "WordCount": 71,
+  "Headline": {
+    "Main": "ITALY DEFICIT SHRINKS",
+    "Kicker": "WORLD BUSINESS BRIEFING: EUROPE",
+    "ContentKicker": null,
+    "PrintHeadline": "WORLD BUSINESS BRIEFING: EUROPE; ITALY DEFICIT SHRINKS",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "Italy",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Tax Evasion",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Taxation",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Finances",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Budgets and Budgeting",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Bloomberg News",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Bloomberg",
+        "MiddleName": null,
+        "LastName": "News",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Eduardo Gonzalez-Cueva letter says insuring peace in new century will require democratic reform of United Nations, civil society's control of World Trade Organization and creation of international criminal court; drawing",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/opinion/l-on-this-first-day-a-fanfare-for-the-new-era-trio-for-a-new-world-165700.html",
+  "Snippet": "Eduardo Gonzalez-Cueva letter says insuring peace in new century will require democratic reform of United Nations, civil society's control of World Trade Organization and creation of international criminal court; drawing",
+  "LeadParagraph": "To the Editor:",
+  "PrintSection": "A",
+  "PrintPage": "30",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Editorial Desk",
+  "SectionName": "Opinion",
+  "TypeOfMaterial": "Letter",
+  "Uri": "nyt://article/cc58cf8a-b5f0-54ab-9d11-443a31379e7e",
+  "WordCount": 64,
+  "Headline": {
+    "Main": "On This First Day, a Fanfare for the New Era; Trio for a New World",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "On This First Day, a Fanfare for the New Era; Trio for a New World",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "organizations",
+      "Value": "International Criminal Court",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "World Trade Organization",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "United Nations",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Gonzalez-Cueva, Eduardo",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "International Relations",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": null,
+    "Organization": null,
+    "Person": []
+  }
+}

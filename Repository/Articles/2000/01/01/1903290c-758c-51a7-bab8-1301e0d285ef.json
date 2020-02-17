@@ -1,0 +1,59 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Experts discuss trends in the kinds of homes Americans will want in 21st century and how they will be built; drawing (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/visions-cities-the-house-of-the-future-still-four-walls-and-a-roof.html",
+  "Snippet": "Experts discuss trends in the kinds of homes Americans will want in 21st century and how they will be built; drawing (M)",
+  "LeadParagraph": "WHAT kind of house will the suburbanites of tomorrow inhabit?",
+  "PrintSection": "E",
+  "PrintPage": "30",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/1903290c-758c-51a7-bab8-1301e0d285ef",
+  "WordCount": 686,
+  "Headline": {
+    "Main": "The House of the Future? Still Four Walls and a Roof",
+    "Kicker": "VISIONS: CITIES",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS: CITIES; The House of the Future? Still Four Walls and a Roof",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Housing",
+      "Rank": 1,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Andrew C. Revkin and John Holusha",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Andrew",
+        "MiddleName": "C.",
+        "LastName": "Revkin",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      },
+      {
+        "FirstName": "John",
+        "MiddleName": null,
+        "LastName": "Holusha",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 2
+      }
+    ]
+  }
+}

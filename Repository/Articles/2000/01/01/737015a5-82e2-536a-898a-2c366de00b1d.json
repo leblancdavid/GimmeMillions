@@ -1,0 +1,80 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Older shopping malls are closing across America, the victims of newer, more entertaining malls, catalogue and Internet retailers and big-box stores like Wal-Mart; certain developers, architects and planners are now converting these doomed malls into compact new neighborhoods where people park their cars and walk between shops and home; photos (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/us/retail-darwinism-puts-old-malls-in-jeopardy.html",
+  "Snippet": "Older shopping malls are closing across America, the victims of newer, more entertaining malls, catalogue and Internet retailers and big-box stores like Wal-Mart; certain developers, architects and planners are now converting these doomed malls in...",
+  "LeadParagraph": "The fully enclosed shopping mall, that island of boxy chain stores and lost apostrophes in a sea of asphalt, was not born in California. But this seems to be the place where people are digging its grave, at least in its present form.",
+  "PrintSection": "A",
+  "PrintPage": "20",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "National Desk",
+  "SectionName": "U.S.",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/737015a5-82e2-536a-898a-2c366de00b1d",
+  "WordCount": 1566,
+  "Headline": {
+    "Main": "Retail Darwinism Puts Old Malls in Jeopardy",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Retail Darwinism Puts Old Malls in Jeopardy",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Mail Order Companies",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Housing",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "CATALOGUES",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "SHOPPING CENTERS",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "RETAIL STORES AND TRADE",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Computers and the Internet",
+      "Rank": 6,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Timothy Egan",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Timothy",
+        "MiddleName": null,
+        "LastName": "Egan",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

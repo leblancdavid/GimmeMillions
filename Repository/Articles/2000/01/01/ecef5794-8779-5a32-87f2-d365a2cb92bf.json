@@ -1,0 +1,62 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Cost of college education is expected to outpace inflation well into the new century and perhaps forever; graph (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/education/visions-cities-the-human-touch-will-only-inflate-college-bills.html",
+  "Snippet": "Cost of college education is expected to outpace inflation well into the new century and perhaps forever; graph (M)",
+  "LeadParagraph": "WHEN Mozart was alive, it took two to three months for a craftsman to make a watch and about 18 minutes for an ensemble to perform ''Eine Kleine Nachtmusik.'' Today, it takes two minutes for a machine to make a watch. But a performance of Mozart's familiar composition still takes musicians more than a quarter-hour.",
+  "PrintSection": "E",
+  "PrintPage": "32",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Education",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/ecef5794-8779-5a32-87f2-d365a2cb92bf",
+  "WordCount": 378,
+  "Headline": {
+    "Main": "The Human Touch Will Only Inflate College Bills",
+    "Kicker": "VISIONS: CITIES",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS: CITIES; The Human Touch Will Only Inflate College Bills",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Tuition",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Colleges and Universities",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Forecasts",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Edward Wyatt",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Edward",
+        "MiddleName": null,
+        "LastName": "Wyatt",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

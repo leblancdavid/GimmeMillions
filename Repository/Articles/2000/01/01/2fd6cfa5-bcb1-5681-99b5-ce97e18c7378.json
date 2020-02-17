@@ -1,0 +1,62 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Ben Brantley article says A Chorus Line, once Broadway's longest-running musical, will be a curiosity by end of 21st century; photo (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/theater/visions-great-hits-headed-for-the-attic-000558.html",
+  "Snippet": "Ben Brantley article says A Chorus Line, once Broadway's longest-running musical, will be a curiosity by end of 21st century; photo (M)",
+  "LeadParagraph": "The challenge put to The Times's critics was direct: Name a 20th-century work considered ''timeless'' today that you think will be all but forgotten in 100 years. Their selections:",
+  "PrintSection": "E",
+  "PrintPage": "3",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Theater",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/2fd6cfa5-bcb1-5681-99b5-ce97e18c7378",
+  "WordCount": 197,
+  "Headline": {
+    "Main": "Great Hits Headed for The Attic",
+    "Kicker": "VISIONS",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS; Great Hits Headed for The Attic",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Forecasts",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Theater",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "creative_works",
+      "Value": "CHORUS LINE, A (PLAY)",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Ben Brantley",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Ben",
+        "MiddleName": null,
+        "LastName": "Brantley",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

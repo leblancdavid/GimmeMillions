@@ -1,0 +1,74 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Revelers at Irish pub in Woodside, Queens, get a jump on New Year by celebrating its arrival in Dublin time (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/nyregion/1-1-00-a-city-celebrates-pub-has-eye-on-dublin-2-midnights-in-queens.html",
+  "Snippet": "Revelers at Irish pub in Woodside, Queens, get a jump on New Year by celebrating its arrival in Dublin time (M)",
+  "LeadParagraph": "Sean Cunningham nodded to the television hanging above him in the smoky air of the Starting Gate Pub. It was 5 p.m. in Woodside, Queens, and, by Mr. Cunningham's calculation, two hours to midnight.",
+  "PrintSection": "A",
+  "PrintPage": "9",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Metropolitan Desk",
+  "SectionName": "New York",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/dd254220-97ea-5a3e-8151-79acaa9c705d",
+  "WordCount": 689,
+  "Headline": {
+    "Main": "Pub Has Eye On Dublin: 2 Midnights In Queens",
+    "Kicker": "1/1/00: A CITY CELEBRATES",
+    "ContentKicker": null,
+    "PrintHeadline": "1/1/00: A CITY CELEBRATES; Pub Has Eye On Dublin: 2 Midnights In Queens",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "New York City",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Dublin (Ireland)",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Irish-Americans",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "New Year",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "TWO THOUSAND (YEAR)",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By C. J. Chivers",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "C.",
+        "MiddleName": "J.",
+        "LastName": "Chivers",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

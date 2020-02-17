@@ -1,0 +1,86 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Vladimir V Putin, prime minister and now acting president of Russia, remains a mystery; his public record is distinguished mostly by a popular but brutal war in Chechnya and a parliamentary election victory that, by most experts' reckoning, made a hash of democratic campaign norms; his private record conceals some 15 years with KGB, largely as an intelligence officer based in East Germany; photo (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/world/yeltsin-resigns-man-top-still-mystery-vladimir-vladimirovich-putin.html",
+  "Snippet": "Vladimir V Putin, prime minister and now acting president of Russia, remains a mystery; his public record is distinguished mostly by a popular but brutal war in Chechnya and a parliamentary election victory that, by most experts' reckoning, made a...",
+  "LeadParagraph": "After the Kremlin's newborn political party registered a thumping victory in parliamentary elections last week, reporters asked Prime Minister Vladimir V. Putin whether his strengthened hand might lead to changes in the government. Mr. Putin was characteristically forthcoming. ''We'll see,'' he said.",
+  "PrintSection": "A",
+  "PrintPage": "11",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Foreign Desk",
+  "SectionName": "World",
+  "TypeOfMaterial": "Biography",
+  "Uri": "nyt://article/82f3b330-1215-55b7-9c5a-435b6645d253",
+  "WordCount": 1402,
+  "Headline": {
+    "Main": "On Top, Still a Mystery: Vladimir Vladimirovich Putin",
+    "Kicker": "YELTSIN RESIGNS: MAN IN THE NEWS",
+    "ContentKicker": null,
+    "PrintHeadline": "YELTSIN RESIGNS: MAN IN THE NEWS; On Top, Still a Mystery: Vladimir Vladimirovich Putin",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "Russia",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Chechnya (Russia)",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "KGB",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Putin, Vladimir V",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Politics and Government",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Biographical Information",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Elections",
+      "Rank": 7,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Michael Wines",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Michael",
+        "MiddleName": null,
+        "LastName": "Wines",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

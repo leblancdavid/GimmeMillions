@@ -1,0 +1,68 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Many experts on Y2K computer problem report that Internet performed impressively through rollover from 1999 to 2000 even if it did sag at times in isolated sites as users turned to e-mail messages, Web sites, newsgroups and electronic chat rooms to track arrival of Year 2000 in more and more time zones (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/us/1-1-00-technology-2000-momentous-relief-internet-s-cheering-squad-nervously.html",
+  "Snippet": "Many experts on Y2K computer problem report that Internet performed impressively through rollover from 1999 to 2000 even if it did sag at times in isolated sites as users turned to e-mail messages, Web sites, newsgroups and electronic chat rooms t...",
+  "LeadParagraph": "As the world slid nervously yesterday through the shadow of its first global technology challenge, many year 2000 experts took special comfort in the relatively stable behavior of one of their principal tools in dealing with the problem: the not-always-reliable Internet.",
+  "PrintSection": "A",
+  "PrintPage": "10",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "National Desk",
+  "SectionName": "U.S.",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/02a8f89b-153f-5b84-983c-e328de5bf811",
+  "WordCount": 761,
+  "Headline": {
+    "Main": "Internet's Cheering Squad Nervously Watches Clock",
+    "Kicker": "1/1/00: TECHNOLOGY AND 2000 -- MOMENTOUS RELIEF",
+    "ContentKicker": null,
+    "PrintHeadline": "1/1/00: TECHNOLOGY AND 2000 -- MOMENTOUS RELIEF; Internet's Cheering Squad Nervously Watches Clock",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Electronic Mail",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "COMPUTER SOFTWARE",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "TWO THOUSAND (YEAR)",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Computers and the Internet",
+      "Rank": 4,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Barnaby J. Feder",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Barnaby",
+        "MiddleName": "J.",
+        "LastName": "Feder",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

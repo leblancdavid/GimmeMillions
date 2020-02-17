@@ -1,0 +1,86 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Mack-Cali Realty Corp says it sold stakes in office buildings in Princeton and Parsipanny, NJ, and in Phoenix, Ariz, for more than $100 million, and bought office buildings in Moorestown, NJ, for $8 million (S)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/business/company-news-mack-cali-realty-sells-new-jersey-and-arizona-stakes.html",
+  "Snippet": "Mack-Cali Realty Corp says it sold stakes in office buildings in Princeton and Parsipanny, NJ, and in Phoenix, Ariz, for more than $100 million, and bought office buildings in Moorestown, NJ, for $8 million (S)",
+  "LeadParagraph": "The Mack-Cali Realty Corporation, a real estate investment trust in Cranford, N.J., said late on Thursday that it had sold stakes in properties in New Jersey and Arizona for more than $100 million. The company sold a 71,000-square-foot office building in Princeton, N.J., and a 119,000-square-foot office property in Phoenix, each for about $9 million. The company said it sold a 55 percent stake in five buildings in Parsippany, N.J., for $84 million. Mack-Cali, which owns or has stakes in 257 properties, used part of the proceeds to buy three office buildings in Moorestown, N.J., for $8 million.",
+  "PrintSection": "C",
+  "PrintPage": "4",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Business/Financial Desk",
+  "SectionName": "Business Day",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/aa6684f8-70da-507c-8819-1b9429de2381",
+  "WordCount": 98,
+  "Headline": {
+    "Main": "MACK-CALI REALTY SELLS NEW JERSEY AND ARIZONA STAKES",
+    "Kicker": "COMPANY NEWS",
+    "ContentKicker": null,
+    "PrintHeadline": "COMPANY NEWS; MACK-CALI REALTY SELLS NEW JERSEY AND ARIZONA STAKES",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "Princeton (NJ)",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Parsippany (NJ)",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Phoenix (Ariz)",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "MOORESTOWN (NJ)",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "MACK-CALI REALTY CORP",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Mergers, Acquisitions and Divestitures",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "OFFICE BUILDINGS",
+      "Rank": 7,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Bloomberg News",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Bloomberg",
+        "MiddleName": null,
+        "LastName": "News",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

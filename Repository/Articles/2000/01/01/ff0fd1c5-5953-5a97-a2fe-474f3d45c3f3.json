@@ -1,0 +1,80 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Nonprofit New York group known as Mouse (Making Opportunities for Upgrading Schools and Education) has helped to pioneer fund-raising approach of soliciting stock, or chance to buy it, from startup companies at bargain prices before stocks go public; Mouse is at forefront of practice that not only benefits nonprofit organizations, but gives new companies means to contribute before they become profitable; in California, Entrepreneurs' Foundation asks high-tech companies to encourage giving; participating companies donate stock options to charity before they go public; photo (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/nyregion/before-stocks-go-public-some-will-go-to-charity.html",
+  "Snippet": "Nonprofit New York group known as Mouse (Making Opportunities for Upgrading Schools and Education) has helped to pioneer fund-raising approach of soliciting stock, or chance to buy it, from startup companies at bargain prices before stocks go publ...",
+  "LeadParagraph": "When the newly rich get richer, shouldn't others get richer, too? That is the idea behind a new form of fund-raising that has helped one local nonprofit group raise hundreds of thousands of dollars.",
+  "PrintSection": "B",
+  "PrintPage": "3",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Metropolitan Desk",
+  "SectionName": "New York",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/ff0fd1c5-5953-5a97-a2fe-474f3d45c3f3",
+  "WordCount": 965,
+  "Headline": {
+    "Main": "Before Stocks Go Public, Some Will Go to Charity",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Before Stocks Go Public, Some Will Go to Charity",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "organizations",
+      "Value": "Entrepreneurs' Foundation",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "MOUSE",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Philanthropy",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Stock Options and Purchase Plans",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Stocks and Bonds",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Computers and the Internet",
+      "Rank": 6,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Tina Kelley",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Tina",
+        "MiddleName": null,
+        "LastName": "Kelley",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

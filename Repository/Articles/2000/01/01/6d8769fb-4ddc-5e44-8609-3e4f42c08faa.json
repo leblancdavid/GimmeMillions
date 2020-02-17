@@ -1,0 +1,68 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "New York Knicks forward Latrell Sprewell says his relationship with Coach Jeff Van Gundy is much smoother because Sprewell understands his role on team (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/sports/pro-basketball-all-s-well-now-between-sprewell-and-van-gundy.html",
+  "Snippet": "New York Knicks forward Latrell Sprewell says his relationship with Coach Jeff Van Gundy is much smoother because Sprewell understands his role on team (M)",
+  "LeadParagraph": "The fourth-quarter clock was slipping toward the final two minutes Thursday night as Latrell Sprewell sat on the bench with the patience and contentment of a bird watcher.",
+  "PrintSection": "D",
+  "PrintPage": "5",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Sports Desk",
+  "SectionName": "Sports",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/6d8769fb-4ddc-5e44-8609-3e4f42c08faa",
+  "WordCount": 759,
+  "Headline": {
+    "Main": "All's Well Now Between Sprewell and Van Gundy",
+    "Kicker": "PRO BASKETBALL",
+    "ContentKicker": null,
+    "PrintHeadline": "PRO BASKETBALL; All's Well Now Between Sprewell and Van Gundy",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "organizations",
+      "Value": "NEW YORK KNICKERBOCKERS",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Van Gundy, Jeff",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Sprewell, Latrell",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Basketball",
+      "Rank": 4,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Selena Roberts",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Selena",
+        "MiddleName": null,
+        "LastName": "Roberts",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

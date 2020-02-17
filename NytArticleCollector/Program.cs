@@ -15,7 +15,7 @@ namespace NytArticleCollector
     {
         static void Main(string[] args)
         {
-            var lastCollectedDate = new DateTime(2000, 1, 1);
+            var lastCollectedDate = new DateTime(2000, 1, 2);
             string progressFile = "progress.json";
             if(File.Exists(progressFile))
             {
@@ -23,8 +23,8 @@ namespace NytArticleCollector
                 lastCollectedDate = JsonConvert.DeserializeObject<DateTime>(jsonDate);
             }
 
-            var keysRepo = new NYTApiAccessKeyRepository("../../../../Repository/Keys");
-            var articlesRepo = new NYTArticleRepository("../../../../Repository/Articles");
+            var keysRepo = new NYTApiAccessKeyRepository("../../../Repository/Keys");
+            var articlesRepo = new NYTArticleRepository("../../../Repository/Articles");
 
             var accessService = new NYTArticleAccessService(keysRepo, articlesRepo);
 
@@ -42,7 +42,7 @@ namespace NytArticleCollector
                 else
                 {
                     Console.WriteLine($"Found {articles.Value.Count()} articles for {lastCollectedDate.ToString("yyyy/MM/dd")}");
-                    lastCollectedDate.AddDays(1.0);
+                    lastCollectedDate = lastCollectedDate.AddDays(1.0);
                     retryCount = 0;
                 }
 

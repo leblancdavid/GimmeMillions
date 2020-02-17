@@ -1,0 +1,101 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Alfred Bardelli, 91, sole surviving member of negotating team that concluded United Auto Workers' first contract with Ford Motor Co in 1941, says workers went through hell at Ford until contract was signed; Khalilah A Johnson, 23-year-old attending job-training classes for 12 hours a day, says she intends to rise out of poverty and become a Ford engineer; chronology of milestones in auto industry history (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/reflections-detroit-usa-looking-back-with-an-eye-to-the-future.html",
+  "Snippet": "Alfred Bardelli, 91, sole surviving member of negotating team that concluded United Auto Workers' first contract with Ford Motor Co in 1941, says workers went through hell at Ford until contract was signed; Khalilah A Johnson, 23-year-old attendin...",
+  "LeadParagraph": "The enormous growth and subsequent unionization of the auto industry created opportunities for millions of Americans to enter the middle class. Alfred Bardelli, whose family immigrated from Italy to a Pennsylvania coal town 10 months after his birth in 1909, began cutting glass for windows in 1928 at Ford Motor's Rouge complex in Dearborn, near Detroit. It was the world's largest factory then, with 103,000 workers. He joined the United Automobile Workers in 1937, a time of violent clashes between union organizers and company security personnel. He is the sole surviving member of the negotiating team that concluded the U.A.W.'s first contract with Ford in 1941.",
+  "PrintSection": "E",
+  "PrintPage": "39",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "Chronology",
+  "Uri": "nyt://article/5d3f30d6-2887-58dd-9516-53bb5abf4db7",
+  "WordCount": 905,
+  "Headline": {
+    "Main": "Looking Back, With an Eye to the Future",
+    "Kicker": "REFLECTIONS: DETROIT, U.S.A.",
+    "ContentKicker": null,
+    "PrintHeadline": "REFLECTIONS: DETROIT, U.S.A.; Looking Back, With an Eye to the Future",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "organizations",
+      "Value": "United Automobile Workers",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Ford Motor Co",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Johnson, Khalilah A",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Bardelli, Alfred",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Automobiles",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "LABOR",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "UNIONIZATION",
+      "Rank": 7,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Vocational Training",
+      "Rank": 8,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Keith Bradsher and Robyn Meredith",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Keith",
+        "MiddleName": null,
+        "LastName": "Bradsher",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      },
+      {
+        "FirstName": "Robyn",
+        "MiddleName": null,
+        "LastName": "Meredith",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 2
+      }
+    ]
+  }
+}

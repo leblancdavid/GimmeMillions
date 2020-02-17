@@ -1,0 +1,110 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Waste Management Inc contends in lawsuit that it overpaid in its $1.15 billion acquisition of Eastern Environmental Services Inc because Eastern's chairman, Louis Paolino Jr, overstated profits; suit also contends that Waste Management's former chief executive, John Drury, and president, Rodney Proto, personally benefitted from transactions with Paolino; suit seeks more than $597 million in damages; Drury quit in August and Proto was ousted; neither are named as defendant in suit; Roderick Hills, chairman of audit committee of Waste Management's board, says other Waste Management acquisitions are under review; A Maurice Myers was named chief executive last month (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/business/suit-by-waste-management-says-it-overpaid-in-deal.html",
+  "Snippet": "Waste Management Inc contends in lawsuit that it overpaid in its $1.15 billion acquisition of Eastern Environmental Services Inc because Eastern's chairman, Louis Paolino Jr, overstated profits; suit also contends that Waste Management's former ch...",
+  "LeadParagraph": "Waste Management Inc., the nation's biggest hauler of trash, contends in a lawsuit that it overpaid in last year's $1.15 billion acquisition of Eastern Environmental Services Inc. because Eastern's chairman overstated profits.",
+  "PrintSection": "C",
+  "PrintPage": "6",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Business/Financial Desk",
+  "SectionName": "Business Day",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/8be0b5b7-0a6d-53c9-865f-5a15b65b1c13",
+  "WordCount": 531,
+  "Headline": {
+    "Main": "Suit by Waste Management Says It Overpaid in Deal",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Suit by Waste Management Says It Overpaid in Deal",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "organizations",
+      "Value": "Eastern Environmental Services Inc",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Waste Management Inc",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Drury, John",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Paolino, Louis Jr",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Myers, A Maurice",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "HILLS, RODERICK",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Proto, Rodney R",
+      "Rank": 7,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Frauds and Swindling",
+      "Rank": 8,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Mergers, Acquisitions and Divestitures",
+      "Rank": 9,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Suits and Litigation",
+      "Rank": 10,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Waste Materials and Disposal",
+      "Rank": 11,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Bloomberg News",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Bloomberg",
+        "MiddleName": null,
+        "LastName": "News",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

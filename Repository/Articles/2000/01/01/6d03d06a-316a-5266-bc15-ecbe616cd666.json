@@ -1,0 +1,50 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Ann Powers article suggests that culture will be interactive in 21st century, with no lines between artist and appreciator or between individually rendered masterpiece and commonly created work-in-progress (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/visions-identity-the-artist-formerly-known-as-spectator.html",
+  "Snippet": "Ann Powers article suggests that culture will be interactive in 21st century, with no lines between artist and appreciator or between individually rendered masterpiece and commonly created work-in-progress (M)",
+  "LeadParagraph": "IMAGINE yourself as a member of an empty orchestra. The music, ever changing within a basic set of themes, wafts forth from instruments held by invisible hands, but the chairs are open for you to occupy and add your part.",
+  "PrintSection": "E",
+  "PrintPage": "27",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/6d03d06a-316a-5266-bc15-ecbe616cd666",
+  "WordCount": 804,
+  "Headline": {
+    "Main": "The Artist Formerly Known as Spectator",
+    "Kicker": "VISIONS: IDENTITY",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS: IDENTITY; The Artist Formerly Known as Spectator",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Culture",
+      "Rank": 1,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Ann Powers",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Ann",
+        "MiddleName": null,
+        "LastName": "Powers",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

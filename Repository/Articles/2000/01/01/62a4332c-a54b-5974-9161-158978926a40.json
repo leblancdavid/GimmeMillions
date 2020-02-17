@@ -1,0 +1,62 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Mockup of New York Times front page for Jan 1, 2100, priced $9; photo",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/reflections-100-years-ago-a-penny-bought-the-world.html",
+  "Snippet": "Mockup of New York Times front page for Jan 1, 2100, priced $9; photo",
+  "LeadParagraph": "ONE of the first things you learn from examining the world of a century ago is that people knew how to count. They understood that 99 years do not a century make, which is more than you can say for us today.",
+  "PrintSection": "E",
+  "PrintPage": "37",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/62a4332c-a54b-5974-9161-158978926a40",
+  "WordCount": 1659,
+  "Headline": {
+    "Main": "100 Years Ago, A Penny Bought the World",
+    "Kicker": "REFLECTIONS",
+    "ContentKicker": null,
+    "PrintHeadline": "REFLECTIONS; 100 Years Ago, A Penny Bought the World",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "organizations",
+      "Value": "New York Times",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Forecasts",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "News and News Media",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Clyde Haberman",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Clyde",
+        "MiddleName": null,
+        "LastName": "Haberman",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

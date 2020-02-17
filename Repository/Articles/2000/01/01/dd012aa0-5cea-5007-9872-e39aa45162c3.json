@@ -1,0 +1,58 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Paul Bledsoe letter says F Scott Fitzgerald is the American writer of the 20th century who is most likely to be read 1,000 years from now; drawing",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/opinion/l-on-this-first-day-a-fanfare-for-the-new-era-chronicler-of-a-century-165654.html",
+  "Snippet": "Paul Bledsoe letter says F Scott Fitzgerald is the American writer of the 20th century who is most likely to be read 1,000 years from now; drawing",
+  "LeadParagraph": "To the Editor:",
+  "PrintSection": "A",
+  "PrintPage": "30",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Editorial Desk",
+  "SectionName": "Opinion",
+  "TypeOfMaterial": "Letter",
+  "Uri": "nyt://article/dd012aa0-5cea-5007-9872-e39aa45162c3",
+  "WordCount": 187,
+  "Headline": {
+    "Main": "On This First Day, a Fanfare for the New Era; Chronicler of a Century",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "On This First Day, a Fanfare for the New Era; Chronicler of a Century",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "persons",
+      "Value": "Fitzgerald, F Scott",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Bledsoe, Paul",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Books and Literature",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Forecasts",
+      "Rank": 4,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": null,
+    "Organization": null,
+    "Person": []
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Anita Gates reviews play Inappropriate by A Michael DeSisto and Lonnie McNeil; photo (S)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/theater/theater-review-smells-like-teen-spirit-or-whatever.html",
+  "Snippet": "Anita Gates reviews play Inappropriate by A Michael DeSisto and Lonnie McNeil; photo (S)",
+  "LeadParagraph": "''Inappropriate'' is not ''Rent.'' A theatergoer might be forgiven for thinking it is, since the show, a rock musical, stars an ensemble of young actors wearing headset microphones, attitude and the combination of layers, mismatches, glitter and sportswear that make up homeless-person chic. Averie Boyer, who is excellent in his understated way as one of the central performers (there are no character names), even looks something like Anthony Rapp, who played Mark in ''Rent's'' original Broadway and Off Broadway cast.",
+  "PrintSection": "F",
+  "PrintPage": "28",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Arts/Cultural Desk",
+  "SectionName": "Theater",
+  "TypeOfMaterial": "Review",
+  "Uri": "nyt://article/c1e8332c-4e14-5292-86cc-cb1770fb835e",
+  "WordCount": 790,
+  "Headline": {
+    "Main": "Smells Like Teen Spirit, or Whatever",
+    "Kicker": "THEATER REVIEW",
+    "ContentKicker": null,
+    "PrintHeadline": "THEATER REVIEW; Smells Like Teen Spirit, or Whatever",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "persons",
+      "Value": "McNeil, Lonnie",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "DeSisto, A Michael",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Reviews",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Theater",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "creative_works",
+      "Value": "INAPPROPRIATE (PLAY)",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Anita Gates",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Anita",
+        "MiddleName": null,
+        "LastName": "Gates",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

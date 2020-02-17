@@ -1,0 +1,92 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Experimental vehicles are being built by General Motors, Ford Motor Co and DaimlerChrysler under umbrella of government-sponsored Partnership for a New Generation of Vehicles; they face huge obstacles; Big Three are all focusing on diesel-electric hybrid cars, even though federal and state environmental regulators are adopting new rules for tailpipe emissions that will make it difficult after 2003 to sell cars with diesel engines; Honda Motor and Toyota Motor, operating with much smaller government subsidies, are already mass producing small high-mileage cars that combine gasoline engines and electric motors; manufacturing costs for all hybrid cars, including Japanese models, are steep; selling them at competitive prices remains money-losing proposition; and there is little sign that Americans want high-mileage cars in era of relatively low gasoline prices and rising national prosperity; photos; diagrams (L)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/business/detroit-plays-catch-up-race-for-hybrid-car-with-fewer-subsidies-japan-ahead.html",
+  "Snippet": "Experimental vehicles are being built by General Motors, Ford Motor Co and DaimlerChrysler under umbrella of government-sponsored Partnership for a New Generation of Vehicles; they face huge obstacles; Big Three are all focusing on diesel-electric...",
+  "LeadParagraph": "With hundreds of millions of dollars of private and federal research work behind it, the General Motors Precept, an experimental model to be introduced here on Jan. 9, is probably the most expensive single car ever built. Yet it is still a lot of car for the money.",
+  "PrintSection": "C",
+  "PrintPage": "1",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Business/Financial Desk",
+  "SectionName": "Business Day",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/d3c90dee-f2c4-5d3e-94e9-88efd7af1b6c",
+  "WordCount": 1839,
+  "Headline": {
+    "Main": "Detroit Plays Catch-Up In Race for Hybrid Car; With Fewer Subsidies, Japan Is Ahead",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Detroit Plays Catch-Up In Race for Hybrid Car; With Fewer Subsidies, Japan Is Ahead",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "organizations",
+      "Value": "General Motors Corp",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "DAIMLERCHRYSLER",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Ford Motor Co",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "HONDA MOTOR CO",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Toyota Motor Corp",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "PUBLIC OPINION",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Electric Vehicles",
+      "Rank": 7,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Prices (Fares, Fees and Rates)",
+      "Rank": 8,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Keith Bradsher",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Keith",
+        "MiddleName": null,
+        "LastName": "Bradsher",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

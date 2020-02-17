@@ -1,0 +1,104 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Akihiro Takahashi, 68, vividly recalls atomic bombing of Hiroshima, even if most Japanese say 1995 Kobe earthquake was the century's most significant event; 18-year-old Ayako Matsushima worries about Japan's ability to compete in new century, but welcomes gains made by women in work force; photos; chronology of Japanese history since 1931 (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/reflections-japan-they-just-moved-brick-because-brick-was-right-their-face.html",
+  "Snippet": "Akihiro Takahashi, 68, vividly recalls atomic bombing of Hiroshima, even if most Japanese say 1995 Kobe earthquake was the century's most significant event; 18-year-old Ayako Matsushima worries about Japan's ability to compete in new century, but ...",
+  "LeadParagraph": "Akihiro Takahashi had noticed the American bombers flying high in the bright sky overhead. Then came the terrible blast. For this 68-year-old former director of the Hiroshima Peace Memorial Museum, the clouds from the bombing still hover starkly over Japan, even if recent polls show that the 1995 Kobe earthquake is cited by more people as the century's most significant event.",
+  "PrintSection": "E",
+  "PrintPage": "43",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "Chronology",
+  "Uri": "nyt://article/0c6b9d9a-0987-53b8-83f2-2e677d92cfe6",
+  "WordCount": 337,
+  "Headline": {
+    "Main": "'They Just Moved a Brick, Because the Brick Was Right in Their Face'",
+    "Kicker": "REFLECTIONS: JAPAN",
+    "ContentKicker": null,
+    "PrintHeadline": "REFLECTIONS: JAPAN; 'They Just Moved a Brick, Because the Brick Was Right in Their Face'",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "Japan",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Kobe (Japan)",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Hiroshima (Japan)",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Matsushima, Ayako",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Takahashi, Akihiro",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "ATOMIC WEAPONS",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Earthquakes",
+      "Rank": 7,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Women",
+      "Rank": 8,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "History",
+      "Rank": 9,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "World War II (1939-45)",
+      "Rank": 10,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Howard W. French",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Howard",
+        "MiddleName": "W.",
+        "LastName": "French",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

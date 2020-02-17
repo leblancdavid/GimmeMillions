@@ -1,0 +1,74 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Flamma Mvunelwa, 77-year-old retired teacher in Mlungisi, South Africa, considers widespread protests and disruptions that swept up nation's young people in 1980's to be the most profound experience of her life; Mvuselemo Jompolo, 13, hopes to make life better in Mlungisi by building houses; photos; chronology of South African history since 1910 (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/reflections-south-africa-children-saw-what-we-had-not-seen-that-we-must-fight.html",
+  "Snippet": "Flamma Mvunelwa, 77-year-old retired teacher in Mlungisi, South Africa, considers widespread protests and disruptions that swept up nation's young people in 1980's to be the most profound experience of her life; Mvuselemo Jompolo, 13, hopes to mak...",
+  "LeadParagraph": "Flamma Mvunelwa, 77, and Mvuselelo Jompolo, 13, both live in Mlungisi, a township in the eastern Cape province of South Africa.",
+  "PrintSection": "E",
+  "PrintPage": "44",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "Chronology",
+  "Uri": "nyt://article/a18bfb40-5b2f-50cf-b928-353728bf49b7",
+  "WordCount": 636,
+  "Headline": {
+    "Main": "'Children Saw What We Had Not Seen, That We Must Fight.'",
+    "Kicker": "REFLECTIONS: SOUTH AFRICA",
+    "ContentKicker": null,
+    "PrintHeadline": "REFLECTIONS: SOUTH AFRICA; 'Children Saw What We Had Not Seen, That We Must Fight.'",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "MLUNGISI (SOUTH AFRICA)",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "South Africa",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Jompolo, Mvuselemo",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Mvunelwa, Flamma",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "History",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Rachel L. Swarns",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Rachel",
+        "MiddleName": "L.",
+        "LastName": "Swarns",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

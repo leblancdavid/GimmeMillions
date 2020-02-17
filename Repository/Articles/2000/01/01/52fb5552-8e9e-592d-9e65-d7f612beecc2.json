@@ -1,0 +1,86 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Arts & Ideas look at works-in-progress; Joe Austin, professor of popular culture, studies New York's war against graffiti in 1970's and 80's, and perceives sociological phenomenon known as deviance amplification or, the more attention bad behavior gets, the more it is attractive to certain young people; city officials preferred broken-window theory: graffiti suggested society would tolerate crime; Austin claims city repressed 'really important' inner-city art movement; photos (S)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/arts/works-in-progress-from-all-over-rethinking-the-graffiti-wars.html",
+  "Snippet": "Arts & Ideas look at works-in-progress; Joe Austin, professor of popular culture, studies New York's war against graffiti in 1970's and 80's, and perceives sociological phenomenon known as deviance amplification or, the more attention bad behavior...",
+  "LeadParagraph": "The centruy's turn has been a time of retrospectives: what was the most important event, who was the most influential thinker? Arts & Ideas decided to take a look ahead at what some of today's researchers are working on. From the most raked-over field, like the history of the ancient world, to the latest medical technology, scholars are coming up with fresh insights. Some ideas may turn into breakthroughs, and others may turn out to be dead-ends, but the journey is rarely boring. Here is a handful of works in progress.",
+  "PrintSection": "F",
+  "PrintPage": "1",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Arts/Cultural Desk",
+  "SectionName": "Arts",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/52fb5552-8e9e-592d-9e65-d7f612beecc2",
+  "WordCount": 666,
+  "Headline": {
+    "Main": "Works In Progress From All Over; Rethinking the Graffiti Wars",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Works In Progress From All Over; Rethinking the Graffiti Wars",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "New York City",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Austin, Joe",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Social Conditions and Trends",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Graffiti",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Art",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Crime and Criminals",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Vandalism",
+      "Rank": 7,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Dinitia Smith",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Dinitia",
+        "MiddleName": null,
+        "LastName": "Smith",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

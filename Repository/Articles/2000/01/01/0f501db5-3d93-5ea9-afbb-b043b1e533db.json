@@ -1,0 +1,62 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Ann Powers reviews performance by rap group Arsonists; photo (S)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/arts/pop-review-rappers-who-won-t-let-the-audience-be-lazy.html",
+  "Snippet": "Ann Powers reviews performance by rap group Arsonists; photo (S)",
+  "LeadParagraph": "Q-Unique, one of the rappers in the Bushwick-based Arsonists crew, was home after a European tour, and he wasn't going to suffer a bland reception. ''You paid some good money to see a show,'' he urged the crowd Wednesday night at S.O.B.'s. ''Be part of the show!''",
+  "PrintSection": "F",
+  "PrintPage": "22",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Arts/Cultural Desk",
+  "SectionName": "Arts",
+  "TypeOfMaterial": "Review",
+  "Uri": "nyt://article/0f501db5-3d93-5ea9-afbb-b043b1e533db",
+  "WordCount": 393,
+  "Headline": {
+    "Main": "Rappers Who Won't Let The Audience Be Lazy",
+    "Kicker": "POP REVIEW",
+    "ContentKicker": null,
+    "PrintHeadline": "POP REVIEW; Rappers Who Won't Let The Audience Be Lazy",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "organizations",
+      "Value": "ARSONISTS",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Music",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Reviews",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Ann Powers",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Ann",
+        "MiddleName": null,
+        "LastName": "Powers",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

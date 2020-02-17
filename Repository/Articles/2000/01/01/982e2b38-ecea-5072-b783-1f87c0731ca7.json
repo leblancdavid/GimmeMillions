@@ -1,0 +1,56 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "New York Stock Exchange sets level for trading halt in United States equity markets at drop of 1,100 points in Dow Jones industrial average; change will take effect on Jan 3, first trading day of first quarter (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/business/nyse-sets-levels-for-trading-halts.html",
+  "Snippet": "New York Stock Exchange sets level for trading halt in United States equity markets at drop of 1,100 points in Dow Jones industrial average; change will take effect on Jan 3, first trading day of first quarter (M)",
+  "LeadParagraph": "In its quarterly adjustment of ''circuit breakers,'' the New York Stock Exchange set the level for a trading halt in United States equity markets at a drop of 1,100 points in the Dow Jones industrial average.",
+  "PrintSection": "C",
+  "PrintPage": "2",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Business/Financial Desk",
+  "SectionName": "Business Day",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/982e2b38-ecea-5072-b783-1f87c0731ca7",
+  "WordCount": 261,
+  "Headline": {
+    "Main": "N.Y.S.E. Sets Levels for Trading Halts",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "N.Y.S.E. Sets Levels for Trading Halts",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Stocks and Bonds",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Dow Jones Stock Average",
+      "Rank": 2,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Bloomberg News",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Bloomberg",
+        "MiddleName": null,
+        "LastName": "News",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Meditrust Cos generates $146 million in proceeds from sale of health care assets and from early repayment of mortgage note receivables in fourth quarter; company has received gross proceeds of $1.4 billion from sale of assets since November 1998, when it announced its restructuring plan (S)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/business/company-news-meditrust-generates-146-million-from-sale-of-assets.html",
+  "Snippet": "Meditrust Cos generates $146 million in proceeds from sale of health care assets and from early repayment of mortgage note receivables in fourth quarter; company has received gross proceeds of $1.4 billion from sale of assets since November 1998, ...",
+  "LeadParagraph": "The Meditrust Companies has generated $146 million in proceeds from the sale of health care assets and from the early repayment of mortgage note receivables in the fourth quarter. The company said it had also repaid $250 million of its credit facility that otherwise was to mature on Jan. 17. The $146 million was generated from the sale of 20 assisted-living properties, one rehabilitation center and the early repayment of 10 nursing home mortgages. Since November 1998, when it announced a restructuring plan, the company has received gross proceeds of $1.4 billion from the sale of assets.",
+  "PrintSection": "C",
+  "PrintPage": "4",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Business/Financial Desk",
+  "SectionName": "Business Day",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/5e5d3d7e-a642-5938-920e-b8441ff12353",
+  "WordCount": 97,
+  "Headline": {
+    "Main": "MEDITRUST GENERATES $146 MILLION FROM SALE OF ASSETS",
+    "Kicker": "COMPANY NEWS",
+    "ContentKicker": null,
+    "PrintHeadline": "COMPANY NEWS; MEDITRUST GENERATES $146 MILLION FROM SALE OF ASSETS",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "organizations",
+      "Value": "MEDITRUST COMPANIES",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Reform and Reorganization",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Mergers, Acquisitions and Divestitures",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Dow Jones",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Dow",
+        "MiddleName": null,
+        "LastName": "Jones",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

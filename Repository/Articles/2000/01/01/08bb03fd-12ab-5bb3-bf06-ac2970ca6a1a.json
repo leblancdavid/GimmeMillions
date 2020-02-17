@@ -1,0 +1,92 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Rice, milk, produce, eggs and corn that have been improved through genetic engeering or more traditional tools of biotechnology will be available in early years of 21st century; photos (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/visions-biology-science-invades-the-pantry.html",
+  "Snippet": "Rice, milk, produce, eggs and corn that have been improved through genetic engeering or more traditional tools of biotechnology will be available in early years of 21st century; photos (M)",
+  "LeadParagraph": "So far, most of the inventions of agricultural biotechnology have been new weapons for farmers in their fight against insects and weeds. A few make processes like making cheese more efficient. One big seller, a cow hormone produced in genetically altered bacteria, increases milk production.",
+  "PrintSection": "E",
+  "PrintPage": "8",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/08bb03fd-12ab-5bb3-bf06-ac2970ca6a1a",
+  "WordCount": 483,
+  "Headline": {
+    "Main": "Science Invades the Pantry",
+    "Kicker": "VISIONS: BIOLOGY",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS: BIOLOGY; Science Invades the Pantry",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "AGRICULTURE",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Rice",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Vegetables",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Eggs",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Grain",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Fruit",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Dairy Products",
+      "Rank": 7,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Genetic Engineering",
+      "Rank": 8,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Barnaby J. Feder",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Barnaby",
+        "MiddleName": "J.",
+        "LastName": "Feder",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "MALIN-Mildred. My beloved Aunt, I will miss you for the next thousand years. Always, Frey",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/classified/paid-notice-memorials-malin-mildred.html",
+  "Snippet": "",
+  "LeadParagraph": "MALIN-Mildred. My beloved Aunt, I will miss you for the next thousand years. Always, Frey",
+  "PrintSection": "B",
+  "PrintPage": "7",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Classified",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "Paid Death Notice",
+  "Uri": "nyt://article/af333756-803e-5478-9dd4-68eb21aba6a3",
+  "WordCount": 15,
+  "Headline": {
+    "Main": "Paid Notice: Memorials  MALIN, MILDRED",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Paid Notice: Memorials  MALIN, MILDRED",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "persons",
+      "Value": "Malin, Mildred",
+      "Rank": 1,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": null,
+    "Organization": null,
+    "Person": []
+  }
+}

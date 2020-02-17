@@ -1,0 +1,92 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Arts & Ideas section's look at works-in-progress reports on Ken Jacobson's study of attention-deficit hyperactivity disorder in children in Oxfordshire, England, and in western Massachusetts; Jacobson finds little difference in behavior between those who are diagnosed and those who are not (S)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/arts/works-in-progress-from-all-over-discovering-a-deficit-of-attention-deficit.html",
+  "Snippet": "Arts & Ideas section's look at works-in-progress reports on Ken Jacobson's study of attention-deficit hyperactivity disorder in children in Oxfordshire, England, and in western Massachusetts; Jacobson finds little difference in behavior between th...",
+  "LeadParagraph": "The centruy's turn has been a time of retrospectives: what was the most important event, who was the most influential thinker? Arts & Ideas decided to take a look ahead at what some of today's researchers are working on. From the most raked-over field, like the history of the ancient world, to the latest medical technology, scholars are coming up with fresh insights. Some ideas may turn into breakthroughs, and others may turn out to be dead-ends, but the journey is rarely boring. Here is a handful of works in progress.",
+  "PrintSection": "F",
+  "PrintPage": "1",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Arts/Cultural Desk",
+  "SectionName": "Arts",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/8b2df999-93da-5ee4-8836-de7a80f26044",
+  "WordCount": 555,
+  "Headline": {
+    "Main": "Works In Progress From All Over; Discovering a Deficit Of Attention Deficit",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Works In Progress From All Over; Discovering a Deficit Of Attention Deficit",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "Great Britain",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Massachusetts",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "JACOBSON, KEN",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Hyperactivity",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Education and Schools",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Children and Youth",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Research",
+      "Rank": 7,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Attention Deficit Hyperactivity Disorder",
+      "Rank": 8,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Laurence Zuckerman",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Laurence",
+        "MiddleName": null,
+        "LastName": "Zuckerman",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

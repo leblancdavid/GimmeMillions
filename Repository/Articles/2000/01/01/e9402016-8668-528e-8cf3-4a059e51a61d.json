@@ -1,0 +1,56 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Eric Asimov mock review of a restaurant of the future in which fear of germs is taken to extremes; photo (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/visions-biology-restaurants-pristine-cuisine-kills-germs-and-tastebuds.html",
+  "Snippet": "Eric Asimov mock review of a restaurant of the future in which fear of germs is taken to extremes; photo (M)",
+  "LeadParagraph": "IN the anteroom of Island, the latest Pristine Cuisine restaurant in fashionable Forest Hills, the crowd was avoiding any contact with one another as they switched their shoes for nylon booties and dipped their hands in that pricey California biocide coyly evocative of eau de Lysol (just ask your grandmother).",
+  "PrintSection": "E",
+  "PrintPage": "8",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "Review",
+  "Uri": "nyt://article/e9402016-8668-528e-8cf3-4a059e51a61d",
+  "WordCount": 593,
+  "Headline": {
+    "Main": "Pristine Cuisine Kills Germs, and Tastebuds",
+    "Kicker": "VISIONS: BIOLOGY - RESTAURANTS",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS: BIOLOGY - RESTAURANTS; Pristine Cuisine Kills Germs, and Tastebuds",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Restaurants",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "SANITATION",
+      "Rank": 2,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Eric Asimov",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Eric",
+        "MiddleName": null,
+        "LastName": "Asimov",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

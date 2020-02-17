@@ -1,0 +1,74 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "David E Sanger article says the most advanced countries, including Japan, Europe and China, could suffer a sharp population drop in 21st century even as nations now ranked the poorest will continue to grow in population; photo; table (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/visions-biology-in-leading-nations-a-population-bust.html",
+  "Snippet": "David E Sanger article says the most advanced countries, including Japan, Europe and China, could suffer a sharp population drop in 21st century even as nations now ranked the poorest will continue to grow in population; photo; table (M)",
+  "LeadParagraph": "LADIES and gentlemen, welcome to Shanghai,'' said China's president, greeting leaders of the world's powers as they gathered on Jan. 1, 2100. ''A century ago, our predecessors worried that the world was headed for a Malthusian meltdown -- that we could not feed, clothe or find enough energy for an overpopulated earth. This city was a symbol of their fears.",
+  "PrintSection": "E",
+  "PrintPage": "8",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/fbeedf7d-8ee5-53e1-b9af-816bcd97e19b",
+  "WordCount": 1111,
+  "Headline": {
+    "Main": "In Leading Nations, A Population Bust?",
+    "Kicker": "VISIONS: BIOLOGY",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS: BIOLOGY; In Leading Nations, A Population Bust?",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "Japan",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "Europe",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "glocations",
+      "Value": "China",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Population",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Forecasts",
+      "Rank": 5,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By David E. Sanger",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "David",
+        "MiddleName": "E.",
+        "LastName": "Sanger",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

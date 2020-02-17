@@ -1,0 +1,40 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "New York Times corrects error made in 1898 when the issue succeeding 14,499 was given as 15,000 instead of 14,500 (S)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/us/c-a-correction-welcome-to-51254-000005.html",
+  "Snippet": "New York Times corrects error made in 1898 when the issue succeeding 14,499 was given as 15,000 instead of 14,500 (S)",
+  "LeadParagraph": "For those who believe that in the good old days -- before calculators, before computers -- people were better at mental arithmetic, The Times offers a sobering New Year's message: Not necessarily.",
+  "PrintSection": "A",
+  "PrintPage": "22",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "National Desk",
+  "SectionName": "U.S.",
+  "TypeOfMaterial": "Correction",
+  "Uri": "nyt://article/3542a056-b005-5155-9b02-16cb87c291c2",
+  "WordCount": 393,
+  "Headline": {
+    "Main": "A Correction; Welcome to 51,254",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "A Correction; Welcome to 51,254",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "organizations",
+      "Value": "New York Times",
+      "Rank": 1,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": null,
+    "Organization": null,
+    "Person": []
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Arts & Ideas looks ahead at works-in-progress; Dr Nicholas M Barbaro and team at University of California at San Francisco joins with epilepsy specialists at Yale, Pittsburgh, Northwestern and Virginia universities to study bloodless radiosurgery technique to help patients with temporal lobe epilepsy, which is drug-resistant but is responsive to traditional surgery; $5-million Gamma Knife developed in Sweden focuses low-dosage gamma radiation on brain target; photo (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/arts/works-in-progress-from-all-over-bloodless-knife-for-epilepsy.html",
+  "Snippet": "Arts & Ideas looks ahead at works-in-progress; Dr Nicholas M Barbaro and team at University of California at San Francisco joins with epilepsy specialists at Yale, Pittsburgh, Northwestern and Virginia universities to study bloodless radiosurgery ...",
+  "LeadParagraph": "The centruy's turn has been a time of retrospectives: what was the most important event, who was the most influential thinker? Arts & Ideas decided to take a look ahead at what some of today's researchers are working on. From the most raked-over field, like the history of the ancient world, to the latest medical technology, scholars are coming up with fresh insights. Some ideas may turn into breakthroughs, and others may turn out to be dead-ends, but the journey is rarely boring. Here is a handful of works in progress.",
+  "PrintSection": "F",
+  "PrintPage": "1",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Arts/Cultural Desk",
+  "SectionName": "Arts",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/557ea658-de03-50fb-a62e-d0b5e77974bb",
+  "WordCount": 686,
+  "Headline": {
+    "Main": "Works In Progress From All Over; Bloodless Knife for Epilepsy",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "Works In Progress From All Over; Bloodless Knife for Epilepsy",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "Sweden",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "University of Pittsburgh",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Yale University",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Northwestern University",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "University of Virginia",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "University of California",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Barbaro, Nicholas M",
+      "Rank": 7,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "GAMMA RAYS",
+      "Rank": 8,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Brain",
+      "Rank": 9,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Epilepsy",
+      "Rank": 10,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Radiation",
+      "Rank": 11,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Research",
+      "Rank": 12,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Surgery and Surgeons",
+      "Rank": 13,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Denise Caruso",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Denise",
+        "MiddleName": null,
+        "LastName": "Caruso",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

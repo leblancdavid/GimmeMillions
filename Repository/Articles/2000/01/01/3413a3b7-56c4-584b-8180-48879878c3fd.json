@@ -1,0 +1,62 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Cruising World exec editor Herb McCormick article notes that victor in Louis Vuitton challengers series will challenge Team New Zealand for America's Cup; photo (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/sports/yacht-racing-elite-survivors-race-toward-cup.html",
+  "Snippet": "Cruising World exec editor Herb McCormick article notes that victor in Louis Vuitton challengers series will challenge Team New Zealand for America's Cup; photo (M)",
+  "LeadParagraph": "It has already been a nautical war of attrition, but the truly critical battles in the run-up to decide who will challenge Team New Zealand for the America's Cup have yet to be engaged. What amounts to the regular season of the Cup tournament is over, however, and, as the Nippon Challenge skipper Peter Gilmour says, the ''real regatta'' is now at hand.",
+  "PrintSection": "D",
+  "PrintPage": "4",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Sports Desk",
+  "SectionName": "Sports",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/3413a3b7-56c4-584b-8180-48879878c3fd",
+  "WordCount": 856,
+  "Headline": {
+    "Main": "Elite Survivors Race Toward Cup",
+    "Kicker": "YACHT RACING",
+    "ContentKicker": null,
+    "PrintHeadline": "YACHT RACING; Elite Survivors Race Toward Cup",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "New Zealand",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "AMERICA'S CUP",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Boats and Boating",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Herb McCormick",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Herb",
+        "MiddleName": null,
+        "LastName": "McCormick",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

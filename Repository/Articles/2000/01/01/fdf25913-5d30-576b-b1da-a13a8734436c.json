@@ -1,0 +1,62 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "John Tierney The Big City column wonders why citizens of world's most technologically advanced society celebrate future by gathering to watch ball slide down a pole; suggests more elaborate plan: to replace ball with huge illuminated swing shaped like crescent moon, which would transport leggy chorine across Times Square, accompanied by elaborate lights and holograms in the sky (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/nyregion/the-big-city-millennium-it-s-really-1703.html",
+  "Snippet": "John Tierney The Big City column wonders why citizens of world's most technologically advanced society celebrate future by gathering to watch ball slide down a pole; suggests more elaborate plan: to replace ball with huge illuminated swing shaped ...",
+  "LeadParagraph": "ARE you already disappointed by the alleged new millennium?",
+  "PrintSection": "B",
+  "PrintPage": "1",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Metropolitan Desk",
+  "SectionName": "New York",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/fdf25913-5d30-576b-b1da-a13a8734436c",
+  "WordCount": 769,
+  "Headline": {
+    "Main": "The Big City; Millennium? It's Really 1703!",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "The Big City; Millennium? It's Really 1703!",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "TIMES SQUARE AND 42D STREET (NYC)",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "New Year",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "TWO THOUSAND (YEAR)",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By John Tierney",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "John",
+        "MiddleName": null,
+        "LastName": "Tierney",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

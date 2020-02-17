@@ -1,0 +1,86 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "American and Russian military personnel monitoring data that would reflect an accidental launching of a nuclear missile as result of a Year 2000 computer glitch are relieved to be able to report that there were none; photo of Russian and American monitors sitting side by side at Y2K Strategic Stability Center at Peterson Air Force Base in Colorado Springs (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/us/1-1-00-technology-2000-momentous-relief-monitors-missiles-year-2000-note-relief.html",
+  "Snippet": "American and Russian military personnel monitoring data that would reflect an accidental launching of a nuclear missile as result of a Year 2000 computer glitch are relieved to be able to report that there were none; photo of Russian and American ...",
+  "LeadParagraph": "The new decade arrived well before dawn here today at Peterson Air Force Base, but there was more relief than celebration as the world's 24 time zones began passing from the 20th century without nuclear conflagration.",
+  "PrintSection": "A",
+  "PrintPage": "10",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "National Desk",
+  "SectionName": "U.S.",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/5168f970-c98a-51b6-957b-142e76d964a8",
+  "WordCount": 494,
+  "Headline": {
+    "Main": "Monitors Of Missiles At Year 2000 Note Relief",
+    "Kicker": "1/1/00: TECHNOLOGY AND 2000 -- MOMENTOUS RELIEF",
+    "ContentKicker": null,
+    "PrintHeadline": "1/1/00: TECHNOLOGY AND 2000 -- MOMENTOUS RELIEF; Monitors Of Missiles At Year 2000 Note Relief",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "Russia",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "ATOMIC WEAPONS",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "ACCIDENTS AND SAFETY",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "MISSILES",
+      "Rank": 4,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "TWO THOUSAND (YEAR)",
+      "Rank": 5,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "PETERSON AIR FORCE BASE (COLORADO SPINGS, COLO)",
+      "Rank": 6,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Computers and the Internet",
+      "Rank": 7,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Michael Janofsky",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Michael",
+        "MiddleName": null,
+        "LastName": "Janofsky",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

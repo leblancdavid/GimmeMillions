@@ -1,0 +1,62 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Ric Burns, documentary filmmaker, believes that in 21st century New York City should convert an entire city block into a 'metropolitarium' dedicated to education (S)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/education/visions-cities-manifestoes-to-give-city-a-new-edge-the-metropolitarium.html",
+  "Snippet": "Ric Burns, documentary filmmaker, believes that in 21st century New York City should convert an entire city block into a 'metropolitarium' dedicated to education (S)",
+  "LeadParagraph": "RIC BURNS, director and co-writer of ''New York: A Documentary Film''",
+  "PrintSection": "E",
+  "PrintPage": "28",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Education",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/b8d8e3ad-b3d8-5619-9e8d-2aaf142c81c2",
+  "WordCount": 139,
+  "Headline": {
+    "Main": "VISIONS: CITIES - Manifestoes To Give City A New Edge; 'The Metropolitarium'",
+    "Kicker": null,
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS: CITIES - Manifestoes To Give City A New Edge; 'The Metropolitarium'",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "glocations",
+      "Value": "New York City",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "persons",
+      "Value": "Burns, Ric",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Education and Schools",
+      "Rank": 3,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Dan Barry",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Dan",
+        "MiddleName": null,
+        "LastName": "Barry",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

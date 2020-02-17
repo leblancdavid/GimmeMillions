@@ -1,0 +1,68 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Article on upcoming Rose Bowl between Stanford and Wisconsin; photo (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/sports/college-football-stanford-hopes-to-follow-path-wisconsin-cut.html",
+  "Snippet": "Article on upcoming Rose Bowl between Stanford and Wisconsin; photo (M)",
+  "LeadParagraph": "Going into Saturday's 86th Rose Bowl, there is great uncertainty about the playing status of Troy Walters, the Stanford all-American receiver, defensive lineman Willie Howard and center Mike McLaughlin. It is unclear, too, whether Coach Barry Alvarez of Wisconsin, recovering from knee replacement, will man the sideline or coach from the press box.",
+  "PrintSection": "D",
+  "PrintPage": "3",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "Sports Desk",
+  "SectionName": "Sports",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/b5559cc1-cfe4-537b-a290-dfc2d21d24b7",
+  "WordCount": 713,
+  "Headline": {
+    "Main": "Stanford Hopes To Follow Path Wisconsin Cut",
+    "Kicker": "COLLEGE FOOTBALL",
+    "ContentKicker": null,
+    "PrintHeadline": "COLLEGE FOOTBALL; Stanford Hopes To Follow Path Wisconsin Cut",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "organizations",
+      "Value": "University of Wisconsin",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "organizations",
+      "Value": "Stanford University",
+      "Rank": 2,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Football",
+      "Rank": 3,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Rose Bowl (Football Game)",
+      "Rank": 4,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Ken Gurnick",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Ken",
+        "MiddleName": null,
+        "LastName": "Gurnick",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "Date": "2000-01-01T00:00:00",
+  "Abstract": "Erica Goode article says increased understanding of interplay of chemicals, genes and enviropnmental influences will bring exponential leaps in the ability to manipulate the brain and to influence thinking, feeling, memory and behavior in the next century, perhaps as early as in the next three decades; photo (M)",
+  "WebUrl": "https://www.nytimes.com/2000/01/01/news/visions-identity-rx-for-brain-makeovers.html",
+  "Snippet": "Erica Goode article says increased understanding of interplay of chemicals, genes and enviropnmental influences will bring exponential leaps in the ability to manipulate the brain and to influence thinking, feeling, memory and behavior in the next...",
+  "LeadParagraph": "THE Scarecrow in ''The Wizard of Oz'' wanted only a brain -- he did not much care what kind.",
+  "PrintSection": "E",
+  "PrintPage": "27",
+  "Source": "The New York Times",
+  "PubDate": "2000-01-01T05:00:00+0000",
+  "DocumentType": "article",
+  "NewsDesk": "The Millennium",
+  "SectionName": "Archives",
+  "TypeOfMaterial": "News",
+  "Uri": "nyt://article/d3d27a3e-ab23-550a-9b54-3e421fa9f8bc",
+  "WordCount": 728,
+  "Headline": {
+    "Main": "Rx for Brain Makeovers",
+    "Kicker": "VISIONS: IDENTITY",
+    "ContentKicker": null,
+    "PrintHeadline": "VISIONS: IDENTITY; Rx for Brain Makeovers",
+    "Name": null,
+    "Seo": null,
+    "Sub": null
+  },
+  "Keywords": [
+    {
+      "Name": "subject",
+      "Value": "Brain",
+      "Rank": 1,
+      "Major": "N"
+    },
+    {
+      "Name": "subject",
+      "Value": "Research",
+      "Rank": 2,
+      "Major": "N"
+    }
+  ],
+  "Multimedia": [],
+  "Byline": {
+    "Original": "By Erica Goode",
+    "Organization": null,
+    "Person": [
+      {
+        "FirstName": "Erica",
+        "MiddleName": null,
+        "LastName": "Goode",
+        "Qualifier": null,
+        "Title": null,
+        "Organization": "",
+        "Rank": 1
+      }
+    ]
+  }
+}
