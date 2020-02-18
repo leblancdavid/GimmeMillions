@@ -54,10 +54,12 @@
     <Compile Include="Articles\Multimedia.cs" />
     <Compile Include="Articles\Person.cs" />
     <Compile Include="Features\BagOfWordsFeatureVectorExtractor.cs" />
+    <Compile Include="Features\DefaultFeatureDatasetService.cs" />
     <Compile Include="Features\DefaultTextProcessor.cs" />
     <Compile Include="Features\FeaturesDictionary.cs" />
     <Compile Include="Features\FeatureVector.cs" />
     <Compile Include="Features\IFeatureChecker.cs" />
+    <Compile Include="Features\IFeatureDatasetService.cs" />
     <Compile Include="Features\IFeatureDictionaryRepository.cs" />
     <Compile Include="Features\IFeatureVectorExtractor.cs" />
     <Compile Include="Features\ITextProcessor.cs" />
