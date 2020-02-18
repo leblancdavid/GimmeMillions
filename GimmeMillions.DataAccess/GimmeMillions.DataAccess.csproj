@@ -54,6 +54,7 @@
     <Compile Include="Articles\NYTArticleAccessService.cs" />
     <Compile Include="Articles\NYTArticleRepository.cs" />
     <Compile Include="Articles\NYTArticleResponse.cs" />
+    <Compile Include="Features\FeatureDictionaryJsonRepository.cs" />
     <Compile Include="Keys\NYTApiAccessKeyRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stocks\StockDataRepository.cs" />

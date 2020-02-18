@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="Articles\NYTArticleAccessServiceTests.cs" />
     <Compile Include="Articles\NYTArticleRepositoryTests.cs" />
+    <Compile Include="Features\FeatureDictionaryJsonRepositoryTests.cs" />
     <Compile Include="Keys\NYTApiAccessKeyRepositoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stocks\StockDataRepositoryTests.cs" />
@@ -89,6 +90,10 @@
     <ProjectReference Include="..\..\GimmeMillions.Domain\GimmeMillions.Domain.csproj">
       <Project>{33C44D32-3FE7-4B05-9D8D-0E3018F608C5}</Project>
       <Name>GimmeMillions.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\GimmeMillions.Domain.Tests\GimmeMillions.Domain.Tests.csproj">
+      <Project>{bc7b0190-4f97-4727-b827-187bb4e24324}</Project>
+      <Name>GimmeMillions.Domain.Tests</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

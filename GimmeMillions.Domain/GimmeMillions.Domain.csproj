@@ -56,6 +56,7 @@
     <Compile Include="Features\DefaultTextProcessor.cs" />
     <Compile Include="Features\FeaturesDictionary.cs" />
     <Compile Include="Features\IFeatureChecker.cs" />
+    <Compile Include="Features\IFeatureDictionaryRepository.cs" />
     <Compile Include="Features\ITextProcessor.cs" />
     <Compile Include="Features\UsaLanguageChecker.cs" />
     <Compile Include="Keys\AccessKey.cs" />

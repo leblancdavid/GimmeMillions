@@ -9,31 +9,36 @@ namespace GimmeMillions.Domain.Features
 {
     public class UsaLanguageChecker : IFeatureChecker
     {
-        private HashSet<string> _dictionary = new HashSet<string>();
+        public HashSet<string> LanguageSet { get; set; }
+
+        public UsaLanguageChecker()
+        {
+            LanguageSet = new HashSet<string>();
+        }
 
         public void Load(StreamReader reader)
         {
-            _dictionary = new HashSet<string>();
+            LanguageSet = new HashSet<string>();
             string word;
             while ((word = reader.ReadLine()) != null)
             {
-                _dictionary.Add(word);
+                LanguageSet.Add(word);
             }
         }
 
         public void Add(string f)
         {
-            _dictionary.Add(f);
+            LanguageSet.Add(f);
         }
 
         public void Remove(string f)
         {
-            _dictionary.Remove(f);
+            LanguageSet.Remove(f);
         }
 
         public bool IsValid(string feature)
         {
-            if (_dictionary.Contains(feature))
+            if (LanguageSet.Contains(feature))
                 return true;
             return false;
         }

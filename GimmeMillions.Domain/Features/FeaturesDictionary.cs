@@ -2,21 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.Features
 {
     public class FeaturesDictionary
     {
-        private Dictionary<string, int> _featureSet = new Dictionary<string, int>();
+        public Dictionary<string, int> FeatureTable { get; set; }
 
         public int Size
         {
             get
             {
-                return _featureSet.Count;
+                return FeatureTable.Count;
             }
         }
 
@@ -24,12 +21,23 @@ namespace GimmeMillions.Domain.Features
         {
             get
             {
-                return _featureSet.Sum(x => (double)x.Value) / (double)_featureSet.Count;
+                return FeatureTable.Sum(x => (double)x.Value) / (double)FeatureTable.Count;
             }
+        }
+
+        public int MaxCount { get; set; }
+        public string DictionaryId { get; set; }
+            
+        public FeaturesDictionary()
+        {
+            MaxCount = 0;
+            DictionaryId = Guid.NewGuid().ToString();
+            FeatureTable = new Dictionary<string, int>();
         }
         public void Clear()
         {
-            _featureSet = new Dictionary<string, int>();
+            MaxCount = 0;
+            FeatureTable = new Dictionary<string, int>();
         }
 
         public void AddArticle(Article article, ITextProcessor textProcessor)
@@ -49,13 +57,17 @@ namespace GimmeMillions.Domain.Features
                     continue;
                 }
 
-                if(_featureSet.ContainsKey(f))
+                if(FeatureTable.ContainsKey(f))
                 {
-                    _featureSet[f]++;
+                    FeatureTable[f]++;
                 }
                 else
                 {
-                    _featureSet[f] = 1;
+                    FeatureTable[f] = 1;
+                }
+                if(MaxCount < FeatureTable[f])
+                {
+                    MaxCount = FeatureTable[f];
                 }
             }
         }
