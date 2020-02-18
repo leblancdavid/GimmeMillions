@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.Features
 {
-    public class DefaultTextProcessor : IFeatureChecker
+    public class DefaultTextProcessor : ITextProcessor
     {
         protected IFeatureChecker _featureChecker;
         public DefaultTextProcessor(IFeatureChecker featureChecker)
