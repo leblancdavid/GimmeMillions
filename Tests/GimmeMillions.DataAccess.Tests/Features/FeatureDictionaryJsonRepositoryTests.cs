@@ -33,7 +33,6 @@ namespace GimmeMillions.DataAccess.Tests.Features
             var result = repo.GetFeatureDictionary("FeatureDictionaryJsonRepositoryTests.ShouldAddFeatureDictionaries");
 
             result.IsSuccess.Should().BeTrue();
-            result.Value.MaxCount.Should().Be(112378);
             result.Value.Size.Should().Be(31213);
         }
 

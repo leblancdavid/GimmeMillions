@@ -18,7 +18,21 @@ namespace GimmeMillions.Domain.Features
         }
 
         public string DictionaryId { get; set; }
-            
+
+        public int this[string i]
+        {
+            get
+            {
+                if(!FeatureTable.ContainsKey(i))
+                {
+                    return -1;
+                }
+
+                return FeatureTable[i];
+            }
+            private set { FeatureTable[i] = value; }
+        }
+
         public FeaturesDictionary()
         {
             DictionaryId = Guid.NewGuid().ToString();

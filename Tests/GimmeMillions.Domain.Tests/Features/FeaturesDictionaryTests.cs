@@ -22,7 +22,6 @@ namespace GimmeMillions.Domain.Tests.Features
 
             var featureDictionary = CreateTestFeatureDictionary("FeaturesDictionaryTests.AddArticlesToFeatureDictionary", _pathToArticles, _pathToLanguage);
             featureDictionary.Size.Should().BeGreaterThan(0);
-            featureDictionary.AverageCount.Should().BeGreaterThan(0.0);
         }
 
         public static FeaturesDictionary CreateTestFeatureDictionary(string dictionaryId, string pathToArticles, string pathToLanguage)
