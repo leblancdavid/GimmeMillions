@@ -25,5 +25,25 @@ namespace GimmeMillions.DataAccess.Tests.Features
 
             result.IsSuccess.Should().BeTrue();
         }
+
+        [Fact]
+        public void ShouldGetFeatureDictionary()
+        {
+            var repo = new FeatureDictionaryJsonRepository(_pathToDictionary);
+            var result = repo.GetFeatureDictionary("FeatureDictionaryJsonRepositoryTests.ShouldAddFeatureDictionaries");
+
+            result.IsSuccess.Should().BeTrue();
+            result.Value.MaxCount.Should().Be(112378);
+            result.Value.Size.Should().Be(31213);
+        }
+
+        [Fact]
+        public void ShouldGetTheSetOfAvailableFeatureDictionaries()
+        {
+            var repo = new FeatureDictionaryJsonRepository(_pathToDictionary);
+            var result = repo.GetFeatureDictionaryIds();
+
+            result.Count().Should().BeGreaterThan(0);
+        }
     }
 }
