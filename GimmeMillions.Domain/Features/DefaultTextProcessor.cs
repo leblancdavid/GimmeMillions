@@ -16,6 +16,11 @@ namespace GimmeMillions.Domain.Features
         }
         public IEnumerable<string> Process(string f)
         {
+            if(string.IsNullOrEmpty(f))
+            {
+                return new List<string>();
+            }
+
             var onlyLetters = Regex.Replace(f.ToLower(), @"[^a-z]+", " ");
             var words = onlyLetters.Split(' ');
 
