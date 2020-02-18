@@ -15,7 +15,7 @@ namespace NytArticleCollector
     {
         static void Main(string[] args)
         {
-            var lastCollectedDate = new DateTime(2000, 1, 2);
+            var lastCollectedDate = new DateTime(2000, 5, 2);
             string progressFile = "progress.json";
             if(File.Exists(progressFile))
             {

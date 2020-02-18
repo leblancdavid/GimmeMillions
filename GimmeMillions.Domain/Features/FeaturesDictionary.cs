@@ -17,26 +17,15 @@ namespace GimmeMillions.Domain.Features
             }
         }
 
-        public double AverageCount
-        {
-            get
-            {
-                return FeatureTable.Sum(x => (double)x.Value) / (double)FeatureTable.Count;
-            }
-        }
-
-        public int MaxCount { get; set; }
         public string DictionaryId { get; set; }
             
         public FeaturesDictionary()
         {
-            MaxCount = 0;
             DictionaryId = Guid.NewGuid().ToString();
             FeatureTable = new Dictionary<string, int>();
         }
         public void Clear()
         {
-            MaxCount = 0;
             FeatureTable = new Dictionary<string, int>();
         }
 
@@ -45,29 +34,27 @@ namespace GimmeMillions.Domain.Features
             ProcessFeatureString(article.Abstract, textProcessor);
             ProcessFeatureString(article.Snippet, textProcessor);
             ProcessFeatureString(article.LeadParagraph, textProcessor);
+            if(article.Headline != null)
+            {
+                ProcessFeatureString(article.Headline.PrintHeadline, textProcessor);
+            }
         }
 
         private void ProcessFeatureString(string text, ITextProcessor textProcessor)
         {
+            int index = FeatureTable.Count;
             var features = textProcessor.Process(text);
-            foreach(var f in features)
+            foreach (var f in features)
             {
-                if(string.IsNullOrEmpty(f))
+                if (string.IsNullOrEmpty(f))
                 {
                     continue;
                 }
 
-                if(FeatureTable.ContainsKey(f))
+                if (!FeatureTable.ContainsKey(f))
                 {
-                    FeatureTable[f]++;
-                }
-                else
-                {
-                    FeatureTable[f] = 1;
-                }
-                if(MaxCount < FeatureTable[f])
-                {
-                    MaxCount = FeatureTable[f];
+                    FeatureTable[f] = index;
+                    index++;
                 }
             }
         }

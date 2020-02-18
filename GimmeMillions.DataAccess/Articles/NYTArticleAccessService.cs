@@ -15,7 +15,7 @@ namespace GimmeMillions.DataAccess.Articles
         private readonly IAccessKeyRepository _accessKeyRepository;
         private readonly IArticleRepository _articleRepository;
         private readonly string _nytApiUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-        private readonly int _callInterval_ms = 2000;
+        private readonly int _callInterval_ms = 1000;
         public NYTArticleAccessService(IAccessKeyRepository accessKeyRepository,
             IArticleRepository articleRepository)
         {
