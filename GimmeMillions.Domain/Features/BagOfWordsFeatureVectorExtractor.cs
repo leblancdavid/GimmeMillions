@@ -24,8 +24,8 @@ namespace GimmeMillions.Domain.Features
             {
                 return new FeatureVector(0);
             }
-
-            var vector = new FeatureVector(_featuresDictionary.Size);
+            
+            var vector = new FeatureVector(_featuresDictionary.Size, articles.Max(x => x.Article.Date));
 
             foreach(var article in articles)
             {
