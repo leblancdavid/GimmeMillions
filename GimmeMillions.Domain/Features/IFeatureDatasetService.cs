@@ -12,6 +12,7 @@ namespace GimmeMillions.Domain.Features
     {
         Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol, 
             DateTime startDate = default(DateTime), DateTime endDate = default(DateTime));
-        Result<(FeatureVector Input, StockData Output)> GetTestExample(string symbol, DateTime date);
+        Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date);
+        Result<FeatureVector> GetData(DateTime date);
     }
 }

@@ -23,7 +23,7 @@ namespace GimmeMillions.Domain.Features
             _stockRepository = stockRepository;
         }
 
-        public Result<(FeatureVector Input, StockData Output)> GetTestExample(string symbol, DateTime date)
+        public Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date)
         {
             var stock = _stockRepository.GetStocks(symbol).FirstOrDefault(x => x.Date.Date == date.Date);
             if(stock == null)
@@ -40,6 +40,17 @@ namespace GimmeMillions.Domain.Features
 
             return Result.Ok((Input: _featureVectorExtractor.Extract(articles.Select(x => (x, 1.0))), Output: stock));
 
+        }
+
+        public Result<FeatureVector> GetData(DateTime date)
+        {
+            var articleDate = date.Date.AddDays(-1.0);
+            var articles = _articleRepository.GetArticles(articleDate);
+            if (!articles.Any())
+                return Result.Failure<FeatureVector>(
+                    $"No articles found on {articleDate.ToString("yyyy/MM/dd")}"); ;
+
+            return Result.Ok(_featureVectorExtractor.Extract(articles.Select(x => (x, 1.0))));
         }
 
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol,
