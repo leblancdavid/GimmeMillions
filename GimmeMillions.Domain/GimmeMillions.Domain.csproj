@@ -68,6 +68,7 @@
     <Compile Include="Keys\IAccessKeyRepository.cs" />
     <Compile Include="ML\IStockPredictor.cs" />
     <Compile Include="ML\StockPrediction.cs" />
+    <Compile Include="ML\TrainingResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stocks\IStockRepository.cs" />
     <Compile Include="Stocks\StockData.cs" />
