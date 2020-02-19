@@ -66,7 +66,9 @@
     <Compile Include="Features\UsaLanguageChecker.cs" />
     <Compile Include="Keys\AccessKey.cs" />
     <Compile Include="Keys\IAccessKeyRepository.cs" />
-    <Compile Include="ML\IStockPredictor.cs" />
+    <Compile Include="ML\IStockPredictionModel.cs" />
+    <Compile Include="ML\IStockPredictionService.cs" />
+    <Compile Include="ML\MLStockRegressionModel.cs" />
     <Compile Include="ML\StockPrediction.cs" />
     <Compile Include="ML\TrainingResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
