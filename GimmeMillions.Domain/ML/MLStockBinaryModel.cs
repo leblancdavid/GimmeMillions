@@ -64,7 +64,7 @@ namespace GimmeMillions.Domain.ML
             definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
             var dataViewData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Value.Select(x =>
-                new StockRiseDataFeature(x.Input.Data, x.Output.PercentDayChange >= 0)), definedSchema);
+                new StockRiseDataFeature(x.Input.Data, x.Output.PercentDayChange >= 0, (float)x.Output.PercentDayChange)), definedSchema);
 
             IDataView trainData = null, testData = null;
             if (testFraction > 0.0)
@@ -79,7 +79,7 @@ namespace GimmeMillions.Domain.ML
             }
 
             var trainer = _mLContext.BinaryClassification.Trainers.FastTree(
-                numberOfLeaves: 100, 
+                numberOfLeaves: 20, 
                 numberOfTrees: 100, 
                 minimumExampleCountPerLeaf: 0);
             var trainedModel = trainer.Fit(trainData);
@@ -88,7 +88,7 @@ namespace GimmeMillions.Domain.ML
             var trainDataPredictions = trainedModel.Transform(trainData);
             bool[] predictionColumn = trainDataPredictions.GetColumn<bool>("PredictedLabel").ToArray();
             bool[] labelColumn = trainDataPredictions.GetColumn<bool>("Label").ToArray();
-            var probability = trainDataPredictions.GetColumn<float>("Probability").ToArray();
+            var probabilityColumn = trainDataPredictions.GetColumn<float>("Probability").ToArray();
             for (int i = 0; i < predictionColumn.Length; ++i)
             {
                 if ((predictionColumn[i] && labelColumn[i]) || (!predictionColumn[i] && !labelColumn[i]))
@@ -104,7 +104,8 @@ namespace GimmeMillions.Domain.ML
                 var testDataPredictions = trainedModel.Transform(testData);
                 predictionColumn = testDataPredictions.GetColumn<bool>("PredictedLabel").ToArray();
                 labelColumn = testDataPredictions.GetColumn<bool>("Label").ToArray();
-                probability = testDataPredictions.GetColumn<float>("Probability").ToArray();
+                probabilityColumn = testDataPredictions.GetColumn<float>("Probability").ToArray();
+                var valueColumn = testDataPredictions.GetColumn<float>("Value").ToArray();
                 for (int i = 0; i < predictionColumn.Length; ++i)
                 {
                     if ((predictionColumn[i] && labelColumn[i]) || (!predictionColumn[i] && !labelColumn[i]))

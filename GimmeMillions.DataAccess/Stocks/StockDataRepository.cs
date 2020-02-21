@@ -26,16 +26,23 @@ namespace GimmeMillions.DataAccess.Stocks
             var file = new StreamReader(fileName);
             string line;
             file.ReadLine(); //First line is the header
+            StockData previous = null;
             while ((line = file.ReadLine()) != null)
             {
                 var fields = line.Split(',');
-                stocks.Add(new StockData(symbol,
+                var stock = new StockData(symbol,
                     DateTime.Parse(fields[0]),
                     decimal.Parse(fields[1]),
                     decimal.Parse(fields[2]),
                     decimal.Parse(fields[3]),
                     decimal.Parse(fields[4]),
-                    decimal.Parse(fields[5])));
+                    decimal.Parse(fields[5]));
+                if(previous != null)
+                {
+                    stock.PercentChange = (decimal)100.0 * (stock.Close - previous.Close) / previous.Close;
+                }
+                stocks.Add(stock);
+                previous = stock;
             }
 
             return stocks;
