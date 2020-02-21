@@ -11,7 +11,7 @@ namespace GimmeMillions.Domain.ML
     {
         string StockSymbol { get; }
         bool IsTrained { get; }
-        Result<TrainingResult> Train(DateTime startDate, DateTime endDate);
+        Result<TrainingResult> Train(DateTime startDate, DateTime endDate, double testFraction);
         Result<StockPrediction> Predict(DateTime date);
         Result<StockPrediction> PredictLatest();
         Result Save(string pathToModel);

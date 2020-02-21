@@ -8,14 +8,14 @@ namespace GimmeMillions.Domain.Features
 {
     public class FeatureVector
     {
-        public double[] Data { get; set; }
+        public float[] Data { get; set; }
         public DateTime Date { get; set; }
         public int Length
         {
             get { return Data.Length; }
         }
 
-        public double this[int i]
+        public float this[int i]
         {
             get { return Data[i]; }
             set { Data[i] = value; }
@@ -23,13 +23,13 @@ namespace GimmeMillions.Domain.Features
 
         public FeatureVector(int length)
         {
-            Data = new double[length];
+            Data = new float[length];
             Date = DateTime.Today;
         }
 
         public FeatureVector(int length, DateTime date)
         {
-            Data = new double[length];
+            Data = new float[length];
             Date = date;
         }
 

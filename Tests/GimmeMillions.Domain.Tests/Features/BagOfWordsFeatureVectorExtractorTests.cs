@@ -34,7 +34,7 @@ namespace GimmeMillions.Domain.Tests.Features
 
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
 
-            var featureVector = bow.Extract(articles.Select(x => (x, 1.0)));
+            var featureVector = bow.Extract(articles.Select(x => (x, 1.0f)));
             featureVector.Length.Should().BeGreaterThan(0);
             featureVector.Data.Any(x => x >= 0).Should().BeTrue();
 

@@ -6,6 +6,6 @@ namespace GimmeMillions.Domain.Features
 {
     public interface IFeatureVectorExtractor
     {
-        FeatureVector Extract(IEnumerable<(Article Article, double Weight)> articles);
+        FeatureVector Extract(IEnumerable<(Article Article, float Weight)> articles);
     }
 }

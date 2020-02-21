@@ -18,7 +18,7 @@ namespace GimmeMillions.Domain.Features
             _featuresDictionary = featuresDictionary;
             _textProcessor = textProcessor;
         }
-        public FeatureVector Extract(IEnumerable<(Article Article, double Weight)> articles)
+        public FeatureVector Extract(IEnumerable<(Article Article, float Weight)> articles)
         {
             if(!articles.Any())
             {
@@ -36,7 +36,7 @@ namespace GimmeMillions.Domain.Features
 
         }
 
-        private void ProcessAndUpdateVector((Article Article, double Weight) article, FeatureVector vector)
+        private void ProcessAndUpdateVector((Article Article, float Weight) article, FeatureVector vector)
         {
             var features = _textProcessor.Process(article.Article.Abstract)
                 .Concat(_textProcessor.Process(article.Article.Snippet))

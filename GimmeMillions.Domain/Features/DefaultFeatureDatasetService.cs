@@ -38,7 +38,7 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<(FeatureVector Input, StockData Output)>(
                     $"No articles found on {articleDate.ToString("yyyy/MM/dd")}"); ;
 
-            return Result.Ok((Input: _featureVectorExtractor.Extract(articles.Select(x => (x, 1.0))), Output: stock));
+            return Result.Ok((Input: _featureVectorExtractor.Extract(articles.Select(x => (x, 1.0f))), Output: stock));
 
         }
 
@@ -50,7 +50,7 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<FeatureVector>(
                     $"No articles found on {articleDate.ToString("yyyy/MM/dd")}"); ;
 
-            return Result.Ok(_featureVectorExtractor.Extract(articles.Select(x => (x, 1.0))));
+            return Result.Ok(_featureVectorExtractor.Extract(articles.Select(x => (x, 1.0f))));
         }
 
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol,
@@ -73,7 +73,7 @@ namespace GimmeMillions.Domain.Features
                     if (!articles.Any())
                         continue;
                     
-                    trainingData.Add((Input : _featureVectorExtractor.Extract(articles.Select(x => (x, 1.0))), Output: stock));
+                    trainingData.Add((Input : _featureVectorExtractor.Extract(articles.Select(x => (x, 1.0f))), Output: stock));
                 }
             }
 

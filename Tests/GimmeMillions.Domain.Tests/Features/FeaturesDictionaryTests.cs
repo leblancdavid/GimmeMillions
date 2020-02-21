@@ -14,7 +14,6 @@ namespace GimmeMillions.Domain.Tests.Features
     public class FeaturesDictionaryTests
     {
         private readonly string _pathToArticles = "../../../../Repository/Articles";
-        private readonly string _pathToDictionary = "../../../../Repository/Dictionaries";
         private readonly string _pathToLanguage = "../../../../Repository/Languages";
         [Fact]
         public void AddArticlesToFeatureDictionary()
