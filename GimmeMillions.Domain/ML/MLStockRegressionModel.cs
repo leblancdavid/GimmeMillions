@@ -60,13 +60,13 @@ namespace GimmeMillions.Domain.ML
             // The feature dimension (typically this will be the Count of the array 
             // of the features vector known at runtime).
             int featureDimension = dataset.Value.FirstOrDefault().Input.Length;
-            var definedSchema = SchemaDefinition.Create(typeof(FeatureVectorToStockDataFeature));
+            var definedSchema = SchemaDefinition.Create(typeof(StockDailyValueDataFeature));
             var featureColumn = definedSchema["Features"].ColumnType as VectorDataViewType;
             var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
             definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
             var dataViewData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Value.Select(x => 
-                new FeatureVectorToStockDataFeature(x.Input.Data, (float)x.Output.PercentDayChange)), definedSchema);
+                new StockDailyValueDataFeature(x.Input.Data, (float)x.Output.PercentDayChange)), definedSchema);
 
             IDataView trainData = null, testData = null;
             if(testFraction > 0.0)
@@ -103,8 +103,8 @@ namespace GimmeMillions.Domain.ML
 
             var trainer = _mLContext.Regression.Trainers.FastTree(new FastTreeRegressionTrainer.Options
             {
-                LabelColumnName = nameof(FeatureVectorToStockDataFeature.Label),
-                FeatureColumnName = nameof(FeatureVectorToStockDataFeature.Features),
+                LabelColumnName = nameof(StockDailyValueDataFeature.Label),
+                FeatureColumnName = nameof(StockDailyValueDataFeature.Features),
                 NumberOfTrees = 100,
                 NumberOfLeaves = 10,
                 MinimumExampleCountPerLeaf = 1,
