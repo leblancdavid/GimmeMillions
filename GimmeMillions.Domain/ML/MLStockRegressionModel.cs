@@ -8,6 +8,8 @@ using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
 using Microsoft.ML;
 using Microsoft.ML.Data;
+using Microsoft.ML.Trainers.FastTree;
+using Microsoft.ML.Trainers.LightGbm;
 
 namespace GimmeMillions.Domain.ML
 {
@@ -66,29 +68,86 @@ namespace GimmeMillions.Domain.ML
                 dataset.Value.Select(x => 
                 new FeatureVectorToStockDataFeature(x.Input.Data, (float)x.Output.PercentDayChange)), definedSchema);
 
-            var dataSplit = _mLContext.Data.TrainTestSplit(dataViewData, testFraction);
-            var trainData = dataSplit.TrainSet;
-            var testData = dataSplit.TestSet;
+            IDataView trainData = null, testData = null;
+            if(testFraction > 0.0)
+            {
+                var dataSplit = _mLContext.Data.TrainTestSplit(dataViewData, testFraction);
+                trainData = dataSplit.TrainSet;
+                testData = dataSplit.TestSet;
+            }
+            else
+            {
+                trainData = dataViewData;
+            }
+            
 
+            //var trainer = _mLContext.Regression.Trainers.LightGbm(new LightGbmRegressionTrainer.Options
+            //{
+            //    LabelColumnName = nameof(FeatureVectorToStockDataFeature.Label),
+            //    FeatureColumnName = nameof(FeatureVectorToStockDataFeature.Features),
+            //    // How many leaves a single tree should have.
+            //    NumberOfLeaves = 4,
+            //    // Each leaf contains at least this number of training data points.
+            //    MinimumExampleCountPerLeaf = 1,
+            //    // The step size per update. Using a large value might reduce the
+            //    // training time but also increase the algorithm's numerical
+            //    // stability.
+            //    LearningRate = 0.001,
+            //    Booster = new GossBooster.Options()
+            //    {
+            //        TopRate = 0.3,
+            //        OtherRate = 0.2
+            //    }
+            //});
+            //var trainedModel = trainer.Fit(trainData);
 
-            //IEstimator<ITransformer> dataPrepEstimator = _mLContext.Transforms.Concatenate("Features", "Input");
-            //ITransformer dataPrepTransformer = dataPrepEstimator.Fit(trainData);
-           // IDataView transformedTrainingData = dataPrepTransformer.Transform(trainData);
+            var trainer = _mLContext.Regression.Trainers.FastTree(new FastTreeRegressionTrainer.Options
+            {
+                LabelColumnName = nameof(FeatureVectorToStockDataFeature.Label),
+                FeatureColumnName = nameof(FeatureVectorToStockDataFeature.Features),
+                NumberOfTrees = 100,
+                NumberOfLeaves = 10,
+                MinimumExampleCountPerLeaf = 1,
+                LearningRate = 0.001,
+                FeatureFirstUsePenalty = 0.1
+            });
+            var trainedModel = trainer.Fit(trainData);
 
-            var sdcaEstimator = _mLContext.Regression.Trainers.Sdca();
+            var trainingResult = new TrainingResult();
+            var trainDataPredictions = trainedModel.Transform(trainData);
+            float[] scoreColumn = trainDataPredictions.GetColumn<float>("Score").ToArray();
+            float[] labelColumn = trainDataPredictions.GetColumn<float>("Label").ToArray();
+            for(int i = 0; i < scoreColumn.Length; ++i)
+            {
+                if((scoreColumn[i] > 0 && labelColumn[i] > 0) || (scoreColumn[i] < 0 && labelColumn[i] < 0))
+                {
+                    trainingResult.TrainingAccuracy++;
+                }
+                trainingResult.TrainingError += Math.Abs(scoreColumn[i] - labelColumn[i]);
+            }
 
-            var trainedModel = sdcaEstimator.Fit(trainData);
+            trainingResult.TrainingAccuracy /= (double)scoreColumn.Length;
+            trainingResult.TrainingError /= (double)scoreColumn.Length;
 
-            var testDataPredictions = trainedModel.Transform(testData);
+            if (testData != null)
+            {
+                var testDataPredictions = trainedModel.Transform(testData);
+                scoreColumn = testDataPredictions.GetColumn<float>("Score").ToArray();
+                labelColumn = testDataPredictions.GetColumn<float>("Label").ToArray();
+                for (int i = 0; i < scoreColumn.Length; ++i)
+                {
+                    if ((scoreColumn[i] > 0 && labelColumn[i] > 0) || (scoreColumn[i] < 0 && labelColumn[i] < 0))
+                    {
+                        trainingResult.ValidationAccuracy++;
+                    }
+                    trainingResult.ValidationError += Math.Abs(scoreColumn[i] - labelColumn[i]);
+                }
 
-            float[] scoreColumn = testDataPredictions.GetColumn<float>("Score").ToArray();
-            float[] labelColumn = testDataPredictions.GetColumn<float>("Label").ToArray();
-
-            // Extract model metrics and get RSquared
-            var trainedModelMetrics = _mLContext.Regression.Evaluate(testDataPredictions);
-            double rSquared = trainedModelMetrics.RSquared;
-
-            return Result.Ok(new TrainingResult());
+                trainingResult.ValidationAccuracy /= (double)scoreColumn.Length;
+                trainingResult.ValidationError /= (double)scoreColumn.Length;
+            }
+                
+            return Result.Ok(trainingResult);
 
         }
     }

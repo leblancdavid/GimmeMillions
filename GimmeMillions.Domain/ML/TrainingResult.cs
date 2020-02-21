@@ -8,7 +8,9 @@ namespace GimmeMillions.Domain.ML
 {
     public class TrainingResult
     {
-        public double Accuracy { get; set; }
-        public double AverageRegressionError { get; set; }
+        public double TrainingAccuracy { get; set; }
+        public double TrainingError { get; set; }
+        public double ValidationAccuracy { get; set; }
+        public double ValidationError { get; set; }
     }
 }
