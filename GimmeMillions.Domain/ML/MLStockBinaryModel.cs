@@ -79,8 +79,8 @@ namespace GimmeMillions.Domain.ML
             }
 
             var trainer = _mLContext.BinaryClassification.Trainers.FastTree(
-                numberOfLeaves: 100, 
-                numberOfTrees: 100, 
+                numberOfLeaves: 10, 
+                numberOfTrees: 200,
                 minimumExampleCountPerLeaf: 0);
             var trainedModel = trainer.Fit(trainData);
 

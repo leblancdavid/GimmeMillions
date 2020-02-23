@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -63,19 +64,19 @@ namespace GimmeMillions.Domain.Features
                     $"No stocks found for symbol '{symbol}'");
             }
 
-            var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            foreach(var stock in stocks)
+            var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
+            Parallel.ForEach(stocks, (stock) =>
             {
-                if((startDate == default(DateTime) || startDate < stock.Date) &&
+                if ((startDate == default(DateTime) || startDate < stock.Date) &&
                     (endDate == default(DateTime) || endDate > stock.Date))
                 {
                     var articles = _articleRepository.GetArticles(stock.Date.AddDays(-1.0));
                     if (!articles.Any())
-                        continue;
-                    
-                    trainingData.Add((Input : _featureVectorExtractor.Extract(articles.Select(x => (x, 1.0f))), Output: stock));
+                        return;
+
+                    trainingData.Add((Input: _featureVectorExtractor.Extract(articles.Select(x => (x, 1.0f))), Output: stock));
                 }
-            }
+            });
 
             if(!trainingData.Any())
             {
