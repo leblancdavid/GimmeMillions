@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.ML.Mkl.Components.1.4.0\build\netstandard2.0\Microsoft.ML.Mkl.Components.props" Condition="Exists('..\packages\Microsoft.ML.Mkl.Components.1.4.0\build\netstandard2.0\Microsoft.ML.Mkl.Components.props')" />
+  <Import Project="..\packages\Microsoft.ML.Mkl.Redist.1.4.0\build\netstandard2.0\Microsoft.ML.Mkl.Redist.props" Condition="Exists('..\packages\Microsoft.ML.Mkl.Redist.1.4.0\build\netstandard2.0\Microsoft.ML.Mkl.Redist.props')" />
   <Import Project="..\packages\LightGBM.2.2.3\build\LightGBM.props" Condition="Exists('..\packages\LightGBM.2.2.3\build\LightGBM.props')" />
   <Import Project="..\packages\Microsoft.ML.FastTree.1.4.0\build\netstandard2.0\Microsoft.ML.FastTree.props" Condition="Exists('..\packages\Microsoft.ML.FastTree.1.4.0\build\netstandard2.0\Microsoft.ML.FastTree.props')" />
   <Import Project="..\packages\Microsoft.ML.1.4.0\build\netstandard2.0\Microsoft.ML.props" Condition="Exists('..\packages\Microsoft.ML.1.4.0\build\netstandard2.0\Microsoft.ML.props')" />
@@ -80,6 +82,10 @@
     </Reference>
     <Reference Include="Microsoft.ML.LightGbm, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ML.LightGbm.1.4.0\lib\netstandard2.0\Microsoft.ML.LightGbm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ML.Mkl.Components, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ML.Mkl.Components.1.4.0\lib\netstandard2.0\Microsoft.ML.Mkl.Components.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ML.PCA, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ML.1.4.0\lib\netstandard2.0\Microsoft.ML.PCA.dll</HintPath>
@@ -174,6 +180,8 @@
     <Error Condition="!Exists('..\packages\Microsoft.ML.FastTree.1.4.0\build\netstandard2.0\Microsoft.ML.FastTree.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ML.FastTree.1.4.0\build\netstandard2.0\Microsoft.ML.FastTree.props'))" />
     <Error Condition="!Exists('..\packages\LightGBM.2.2.3\build\LightGBM.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\LightGBM.2.2.3\build\LightGBM.props'))" />
     <Error Condition="!Exists('..\packages\LightGBM.2.2.3\build\LightGBM.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\LightGBM.2.2.3\build\LightGBM.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.ML.Mkl.Redist.1.4.0\build\netstandard2.0\Microsoft.ML.Mkl.Redist.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ML.Mkl.Redist.1.4.0\build\netstandard2.0\Microsoft.ML.Mkl.Redist.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.ML.Mkl.Components.1.4.0\build\netstandard2.0\Microsoft.ML.Mkl.Components.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.ML.Mkl.Components.1.4.0\build\netstandard2.0\Microsoft.ML.Mkl.Components.props'))" />
   </Target>
   <Import Project="..\packages\Microsoft.ML.1.4.0\build\netstandard2.0\Microsoft.ML.targets" Condition="Exists('..\packages\Microsoft.ML.1.4.0\build\netstandard2.0\Microsoft.ML.targets')" />
   <Import Project="..\packages\LightGBM.2.2.3\build\LightGBM.targets" Condition="Exists('..\packages\LightGBM.2.2.3\build\LightGBM.targets')" />

@@ -3,6 +3,7 @@ using GimmeMillions.Domain.Features;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers.FastTree;
+using Microsoft.ML.Transforms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,8 @@ namespace GimmeMillions.Domain.ML
         {
             StockSymbol = symbol;
             _featureDatasetService = featureDatasetService;
-            _mLContext = new MLContext();
+            int seed = 27;
+            _mLContext = new MLContext(seed);
 
         }
 
@@ -74,35 +76,44 @@ namespace GimmeMillions.Domain.ML
             var normalizeTransform = normalize.Fit(dataViewData);
             var transformedData = normalizeTransform.Transform(dataViewData);
 
+            var pcaTransform = _mLContext.Transforms.ApproximatedKernelMap("Features",
+                rank: 2000,
+                generator: new GaussianKernel(gamma: 1.5f)).Fit(transformedData);
+            var pcaTransformedData = pcaTransform.Transform(transformedData);
+
             //Split data into training and testing
             IDataView trainData = null, testData = null;
             if (testFraction > 0.0)
             {
-                var dataSplit = _mLContext.Data.TrainTestSplit(transformedData, testFraction);
+                var dataSplit = _mLContext.Data.TrainTestSplit(pcaTransformedData, testFraction);
                 trainData = dataSplit.TrainSet;
                 testData = dataSplit.TestSet;
             }
             else
             {
-                trainData = dataViewData;
+                trainData = pcaTransformedData;
             }
 
-            //var trainer = _mLContext.BinaryClassification.Trainers.FastTree(
-            //    numberOfLeaves: 10, 
-            //    numberOfTrees: 200,
-            //    minimumExampleCountPerLeaf: 0);
+            var trainer = _mLContext.BinaryClassification.Trainers.FastTree(
+                numberOfLeaves: 10,
+                numberOfTrees: 40,
+                minimumExampleCountPerLeaf: 1);
             //var trainer = _mLContext.BinaryClassification.Trainers.FastForest(
-            //    numberOfLeaves: 10,
-            //    numberOfTrees: 200,
-            //    minimumExampleCountPerLeaf: 0);
-            var trainer = _mLContext.BinaryClassification.Trainers.LightGbm(
-                numberOfLeaves: 5000,
-                minimumExampleCountPerLeaf: 0);
+            //    numberOfLeaves: 50,
+            //    numberOfTrees: 500,
+            //    minimumExampleCountPerLeaf: 10);
+            //var trainer = _mLContext.BinaryClassification.Trainers.LightGbm(
+            //    numberOfLeaves: 500,
+            //    minimumExampleCountPerLeaf: 10);
 
             //var trainer = _mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression();
             //var trainer = _mLContext.BinaryClassification.Trainers.AveragedPerceptron();
             //var trainer = _mLContext.BinaryClassification.Trainers.SdcaLogisticRegression();
+            //var trainer = _mLContext.BinaryClassification.Trainers.SymbolicSgdLogisticRegression();
             var trainedModel = trainer.Fit(trainData);
+
+            var cvResults = _mLContext.BinaryClassification.CrossValidate(trainData, trainer, 5);
+            var averageAccuracy = cvResults.Sum(x => x.Metrics.Accuracy) / (double)cvResults.Count();
 
             var trainingResult = new TrainingResult();
             var trainDataPredictions = trainedModel.Transform(trainData);
@@ -136,6 +147,11 @@ namespace GimmeMillions.Domain.ML
 
                 trainingResult.ValidationAccuracy /= (double)predictionColumn.Length;
             }
+
+            var probabilitiesToWin = probabilityColumn.Where(x => x > 0.5f);
+            var averageProbToWin = probabilitiesToWin.Sum() / probabilitiesToWin.Count();
+            var stdevProbToWin = Math.Sqrt(probabilitiesToWin.Sum(x => (x - averageProbToWin) * (x - averageProbToWin))
+                                        / probabilitiesToWin.Count());
 
             return Result.Ok(trainingResult);
 

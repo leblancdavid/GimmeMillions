@@ -26,7 +26,8 @@ namespace GimmeMillions.Domain.ML
         {
             StockSymbol = symbol;
             _featureDatasetService = featureDatasetService;
-            _mLContext = new MLContext();
+            int seed = 27;
+            _mLContext = new MLContext(seed);
 
         }
 
@@ -77,9 +78,10 @@ namespace GimmeMillions.Domain.ML
             var transformedData = normalizeTransform.Transform(dataViewData);
 
             var pcaTransform = _mLContext.Transforms.ApproximatedKernelMap("Features",
-                rank: 1000,
+                rank: 20,
                 generator: new GaussianKernel(gamma: 0.7f)).Fit(transformedData);
             var pcaTransformedData = pcaTransform.Transform(transformedData);
+            var featuresColumn = pcaTransformedData.GetColumn<float[]>("Features").ToArray();
 
             //Split data into training and testing
             IDataView trainData = null, testData = null;
@@ -104,12 +106,12 @@ namespace GimmeMillions.Domain.ML
             //    LearningRate = 0.001,
             //    FeatureFirstUsePenalty = 0.1
             //});
-            var trainer = _mLContext.Regression.Trainers.LightGbm(
-                numberOfLeaves: 1000,
-                minimumExampleCountPerLeaf: 0);
+            //var trainer = _mLContext.Regression.Trainers.LightGbm(
+            //    numberOfLeaves: 1000,
+            //    minimumExampleCountPerLeaf: 0);
 
-            //var trainer = _mLContext.Regression.Trainers.Sdca();
-            var cvResults = _mLContext.Regression.CrossValidate(trainData, trainer, 5);
+            var trainer = _mLContext.Regression.Trainers.Sdca();
+            //var cvResults = _mLContext.Regression.CrossValidate(trainData, trainer, 5);
             var trainedModel = trainer.Fit(trainData);
 
 
