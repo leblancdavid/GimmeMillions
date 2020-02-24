@@ -62,14 +62,23 @@ namespace GimmeMillions.Domain.ML
             var featureColumn = definedSchema["Features"].ColumnType as VectorDataViewType;
             var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
             definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
+
+            //Load the data into a view
             var dataViewData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Value.Select(x =>
                 new StockRiseDataFeature(x.Input.Data, x.Output.PercentDayChange >= 0, (float)x.Output.PercentDayChange)), definedSchema);
 
+            //Normalize it
+            var normalize = _mLContext.Transforms.NormalizeMeanVariance("Features",
+                useCdf: true);
+            var normalizeTransform = normalize.Fit(dataViewData);
+            var transformedData = normalizeTransform.Transform(dataViewData);
+
+            //Split data into training and testing
             IDataView trainData = null, testData = null;
             if (testFraction > 0.0)
             {
-                var dataSplit = _mLContext.Data.TrainTestSplit(dataViewData, testFraction);
+                var dataSplit = _mLContext.Data.TrainTestSplit(transformedData, testFraction);
                 trainData = dataSplit.TrainSet;
                 testData = dataSplit.TestSet;
             }
@@ -78,17 +87,28 @@ namespace GimmeMillions.Domain.ML
                 trainData = dataViewData;
             }
 
-            var trainer = _mLContext.BinaryClassification.Trainers.FastTree(
-                numberOfLeaves: 20, 
-                numberOfTrees: 100, 
+            //var trainer = _mLContext.BinaryClassification.Trainers.FastTree(
+            //    numberOfLeaves: 10, 
+            //    numberOfTrees: 200,
+            //    minimumExampleCountPerLeaf: 0);
+            //var trainer = _mLContext.BinaryClassification.Trainers.FastForest(
+            //    numberOfLeaves: 10,
+            //    numberOfTrees: 200,
+            //    minimumExampleCountPerLeaf: 0);
+            var trainer = _mLContext.BinaryClassification.Trainers.LightGbm(
+                numberOfLeaves: 5000,
                 minimumExampleCountPerLeaf: 0);
+
+            //var trainer = _mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression();
+            //var trainer = _mLContext.BinaryClassification.Trainers.AveragedPerceptron();
+            //var trainer = _mLContext.BinaryClassification.Trainers.SdcaLogisticRegression();
             var trainedModel = trainer.Fit(trainData);
 
             var trainingResult = new TrainingResult();
             var trainDataPredictions = trainedModel.Transform(trainData);
             bool[] predictionColumn = trainDataPredictions.GetColumn<bool>("PredictedLabel").ToArray();
             bool[] labelColumn = trainDataPredictions.GetColumn<bool>("Label").ToArray();
-            var probabilityColumn = trainDataPredictions.GetColumn<float>("Probability").ToArray();
+            float[] probability = trainDataPredictions.GetColumn<float>("Probability").ToArray();
             for (int i = 0; i < predictionColumn.Length; ++i)
             {
                 if ((predictionColumn[i] && labelColumn[i]) || (!predictionColumn[i] && !labelColumn[i]))

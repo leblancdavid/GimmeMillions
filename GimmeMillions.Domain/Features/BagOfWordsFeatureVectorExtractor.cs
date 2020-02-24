@@ -27,11 +27,11 @@ namespace GimmeMillions.Domain.Features
             
             var vector = new FeatureVector(_featuresDictionary.Size, articles.Max(x => x.Article.Date));
 
-            foreach(var article in articles)
+            Parallel.ForEach(articles, (article) =>
             {
                 ProcessAndUpdateVector(article, vector);
-            }
-
+            });
+            
             return vector;
 
         }
