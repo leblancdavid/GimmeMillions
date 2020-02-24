@@ -108,7 +108,7 @@ namespace GimmeMillions.Domain.ML
             var trainDataPredictions = trainedModel.Transform(trainData);
             bool[] predictionColumn = trainDataPredictions.GetColumn<bool>("PredictedLabel").ToArray();
             bool[] labelColumn = trainDataPredictions.GetColumn<bool>("Label").ToArray();
-            float[] probability = trainDataPredictions.GetColumn<float>("Probability").ToArray();
+            float[] probabilityColumn = trainDataPredictions.GetColumn<float>("Probability").ToArray();
             for (int i = 0; i < predictionColumn.Length; ++i)
             {
                 if ((predictionColumn[i] && labelColumn[i]) || (!predictionColumn[i] && !labelColumn[i]))

@@ -10,6 +10,7 @@ using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers.FastTree;
 using Microsoft.ML.Trainers.LightGbm;
+using Microsoft.ML.Transforms;
 
 namespace GimmeMillions.Domain.ML
 {
@@ -64,54 +65,53 @@ namespace GimmeMillions.Domain.ML
             var featureColumn = definedSchema["Features"].ColumnType as VectorDataViewType;
             var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
             definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
+
+            //Load the data into a view
             var dataViewData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Value.Select(x => 
                 new StockDailyValueDataFeature(x.Input.Data, (float)x.Output.PercentDayChange)), definedSchema);
 
+            //Normalize it
+            var normalizeTransform = _mLContext.Transforms.NormalizeMeanVariance("Features",
+                useCdf: true).Fit(dataViewData);
+            var transformedData = normalizeTransform.Transform(dataViewData);
+
+            var pcaTransform = _mLContext.Transforms.ApproximatedKernelMap("Features",
+                rank: 1000,
+                generator: new GaussianKernel(gamma: 0.7f)).Fit(transformedData);
+            var pcaTransformedData = pcaTransform.Transform(transformedData);
+
+            //Split data into training and testing
             IDataView trainData = null, testData = null;
             if(testFraction > 0.0)
             {
-                var dataSplit = _mLContext.Data.TrainTestSplit(dataViewData, testFraction);
+                var dataSplit = _mLContext.Data.TrainTestSplit(pcaTransformedData, testFraction);
                 trainData = dataSplit.TrainSet;
                 testData = dataSplit.TestSet;
             }
             else
             {
-                trainData = dataViewData;
+                trainData = pcaTransformedData;
             }
-            
 
-            //var trainer = _mLContext.Regression.Trainers.LightGbm(new LightGbmRegressionTrainer.Options
+            //var trainer = _mLContext.Regression.Trainers.FastTree(new FastTreeRegressionTrainer.Options
             //{
-            //    LabelColumnName = nameof(FeatureVectorToStockDataFeature.Label),
-            //    FeatureColumnName = nameof(FeatureVectorToStockDataFeature.Features),
-            //    // How many leaves a single tree should have.
-            //    NumberOfLeaves = 4,
-            //    // Each leaf contains at least this number of training data points.
+            //    LabelColumnName = nameof(StockDailyValueDataFeature.Label),
+            //    FeatureColumnName = nameof(StockDailyValueDataFeature.Features),
+            //    NumberOfTrees = 100,
+            //    NumberOfLeaves = 10,
             //    MinimumExampleCountPerLeaf = 1,
-            //    // The step size per update. Using a large value might reduce the
-            //    // training time but also increase the algorithm's numerical
-            //    // stability.
             //    LearningRate = 0.001,
-            //    Booster = new GossBooster.Options()
-            //    {
-            //        TopRate = 0.3,
-            //        OtherRate = 0.2
-            //    }
+            //    FeatureFirstUsePenalty = 0.1
             //});
-            //var trainedModel = trainer.Fit(trainData);
+            var trainer = _mLContext.Regression.Trainers.LightGbm(
+                numberOfLeaves: 1000,
+                minimumExampleCountPerLeaf: 0);
 
-            var trainer = _mLContext.Regression.Trainers.FastTree(new FastTreeRegressionTrainer.Options
-            {
-                LabelColumnName = nameof(StockDailyValueDataFeature.Label),
-                FeatureColumnName = nameof(StockDailyValueDataFeature.Features),
-                NumberOfTrees = 100,
-                NumberOfLeaves = 10,
-                MinimumExampleCountPerLeaf = 1,
-                LearningRate = 0.001,
-                FeatureFirstUsePenalty = 0.1
-            });
+            //var trainer = _mLContext.Regression.Trainers.Sdca();
+            var cvResults = _mLContext.Regression.CrossValidate(trainData, trainer, 5);
             var trainedModel = trainer.Fit(trainData);
+
 
             var trainingResult = new TrainingResult();
             var trainDataPredictions = trainedModel.Transform(trainData);
