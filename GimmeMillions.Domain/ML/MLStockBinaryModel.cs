@@ -77,9 +77,14 @@ namespace GimmeMillions.Domain.ML
             var transformedData = normalizeTransform.Transform(dataViewData);
 
             var pcaTransform = _mLContext.Transforms.ApproximatedKernelMap("Features",
-                rank: 2000,
+                rank: 1000,
                 generator: new GaussianKernel(gamma: 1.5f)).Fit(transformedData);
             var pcaTransformedData = pcaTransform.Transform(transformedData);
+
+            //var pcaTransform = _mLContext.Transforms.ApproximatedKernelMap("Features",
+            //    rank: 2000,
+            //    generator: new GaussianKernel(gamma: 1.5f)).Fit(transformedData);
+            //var pcaTransformedData = pcaTransform.Transform(transformedData);
 
             //Split data into training and testing
             IDataView trainData = null, testData = null;
@@ -95,8 +100,8 @@ namespace GimmeMillions.Domain.ML
             }
 
             var trainer = _mLContext.BinaryClassification.Trainers.FastTree(
-                numberOfLeaves: 10,
-                numberOfTrees: 40,
+                numberOfLeaves: 5,
+                numberOfTrees: 100,
                 minimumExampleCountPerLeaf: 1);
             //var trainer = _mLContext.BinaryClassification.Trainers.FastForest(
             //    numberOfLeaves: 50,
@@ -110,50 +115,36 @@ namespace GimmeMillions.Domain.ML
             //var trainer = _mLContext.BinaryClassification.Trainers.AveragedPerceptron();
             //var trainer = _mLContext.BinaryClassification.Trainers.SdcaLogisticRegression();
             //var trainer = _mLContext.BinaryClassification.Trainers.SymbolicSgdLogisticRegression();
+
             var trainedModel = trainer.Fit(trainData);
 
             var cvResults = _mLContext.BinaryClassification.CrossValidate(trainData, trainer, 5);
-            var averageAccuracy = cvResults.Sum(x => x.Metrics.Accuracy) / (double)cvResults.Count();
 
-            var trainingResult = new TrainingResult();
-            var trainDataPredictions = trainedModel.Transform(trainData);
-            bool[] predictionColumn = trainDataPredictions.GetColumn<bool>("PredictedLabel").ToArray();
-            bool[] labelColumn = trainDataPredictions.GetColumn<bool>("Label").ToArray();
-            float[] probabilityColumn = trainDataPredictions.GetColumn<float>("Probability").ToArray();
-            for (int i = 0; i < predictionColumn.Length; ++i)
+            var trainingMetrics = new List<TrainingMetrics<BinaryClassificationMetrics>>();
+            foreach (var cv in cvResults)
             {
-                if ((predictionColumn[i] && labelColumn[i]) || (!predictionColumn[i] && !labelColumn[i]))
-                {
-                    trainingResult.TrainingAccuracy++;
-                }
+                var m = new TrainingMetrics<BinaryClassificationMetrics>(cv.Metrics);
+                var predictionData = cv.Model.Transform(cv.ScoredHoldOutSet);
+                m.ComputeStatistics(predictionData, 0.0, 6.0);
+
+                trainingMetrics.Add(m);
             }
 
-            trainingResult.TrainingAccuracy /= (double)predictionColumn.Length;
-
+            var testMetrics = new List<TrainingMetrics<BinaryClassificationMetrics>>();
             if (testData != null)
             {
-                var testDataPredictions = trainedModel.Transform(testData);
-                predictionColumn = testDataPredictions.GetColumn<bool>("PredictedLabel").ToArray();
-                labelColumn = testDataPredictions.GetColumn<bool>("Label").ToArray();
-                probabilityColumn = testDataPredictions.GetColumn<float>("Probability").ToArray();
-                var valueColumn = testDataPredictions.GetColumn<float>("Value").ToArray();
-                for (int i = 0; i < predictionColumn.Length; ++i)
+                foreach (var cv in cvResults)
                 {
-                    if ((predictionColumn[i] && labelColumn[i]) || (!predictionColumn[i] && !labelColumn[i]))
-                    {
-                        trainingResult.ValidationAccuracy++;
-                    }
-                }
+                    var m = new TrainingMetrics<BinaryClassificationMetrics>(cv.Metrics);
+                    var predictionData = cv.Model.Transform(testData);
+                    m.ComputeStatistics(predictionData, 0.0, 6.0);
 
-                trainingResult.ValidationAccuracy /= (double)predictionColumn.Length;
+                    testMetrics.Add(m);
+                }
             }
 
-            var probabilitiesToWin = probabilityColumn.Where(x => x > 0.5f);
-            var averageProbToWin = probabilitiesToWin.Sum() / probabilitiesToWin.Count();
-            var stdevProbToWin = Math.Sqrt(probabilitiesToWin.Sum(x => (x - averageProbToWin) * (x - averageProbToWin))
-                                        / probabilitiesToWin.Count());
 
-            return Result.Ok(trainingResult);
+            return Result.Ok(new TrainingResult());
 
         }
     }
