@@ -111,22 +111,26 @@ namespace GimmeMillions.Domain.ML
             //var trainedModel = trainer.Fit(trainData);
 
 
-            //var trainer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: false)
-            //    .Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: 10))
-            //    .Append(_mLContext.BinaryClassification.Trainers.AveragedPerceptron());
-
-            var trainer = _mLContext.Transforms.ApproximatedKernelMap("Features", rank: 2000, generator: new GaussianKernel(gamma: 1.5f))
-            .Append(_mLContext.BinaryClassification.Trainers.FastTree(
-                numberOfLeaves: 4,
-                numberOfTrees: 20,
-                minimumExampleCountPerLeaf: 1));
+            int numberOfTrees = dataset.Value.Count() / 10;
+            int numberOfLeaves = numberOfTrees / 5;
+            var trainer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: false)
+                .Append(_mLContext.Transforms.FeatureSelection.SelectFeaturesBasedOnMutualInformation(outputColumnName: "Features", slotsInOutput: 1000))
+                .Append(_mLContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "Features", rank: 200, overSampling: 0))
+                //.Append(_mLContext.Transforms.FeatureSelection.SelectFeaturesBasedOnMutualInformation(
+                //   outputColumnName: "Features",
+                //   slotsInOutput: 5000))
+                .Append(_mLContext.BinaryClassification.Trainers.FastTree(
+                    numberOfLeaves: numberOfLeaves,
+                    numberOfTrees: numberOfTrees,
+                    minimumExampleCountPerLeaf: 1));
+            //.Append(_mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression());
             //.Append(_mLContext.BinaryClassification.Trainers.LightGbm(
             //    numberOfLeaves: 20,
             //    minimumExampleCountPerLeaf: 1));
 
             //var cvResults = _mLContext.BinaryClassification.CrossValidateNonCalibrated(trainData, trainer, 5, seed: _seed);
             var models = new List<ITransformer>();
-            int numModels = 50;
+            int numModels = 11;
             for(int i = 0; i < numModels; ++i)
             {
                 models.Add(trainer.Fit(trainData));
