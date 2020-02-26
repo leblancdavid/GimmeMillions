@@ -18,6 +18,7 @@ namespace GimmeMillions.Domain.ML
     {
         private IFeatureDatasetService _featureDatasetService;
         private MLContext _mLContext;
+        private int _seed;
         public string StockSymbol { get; private set; }
 
         public bool IsTrained { get; private set; }
@@ -26,8 +27,8 @@ namespace GimmeMillions.Domain.ML
         {
             StockSymbol = symbol;
             _featureDatasetService = featureDatasetService;
-            int seed = 27;
-            _mLContext = new MLContext(seed);
+            _seed = 27;
+            _mLContext = new MLContext(_seed);
 
         }
 
@@ -72,84 +73,89 @@ namespace GimmeMillions.Domain.ML
                 dataset.Value.Select(x => 
                 new StockDailyValueDataFeature(x.Input.Data, (float)x.Output.PercentDayChange)), definedSchema);
 
-            //Normalize it
-            var normalizeTransform = _mLContext.Transforms.NormalizeMeanVariance("Features",
-                useCdf: true).Fit(dataViewData);
-            var transformedData = normalizeTransform.Transform(dataViewData);
-
-            var pcaTransform = _mLContext.Transforms.ApproximatedKernelMap("Features",
-                rank: 20,
-                generator: new GaussianKernel(gamma: 0.7f)).Fit(transformedData);
-            var pcaTransformedData = pcaTransform.Transform(transformedData);
-            var featuresColumn = pcaTransformedData.GetColumn<float[]>("Features").ToArray();
-
             //Split data into training and testing
             IDataView trainData = null, testData = null;
             if(testFraction > 0.0)
             {
-                var dataSplit = _mLContext.Data.TrainTestSplit(pcaTransformedData, testFraction);
+                var dataSplit = _mLContext.Data.TrainTestSplit(dataViewData, testFraction, seed: _seed);
                 trainData = dataSplit.TrainSet;
                 testData = dataSplit.TestSet;
             }
             else
             {
-                trainData = pcaTransformedData;
+                trainData = dataViewData;
             }
 
-            //var trainer = _mLContext.Regression.Trainers.FastTree(new FastTreeRegressionTrainer.Options
-            //{
-            //    LabelColumnName = nameof(StockDailyValueDataFeature.Label),
-            //    FeatureColumnName = nameof(StockDailyValueDataFeature.Features),
-            //    NumberOfTrees = 100,
-            //    NumberOfLeaves = 10,
-            //    MinimumExampleCountPerLeaf = 1,
-            //    LearningRate = 0.001,
-            //    FeatureFirstUsePenalty = 0.1
-            //});
+            int numberOfTrees = dataset.Value.Count() / 10;
+            int numberOfLeaves = numberOfTrees / 5;
+            //Normalize it
+            var trainer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true)
+                //.Append(_mLContext.Transforms.ApproximatedKernelMap("Features",
+                //    rank: 10000,
+                //    useCosAndSinBases: true))
+                .Append(_mLContext.Transforms.FeatureSelection.SelectFeaturesBasedOnMutualInformation(
+                    outputColumnName: "Features",
+                    slotsInOutput: 50, numberOfBins: 8))
+                .Append(_mLContext.Regression.Trainers.FastForest(
+                    numberOfLeaves: numberOfLeaves,
+                    numberOfTrees: numberOfTrees,
+                    minimumExampleCountPerLeaf: 1));
+            //.Append(_mLContext.Regression.Trainers.FastTree(
+            //    numberOfLeaves: 10,
+            //    numberOfTrees: 50,
+            //    minimumExampleCountPerLeaf: 1));
+            //.Append(_mLContext.Regression.Trainers.OnlineGradientDescent(numberOfIterations: 10));
+            //.Append(_mLContext.Regression.Trainers.Sdca());
             //var trainer = _mLContext.Regression.Trainers.LightGbm(
             //    numberOfLeaves: 1000,
             //    minimumExampleCountPerLeaf: 0);
 
-            var trainer = _mLContext.Regression.Trainers.Sdca();
             //var cvResults = _mLContext.Regression.CrossValidate(trainData, trainer, 5);
-            var trainedModel = trainer.Fit(trainData);
-
-
-            var trainingResult = new TrainingResult();
-            var trainDataPredictions = trainedModel.Transform(trainData);
-            float[] scoreColumn = trainDataPredictions.GetColumn<float>("Score").ToArray();
-            float[] labelColumn = trainDataPredictions.GetColumn<float>("Label").ToArray();
-            for(int i = 0; i < scoreColumn.Length; ++i)
+            var models = new List<ITransformer>();
+            int numModels = 10;
+            for (int i = 0; i < numModels; ++i)
             {
-                if((scoreColumn[i] > 0 && labelColumn[i] > 0) || (scoreColumn[i] < 0 && labelColumn[i] < 0))
-                {
-                    trainingResult.TrainingAccuracy++;
-                }
-                trainingResult.TrainingError += Math.Abs(scoreColumn[i] - labelColumn[i]);
+                models.Add(trainer.Fit(trainData));
             }
-
-            trainingResult.TrainingAccuracy /= (double)scoreColumn.Length;
-            trainingResult.TrainingError /= (double)scoreColumn.Length;
 
             if (testData != null)
             {
-                var testDataPredictions = trainedModel.Transform(testData);
-                scoreColumn = testDataPredictions.GetColumn<float>("Score").ToArray();
-                labelColumn = testDataPredictions.GetColumn<float>("Label").ToArray();
-                for (int i = 0; i < scoreColumn.Length; ++i)
+                var labelsColumn = testData.GetColumn<float>("Label").ToArray();
+                double accuracy = 0.0;
+                var posP = new float[labelsColumn.Length];
+                var negP = new float[labelsColumn.Length];
+                var probability = new float[labelsColumn.Length];
+                foreach (var model in models)
                 {
-                    if ((scoreColumn[i] > 0 && labelColumn[i] > 0) || (scoreColumn[i] < 0 && labelColumn[i] < 0))
+                    var predictionData = model.Transform(testData);
+                    var p = predictionData.GetColumn<float>("Score").ToArray();           
+                    for (int i = 0; i < p.Length; ++i)
                     {
-                        trainingResult.ValidationAccuracy++;
+                        if ((p[i] > 0.0f && labelsColumn[i] > 0.0f) || (p[i] <= 0.0f && labelsColumn[i] <= 0.0f))
+                            accuracy++;
+
+                        if (p[i] > 0.0f)
+                        {
+                            posP[i] += p[i];
+                        }
+                        else
+                        {
+                            negP[i] += p[i];
+                        }
                     }
-                    trainingResult.ValidationError += Math.Abs(scoreColumn[i] - labelColumn[i]);
                 }
 
-                trainingResult.ValidationAccuracy /= (double)scoreColumn.Length;
-                trainingResult.ValidationError /= (double)scoreColumn.Length;
+                for (int i = 0; i < probability.Length; ++i)
+                {
+                    probability[i] = posP[i] / (posP[i] - negP[i]);
+                }
+
+                accuracy /= (double)labelsColumn.Length * models.Count();
+
+
             }
-                
-            return Result.Ok(trainingResult);
+
+            return Result.Ok(new TrainingResult());
 
         }
     }

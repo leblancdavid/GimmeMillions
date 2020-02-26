@@ -18,5 +18,9 @@ namespace GimmeMillions.Domain.ML
             Features = input;
             Label = label;
         }
+
+        public StockDailyValueDataFeature()
+        {
+        }
     }
 }
