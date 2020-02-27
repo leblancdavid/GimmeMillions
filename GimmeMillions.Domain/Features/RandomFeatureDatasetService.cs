@@ -54,11 +54,14 @@ namespace GimmeMillions.Domain.Features
         
         private StockData GetNextRandomStockData(string symbol, DateTime date)
         {
+            var openingPrice = (decimal)(_random.NextDouble() * 5.0);
+            //Should only vary by about 5%
+            var closingPrice = openingPrice + openingPrice*(decimal)((_random.NextDouble() - 0.5)/ 10.0);
             return new StockData(symbol, date,
-                (decimal)(_random.NextDouble() * 5.0),
+                openingPrice,
                 (decimal)42.0,
                 (decimal)0.0,
-                (decimal)(_random.NextDouble() * 5.0),
+                closingPrice,
                 (decimal)(_random.NextDouble() * 5.0));
         }
     }

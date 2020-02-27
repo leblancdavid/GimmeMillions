@@ -155,6 +155,7 @@
     <Compile Include="Keys\AccessKey.cs" />
     <Compile Include="Keys\IAccessKeyRepository.cs" />
     <Compile Include="ML\MLStockBinaryModel.cs" />
+    <Compile Include="ML\MLStockKMeansRegressionModel.cs" />
     <Compile Include="ML\StockDailyValueDataFeature.cs" />
     <Compile Include="ML\IStockPredictionModel.cs" />
     <Compile Include="ML\IStockPredictionService.cs" />

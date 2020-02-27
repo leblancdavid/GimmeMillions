@@ -99,10 +99,14 @@ namespace GimmeMillions.Domain.ML
             for (int i = 0; i < iterations; ++i)
             {
                 var trainer = _mLContext.Transforms.ApproximatedKernelMap(outputColumnName: "Features", rank: 20)
-                    .Append( _mLContext.BinaryClassification.Trainers.FastTree(
+                    .Append(_mLContext.BinaryClassification.Trainers.FastTree(
                         numberOfLeaves: numberOfLeaves,
                         numberOfTrees: numberOfTrees,
                         minimumExampleCountPerLeaf: 1));
+                //var trainer = _mLContext.BinaryClassification.Trainers.FastTree(
+                //        numberOfLeaves: numberOfLeaves,
+                //        numberOfTrees: numberOfTrees,
+                //        minimumExampleCountPerLeaf: 1);
                 //var trainer = _mLContext.Regression.Trainers.Sdca();
                 var cvResults = _mLContext.BinaryClassification.CrossValidate(trainData, trainer, crossValidations);
                 var averagePrecision = cvResults.Select(x => x.Metrics.PositivePrecision).Average();

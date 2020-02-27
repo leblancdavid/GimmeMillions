@@ -13,7 +13,7 @@ using Xunit;
 
 namespace GimmeMillions.Domain.Tests.ML
 {
-    public class MLStockBinaryModelTests
+    public class MLStockKMeansRegressionModelTests
     {
         private readonly string _pathToArticles = "../../../../../Repository/Articles";
         private readonly string _pathToDictionary = "../../../../../Repository/Dictionaries";
@@ -21,11 +21,11 @@ namespace GimmeMillions.Domain.Tests.ML
         private readonly string _pathToStocks = "../../../../../Repository/Stocks";
 
         [Fact]
-        public void ShouldTrainUsingBowFeatures()
+        public void ShouldTrainUsingRandomFeatures()
         {
-            //var datasetService = GetTestBoWFeatureDatasetService();
-            var datasetService = GetTestRandomDatasetService(422, 200);
-            var model = new MLStockBinaryModel(datasetService, "IWM");
+            var datasetService = GetTestBoWFeatureDatasetService();
+            //var datasetService = GetTestRandomDatasetService(442, 2);
+            var model = new MLStockKMeansRegressionModel(datasetService, "IWM");
 
             var trainingResults = model.Train(new DateTime(2010, 1, 1), new DateTime(2015, 1, 1), 0.1);
         }
