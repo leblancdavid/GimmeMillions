@@ -150,6 +150,7 @@
     <Compile Include="Features\IFeatureDictionaryRepository.cs" />
     <Compile Include="Features\IFeatureVectorExtractor.cs" />
     <Compile Include="Features\ITextProcessor.cs" />
+    <Compile Include="Features\RandomFeatureDatasetService.cs" />
     <Compile Include="Features\UsaLanguageChecker.cs" />
     <Compile Include="Keys\AccessKey.cs" />
     <Compile Include="Keys\IAccessKeyRepository.cs" />
