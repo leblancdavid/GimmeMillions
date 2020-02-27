@@ -71,117 +71,75 @@ namespace GimmeMillions.Domain.ML
                 dataset.Value.Select(x =>
                 new StockRiseDataFeature(x.Input.Data, x.Output.PercentDayChange >= 0, (float)x.Output.PercentDayChange)), definedSchema);
 
-            //Normalize it
-
-            //var pcaTransform = _mLContext.Transforms.ApproximatedKernelMap("Features",
-            //    rank: 1000,
-            //    generator: new GaussianKernel(gamma: 1.5f)).Fit(transformedData);
-            //var pcaTransformedData = pcaTransform.Transform(transformedData);
-
+            var normalizedData = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true)
+                .Fit(dataViewData)
+                .Transform(dataViewData);
 
             //Split data into training and testing
             IDataView trainData = null, testData = null;
             if (testFraction > 0.0)
             {
-                var dataSplit = _mLContext.Data.TrainTestSplit(dataViewData, testFraction, seed: _seed);
+                var dataSplit = _mLContext.Data.TrainTestSplit(normalizedData, testFraction, seed: _seed);
                 trainData = dataSplit.TrainSet;
                 testData = dataSplit.TestSet;
             }
             else
             {
-                trainData = dataViewData;
+                trainData = normalizedData;
             }
 
-            //var trainer = _mLContext.BinaryClassification.Trainers.FastTree(
-            //    numberOfLeaves: 5,
-            //    numberOfTrees: 20,
-            //    minimumExampleCountPerLeaf: 1);
-            //var trainer = _mLContext.BinaryClassification.Trainers.FastForest(
-            //    numberOfLeaves: 20,
-            //    numberOfTrees: 100,
-            ////    minimumExampleCountPerLeaf: 1);
-            //var trainer = _mLContext.BinaryClassification.Trainers.LightGbm(
-            //    numberOfLeaves: 100,
-            //    minimumExampleCountPerLeaf: 1);
-
-            //var trainer = _mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression();
-            //var trainer = _mLContext.BinaryClassification.Trainers.SdcaLogisticRegression();
-            //var trainer = _mLContext.BinaryClassification.Trainers.SymbolicSgdLogisticRegression();
-
-            //var trainedModel = trainer.Fit(trainData);
-
-
-            int numberOfTrees = dataset.Value.Count() / 10;
+            int iterations = 10, crossValidations = 5;
+            int numberOfTrees = dataset.Value.Count() / 30;
             int numberOfLeaves = numberOfTrees / 5;
-            var trainer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: false)
-                .Append(_mLContext.Transforms.FeatureSelection.SelectFeaturesBasedOnMutualInformation(outputColumnName: "Features", slotsInOutput: 1000))
-                .Append(_mLContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "Features", rank: 200, overSampling: 0))
-                //.Append(_mLContext.Transforms.FeatureSelection.SelectFeaturesBasedOnMutualInformation(
-                //   outputColumnName: "Features",
-                //   slotsInOutput: 5000))
-                .Append(_mLContext.BinaryClassification.Trainers.FastTree(
-                    numberOfLeaves: numberOfLeaves,
-                    numberOfTrees: numberOfTrees,
-                    minimumExampleCountPerLeaf: 1));
-            //.Append(_mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression());
-            //.Append(_mLContext.BinaryClassification.Trainers.LightGbm(
-            //    numberOfLeaves: 20,
-            //    minimumExampleCountPerLeaf: 1));
 
-            //var cvResults = _mLContext.BinaryClassification.CrossValidateNonCalibrated(trainData, trainer, 5, seed: _seed);
-            var models = new List<ITransformer>();
-            int numModels = 11;
-            for(int i = 0; i < numModels; ++i)
+            List<ITransformer> bestModels = null, worstModels = null;
+            double bestPrecision = 0.0, worstPrecision = double.MaxValue;
+
+            //var pca = _mLContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "Features", rank: 20, overSampling: 20);
+            for (int i = 0; i < iterations; ++i)
             {
-                models.Add(trainer.Fit(trainData));
+                var trainer = _mLContext.Transforms.ApproximatedKernelMap(outputColumnName: "Features", rank: 20)
+                    .Append( _mLContext.BinaryClassification.Trainers.FastTree(
+                        numberOfLeaves: numberOfLeaves,
+                        numberOfTrees: numberOfTrees,
+                        minimumExampleCountPerLeaf: 1));
+                //var trainer = _mLContext.Regression.Trainers.Sdca();
+                var cvResults = _mLContext.BinaryClassification.CrossValidate(trainData, trainer, crossValidations);
+                var averagePrecision = cvResults.Select(x => x.Metrics.PositivePrecision).Average();
+                if (averagePrecision > bestPrecision)
+                {
+                    bestModels = cvResults.Select(x => x.Model).ToList();
+                    bestPrecision = averagePrecision;
+                }
+
+                if (averagePrecision < worstPrecision)
+                {
+                    worstModels = cvResults.Select(x => x.Model).ToList();
+                    worstPrecision = averagePrecision;
+                }
             }
 
-
-            //var trainingMetrics = new List<TrainingMetrics<BinaryClassificationMetrics>>();
-            //foreach (var cv in cvResults)
-            //{
-            //    var m = new TrainingMetrics<BinaryClassificationMetrics>(cv.Metrics);
-            //    var predictionData = cv.Model.Transform(cv.ScoredHoldOutSet);
-            //    m.ComputeStatistics(predictionData, 0.0, 6.0);
-
-            //    trainingMetrics.Add(m);
-            //}
-
-            var testMetrics = new List<TrainingMetrics<BinaryClassificationMetrics>>();
             if (testData != null)
             {
-                var labelsColumn = testData.GetColumn<bool>("Label").ToArray();
-                double accuracy = 0.0;
-                var averageP = new float[labelsColumn.Length];
-                foreach (var cv in models)
+                double bestAvg = 0.0;
+                foreach (var m in bestModels)
                 {
-                    //var m = new TrainingMetrics<BinaryClassificationMetrics>(cv.Metrics);
-                    //var predictionData = cv.Model.Transform(testData);
-                    //m.ComputeStatistics(predictionData, 0.0, 6.0);
-
-                    //testMetrics.Add(m);
-                    var predictionData = cv.Transform(testData);
-
-                    var l = predictionData.GetColumn<bool>("PredictedLabel").ToArray();
-                    var p = predictionData.GetColumn<float>("Probability").ToArray();
-                    for (int i = 0; i < l.Length; ++i)
-                    {
-                        if(l[i] == labelsColumn[i])
-                            accuracy++;
-
-                        averageP[i] += p[i];
-                    }
+                    var betterResults = _mLContext.BinaryClassification.Evaluate(m.Transform(testData));
+                    bestAvg += betterResults.PositivePrecision;
                 }
+                bestAvg /= bestModels.Count();
 
-                for (int i = 0; i < averageP.Length; ++i)
+                double worstAvg = 0.0;
+                foreach (var m in worstModels)
                 {
-                    averageP[i] /= models.Count();
+                    var worstResults = _mLContext.BinaryClassification.Evaluate(m.Transform(testData));
+                    worstAvg += worstResults.PositivePrecision;
                 }
-                accuracy /= (double)labelsColumn.Length * models.Count();
+                worstAvg /= worstModels.Count();
 
-
+                //var betterResults = _mLContext.Regression.Evaluate(betterModel.Transform(bestPcaModel.Transform(testData)));
+                //var worstResults = _mLContext.Regression.Evaluate(worstModel.Transform(worstModel.Transform(testData)));
             }
-
 
             return Result.Ok(new TrainingResult());
 

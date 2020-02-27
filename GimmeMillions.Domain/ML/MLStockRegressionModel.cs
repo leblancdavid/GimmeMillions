@@ -98,8 +98,10 @@ namespace GimmeMillions.Domain.ML
             int numberOfTrees = dataset.Value.Count() / 30;
             int numberOfLeaves = numberOfTrees / 5;
 
-            ApproximatedKernelTransformer bestPcaModel = null;
-            double bestError = double.MaxValue;
+            ApproximatedKernelTransformer bestPcaModel = null, worstPcaModel = null;
+
+            List<ITransformer> bestModels = null, worstModels = null;
+            double bestError = double.MaxValue, worstError = 0.0;
 
             //var pca = _mLContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "Features", rank: 20, overSampling: 20);
             var pca = _mLContext.Transforms.ApproximatedKernelMap(outputColumnName: "Features", rank: 20);
@@ -109,35 +111,50 @@ namespace GimmeMillions.Domain.ML
                 var pcaModel = pca.Fit(trainData);
                 var pcaData = pcaModel.Transform(trainData);
 
-                var forestTrainer = _mLContext.Regression.Trainers.FastForest(
-                    numberOfLeaves: numberOfLeaves,
-                    numberOfTrees: numberOfTrees,
-                    minimumExampleCountPerLeaf: 1);
-                var cvResults = _mLContext.Regression.CrossValidate(pcaData, forestTrainer, crossValidations);
+                //var trainer = _mLContext.Regression.Trainers.FastForest(
+                //    numberOfLeaves: numberOfLeaves,
+                //    numberOfTrees: numberOfTrees,
+                //    minimumExampleCountPerLeaf: 1);
+                var trainer = _mLContext.Regression.Trainers.Sdca();
+                var cvResults = _mLContext.Regression.CrossValidate(pcaData, trainer, crossValidations);
                 var averageError = cvResults.Select(x => x.Metrics.MeanAbsoluteError).Average();
                 if(averageError < bestError)
                 {
                     bestPcaModel = pcaModel;
+                    bestModels = cvResults.Select(x => x.Model).ToList();
                     bestError = averageError;
                 }
-            }
 
-            var processedData = bestPcaModel.Transform(trainData);
-            var model = _mLContext.Regression.Trainers.FastForest(
-                    numberOfLeaves: numberOfLeaves,
-                    numberOfTrees: numberOfTrees,
-                    minimumExampleCountPerLeaf: 1).Fit(processedData);
+                if (averageError > worstError)
+                {
+                    worstPcaModel = pcaModel;
+                    worstModels = cvResults.Select(x => x.Model).ToList();
+                    worstError = averageError;
+                }
+            }
             //Normalize it
 
 
             if (testData != null)
             {
-                var testProcessedData = model.Transform(bestPcaModel.Transform(trainData));
+                double bestAvgError = 0.0;
+                foreach(var m in bestModels)
+                {
+                    var betterResults = _mLContext.Regression.Evaluate(m.Transform(bestPcaModel.Transform(testData)));
+                    bestAvgError += betterResults.MeanAbsoluteError;
+                }
+                bestAvgError /= bestModels.Count();
 
-                var labelsColumn = testProcessedData.GetColumn<float>("Label").ToArray();
+                double worstAvgError = 0.0;
+                foreach (var m in worstModels)
+                {
+                    var worstResults = _mLContext.Regression.Evaluate(m.Transform(worstPcaModel.Transform(testData)));
+                    worstAvgError += worstResults.MeanAbsoluteError;
+                }
+                worstAvgError /= worstModels.Count();
 
-                var results = _mLContext.Regression.Evaluate(testProcessedData);
-                double accuracy = 0.0;
+                //var betterResults = _mLContext.Regression.Evaluate(betterModel.Transform(bestPcaModel.Transform(testData)));
+                //var worstResults = _mLContext.Regression.Evaluate(worstModel.Transform(worstModel.Transform(testData)));
             }
 
             return Result.Ok(new TrainingResult());
