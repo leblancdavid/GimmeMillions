@@ -23,7 +23,7 @@ namespace GimmeMillions.Domain.ML
             StockSymbol = symbol;
             _featureDatasetService = featureDatasetService;
             _seed = 27;
-            _mLContext = new MLContext();
+            _mLContext = new MLContext(_seed);
 
         }
 
@@ -67,7 +67,9 @@ namespace GimmeMillions.Domain.ML
 
             //Load the data into a view
             var dataViewData = _mLContext.Data.LoadFromEnumerable(
-                dataset.Value.Select(x =>
+                dataset.Value
+                //.Where(x => (double)Math.Abs(x.Output.PercentDayChange) > 1.0)
+                .Select(x =>
                 new StockDailyValueDataFeature(x.Input.Data,
                     (float)x.Output.PercentDayChange)), definedSchema);
 
