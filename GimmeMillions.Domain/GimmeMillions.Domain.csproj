@@ -154,6 +154,8 @@
     <Compile Include="Features\UsaLanguageChecker.cs" />
     <Compile Include="Keys\AccessKey.cs" />
     <Compile Include="Keys\IAccessKeyRepository.cs" />
+    <Compile Include="ML\FeatureContribution.cs" />
+    <Compile Include="ML\Transforms\FeatureSelectorEstimator.cs" />
     <Compile Include="ML\MLStockBinaryModel.cs" />
     <Compile Include="ML\MLStockKMeansRegressionModel.cs" />
     <Compile Include="ML\StockDailyValueDataFeature.cs" />
@@ -164,6 +166,8 @@
     <Compile Include="ML\StockRiseDataFeature.cs" />
     <Compile Include="ML\TrainingMetrics.cs" />
     <Compile Include="ML\TrainingResult.cs" />
+    <Compile Include="ML\Transforms\FeatureSelectorTransform.cs" />
+    <Compile Include="ML\Transforms\RegressionFeatureVector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stocks\IStockRepository.cs" />
     <Compile Include="Stocks\StockData.cs" />

@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.ML.Transforms;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers;
@@ -73,22 +74,21 @@ namespace GimmeMillions.Domain.ML
                 new StockDailyValueDataFeature(x.Input.Data,
                     (float)x.Output.PercentDayChange)), definedSchema);
 
-            //var normalizedData = _mLContext.Transforms.NormalizeMeanVariance("Features")
-            //    //.Append(_mLContext.Transforms.FeatureSelection.SelectFeaturesBasedOnMutualInformation("Features"))
-            //    .Fit(dataViewData)
-            //    .Transform(dataViewData);
-
+            var normalizedData = _mLContext.Transforms.NormalizeMeanVariance("Features")
+                .Append(new FeatureSelectorEvaluator(_mLContext, lowerStdev: -10.0f, upperStdev: 1.0f))
+                .Fit(dataViewData)
+                .Transform(dataViewData);
             //Split data into training and testing
             IDataView trainData = null, testData = null;
             if (testFraction > 0.0)
             {
-                var dataSplit = _mLContext.Data.TrainTestSplit(dataViewData, testFraction, seed: _seed);
+                var dataSplit = _mLContext.Data.TrainTestSplit(normalizedData, testFraction, seed: _seed);
                 trainData = dataSplit.TrainSet;
                 testData = dataSplit.TestSet;
             }
             else
             {
-                trainData = dataViewData;
+                trainData = normalizedData;
             }
 
             //var featureAdder = _mLContext.Transforms.Concatenate("Features", "Features", "Label").Fit(trainData);
@@ -191,10 +191,10 @@ namespace GimmeMillions.Domain.ML
 
             for (int i = 0; i < centroids.Length; ++i)
             {
-                if (distances[i] < minDistance * 1.5f)
+                if (distances[i] < minDistance * 3.0f)
                 {
                     float factor = minDistance / distances[i];
-                    prediction += labels[i] * factor;
+                    prediction += labels[i] > 0.0f ? factor : -1.0f * factor;
                 }
             }
 

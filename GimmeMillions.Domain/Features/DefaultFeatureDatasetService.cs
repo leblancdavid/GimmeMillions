@@ -70,11 +70,15 @@ namespace GimmeMillions.Domain.Features
                 if ((startDate == default(DateTime) || startDate < stock.Date) &&
                     (endDate == default(DateTime) || endDate > stock.Date))
                 {
-                    var articles = _articleRepository.GetArticles(stock.Date.AddDays(-1.0));
-                    if (!articles.Any())
+                    var articlesToExtract = new List<(Article Article, float Weight)>();
+
+                    articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-1.0)).Select(x => (x, 1.0f)));
+                    articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-2.0)).Select(x => (x, 0.6f)));
+                    articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-3.0)).Select(x => (x, 0.3f)));
+                    if (!articlesToExtract.Any())
                         return;
 
-                    trainingData.Add((Input: _featureVectorExtractor.Extract(articles.Select(x => (x, 1.0f))), Output: stock));
+                    trainingData.Add((Input: _featureVectorExtractor.Extract(articlesToExtract), Output: stock));
                 }
             });
 

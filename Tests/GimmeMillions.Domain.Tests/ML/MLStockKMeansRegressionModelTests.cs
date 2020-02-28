@@ -24,10 +24,10 @@ namespace GimmeMillions.Domain.Tests.ML
         public void ShouldTrainUsingRandomFeatures()
         {
             var datasetService = GetTestBoWFeatureDatasetService();
-            //var datasetService = GetTestRandomDatasetService(442, 2);
+            //var datasetService = GetTestRandomDatasetService(442, 16);
             var model = new MLStockKMeansRegressionModel(datasetService, "IWM");
 
-            var trainingResults = model.Train(new DateTime(2010, 1, 1), new DateTime(2015, 1, 1), 0.1);
+            var trainingResults = model.Train(new DateTime(2010, 1, 1), new DateTime(2012, 1, 1), 0.1);
         }
 
         private IFeatureDatasetService GetTestBoWFeatureDatasetService()
