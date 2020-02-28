@@ -75,7 +75,7 @@ namespace GimmeMillions.Domain.ML
                     (float)x.Output.PercentDayChange)), definedSchema);
 
             var normalizedData = _mLContext.Transforms.NormalizeMeanVariance("Features")
-                .Append(new FeatureSelectorEvaluator(_mLContext, lowerStdev: -10.0f, upperStdev: 1.0f))
+                .Append(new FeatureSelectorEvaluator(_mLContext, lowerStdev: -1.5f, upperStdev: 0.0f, inclusive: true))
                 .Fit(dataViewData)
                 .Transform(dataViewData);
             //Split data into training and testing

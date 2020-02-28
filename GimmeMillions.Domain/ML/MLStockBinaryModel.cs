@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.ML.Transforms;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers.FastTree;
@@ -72,6 +73,7 @@ namespace GimmeMillions.Domain.ML
                 new StockRiseDataFeature(x.Input.Data, x.Output.PercentDayChange >= 0, (float)x.Output.PercentDayChange)), definedSchema);
 
             var normalizedData = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true)
+                .Append(new FeatureSelectorEvaluator(_mLContext, lowerStdev: -0.3f, upperStdev: 0.3f, inclusive: true))
                 .Fit(dataViewData)
                 .Transform(dataViewData);
 

@@ -14,19 +14,22 @@ namespace GimmeMillions.Domain.ML.Transforms
         private string _outputColumnName;
         private float _lowerStdev;
         private float _upperStdev;
+        private bool _inclusive;
         private MLContext _mLContext;
 
         public FeatureSelectorEvaluator(MLContext mLContext, 
             string inputColumnName = "Features", 
             string outputColumnName = "Label",
             float lowerStdev = 0.0f,
-            float upperStdev = 0.0f)
+            float upperStdev = 0.0f,
+            bool inclusive = true)
         {
             _inputColumnName = inputColumnName;
             _outputColumnName = outputColumnName;
             _lowerStdev = lowerStdev;
             _upperStdev = upperStdev;
             _mLContext = mLContext;
+            _inclusive = inclusive;
         }
 
         public ITransformer Fit(IDataView input)
@@ -51,7 +54,8 @@ namespace GimmeMillions.Domain.ML.Transforms
             var indicesToKeep = new List<int>();
             for(int i = 0; i < probabilities.Length; ++i)
             {
-                if(probabilities[i] <= lower || probabilities[i] >= upper)
+                if((!_inclusive && (probabilities[i] <= lower || probabilities[i] >= upper)) ||
+                    (_inclusive && (probabilities[i] >= lower && probabilities[i] <= upper)))
                 {
                     indicesToKeep.Add(i);
                 }
