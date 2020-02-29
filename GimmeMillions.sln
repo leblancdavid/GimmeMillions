@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NytArticleCollector", "NytA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GimmeMillions.Domain.Tests", "Tests\GimmeMillions.Domain.Tests\GimmeMillions.Domain.Tests.csproj", "{BC7B0190-4F97-4727-B827-187BB4E24324}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationTest", "Apps\SimulationTest\SimulationTest.csproj", "{4BC2FE6A-05C8-454F-89BA-4EE3112DC44D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,14 @@ Global
 		{BC7B0190-4F97-4727-B827-187BB4E24324}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BC7B0190-4F97-4727-B827-187BB4E24324}.Release|x64.ActiveCfg = Release|x64
 		{BC7B0190-4F97-4727-B827-187BB4E24324}.Release|x64.Build.0 = Release|x64
+		{4BC2FE6A-05C8-454F-89BA-4EE3112DC44D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BC2FE6A-05C8-454F-89BA-4EE3112DC44D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BC2FE6A-05C8-454F-89BA-4EE3112DC44D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4BC2FE6A-05C8-454F-89BA-4EE3112DC44D}.Debug|x64.Build.0 = Debug|Any CPU
+		{4BC2FE6A-05C8-454F-89BA-4EE3112DC44D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BC2FE6A-05C8-454F-89BA-4EE3112DC44D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BC2FE6A-05C8-454F-89BA-4EE3112DC44D}.Release|x64.ActiveCfg = Release|Any CPU
+		{4BC2FE6A-05C8-454F-89BA-4EE3112DC44D}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +83,7 @@ Global
 		{8232078D-B9A6-4FA0-B067-36CA49025271} = {B0E16F1D-5F27-4C13-9117-2D625BB588F6}
 		{32BF6EF5-1541-4359-B783-AB79A423E3F4} = {0EBDE5AA-DB44-4830-9234-5DAA16386E4A}
 		{BC7B0190-4F97-4727-B827-187BB4E24324} = {B0E16F1D-5F27-4C13-9117-2D625BB588F6}
+		{4BC2FE6A-05C8-454F-89BA-4EE3112DC44D} = {0EBDE5AA-DB44-4830-9234-5DAA16386E4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1AC6AAE2-C385-494A-B0BB-CE2501C90DB9}
