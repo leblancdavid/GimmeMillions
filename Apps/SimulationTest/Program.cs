@@ -14,9 +14,9 @@ namespace SimulationTest
             string _pathToStocks = "../../../../Repository/Stocks";
             var repo = new StockDataRepository(_pathToStocks);
 
-            var startDate = new DateTime(2000, 1, 1);
+            var startDate = new DateTime(2017, 1, 1);
             var endDate = new DateTime(2019, 1, 1);
-            var stocks = repo.GetStocks("AMZN")
+            var stocks = repo.GetStocks("IWM")
                 .Where(x => x.Date >= startDate && x.Date <= endDate)
                 .ToList();
 
@@ -82,7 +82,8 @@ namespace SimulationTest
                 }
                 else
                 {
-                    currentMoney = currentMoney * (1.0m + stock.PercentDayChange / 100m);
+                    if(stock.PercentDayChange < 0)
+                        currentMoney = currentMoney * (1.0m + stock.PercentDayChange / 100m);
                 }
             }
 

@@ -73,7 +73,7 @@ namespace GimmeMillions.Domain.ML
                 new StockRiseDataFeature(x.Input.Data, x.Output.PercentDayChange >= 0, (float)x.Output.PercentDayChange)), definedSchema);
 
             var normalizedData = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true)
-                .Append(new BinaryClassificationFeatureSelectorEstimator(_mLContext, lowerStdev: -1.5f, upperStdev: -0.5f, inclusive: true))
+                .Append(new BinaryClassificationFeatureSelectorEstimator(_mLContext, lowerStdev: -2.5f, upperStdev: -0.5f, inclusive: true))
                 .Fit(dataViewData)
                 .Transform(dataViewData);
 
@@ -90,67 +90,67 @@ namespace GimmeMillions.Domain.ML
                 trainData = normalizedData;
             }
 
-            int iterations = 10, crossValidations = 5;
+            int crossValidations = 10;
+            int iterations = 10;
             int numberOfTrees = dataset.Value.Count() / 20;
             int numberOfLeaves = numberOfTrees / 5;
 
-            List<ITransformer> bestModels = null, worstModels = null;
-            double bestPrecision = 0.0, worstPrecision = double.MaxValue;
-
-            //var pca = _mLContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "Features", rank: 20, overSampling: 20);
-            for (int i = 0; i < iterations; ++i)
-            {
-                var trainer = _mLContext.Transforms.ApproximatedKernelMap(outputColumnName: "Features", rank: 200)
+            
+            var trainer = _mLContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "Features", rank: 100, overSampling: 100)
+            //var trainer = _mLContext.Transforms.ApproximatedKernelMap(outputColumnName: "Features", rank: 1000)
                     .Append(_mLContext.BinaryClassification.Trainers.FastTree(
                         numberOfLeaves: numberOfLeaves,
                         numberOfTrees: numberOfTrees,
                         minimumExampleCountPerLeaf: 1));
-                //var trainer = _mLContext.BinaryClassification.Trainers.FastTree(
-                //        numberOfLeaves: numberOfLeaves,
-                //        numberOfTrees: numberOfTrees,
-                //        minimumExampleCountPerLeaf: 1);
-                //var trainer = _mLContext.Regression.Trainers.Sdca();
-                var cvResults = _mLContext.BinaryClassification.CrossValidate(trainData, trainer, crossValidations);
-                var averagePrecision = cvResults.Select(x => x.Metrics.PositivePrecision).Average();
-                if (averagePrecision > bestPrecision)
-                {
-                    bestModels = cvResults.Select(x => x.Model).ToList();
-                    bestPrecision = averagePrecision;
-                }
 
-                if (averagePrecision < worstPrecision)
-                {
-                    worstModels = cvResults.Select(x => x.Model).ToList();
-                    worstPrecision = averagePrecision;
-                }
-            }
-
-            if (testData != null)
+            for (int i = 0; i < iterations; ++i)
             {
-                double bestAvg = 0.0;
-                foreach (var m in bestModels)
-                {
-                    var predictions = m.Transform(testData);
-                    var probabilities = predictions.GetColumn<float>("Probability");
-                    var betterResults = _mLContext.BinaryClassification.Evaluate(predictions);
-                    bestAvg += betterResults.PositivePrecision;
-                }
-                bestAvg /= bestModels.Count();
+                var cvResults = _mLContext.BinaryClassification.CrossValidate(trainData, trainer, crossValidations);
 
-                double worstAvg = 0.0;
-                foreach (var m in worstModels)
+                if (testData != null)
                 {
-                    var worstResults = _mLContext.BinaryClassification.Evaluate(m.Transform(testData));
-                    worstAvg += worstResults.PositivePrecision;
-                }
-                worstAvg /= worstModels.Count();
+                    //var testResults = new List<BinaryClassificationMetrics>();
+                    double upperAverage = 0.0;
+                    var upperPredictionTestAccuracy = new List<double>();
+                    //var upperPredictionValidationAccuracy = new List<double>();
+                    foreach (var cv in cvResults)
+                    {
+                        upperPredictionTestAccuracy.Add(EvaluateUpperPredictionAccuracy(cv.Model, testData));
+                        //upperPredictionValidationAccuracy.Add(EvaluateUpperPredictionAccuracy(cv.Model, ));
 
-                //var betterResults = _mLContext.Regression.Evaluate(betterModel.Transform(bestPcaModel.Transform(testData)));
-                //var worstResults = _mLContext.Regression.Evaluate(worstModel.Transform(worstModel.Transform(testData)));
+                    }
+                    upperAverage = upperPredictionTestAccuracy.Average();
+                }
             }
+            
 
             return Result.Ok(new TrainingResult());
 
+        }
+
+        private double EvaluateUpperPredictionAccuracy(ITransformer model, IDataView testData)
+        {
+            var predictions = model.Transform(testData);
+
+            var probabilities = predictions.GetColumn<float>("Probability").ToArray();
+            var labels = testData.GetColumn<bool>("Label").ToArray();
+
+            float pThreshold = probabilities.Where(x => x > 0.5f).Average();
+            double upper = 0.0, total = 0.0;
+            for (int i = 0; i < probabilities.Length; ++i)
+            {
+                if (probabilities[i] > pThreshold)
+                {
+                    total++;
+                    if (labels[i])
+                    {
+                        upper++;
+                    }
+                }
+            }
+            upper /= total;
+
+            return upper;
         }
     }
 }

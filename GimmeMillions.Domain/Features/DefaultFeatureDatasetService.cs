@@ -15,13 +15,21 @@ namespace GimmeMillions.Domain.Features
         private IFeatureVectorExtractor _featureVectorExtractor;
         private IArticleRepository _articleRepository;
         private IStockRepository _stockRepository;
+        private IFeatureCache _featureCache;
+
+        public bool RefreshCache { get; set; }
         public DefaultFeatureDatasetService(IFeatureVectorExtractor featureVectorExtractor,
             IArticleRepository articleRepository,
-            IStockRepository stockRepository)
+            IStockRepository stockRepository,
+            IFeatureCache featureCache = null,
+            bool refreshCache = false)
         {
             _featureVectorExtractor = featureVectorExtractor;
             _articleRepository = articleRepository;
             _stockRepository = stockRepository;
+            _featureCache = featureCache;
+            RefreshCache = refreshCache;
+            
         }
 
         public Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date)
@@ -33,25 +41,56 @@ namespace GimmeMillions.Domain.Features
                     $"No stock found for symbol '{symbol}' on {date.ToString("yyyy/MM/dd")}");
             }
 
+            var cacheResult = TryGetFromCache(stock.Date);
+            if(cacheResult.IsSuccess)
+            {
+                return Result.Ok((Input: cacheResult.Value, Output: stock));
+            }
+
             var articleDate = stock.Date.AddDays(-1.0);
-            var articles = _articleRepository.GetArticles(articleDate);
-            if (!articles.Any())
+            var articlesToExtract = new List<(Article Article, float Weight)>();
+            articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-1.0)).Select(x => (x, 1.0f)));
+            articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-2.0)).Select(x => (x, 0.6f)));
+            articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-3.0)).Select(x => (x, 0.3f)));
+
+            if (!articlesToExtract.Any())
                 return Result.Failure<(FeatureVector Input, StockData Output)>(
                     $"No articles found on {articleDate.ToString("yyyy/MM/dd")}"); ;
 
-            return Result.Ok((Input: _featureVectorExtractor.Extract(articles.Select(x => (x, 1.0f))), Output: stock));
+            var extractedVector = _featureVectorExtractor.Extract(articlesToExtract);
+            extractedVector.Date = stock.Date;
+
+            if (_featureCache != null)
+                _featureCache.UpdateCache(extractedVector);
+
+            return Result.Ok((Input: extractedVector, Output: stock));
 
         }
 
         public Result<FeatureVector> GetData(DateTime date)
         {
-            var articleDate = date.Date.AddDays(-1.0);
-            var articles = _articleRepository.GetArticles(articleDate);
-            if (!articles.Any())
+            var cacheResult = TryGetFromCache(date);
+            if (cacheResult.IsSuccess)
+            {
+                return cacheResult;
+            }
+
+            var articleDate = date.AddDays(-1.0);
+            var articlesToExtract = new List<(Article Article, float Weight)>();
+            articlesToExtract.AddRange(_articleRepository.GetArticles(date.AddDays(-1.0)).Select(x => (x, 1.0f)));
+            articlesToExtract.AddRange(_articleRepository.GetArticles(date.AddDays(-2.0)).Select(x => (x, 0.6f)));
+            articlesToExtract.AddRange(_articleRepository.GetArticles(date.AddDays(-3.0)).Select(x => (x, 0.3f)));
+            if (!articlesToExtract.Any())
                 return Result.Failure<FeatureVector>(
                     $"No articles found on {articleDate.ToString("yyyy/MM/dd")}"); ;
 
-            return Result.Ok(_featureVectorExtractor.Extract(articles.Select(x => (x, 1.0f))));
+            var extractedVector = _featureVectorExtractor.Extract(articlesToExtract);
+            extractedVector.Date = date;
+
+            if (_featureCache != null)
+                _featureCache.UpdateCache(extractedVector);
+
+            return Result.Ok(extractedVector);
         }
 
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol,
@@ -70,15 +109,30 @@ namespace GimmeMillions.Domain.Features
                 if ((startDate == default(DateTime) || startDate < stock.Date) &&
                     (endDate == default(DateTime) || endDate > stock.Date))
                 {
-                    var articlesToExtract = new List<(Article Article, float Weight)>();
+                    var cacheResult = TryGetFromCache(stock.Date);
+                    if (cacheResult.IsSuccess)
+                    {
+                        trainingData.Add((Input: cacheResult.Value, Output: stock));
+                    }
+                    else
+                    {
+                        var articlesToExtract = new List<(Article Article, float Weight)>();
 
-                    articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-1.0)).Select(x => (x, 1.0f)));
-                    articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-2.0)).Select(x => (x, 0.6f)));
-                    articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-3.0)).Select(x => (x, 0.3f)));
-                    if (!articlesToExtract.Any())
-                        return;
+                        articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-1.0)).Select(x => (x, 1.0f)));
+                        articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-2.0)).Select(x => (x, 0.6f)));
+                        articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-3.0)).Select(x => (x, 0.3f)));
+                        if (!articlesToExtract.Any())
+                            return;
 
-                    trainingData.Add((Input: _featureVectorExtractor.Extract(articlesToExtract), Output: stock));
+                        var extractedVector = _featureVectorExtractor.Extract(articlesToExtract);
+                        extractedVector.Date = stock.Date;
+
+                        if (_featureCache != null)
+                            _featureCache.UpdateCache(extractedVector);
+
+                        trainingData.Add((Input: extractedVector, Output: stock));
+                    }
+                    
                 }
             });
 
@@ -90,5 +144,20 @@ namespace GimmeMillions.Domain.Features
 
             return Result.Ok<IEnumerable<(FeatureVector Input, StockData Output)>>(trainingData);
         }
+
+        Result<FeatureVector> TryGetFromCache(DateTime date)
+        {
+            if(_featureCache == null)
+            {
+                return Result.Failure<FeatureVector>($"No feature cache provided for date {date.ToString("mm/dd/yyyy")}");
+            }
+            if(RefreshCache)
+            {
+                return Result.Failure<FeatureVector>($"RefreshCache is on, therefore features will be re-computed");
+            }
+
+            return _featureCache.GetFeature(_featureVectorExtractor.Encoding, date);
+        }
+
     }
 }

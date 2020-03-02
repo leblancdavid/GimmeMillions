@@ -12,11 +12,14 @@ namespace GimmeMillions.Domain.Features
     {
         private Random _random;
         private int _featureSize;
+        public bool RefreshCache { get; set; }
+
         public RandomFeatureDatasetService(int seed, int featureSize)
         {
             _random = new Random(seed);
             _featureSize = featureSize;
         }
+
 
         public Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date)
         {

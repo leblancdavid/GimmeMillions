@@ -10,6 +10,7 @@ namespace GimmeMillions.Domain.Features
 {
     public interface IFeatureDatasetService
     {
+        bool RefreshCache { get; set; }
         Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol, 
             DateTime startDate = default(DateTime), DateTime endDate = default(DateTime));
         Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date);

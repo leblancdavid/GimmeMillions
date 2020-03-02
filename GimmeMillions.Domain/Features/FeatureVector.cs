@@ -36,5 +36,9 @@ namespace GimmeMillions.Domain.Features
             Encoding = encoding;
         }
 
+        public FeatureVector()
+        {
+        }
+
     }
 }

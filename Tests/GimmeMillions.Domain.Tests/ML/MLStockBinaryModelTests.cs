@@ -19,6 +19,7 @@ namespace GimmeMillions.Domain.Tests.ML
         private readonly string _pathToDictionary = "../../../../../Repository/Dictionaries";
         private readonly string _pathToLanguage = "../../../../../Repository/Languages";
         private readonly string _pathToStocks = "../../../../../Repository/Stocks";
+        private readonly string _pathToCache = "../../../../../Repository/Cache";
 
         [Fact]
         public void ShouldTrainUsingBowFeatures()
@@ -27,7 +28,7 @@ namespace GimmeMillions.Domain.Tests.ML
             //var datasetService = GetTestRandomDatasetService(422, 200);
             var model = new MLStockBinaryModel(datasetService, "IWM");
 
-            var trainingResults = model.Train(new DateTime(2010, 1, 1), new DateTime(2016, 12, 1), 0.1);
+            var trainingResults = model.Train(new DateTime(2010, 1, 1), new DateTime(2017, 1, 1), 0.1);
         }
 
         private IFeatureDatasetService GetTestBoWFeatureDatasetService()
@@ -42,7 +43,10 @@ namespace GimmeMillions.Domain.Tests.ML
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var stocksRepo = new StockDataRepository(_pathToStocks);
-            return new DefaultFeatureDatasetService(bow, articlesRepo, stocksRepo);
+
+            var cache = new FeatureJsonCache(_pathToCache);
+
+            return new DefaultFeatureDatasetService(bow, articlesRepo, stocksRepo, cache);
         }
 
         private IFeatureDatasetService GetTestRandomDatasetService(int seed, int featureSize)
