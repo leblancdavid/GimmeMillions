@@ -10,6 +10,7 @@ namespace GimmeMillions.Domain.Features
     {
         public float[] Data { get; set; }
         public DateTime Date { get; set; }
+        public string Encoding { get; set; }
         public int Length
         {
             get { return Data.Length; }
@@ -21,16 +22,18 @@ namespace GimmeMillions.Domain.Features
             set { Data[i] = value; }
         }
 
-        public FeatureVector(int length)
+        public FeatureVector(int length, string encoding)
         {
             Data = new float[length];
             Date = DateTime.Today;
+            Encoding = encoding;
         }
 
-        public FeatureVector(int length, DateTime date)
+        public FeatureVector(int length, DateTime date, string encoding)
         {
             Data = new float[length];
             Date = date;
+            Encoding = encoding;
         }
 
     }

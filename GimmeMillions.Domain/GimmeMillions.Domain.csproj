@@ -145,6 +145,7 @@
     <Compile Include="Features\DefaultTextProcessor.cs" />
     <Compile Include="Features\FeaturesDictionary.cs" />
     <Compile Include="Features\FeatureVector.cs" />
+    <Compile Include="Features\IFeatureCache.cs" />
     <Compile Include="Features\IFeatureChecker.cs" />
     <Compile Include="Features\IFeatureDatasetService.cs" />
     <Compile Include="Features\IFeatureDictionaryRepository.cs" />

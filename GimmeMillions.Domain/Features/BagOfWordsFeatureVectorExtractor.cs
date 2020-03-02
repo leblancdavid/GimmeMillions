@@ -11,21 +11,25 @@ namespace GimmeMillions.Domain.Features
     {
         private FeaturesDictionary _featuresDictionary;
         private ITextProcessor _textProcessor;
+        public string Encoding { get; set; }
 
         public BagOfWordsFeatureVectorExtractor(FeaturesDictionary featuresDictionary,
             ITextProcessor textProcessor)
         {
             _featuresDictionary = featuresDictionary;
             _textProcessor = textProcessor;
+            Encoding = $"BoW-{_featuresDictionary.DictionaryId}";
         }
+
+
         public FeatureVector Extract(IEnumerable<(Article Article, float Weight)> articles)
         {
             if(!articles.Any())
             {
-                return new FeatureVector(0);
+                return new FeatureVector(0, Encoding);
             }
             
-            var vector = new FeatureVector(_featuresDictionary.Size, articles.Max(x => x.Article.Date));
+            var vector = new FeatureVector(_featuresDictionary.Size, articles.Max(x => x.Article.Date), Encoding);
 
             Parallel.ForEach(articles, (article) =>
             {

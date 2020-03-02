@@ -73,7 +73,7 @@ namespace GimmeMillions.Domain.ML
                 new StockRiseDataFeature(x.Input.Data, x.Output.PercentDayChange >= 0, (float)x.Output.PercentDayChange)), definedSchema);
 
             var normalizedData = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true)
-                .Append(new BinaryClassificationFeatureSelectorEstimator(_mLContext, lowerStdev: -1.5f, upperStdev: -0.25f, inclusive: true))
+                .Append(new BinaryClassificationFeatureSelectorEstimator(_mLContext, lowerStdev: -1.5f, upperStdev: -0.5f, inclusive: true))
                 .Fit(dataViewData)
                 .Transform(dataViewData);
 
@@ -130,7 +130,9 @@ namespace GimmeMillions.Domain.ML
                 double bestAvg = 0.0;
                 foreach (var m in bestModels)
                 {
-                    var betterResults = _mLContext.BinaryClassification.Evaluate(m.Transform(testData));
+                    var predictions = m.Transform(testData);
+                    var probabilities = predictions.GetColumn<float>("Probability");
+                    var betterResults = _mLContext.BinaryClassification.Evaluate(predictions);
                     bestAvg += betterResults.PositivePrecision;
                 }
                 bestAvg /= bestModels.Count();
