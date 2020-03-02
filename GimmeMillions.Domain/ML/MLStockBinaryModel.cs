@@ -73,7 +73,7 @@ namespace GimmeMillions.Domain.ML
                 new StockRiseDataFeature(x.Input.Data, x.Output.PercentDayChange >= 0, (float)x.Output.PercentDayChange)), definedSchema);
 
             var normalizedData = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true)
-                .Append(new FeatureSelectorEvaluator(_mLContext, lowerStdev: -0.3f, upperStdev: 0.3f, inclusive: true))
+                .Append(new BinaryClassificationFeatureSelectorEstimator(_mLContext, lowerStdev: -1.5f, upperStdev: -0.25f, inclusive: true))
                 .Fit(dataViewData)
                 .Transform(dataViewData);
 
@@ -91,7 +91,7 @@ namespace GimmeMillions.Domain.ML
             }
 
             int iterations = 10, crossValidations = 5;
-            int numberOfTrees = dataset.Value.Count() / 30;
+            int numberOfTrees = dataset.Value.Count() / 20;
             int numberOfLeaves = numberOfTrees / 5;
 
             List<ITransformer> bestModels = null, worstModels = null;
@@ -100,7 +100,7 @@ namespace GimmeMillions.Domain.ML
             //var pca = _mLContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "Features", rank: 20, overSampling: 20);
             for (int i = 0; i < iterations; ++i)
             {
-                var trainer = _mLContext.Transforms.ApproximatedKernelMap(outputColumnName: "Features", rank: 20)
+                var trainer = _mLContext.Transforms.ApproximatedKernelMap(outputColumnName: "Features", rank: 200)
                     .Append(_mLContext.BinaryClassification.Trainers.FastTree(
                         numberOfLeaves: numberOfLeaves,
                         numberOfTrees: numberOfTrees,
