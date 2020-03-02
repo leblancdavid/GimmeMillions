@@ -26,7 +26,7 @@ namespace GimmeMillions.Domain.Tests.ML
         {
             var datasetService = GetTestBoWFeatureDatasetService();
             //var datasetService = GetTestRandomDatasetService(422, 200);
-            var model = new MLStockBinaryModel(datasetService, "IWM");
+            var model = new MLStockBinaryModel(datasetService, "AMZN");
 
             var trainingResults = model.Train(new DateTime(2010, 1, 1), new DateTime(2017, 1, 1), 0.1);
         }

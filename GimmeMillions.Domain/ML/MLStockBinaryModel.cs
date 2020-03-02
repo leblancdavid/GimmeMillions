@@ -73,7 +73,7 @@ namespace GimmeMillions.Domain.ML
                 new StockRiseDataFeature(x.Input.Data, x.Output.PercentDayChange >= 0, (float)x.Output.PercentDayChange)), definedSchema);
 
             var normalizedData = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true)
-                .Append(new BinaryClassificationFeatureSelectorEstimator(_mLContext, lowerStdev: -2.5f, upperStdev: -0.5f, inclusive: true))
+                .Append(new BinaryClassificationFeatureSelectorEstimator(_mLContext, lowerStdev: -3.5f, upperStdev: -1.0f, inclusive: true))
                 .Fit(dataViewData)
                 .Transform(dataViewData);
 
@@ -95,13 +95,17 @@ namespace GimmeMillions.Domain.ML
             int numberOfTrees = dataset.Value.Count() / 20;
             int numberOfLeaves = numberOfTrees / 5;
 
-            
-            var trainer = _mLContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "Features", rank: 100, overSampling: 100)
-            //var trainer = _mLContext.Transforms.ApproximatedKernelMap(outputColumnName: "Features", rank: 1000)
+
+            var trainer = _mLContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "Features", rank: 600, overSampling: 600)
+            //var trainer = _mLContext.Transforms.ApproximatedKernelMap(outputColumnName: "Features", rank: numberOfTrees)
                     .Append(_mLContext.BinaryClassification.Trainers.FastTree(
                         numberOfLeaves: numberOfLeaves,
                         numberOfTrees: numberOfTrees,
                         minimumExampleCountPerLeaf: 1));
+            //var trainer = _mLContext.BinaryClassification.Trainers.FastTree(
+            //            numberOfLeaves: numberOfLeaves,
+            //            numberOfTrees: numberOfTrees,
+            //            minimumExampleCountPerLeaf: 1);
 
             for (int i = 0; i < iterations; ++i)
             {
