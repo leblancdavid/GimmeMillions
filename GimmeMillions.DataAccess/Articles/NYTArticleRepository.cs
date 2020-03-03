@@ -77,7 +77,12 @@ namespace GimmeMillions.DataAccess.Articles
                             if(articleId == id)
                             {
                                 var jsonArticle = File.ReadAllText(articleFile);
-                                return Result.Ok(JsonConvert.DeserializeObject<Article>(jsonArticle));
+                                var article = JsonConvert.DeserializeObject<Article>(jsonArticle);
+                                if (article == null)
+                                {
+                                    continue;
+                                }
+                                return Result.Ok(article);
                             }
                         }
                     }
@@ -101,7 +106,12 @@ namespace GimmeMillions.DataAccess.Articles
             foreach(var file in files)
             {
                 var jsonArticle = File.ReadAllText(file);
-                articles.Add(JsonConvert.DeserializeObject<Article>(jsonArticle));
+                var article = JsonConvert.DeserializeObject<Article>(jsonArticle);
+                if(article == null)
+                {
+                    continue;
+                }
+                articles.Add(article);
             }
 
             return articles;
@@ -123,7 +133,12 @@ namespace GimmeMillions.DataAccess.Articles
                         foreach (var articleFile in articleFiles)
                         {
                             var jsonArticle = File.ReadAllText(articleFile);
-                            articles.Add(JsonConvert.DeserializeObject<Article>(jsonArticle));
+                            var article = JsonConvert.DeserializeObject<Article>(jsonArticle);
+                            if (article == null)
+                            {
+                                continue;
+                            }
+                            articles.Add(article);
                         }
                     }
                 }
