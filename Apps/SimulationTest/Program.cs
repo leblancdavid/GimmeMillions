@@ -83,7 +83,9 @@ namespace SimulationTest
                 else
                 {
                     if(stock.PercentDayChange < 0)
+                    {
                         currentMoney = currentMoney * (1.0m + stock.PercentDayChange / 100m);
+                    }
                 }
             }
 
