@@ -22,6 +22,7 @@ namespace GimmeMillions.Domain.ML.Binary
         public int NumIterations { get; set; }
         public int NumOfTrees { get; set; }
         public int NumOfLeaves { get; set; }
+        public int PcaRank { get; set; }
 
     }
 
@@ -30,6 +31,11 @@ namespace GimmeMillions.Domain.ML.Binary
         private IFeatureDatasetService _featureDatasetService;
         private MLContext _mLContext;
         private int _seed;
+        private ITransformer _dataNormalizer;
+        private ITransformer _featureSelector;
+        private ITransformer _predictor;
+        private ITransformer _completeModel;
+
         public string StockSymbol { get; private set; }
 
         public bool IsTrained { get; private set; }
@@ -85,22 +91,24 @@ namespace GimmeMillions.Domain.ML.Binary
                 dataset.Value.Select(x =>
                 new StockRiseDataFeature(x.Input.Data, x.Output.PercentDayChange >= 0, (float)x.Output.PercentDayChange)), definedSchema);
 
-            var normalizedData = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true)
-                .Append(new BinaryClassificationFeatureSelectorEstimator(_mLContext, lowerStdev: -3.5f, upperStdev: -1.0f, inclusive: true))
-                .Fit(dataViewData)
-                .Transform(dataViewData);
+            _dataNormalizer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true).Fit(dataViewData);
+            var normalizedData = _dataNormalizer.Transform(dataViewData);
+
+            _featureSelector = new BinaryClassificationFeatureSelectorEstimator(_mLContext, lowerStdev: -3.5f, upperStdev: -1.0f, inclusive: true)
+                .Fit(normalizedData);
+            var featureSelectedData = _featureSelector.Transform(normalizedData);
 
             //Split data into training and testing
             IDataView trainData = null, testData = null;
             if (testFraction > 0.0)
             {
-                var dataSplit = _mLContext.Data.TrainTestSplit(normalizedData, testFraction, seed: _seed);
+                var dataSplit = _mLContext.Data.TrainTestSplit(featureSelectedData, testFraction, seed: _seed);
                 trainData = dataSplit.TrainSet;
                 testData = dataSplit.TestSet;
             }
             else
             {
-                trainData = normalizedData;
+                trainData = featureSelectedData;
             }
 
             int crossValidations = 10;
@@ -108,7 +116,7 @@ namespace GimmeMillions.Domain.ML.Binary
             int numberOfTrees = dataset.Value.Count() / 20;
             int numberOfLeaves = numberOfTrees / 5;
 
-            var trainer = _mLContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "Features", rank: 60, overSampling: 60)
+            var trainer = _mLContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "Features", rank: 200, overSampling: 200)
                     .Append(_mLContext.BinaryClassification.Trainers.FastTree(
                         numberOfLeaves: numberOfLeaves,
                         numberOfTrees: numberOfTrees,
@@ -134,9 +142,15 @@ namespace GimmeMillions.Domain.ML.Binary
                 }
             });
 
+            _predictor = bestCvResult.Model;
+
+            _completeModel = _dataNormalizer
+                .Append(_featureSelector)
+                .Append(_predictor);
+
             if (testData != null)
             {
-                var predictions = bestCvResult.Model.Transform(testData);
+                var predictions = _predictor.Transform(testData);
                 return Result.Ok<BinaryClassificationMetrics>(_mLContext.BinaryClassification.Evaluate(predictions));
             }
 

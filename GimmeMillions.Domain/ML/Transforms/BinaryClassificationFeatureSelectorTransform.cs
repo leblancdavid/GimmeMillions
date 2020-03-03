@@ -1,7 +1,10 @@
-﻿using Microsoft.ML;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.ML;
 using Microsoft.ML.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +31,26 @@ namespace GimmeMillions.Domain.ML.Transforms
             _featureIndices = featureIndices;
         }
 
+        public static Result<BinaryClassificationFeatureSelectorTransform> LoadFromFile(string fileName,
+            MLContext mLContext, 
+            string inputColumnName = "Features",
+            string outputColumnName = "Label")
+        {
+            if (!File.Exists(fileName))
+            {
+                return Result.Failure<BinaryClassificationFeatureSelectorTransform>($"BinaryClassificationFeatureSelectorTransform model named {fileName} could not be found");
+            }
+            var json = File.ReadAllText(fileName);
+            return Result.Ok(new BinaryClassificationFeatureSelectorTransform(mLContext, 
+                JsonConvert.DeserializeObject<int[]>(json),
+                inputColumnName, outputColumnName));
+        }
+
+        public void SaveToFile(string fileName)
+        {
+            File.WriteAllText(fileName, JsonConvert.SerializeObject(_featureIndices, Formatting.Indented));
+        }
+
         public DataViewSchema GetOutputSchema(DataViewSchema inputSchema)
         {
             return inputSchema;
@@ -40,6 +63,8 @@ namespace GimmeMillions.Domain.ML.Transforms
 
         public void Save(ModelSaveContext ctx)
         {
+            //Not sure how I'm suppose to go about implementing this!!!
+            //ModelSaveContext is just an empty class with a bunch of internals that I can't use
             throw new NotImplementedException();
         }
 
