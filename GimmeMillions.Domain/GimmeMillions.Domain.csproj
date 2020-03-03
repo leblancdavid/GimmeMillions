@@ -156,10 +156,11 @@
     <Compile Include="Keys\AccessKey.cs" />
     <Compile Include="Keys\IAccessKeyRepository.cs" />
     <Compile Include="ML\FeatureContribution.cs" />
+    <Compile Include="ML\Binary\IBinaryStockPredictionModel.cs" />
     <Compile Include="ML\Transforms\BinaryClassificationFeatureSelectorEstimator.cs" />
     <Compile Include="ML\Transforms\BinaryClassificationFeatureVector.cs" />
     <Compile Include="ML\Transforms\FeatureSelectorEstimator.cs" />
-    <Compile Include="ML\MLStockBinaryModel.cs" />
+    <Compile Include="ML\Binary\MLStockBinaryFastTreeModel.cs" />
     <Compile Include="ML\MLStockKMeansRegressionModel.cs" />
     <Compile Include="ML\StockDailyValueDataFeature.cs" />
     <Compile Include="ML\IStockPredictionModel.cs" />

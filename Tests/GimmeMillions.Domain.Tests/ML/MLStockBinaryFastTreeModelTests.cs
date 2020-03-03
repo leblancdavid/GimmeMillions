@@ -3,6 +3,7 @@ using GimmeMillions.DataAccess.Features;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
+using GimmeMillions.Domain.ML.Binary;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +14,7 @@ using Xunit;
 
 namespace GimmeMillions.Domain.Tests.ML
 {
-    public class MLStockBinaryModelTests
+    public class MLStockBinaryFastTreeModelTests
     {
         private readonly string _pathToArticles = "../../../../../Repository/Articles";
         private readonly string _pathToDictionary = "../../../../../Repository/Dictionaries";
@@ -26,7 +27,7 @@ namespace GimmeMillions.Domain.Tests.ML
         {
             var datasetService = GetTestBoWFeatureDatasetService();
             //var datasetService = GetTestRandomDatasetService(422, 200);
-            var model = new MLStockBinaryModel(datasetService, "AMZN");
+            var model = new MLStockBinaryFastTreeModel(datasetService, "AMZN");
 
             var trainingResults = model.Train(new DateTime(2010, 1, 1), new DateTime(2017, 1, 1), 0.1);
         }
