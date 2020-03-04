@@ -22,7 +22,21 @@ namespace GimmeMillions.Domain.ML.Binary
         public int NumIterations { get; set; }
         public int NumOfTrees { get; set; }
         public int NumOfLeaves { get; set; }
+        public int MinNumOfLeaves { get; set; }
         public int PcaRank { get; set; }
+
+        public FastTreeBinaryModelParameters()
+        {
+            LowerStdDev = -4.0f;
+            UpperStdDev = -1.5f;
+            NumCrossValidations = 10;
+            NumIterations = 10;
+            NumOfTrees = 100;
+            NumOfLeaves = 20;
+            MinNumOfLeaves = 1;
+
+            PcaRank = 20;
+        }
 
     }
 
@@ -47,6 +61,7 @@ namespace GimmeMillions.Domain.ML.Binary
             _featureDatasetService = featureDatasetService;
             _seed = 27;
             _mLContext = new MLContext(_seed);
+            Parameters = new FastTreeBinaryModelParameters();
 
         }
 
@@ -94,67 +109,30 @@ namespace GimmeMillions.Domain.ML.Binary
             _dataNormalizer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true).Fit(dataViewData);
             var normalizedData = _dataNormalizer.Transform(dataViewData);
 
-            _featureSelector = new BinaryClassificationFeatureSelectorEstimator(_mLContext, lowerStdev: -3.5f, upperStdev: -1.0f, inclusive: true)
-                .Fit(normalizedData);
-            var featureSelectedData = _featureSelector.Transform(normalizedData);
-
             //Split data into training and testing
             IDataView trainData = null, testData = null;
             if (testFraction > 0.0)
             {
-                var dataSplit = _mLContext.Data.TrainTestSplit(featureSelectedData, testFraction, seed: _seed);
+                var dataSplit = _mLContext.Data.TrainTestSplit(normalizedData, testFraction, seed: _seed);
                 trainData = dataSplit.TrainSet;
                 testData = dataSplit.TestSet;
             }
             else
             {
-                trainData = featureSelectedData;
+                trainData = normalizedData;
             }
 
-            int crossValidations = 10;
-            int iterations = 10;
-            int numberOfTrees = dataset.Value.Count() / 20;
-            int numberOfLeaves = numberOfTrees / 5;
-
-            var trainer = _mLContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "Features", rank: 200, overSampling: 200)
-                    .Append(_mLContext.BinaryClassification.Trainers.FastTree(
-                        numberOfLeaves: numberOfLeaves,
-                        numberOfTrees: numberOfTrees,
-                        minimumExampleCountPerLeaf: 1));
-
-            CrossValidationResult<CalibratedBinaryClassificationMetrics> bestCvResult = null;
-            object progressLock = new object();
-            Parallel.For(0, iterations, it =>
-            {
-                var cvResults = _mLContext.BinaryClassification.CrossValidate(trainData, trainer, crossValidations);
-                lock (progressLock)
-                {
-                    if (bestCvResult == null)
-                        bestCvResult = cvResults.FirstOrDefault();
-
-                    foreach (var cv in cvResults)
-                    {
-                        if (cv.Metrics.AreaUnderPrecisionRecallCurve > bestCvResult.Metrics.AreaUnderPrecisionRecallCurve)
-                        {
-                            bestCvResult = cv;
-                        }
-                    }
-                }
-            });
-
-            _predictor = bestCvResult.Model;
-
-            _completeModel = _dataNormalizer
-                .Append(_featureSelector)
-                .Append(_predictor);
+            _completeModel = GetBestModel(trainData, -4.0f, 4.0f);
 
             if (testData != null)
             {
-                var predictions = _predictor.Transform(testData);
-                return Result.Ok<BinaryClassificationMetrics>(_mLContext.BinaryClassification.Evaluate(predictions));
+                var positivePrediction = _completeModel.Transform(testData);
+                var posResults = _mLContext.BinaryClassification.Evaluate(positivePrediction);
+
+                return Result.Ok<BinaryClassificationMetrics>(posResults);
             }
 
-            return Result.Ok<BinaryClassificationMetrics>(bestCvResult.Metrics);
+            return Result.Ok<BinaryClassificationMetrics>(null);
 
         }
 
@@ -181,6 +159,57 @@ namespace GimmeMillions.Domain.ML.Binary
             upper /= total;
 
             return upper;
+        }
+
+        private ITransformer GetBestModel(IDataView dataViewData, float lowStdev, float highStdev)
+        {
+            var featureSelector = new BinaryClassificationFeatureSelectorEstimator(_mLContext,
+                lowerStdev: lowStdev,
+                upperStdev: highStdev,
+                inclusive: true)
+                .Fit(dataViewData);
+            //_featureSelector = _mLContext.Transforms.FeatureSelection.SelectFeaturesBasedOnMutualInformation(
+            //   "Features", "Features", "Label", featureDimension / 10).Fit(normalizedData);
+            var featureSelectedData = featureSelector.Transform(dataViewData);
+
+            int crossValidations = Parameters.NumCrossValidations;
+            int iterations = Parameters.NumIterations;
+            int numberOfTrees = Parameters.NumOfTrees;
+            int numberOfLeaves = Parameters.NumOfLeaves;
+
+            var trainer = _mLContext.Transforms.FeatureSelection.SelectFeaturesBasedOnMutualInformation(
+                "Features", slotsInOutput: Parameters.PcaRank * 2)
+                .Append(_mLContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "Features",
+                rank: Parameters.PcaRank, overSampling: Parameters.PcaRank))
+            //var trainer = _mLContext.Transforms.ApproximatedKernelMap(outputColumnName: "Features",
+            //    rank: Parameters.PcaRank)
+                    .Append(_mLContext.BinaryClassification.Trainers.FastTree(
+                        numberOfLeaves: numberOfLeaves,
+                        numberOfTrees: numberOfTrees,
+                        minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
+
+            CrossValidationResult<CalibratedBinaryClassificationMetrics> bestCvResult = null;
+            for (int it = 0; it < iterations; ++it)
+            {
+                var cvResults = _mLContext.BinaryClassification.CrossValidate(featureSelectedData, trainer, crossValidations);
+                if (bestCvResult == null)
+                    bestCvResult = cvResults.FirstOrDefault();
+
+                foreach (var cv in cvResults)
+                {
+                    if (cv.Metrics.AreaUnderPrecisionRecallCurve > bestCvResult.Metrics.AreaUnderPrecisionRecallCurve)
+                    {
+                        bestCvResult = cv;
+                    }
+                }
+            }
+
+            var predictor = bestCvResult.Model;
+
+            var model = featureSelector
+                .Append(predictor);
+
+            return model;
         }
     }
 }

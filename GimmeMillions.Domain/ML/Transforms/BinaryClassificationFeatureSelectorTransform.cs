@@ -53,7 +53,16 @@ namespace GimmeMillions.Domain.ML.Transforms
 
         public DataViewSchema GetOutputSchema(DataViewSchema inputSchema)
         {
-            return inputSchema;
+            var annotationBuilder = new DataViewSchema.Annotations.Builder();
+            annotationBuilder.AddPrimitiveValue<bool>("IsNormalized", BooleanDataViewType.Instance, true);
+            var schemaBuilder = new DataViewSchema.Builder();
+            schemaBuilder.AddColumn(_inputColumnName, new VectorDataViewType((
+                (VectorDataViewType)inputSchema[_inputColumnName].Type).ItemType, _featureIndices.Length), 
+                annotationBuilder.ToAnnotations());
+            schemaBuilder.AddColumn(_outputColumnName, inputSchema[_outputColumnName].Type);
+
+            var schema = schemaBuilder.ToSchema();
+            return schema;
         }
 
         public IRowToRowMapper GetRowToRowMapper(DataViewSchema inputSchema)
