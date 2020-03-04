@@ -24,7 +24,7 @@ namespace GimmeMillions.Domain.ML.Binary
         public int NumOfLeaves { get; set; }
         public int MinNumOfLeaves { get; set; }
         public int PcaRank { get; set; }
-
+        public int FeatureSelectionRank { get; set; }
         public FastTreeBinaryModelParameters()
         {
             LowerStdDev = -4.0f;
@@ -36,6 +36,7 @@ namespace GimmeMillions.Domain.ML.Binary
             MinNumOfLeaves = 1;
 
             PcaRank = 20;
+            FeatureSelectionRank = 100;
         }
 
     }
@@ -163,11 +164,14 @@ namespace GimmeMillions.Domain.ML.Binary
 
         private ITransformer GetBestModel(IDataView dataViewData, float lowStdev, float highStdev)
         {
-            var featureSelector = new BinaryClassificationFeatureSelectorEstimator(_mLContext,
-                lowerStdev: lowStdev,
-                upperStdev: highStdev,
-                inclusive: true)
+            var featureSelector = new MaxDifferenceFeatureFilterEstimator(_mLContext,
+                rank: Parameters.FeatureSelectionRank)
                 .Fit(dataViewData);
+            //var featureSelector = new ProbabilityFeatureFilterEstimator(_mLContext,
+            //    lowerStdev: lowStdev,
+            //    upperStdev: highStdev,
+            //    inclusive: true)
+            //    .Fit(dataViewData);
             //_featureSelector = _mLContext.Transforms.FeatureSelection.SelectFeaturesBasedOnMutualInformation(
             //   "Features", "Features", "Label", featureDimension / 10).Fit(normalizedData);
             var selectedFeaturesData = featureSelector.Transform(dataViewData);
@@ -180,21 +184,21 @@ namespace GimmeMillions.Domain.ML.Binary
             var trainer = _mLContext.Transforms.ProjectToPrincipalComponents(
                 outputColumnName: "Features",
                 rank: Parameters.PcaRank, overSampling: Parameters.PcaRank)
-            //var trainer = _mLContext.Transforms.FeatureSelection.SelectFeaturesBasedOnMutualInformation(
-            //    "Features", slotsInOutput: Parameters.PcaRank * 4)
-            //    .Append(_mLContext.Transforms.ProjectToPrincipalComponents(outputColumnName: "Features",
-            //    rank: Parameters.PcaRank, overSampling: Parameters.PcaRank))
-            //var trainer = _mLContext.Transforms.ApproximatedKernelMap(outputColumnName: "Features",
-            //    rank: Parameters.PcaRank)
-                    .Append(_mLContext.BinaryClassification.Trainers.FastTree(
-                        featureColumnName: "Features",
-                        numberOfLeaves: numberOfLeaves,
-                        numberOfTrees: numberOfTrees,
-                        minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
+            .Append(_mLContext.BinaryClassification.Trainers.FastTree(
+                featureColumnName: "Features",
+                numberOfLeaves: numberOfLeaves,
+                numberOfTrees: numberOfTrees,
+                minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
+            //var trainer = _mLContext.BinaryClassification.Trainers.FastTree(
+            //    featureColumnName: "Features",
+            //    numberOfLeaves: numberOfLeaves,
+            //    numberOfTrees: numberOfTrees,
+            //    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
 
             CrossValidationResult<CalibratedBinaryClassificationMetrics> bestCvResult = null;
             for (int it = 0; it < iterations; ++it)
             {
+
                 var cvResults = _mLContext.BinaryClassification.CrossValidate(selectedFeaturesData, trainer, crossValidations);
                 if (bestCvResult == null)
                     bestCvResult = cvResults.FirstOrDefault();

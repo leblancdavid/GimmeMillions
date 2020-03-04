@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Transforms
 {
-    public class BinaryClassificationFeatureSelectorTransform : ITransformer
+    public class FeatureFilterTransform : ITransformer
     {
         private int[] _featureIndices;
         private string _inputColumnName;
@@ -20,7 +20,7 @@ namespace GimmeMillions.Domain.ML.Transforms
 
         public bool IsRowToRowMapper => true;
 
-        public BinaryClassificationFeatureSelectorTransform(MLContext mLContext,
+        public FeatureFilterTransform(MLContext mLContext,
             int[] featureIndices,
             string inputColumnName = "Features",
             string outputColumnName = "Label")
@@ -31,17 +31,17 @@ namespace GimmeMillions.Domain.ML.Transforms
             _featureIndices = featureIndices;
         }
 
-        public static Result<BinaryClassificationFeatureSelectorTransform> LoadFromFile(string fileName,
+        public static Result<FeatureFilterTransform> LoadFromFile(string fileName,
             MLContext mLContext, 
             string inputColumnName = "Features",
             string outputColumnName = "Label")
         {
             if (!File.Exists(fileName))
             {
-                return Result.Failure<BinaryClassificationFeatureSelectorTransform>($"BinaryClassificationFeatureSelectorTransform model named {fileName} could not be found");
+                return Result.Failure<FeatureFilterTransform>($"BinaryClassificationFeatureSelectorTransform model named {fileName} could not be found");
             }
             var json = File.ReadAllText(fileName);
-            return Result.Ok(new BinaryClassificationFeatureSelectorTransform(mLContext, 
+            return Result.Ok(new FeatureFilterTransform(mLContext, 
                 JsonConvert.DeserializeObject<int[]>(json),
                 inputColumnName, outputColumnName));
         }
