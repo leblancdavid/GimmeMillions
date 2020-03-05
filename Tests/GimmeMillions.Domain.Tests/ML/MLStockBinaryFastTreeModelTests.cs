@@ -27,7 +27,7 @@ namespace GimmeMillions.Domain.Tests.ML
         {
             var datasetService = GetTestBoWFeatureDatasetService();
             //var datasetService = GetTestRandomDatasetService(422, 200);
-            var model = new MLStockBinaryFastTreeModel(datasetService, "F");
+            var model = new MLStockBinaryFastTreeModel(datasetService, "AMZN");
             model.Parameters.PcaRank = 128;
             model.Parameters.FeatureSelectionRank = model.Parameters.PcaRank * 10;
             model.Parameters.NumIterations = 3;
