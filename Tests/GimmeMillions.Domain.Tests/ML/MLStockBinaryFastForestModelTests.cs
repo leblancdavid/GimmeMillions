@@ -57,10 +57,34 @@ namespace GimmeMillions.Domain.Tests.ML
             model.Parameters.NumOfLeaves = 4;
             model.Parameters.MinNumOfLeaves = 5;
 
-            var dataset = datasetService.GetTrainingData("AMZN", new DateTime(2010, 1, 1), new DateTime(2018, 8, 1));
+            var dataset = datasetService.GetTrainingData("RNG", new DateTime(2010, 1, 1), new DateTime(2018, 8, 1));
             dataset.IsSuccess.Should().BeTrue();
 
             var trainingResults = model.Train(dataset.Value, 0.1);
+        }
+
+        [Fact]
+        public void ShouldBeAbleToTrainAndPredictRandomFeatures()
+        {
+            var datasetService = GetTestRandomDatasetService(422, 200);
+            var model = new MLStockBinaryFastForestModel();
+            model.Parameters.PcaRank = 10;
+            model.Parameters.FeatureSelectionRank = model.Parameters.PcaRank * 10;
+            model.Parameters.NumIterations = 1;
+            model.Parameters.NumCrossValidations = 10;
+            model.Parameters.NumOfTrees = 20;
+            model.Parameters.NumOfLeaves = 4;
+            model.Parameters.MinNumOfLeaves = 5;
+
+            var dataset = datasetService.GetTrainingData("RNG", new DateTime(2010, 1, 1), new DateTime(2018, 8, 1));
+            dataset.IsSuccess.Should().BeTrue();
+
+            var trainingResults = model.Train(dataset.Value, 0.1);
+
+            var textExample = datasetService.GetData("RNG", new DateTime(1, 1, 1));
+            textExample.IsSuccess.Should().BeTrue();
+
+            var prediction = model.Predict(textExample.Value.Input);
         }
 
         private IFeatureDatasetService GetTestBoWFeatureDatasetService()

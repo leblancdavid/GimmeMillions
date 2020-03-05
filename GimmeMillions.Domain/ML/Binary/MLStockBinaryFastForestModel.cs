@@ -45,7 +45,7 @@ namespace GimmeMillions.Domain.ML.Binary
         private ITransformer _dataNormalizer;
         private ITransformer _featureSelector;
         private ITransformer _predictor;
-        private PredictionEngine<StockRiseDataFeature, StockPrediction> _predictionEngine;
+        private ITransformer _model;
 
         public FastTreeBinaryModelParameters Parameters { get; set; }
         public BinaryPredictionModelMetadata<FastTreeBinaryModelParameters> Metadata { get; private set; }
@@ -66,7 +66,24 @@ namespace GimmeMillions.Domain.ML.Binary
 
         public Result<StockPrediction> Predict(FeatureVector input)
         {
-            throw new NotImplementedException();
+            //Load the data into a view
+            var inputDataView = _mLContext.Data.LoadFromEnumerable(
+                new List<StockRiseDataFeature>()
+                {
+                    new StockRiseDataFeature(input.Data, false, 0.0f)
+                },
+                GetSchemaDefinition(input));
+
+            var prediction = _model.Transform(inputDataView);
+
+            var score = prediction.GetColumn<float>("Score").ToArray();
+            var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
+
+            return Result.Ok(new StockPrediction()
+            {
+                Score = score[0],
+                PredictedLabel = predictedLabel[0]
+            });
         }
 
         public Result Save(string pathToModel)
@@ -87,16 +104,11 @@ namespace GimmeMillions.Domain.ML.Binary
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
             Metadata.StockSymbol = firstFeature.Output.Symbol;
 
-            int featureDimension = firstFeature.Input.Length;
-            var definedSchema = SchemaDefinition.Create(typeof(StockRiseDataFeature));
-            var featureColumn = definedSchema["Features"].ColumnType as VectorDataViewType;
-            var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
-            definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
-
             //Load the data into a view
             var dataViewData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Select(x =>
-                new StockRiseDataFeature(x.Input.Data, x.Output.PercentDayChange >= 0, (float)x.Output.PercentDayChange)), definedSchema);
+                new StockRiseDataFeature(x.Input.Data, x.Output.PercentDayChange >= 0, (float)x.Output.PercentDayChange)), 
+                GetSchemaDefinition(firstFeature.Input));
 
             _dataNormalizer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true).Fit(dataViewData);
             var normalizedData = _dataNormalizer.Transform(dataViewData);
@@ -122,11 +134,9 @@ namespace GimmeMillions.Domain.ML.Binary
             var trainingResults = GetBestTrainingModel(trainData);
             _predictor = trainingResults.Model;
 
-            var model = _dataNormalizer.Append(_featureSelector).Append(_predictor);
+            _model = _dataNormalizer.Append(_featureSelector).Append(_predictor);
 
             UpdateMetadata(trainingResults);
-
-            //_predictionEngine = _mLContext.Model.CreatePredictionEngine<StockRiseDataFeature, StockPrediction>(model);
 
             if (testData != null)
             {
@@ -211,6 +221,17 @@ namespace GimmeMillions.Domain.ML.Binary
                 Metadata.AverageUpperProbability /= upperCount;
             else
                 Metadata.AverageUpperProbability = 0.0f;
+        }
+
+        private SchemaDefinition GetSchemaDefinition(FeatureVector vector)
+        {
+            int featureDimension = vector.Length;
+            var definedSchema = SchemaDefinition.Create(typeof(StockRiseDataFeature));
+            var featureColumn = definedSchema["Features"].ColumnType as VectorDataViewType;
+            var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
+            definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
+
+            return definedSchema;
         }
 
     }
