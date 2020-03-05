@@ -155,6 +155,7 @@
     <Compile Include="Features\UsaLanguageChecker.cs" />
     <Compile Include="Keys\AccessKey.cs" />
     <Compile Include="Keys\IAccessKeyRepository.cs" />
+    <Compile Include="ML\Binary\BinaryPredictionModelMetadata.cs" />
     <Compile Include="ML\FeatureContribution.cs" />
     <Compile Include="ML\Binary\IBinaryStockPredictionModel.cs" />
     <Compile Include="ML\Transforms\MaxDifferenceFeatureFilterEstimator.cs" />

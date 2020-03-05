@@ -28,15 +28,33 @@ namespace GimmeMillions.Domain.Tests.ML
         {
             var datasetService = GetTestBoWFeatureDatasetService();
             //var datasetService = GetTestRandomDatasetService(422, 200);
-            var model = new MLStockBinaryFastForestModel("AMZN");
+            var model = new MLStockBinaryFastForestModel();
             model.Parameters.PcaRank = 128;
             model.Parameters.FeatureSelectionRank = model.Parameters.PcaRank * 10;
             model.Parameters.NumIterations = 3;
             model.Parameters.NumCrossValidations = 10;
-            model.Parameters.LowerStdDev = 1.5f;
-            model.Parameters.UpperStdDev = 4.0f;
             model.Parameters.NumOfTrees = 512;
             model.Parameters.NumOfLeaves = 16;
+            model.Parameters.MinNumOfLeaves = 5;
+
+            var dataset = datasetService.GetTrainingData("AMZN", new DateTime(2010, 1, 1), new DateTime(2018, 8, 1));
+            dataset.IsSuccess.Should().BeTrue();
+
+            var trainingResults = model.Train(dataset.Value, 0.1);
+        }
+
+        [Fact]
+        public void ShouldTrainUsingRandomFeatures()
+        {
+            //var datasetService = GetTestBoWFeatureDatasetService();
+            var datasetService = GetTestRandomDatasetService(422, 200);
+            var model = new MLStockBinaryFastForestModel();
+            model.Parameters.PcaRank = 10;
+            model.Parameters.FeatureSelectionRank = model.Parameters.PcaRank * 10;
+            model.Parameters.NumIterations = 1;
+            model.Parameters.NumCrossValidations = 10;
+            model.Parameters.NumOfTrees = 20;
+            model.Parameters.NumOfLeaves = 4;
             model.Parameters.MinNumOfLeaves = 5;
 
             var dataset = datasetService.GetTrainingData("AMZN", new DateTime(2010, 1, 1), new DateTime(2018, 8, 1));

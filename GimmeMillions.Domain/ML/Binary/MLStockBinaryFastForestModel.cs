@@ -17,8 +17,6 @@ namespace GimmeMillions.Domain.ML.Binary
 {
     public class FastTreeBinaryModelParameters
     {
-        public float LowerStdDev { get; set; }
-        public float UpperStdDev { get; set; }
         public int NumCrossValidations { get; set; }
         public int NumIterations { get; set; }
         public int NumOfTrees { get; set; }
@@ -28,8 +26,6 @@ namespace GimmeMillions.Domain.ML.Binary
         public int FeatureSelectionRank { get; set; }
         public FastTreeBinaryModelParameters()
         {
-            LowerStdDev = -4.0f;
-            UpperStdDev = -1.5f;
             NumCrossValidations = 10;
             NumIterations = 10;
             NumOfTrees = 100;
@@ -49,15 +45,14 @@ namespace GimmeMillions.Domain.ML.Binary
         private ITransformer _dataNormalizer;
         private ITransformer _featureSelector;
         private ITransformer _predictor;
+        private PredictionEngine<StockRiseDataFeature, StockPrediction> _predictionEngine;
 
-        public string StockSymbol { get; private set; }
-
-        public bool IsTrained { get; private set; }
         public FastTreeBinaryModelParameters Parameters { get; set; }
+        public BinaryPredictionModelMetadata<FastTreeBinaryModelParameters> Metadata { get; private set; }
 
-        public MLStockBinaryFastForestModel(string symbol)
+        public MLStockBinaryFastForestModel()
         {
-            StockSymbol = symbol;
+            Metadata = new BinaryPredictionModelMetadata<FastTreeBinaryModelParameters>();
             _seed = 27;
             _mLContext = new MLContext(_seed);
             Parameters = new FastTreeBinaryModelParameters();
@@ -88,7 +83,11 @@ namespace GimmeMillions.Domain.ML.Binary
 
             // The feature dimension (typically this will be the Count of the array 
             // of the features vector known at runtime).
-            int featureDimension = dataset.FirstOrDefault().Input.Length;
+            var firstFeature = dataset.FirstOrDefault();
+            Metadata.FeatureEncoding = firstFeature.Input.Encoding;
+            Metadata.StockSymbol = firstFeature.Output.Symbol;
+
+            int featureDimension = firstFeature.Input.Length;
             var definedSchema = SchemaDefinition.Create(typeof(StockRiseDataFeature));
             var featureColumn = definedSchema["Features"].ColumnType as VectorDataViewType;
             var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
@@ -122,6 +121,12 @@ namespace GimmeMillions.Domain.ML.Binary
 
             var trainingResults = GetBestTrainingModel(trainData);
             _predictor = trainingResults.Model;
+
+            var model = _dataNormalizer.Append(_featureSelector).Append(_predictor);
+
+            UpdateMetadata(trainingResults);
+
+            //_predictionEngine = _mLContext.Model.CreatePredictionEngine<StockRiseDataFeature, StockPrediction>(model);
 
             if (testData != null)
             {
@@ -172,5 +177,41 @@ namespace GimmeMillions.Domain.ML.Binary
 
             return bestCvResult;
         }
+
+        private void UpdateMetadata(CrossValidationResult<BinaryClassificationMetrics> crossValidationResult)
+        {
+            Metadata.Parameters = Parameters;
+            Metadata.TrainingResults = crossValidationResult.Metrics;
+
+            //var predictedSet = crossValidationResult.Model.Transform(crossValidationResult.ScoredHoldOutSet);
+            var probabilities = crossValidationResult.ScoredHoldOutSet.GetColumn<float>("Score").ToArray();
+            float lowerCount = 0.0f, upperCount = 0.0f;
+            Metadata.AverageLowerProbability = 0.0f;
+            Metadata.AverageUpperProbability = 0.0f;
+            for (int i = 0; i < probabilities.Length; ++i)
+            {
+                if(probabilities[i] >= 0.0f)
+                {
+                    Metadata.AverageUpperProbability += probabilities[i];
+                    upperCount++;
+                }
+                else
+                {
+                    Metadata.AverageLowerProbability += probabilities[i];
+                    lowerCount++;
+                }
+            }
+
+            if (lowerCount > 0)
+                Metadata.AverageLowerProbability /= lowerCount;
+            else
+                Metadata.AverageLowerProbability = 0.0f;
+
+            if (upperCount > 0)
+                Metadata.AverageUpperProbability /= upperCount;
+            else
+                Metadata.AverageUpperProbability = 0.0f;
+        }
+
     }
 }

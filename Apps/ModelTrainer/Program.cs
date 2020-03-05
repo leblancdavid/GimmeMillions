@@ -26,7 +26,7 @@ namespace ModelTrainer
             string stock = "AMZN";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
-            var model = new MLStockBinaryFastForestModel(stock);
+            var model = new MLStockBinaryFastForestModel();
             double bestPR = 0.0f;
             MLStockBinaryFastForestModel bestModel = null;
 
