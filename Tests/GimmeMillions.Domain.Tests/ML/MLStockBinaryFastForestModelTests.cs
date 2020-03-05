@@ -1,4 +1,5 @@
-﻿using GimmeMillions.DataAccess.Articles;
+﻿using FluentAssertions;
+using GimmeMillions.DataAccess.Articles;
 using GimmeMillions.DataAccess.Features;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
@@ -14,7 +15,7 @@ using Xunit;
 
 namespace GimmeMillions.Domain.Tests.ML
 {
-    public class MLStockBinaryFastTreeModelTests
+    public class MLStockBinaryFastForestModelTests
     {
         private readonly string _pathToArticles = "../../../../../Repository/Articles";
         private readonly string _pathToDictionary = "../../../../../Repository/Dictionaries";
@@ -27,7 +28,7 @@ namespace GimmeMillions.Domain.Tests.ML
         {
             var datasetService = GetTestBoWFeatureDatasetService();
             //var datasetService = GetTestRandomDatasetService(422, 200);
-            var model = new MLStockBinaryFastTreeModel(datasetService, "AMZN");
+            var model = new MLStockBinaryFastForestModel("AMZN");
             model.Parameters.PcaRank = 128;
             model.Parameters.FeatureSelectionRank = model.Parameters.PcaRank * 10;
             model.Parameters.NumIterations = 3;
@@ -37,7 +38,11 @@ namespace GimmeMillions.Domain.Tests.ML
             model.Parameters.NumOfTrees = 512;
             model.Parameters.NumOfLeaves = 16;
             model.Parameters.MinNumOfLeaves = 5;
-            var trainingResults = model.Train(new DateTime(2010, 1, 1), new DateTime(2018, 8, 1), 0.1);
+
+            var dataset = datasetService.GetTrainingData("AMZN", new DateTime(2010, 1, 1), new DateTime(2018, 8, 1));
+            dataset.IsSuccess.Should().BeTrue();
+
+            var trainingResults = model.Train(dataset.Value, 0.1);
         }
 
         private IFeatureDatasetService GetTestBoWFeatureDatasetService()

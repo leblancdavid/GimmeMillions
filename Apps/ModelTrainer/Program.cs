@@ -26,12 +26,13 @@ namespace ModelTrainer
             string stock = "AMZN";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
-            var model = new MLStockBinaryFastTreeModel(datasetService, stock);
+            var model = new MLStockBinaryFastForestModel(stock);
             double bestPR = 0.0f;
-            MLStockBinaryFastTreeModel bestModel = null;
+            MLStockBinaryFastForestModel bestModel = null;
 
             var startDate = new DateTime(2000, 1, 1);
             var endDate = new DateTime(2004, 6, 1);
+            var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
             var testSplit = 0.1;
             for(int numFeatures = 500; numFeatures < 5000; numFeatures += 500)
             {
@@ -48,7 +49,7 @@ namespace ModelTrainer
                     Console.WriteLine($"Number of Trees: { model.Parameters.NumOfTrees} \t Number of Leaves: { model.Parameters.NumOfLeaves}");
                     Console.WriteLine($"Pca Rank: {model.Parameters.PcaRank}");
                     Stopwatch stopwatch = Stopwatch.StartNew();
-                    var trainingResult = model.Train(startDate, endDate, testSplit);
+                    var trainingResult = model.Train(dataset.Value, testSplit);
                     stopwatch.Stop();
 
                     Console.WriteLine($"-=== Training done ===-");

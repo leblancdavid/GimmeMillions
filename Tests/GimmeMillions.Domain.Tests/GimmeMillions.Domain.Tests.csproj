@@ -147,7 +147,7 @@
     <Compile Include="Features\BagOfWordsFeatureVectorExtractorTests.cs" />
     <Compile Include="Features\DefaultFeatureDatasetServiceTests.cs" />
     <Compile Include="Features\FeaturesDictionaryTests.cs" />
-    <Compile Include="ML\MLStockBinaryFastTreeModelTests.cs" />
+    <Compile Include="ML\MLStockBinaryFastForestModelTests.cs" />
     <Compile Include="ML\MLStockKMeansRegressionModelTests.cs" />
     <Compile Include="ML\MLStockRegressionModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

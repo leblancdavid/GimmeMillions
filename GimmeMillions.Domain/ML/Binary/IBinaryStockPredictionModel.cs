@@ -1,4 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
+using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.Stocks;
 using Microsoft.ML.Data;
 using System;
 using System.Collections.Generic;
@@ -14,9 +16,8 @@ namespace GimmeMillions.Domain.ML.Binary
         bool IsTrained { get; }
         TParams Parameters { get; set; }
 
-        Result<BinaryClassificationMetrics> Train(DateTime startDate, DateTime endDate, double testFraction);
-        Result<StockPrediction> Predict(DateTime date);
-        Result<StockPrediction> PredictLatest();
+        Result<BinaryClassificationMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction);
+        Result<StockPrediction> Predict(FeatureVector Input);
         Result Save(string pathToModel);
         Result Load(string pathToModel);
     }

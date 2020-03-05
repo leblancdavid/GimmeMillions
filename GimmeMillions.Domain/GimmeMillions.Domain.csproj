@@ -162,7 +162,7 @@
     <Compile Include="ML\Transforms\ProbabilityFeatureFilterEstimator.cs" />
     <Compile Include="ML\Transforms\BinaryClassificationFeatureVector.cs" />
     <Compile Include="ML\Transforms\FeatureSelectorEstimator.cs" />
-    <Compile Include="ML\Binary\MLStockBinaryFastTreeModel.cs" />
+    <Compile Include="ML\Binary\MLStockBinaryFastForestModel.cs" />
     <Compile Include="ML\MLStockKMeansRegressionModel.cs" />
     <Compile Include="ML\StockDailyValueDataFeature.cs" />
     <Compile Include="ML\IStockPredictionModel.cs" />
