@@ -10,8 +10,7 @@ namespace GimmeMillions.Domain.ML.Binary
 {
     public class BinaryPredictionModelMetadata<TParams>
     {
-        public DataViewSchema Schema { get; set; }
-        public BinaryClassificationMetrics TrainingResults { get; set; }
+        public ModelMetrics TrainingResults { get; set; }
         public string StockSymbol { get; set; }
         public TParams Parameters { get; set; }
         public bool IsTrained 

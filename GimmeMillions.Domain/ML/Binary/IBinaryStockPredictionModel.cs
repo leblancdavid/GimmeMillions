@@ -15,9 +15,9 @@ namespace GimmeMillions.Domain.ML.Binary
         TParams Parameters { get; set; }
         BinaryPredictionModelMetadata<FastTreeBinaryModelParameters> Metadata { get; }
 
-        Result<BinaryClassificationMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction);
+        Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction);
         Result<StockPrediction> Predict(FeatureVector Input);
         Result Save(string pathToModel);
-        Result Load(string pathToModel);
+        Result Load(string pathToModel, string symbol, string encoding);
     }
 }

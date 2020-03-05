@@ -49,6 +49,7 @@ namespace GimmeMillions.Domain.ML.Binary
         private ITransformer _predictor;
         private ITransformer _model;
 
+        private DataViewSchema _dataSchema;
         public FastTreeBinaryModelParameters Parameters { get; set; }
         public BinaryPredictionModelMetadata<FastTreeBinaryModelParameters> Metadata { get; private set; }
 
@@ -61,9 +62,31 @@ namespace GimmeMillions.Domain.ML.Binary
 
         }
 
-        public Result Load(string pathToModel)
+        public Result Load(string pathToModel, string symbol, string encoding)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string directory = $"{pathToModel}/{encoding}";
+
+                Metadata = JsonConvert.DeserializeObject<BinaryPredictionModelMetadata<FastTreeBinaryModelParameters>>(
+                    File.ReadAllText($"{ directory}/{symbol}-meta.json"));
+
+                DataViewSchema schema = null;
+                _dataNormalizer = _mLContext.Model.Load($"{directory}/{Metadata.StockSymbol}-normalizer.zip", out schema);
+                var selectorLoad = FeatureFilterTransform.LoadFromFile($"{ directory}/{ Metadata.StockSymbol}-selector.json", _mLContext);
+                if(selectorLoad.IsFailure)
+                {
+                    return Result.Failure(selectorLoad.Error);
+                }
+                _featureSelector = selectorLoad.Value;
+                _predictor = _mLContext.Model.Load($"{directory}/{Metadata.StockSymbol}-predictor.zip", out schema);
+
+                return Result.Ok();
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure($"Unable to load the model: {ex.Message}");
+            }
         }
 
         public Result<StockPrediction> Predict(FeatureVector input)
@@ -104,9 +127,9 @@ namespace GimmeMillions.Domain.ML.Binary
                 }
 
                 File.WriteAllText($"{directory}/{Metadata.StockSymbol}-meta.json", JsonConvert.SerializeObject(Metadata, Formatting.Indented));
-                _mLContext.Model.Save(_dataNormalizer, Metadata.Schema, $"{directory}/{Metadata.StockSymbol}-normalizer.zip");
+                _mLContext.Model.Save(_dataNormalizer, _dataSchema, $"{directory}/{Metadata.StockSymbol}-normalizer.zip");
                 _featureSelector.SaveToFile($"{ directory}/{ Metadata.StockSymbol}-selector.json");
-                _mLContext.Model.Save(_predictor, Metadata.Schema, $"{directory}/{Metadata.StockSymbol}-predictor.zip");
+                _mLContext.Model.Save(_predictor, _dataSchema, $"{directory}/{Metadata.StockSymbol}-predictor.zip");
 
                 return Result.Ok();
             }
@@ -114,17 +137,13 @@ namespace GimmeMillions.Domain.ML.Binary
             {
                 return Result.Failure($"Unable to save the model: {ex.Message}");
             }
-            
-
-
-
         }
 
-        public Result<BinaryClassificationMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction)
+        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction)
         {
             if (!dataset.Any())
             {
-                return Result.Failure<BinaryClassificationMetrics>($"Training dataset is empty");
+                return Result.Failure<ModelMetrics>($"Training dataset is empty");
             }
 
             // The feature dimension (typically this will be the Count of the array 
@@ -137,7 +156,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 new StockRiseDataFeature(x.Input.Data, x.Output.PercentDayChange >= 0, (float)x.Output.PercentDayChange)), 
                 GetSchemaDefinition(firstFeature.Input));
 
-            Metadata.Schema = dataViewData.Schema; 
+            _dataSchema = dataViewData.Schema; 
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
             Metadata.StockSymbol = firstFeature.Output.Symbol;
 
@@ -174,10 +193,10 @@ namespace GimmeMillions.Domain.ML.Binary
                 var positivePrediction = _predictor.Transform(testData);
                 var testResults = _mLContext.BinaryClassification.EvaluateNonCalibrated(positivePrediction);
 
-                return Result.Ok<BinaryClassificationMetrics>(testResults);
+                return Result.Ok<ModelMetrics>(new ModelMetrics(testResults));
             }
 
-            return Result.Ok<BinaryClassificationMetrics>(trainingResults.Metrics);
+            return Result.Ok<ModelMetrics>(new ModelMetrics(trainingResults.Metrics));
 
         }
 
@@ -222,7 +241,7 @@ namespace GimmeMillions.Domain.ML.Binary
         private void UpdateMetadata(CrossValidationResult<BinaryClassificationMetrics> crossValidationResult)
         {
             Metadata.Parameters = Parameters;
-            Metadata.TrainingResults = crossValidationResult.Metrics;
+            Metadata.TrainingResults = new ModelMetrics(crossValidationResult.Metrics);
 
             //var predictedSet = crossValidationResult.Model.Transform(crossValidationResult.ScoredHoldOutSet);
             var probabilities = crossValidationResult.ScoredHoldOutSet.GetColumn<float>("Score").ToArray();

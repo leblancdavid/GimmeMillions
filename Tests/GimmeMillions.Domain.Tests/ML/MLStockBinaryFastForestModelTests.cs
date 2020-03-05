@@ -110,6 +110,43 @@ namespace GimmeMillions.Domain.Tests.ML
             saveResult.IsSuccess.Should().BeTrue();
         }
 
+        [Fact]
+        public void ShouldBeAbleToLoadAnExistingModel()
+        {
+            var datasetService = GetTestRandomDatasetService(422, 200);
+            var model = new MLStockBinaryFastForestModel();
+            model.Parameters.PcaRank = 10;
+            model.Parameters.FeatureSelectionRank = model.Parameters.PcaRank * 10;
+            model.Parameters.NumIterations = 1;
+            model.Parameters.NumCrossValidations = 10;
+            model.Parameters.NumOfTrees = 20;
+            model.Parameters.NumOfLeaves = 4;
+            model.Parameters.MinNumOfLeaves = 5;
+
+            string symbol = "RandomTestModel";
+            var dataset = datasetService.GetTrainingData(symbol, new DateTime(2010, 1, 1), new DateTime(2018, 8, 1));
+            dataset.IsSuccess.Should().BeTrue();
+
+            var trainingResults = model.Train(dataset.Value, 0.1);
+
+            var testExample = datasetService.GetData(symbol, new DateTime(1, 1, 1));
+            testExample.IsSuccess.Should().BeTrue();
+            var preLoadPrediction = model.Predict(testExample.Value.Input);
+            preLoadPrediction.IsSuccess.Should().BeTrue();
+
+            var saveResult = model.Save(_pathToModels);
+            saveResult.IsSuccess.Should().BeTrue();
+
+            var loadResult = model.Load(_pathToModels, symbol, testExample.Value.Input.Encoding);
+            loadResult.IsSuccess.Should().BeTrue();
+
+            var postLoadPrediction = model.Predict(testExample.Value.Input);
+            postLoadPrediction.IsSuccess.Should().BeTrue();
+
+            preLoadPrediction.Value.PredictedLabel.Should().Be(postLoadPrediction.Value.PredictedLabel);
+            preLoadPrediction.Value.Score.Should().Be(postLoadPrediction.Value.Score);
+        }
+
         private IFeatureDatasetService GetTestBoWFeatureDatasetService()
         {
             var featureChecker = new UsaLanguageChecker();
