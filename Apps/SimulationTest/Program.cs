@@ -14,9 +14,9 @@ namespace SimulationTest
             string _pathToStocks = "../../../../Repository/Stocks";
             var repo = new StockDataRepository(_pathToStocks);
 
-            var startDate = new DateTime(2018, 1, 1);
+            var startDate = new DateTime(2014, 1, 1);
             var endDate = new DateTime(2019, 1, 1);
-            var stocks = repo.GetStocks("IWM")
+            var stocks = repo.GetStocks("AMZN")
                 .Where(x => x.Date >= startDate && x.Date <= endDate)
                 .ToList();
 
@@ -42,7 +42,8 @@ namespace SimulationTest
                 var endingMoney = 0m;
                 for (int i = 0; i < 100; ++i)
                 {
-                    endingMoney += RunWithPredictorMethod(1000m, predictorAccuracy, stocks, rng);
+                    //endingMoney += RunWithPredictorMethod(1000m, predictorAccuracy, stocks, rng); 
+                    endingMoney += RunWithAlwaysRightPredictorMethod(1000m, predictorAccuracy, stocks, rng);
                 }
                 endingMoney /= 100m;
                 Console.WriteLine($"Starting with $1000, when investing a {predictorAccuracy}, you would end up on average with ${endingMoney}");
@@ -86,6 +87,28 @@ namespace SimulationTest
                     {
                         currentMoney = currentMoney * (1.0m + stock.PercentDayChange / 100m);
                     }
+                }
+            }
+
+            return currentMoney;
+        }
+
+        static decimal RunWithAlwaysRightPredictorMethod(decimal startingMoney, decimal correctnessFactor,
+            IEnumerable<StockData> stocks, Random rng)
+        {
+            decimal currentMoney = startingMoney;
+            foreach (var stock in stocks)
+            {
+                if (currentMoney < 0.001m)
+                    break;
+                var r = (decimal)rng.NextDouble();
+                if (r < correctnessFactor)
+                {
+                    currentMoney = currentMoney * (1.0m + Math.Abs(stock.PercentDayChange) / 100m);
+                }
+                else
+                {
+                    currentMoney = currentMoney * Math.Abs(1.0m + (Math.Abs(stock.PercentDayChange) * -1.0m) / 100m);
                 }
             }
 

@@ -141,7 +141,8 @@ namespace GimmeMillions.Domain.ML.Binary
             if (testData != null)
             {
                 var positivePrediction = _completeModel.Transform(testData);
-                var posResults = _mLContext.BinaryClassification.Evaluate(positivePrediction);
+                //var posResults = _mLContext.BinaryClassification.Evaluate(positivePrediction);
+                var posResults = _mLContext.BinaryClassification.EvaluateNonCalibrated(positivePrediction);
 
                 return Result.Ok<BinaryClassificationMetrics>(posResults);
             }
@@ -193,26 +194,31 @@ namespace GimmeMillions.Domain.ML.Binary
             //        numberOfTrees: numberOfTrees,
             //        minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
 
+            //var trainer = _mLContext.Transforms.ProjectToPrincipalComponents(
+            //    outputColumnName: "Features",
+            //    rank: Parameters.PcaRank, overSampling: Parameters.PcaRank)
+            //.Append(_mLContext.BinaryClassification.Trainers.FastTree(
+            //    featureColumnName: "Features",
+            //    numberOfLeaves: numberOfLeaves,
+            //    numberOfTrees: numberOfTrees,
+            //    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
+
             var trainer = _mLContext.Transforms.ProjectToPrincipalComponents(
                 outputColumnName: "Features",
                 rank: Parameters.PcaRank, overSampling: Parameters.PcaRank)
-            .Append(_mLContext.BinaryClassification.Trainers.FastTree(
+            .Append(_mLContext.BinaryClassification.Trainers.FastForest(
                 featureColumnName: "Features",
                 numberOfLeaves: numberOfLeaves,
                 numberOfTrees: numberOfTrees,
                 minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
 
-            //var trainer = _mLContext.BinaryClassification.Trainers.FastTree(
-            //    featureColumnName: "Features",
-            //    numberOfLeaves: numberOfLeaves,
-            //    numberOfTrees: numberOfTrees,
-            //    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
-
-            CrossValidationResult<CalibratedBinaryClassificationMetrics> bestCvResult = null;
+            //CrossValidationResult<CalibratedBinaryClassificationMetrics> bestCvResult = null;
+            CrossValidationResult<BinaryClassificationMetrics> bestCvResult = null;
             for (int it = 0; it < iterations; ++it)
             {
+                //var cvResults = _mLContext.BinaryClassification.CrossValidate(dataViewData, trainer, crossValidations);
+                var cvResults = _mLContext.BinaryClassification.CrossValidateNonCalibrated(dataViewData, trainer, crossValidations);
 
-                var cvResults = _mLContext.BinaryClassification.CrossValidate(dataViewData, trainer, crossValidations);
                 if (bestCvResult == null)
                     bestCvResult = cvResults.FirstOrDefault();
 
