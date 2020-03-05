@@ -46,7 +46,7 @@ namespace GimmeMillions.Domain.Features
 
         private FeatureVector GetNextRandomFeatureVector()
         {
-            var v = new FeatureVector(_featureSize, "RNG");
+            var v = new FeatureVector(_featureSize, "RandomFeaturesForTestingPurposes");
             for (int i = 0; i < _featureSize; ++i)
             {
                 v[i] = (float)_random.NextDouble();

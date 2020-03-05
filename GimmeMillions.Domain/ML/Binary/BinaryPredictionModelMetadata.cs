@@ -1,4 +1,5 @@
-﻿using Microsoft.ML.Data;
+﻿using Microsoft.ML;
+using Microsoft.ML.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace GimmeMillions.Domain.ML.Binary
 {
     public class BinaryPredictionModelMetadata<TParams>
     {
+        public DataViewSchema Schema { get; set; }
         public BinaryClassificationMetrics TrainingResults { get; set; }
         public string StockSymbol { get; set; }
         public TParams Parameters { get; set; }

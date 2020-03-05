@@ -6,8 +6,10 @@ using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers.FastTree;
 using Microsoft.ML.Transforms;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,7 +45,7 @@ namespace GimmeMillions.Domain.ML.Binary
         private MLContext _mLContext;
         private int _seed;
         private ITransformer _dataNormalizer;
-        private ITransformer _featureSelector;
+        private FeatureFilterTransform _featureSelector;
         private ITransformer _predictor;
         private ITransformer _model;
 
@@ -88,7 +90,34 @@ namespace GimmeMillions.Domain.ML.Binary
 
         public Result Save(string pathToModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (!Metadata.IsTrained)
+                {
+                    return Result.Failure("Model has not been trained or loaded");
+                }
+
+                string directory = $"{pathToModel}/{Metadata.FeatureEncoding}";
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                File.WriteAllText($"{directory}/{Metadata.StockSymbol}-meta.json", JsonConvert.SerializeObject(Metadata, Formatting.Indented));
+                _mLContext.Model.Save(_dataNormalizer, Metadata.Schema, $"{directory}/{Metadata.StockSymbol}-normalizer.zip");
+                _featureSelector.SaveToFile($"{ directory}/{ Metadata.StockSymbol}-selector.json");
+                _mLContext.Model.Save(_predictor, Metadata.Schema, $"{directory}/{Metadata.StockSymbol}-predictor.zip");
+
+                return Result.Ok();
+            }
+            catch(Exception ex)
+            {
+                return Result.Failure($"Unable to save the model: {ex.Message}");
+            }
+            
+
+
+
         }
 
         public Result<BinaryClassificationMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction)
@@ -101,21 +130,23 @@ namespace GimmeMillions.Domain.ML.Binary
             // The feature dimension (typically this will be the Count of the array 
             // of the features vector known at runtime).
             var firstFeature = dataset.FirstOrDefault();
-            Metadata.FeatureEncoding = firstFeature.Input.Encoding;
-            Metadata.StockSymbol = firstFeature.Output.Symbol;
-
+           
             //Load the data into a view
             var dataViewData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Select(x =>
                 new StockRiseDataFeature(x.Input.Data, x.Output.PercentDayChange >= 0, (float)x.Output.PercentDayChange)), 
                 GetSchemaDefinition(firstFeature.Input));
 
+            Metadata.Schema = dataViewData.Schema; 
+            Metadata.FeatureEncoding = firstFeature.Input.Encoding;
+            Metadata.StockSymbol = firstFeature.Output.Symbol;
+
             _dataNormalizer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true).Fit(dataViewData);
             var normalizedData = _dataNormalizer.Transform(dataViewData);
 
-            _featureSelector = new MaxVarianceFeatureFilterEstimator(_mLContext,
+            _featureSelector = (FeatureFilterTransform)(new MaxVarianceFeatureFilterEstimator(_mLContext,
                 rank: Parameters.FeatureSelectionRank)
-                .Fit(normalizedData);
+                .Fit(normalizedData));
             var selectedFeaturesData = _featureSelector.Transform(normalizedData);
 
             //Split data into training and testing
