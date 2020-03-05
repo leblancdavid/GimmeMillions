@@ -107,21 +107,15 @@ namespace GimmeMillions.Domain.ML.Binary
                 dataset.Value.Select(x =>
                 new StockRiseDataFeature(x.Input.Data, x.Output.PercentDayChange >= 0, (float)x.Output.PercentDayChange)), definedSchema);
 
-
-            //var featureSelector = new MaxDifferenceFeatureFilterEstimator(_mLContext,
-            //    rank: Parameters.FeatureSelectionRank)
-            //    .Fit(dataViewData);
-            //var selectedFeaturesData = featureSelector.Transform(dataViewData);
-
-            //_dataNormalizer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true).Fit(dataViewData);
-            //var normalizedData = _dataNormalizer.Transform(dataViewData);
-
-            _dataNormalizer = _mLContext.Transforms.NormalizeMinMax("Features").Fit(dataViewData);
+            _dataNormalizer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true).Fit(dataViewData);
             var normalizedData = _dataNormalizer.Transform(dataViewData);
+
+            //_dataNormalizer = _mLContext.Transforms.NormalizeMinMax("Features").Fit(dataViewData);
+            //var normalizedData = _dataNormalizer.Transform(dataViewData);
 
             var featureSelector = new MaxDifferenceFeatureFilterEstimator(_mLContext,
                 rank: Parameters.FeatureSelectionRank)
-                .Fit(dataViewData);
+                .Fit(normalizedData);
             var selectedFeaturesData = featureSelector.Transform(normalizedData);
 
             //Split data into training and testing
@@ -184,6 +178,16 @@ namespace GimmeMillions.Domain.ML.Binary
             int numberOfTrees = Parameters.NumOfTrees;
             int numberOfLeaves = Parameters.NumOfLeaves;
 
+            //var trainer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true)
+            //    .Append(_mLContext.Transforms.ProjectToPrincipalComponents(
+            //    outputColumnName: "Features",
+            //    rank: Parameters.PcaRank, overSampling: Parameters.PcaRank))
+            //    .Append(_mLContext.BinaryClassification.Trainers.FastTree(
+            //        featureColumnName: "Features",
+            //        numberOfLeaves: numberOfLeaves,
+            //        numberOfTrees: numberOfTrees,
+            //        minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
+
             var trainer = _mLContext.Transforms.ProjectToPrincipalComponents(
                 outputColumnName: "Features",
                 rank: Parameters.PcaRank, overSampling: Parameters.PcaRank)
@@ -192,6 +196,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 numberOfLeaves: numberOfLeaves,
                 numberOfTrees: numberOfTrees,
                 minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
+
             //var trainer = _mLContext.BinaryClassification.Trainers.FastTree(
             //    featureColumnName: "Features",
             //    numberOfLeaves: numberOfLeaves,
