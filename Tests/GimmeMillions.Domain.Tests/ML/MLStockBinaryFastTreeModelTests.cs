@@ -28,8 +28,8 @@ namespace GimmeMillions.Domain.Tests.ML
             var datasetService = GetTestBoWFeatureDatasetService();
             //var datasetService = GetTestRandomDatasetService(422, 200);
             var model = new MLStockBinaryFastTreeModel(datasetService, "AMZN");
-            model.Parameters.PcaRank = 50;
-            model.Parameters.FeatureSelectionRank = 500;
+            model.Parameters.PcaRank = 100;
+            model.Parameters.FeatureSelectionRank = 1000;
             model.Parameters.NumIterations = 3;
             model.Parameters.NumCrossValidations = 10;
             model.Parameters.LowerStdDev = 1.5f;

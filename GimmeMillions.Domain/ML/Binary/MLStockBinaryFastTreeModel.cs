@@ -113,7 +113,12 @@ namespace GimmeMillions.Domain.ML.Binary
             //_dataNormalizer = _mLContext.Transforms.NormalizeMinMax("Features").Fit(dataViewData);
             //var normalizedData = _dataNormalizer.Transform(dataViewData);
 
-            var featureSelector = new MaxDifferenceFeatureFilterEstimator(_mLContext,
+            //var featureSelector = new MaxDifferenceFeatureFilterEstimator(_mLContext,
+            //    rank: Parameters.FeatureSelectionRank)
+            //    .Fit(normalizedData);
+            //var selectedFeaturesData = featureSelector.Transform(normalizedData);
+
+            var featureSelector = new MaxVarianceFeatureFilterEstimator(_mLContext,
                 rank: Parameters.FeatureSelectionRank)
                 .Fit(normalizedData);
             var selectedFeaturesData = featureSelector.Transform(normalizedData);
