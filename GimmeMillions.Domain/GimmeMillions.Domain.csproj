@@ -157,7 +157,9 @@
     <Compile Include="Keys\IAccessKeyRepository.cs" />
     <Compile Include="ML\FeatureContribution.cs" />
     <Compile Include="ML\Binary\IBinaryStockPredictionModel.cs" />
-    <Compile Include="ML\Transforms\BinaryClassificationFeatureSelectorEstimator.cs" />
+    <Compile Include="ML\Transforms\MaxDifferenceFeatureFilterEstimator.cs" />
+    <Compile Include="ML\Transforms\MaxVarianceFeatureFilterEstimator.cs" />
+    <Compile Include="ML\Transforms\ProbabilityFeatureFilterEstimator.cs" />
     <Compile Include="ML\Transforms\BinaryClassificationFeatureVector.cs" />
     <Compile Include="ML\Transforms\FeatureSelectorEstimator.cs" />
     <Compile Include="ML\Binary\MLStockBinaryFastTreeModel.cs" />
@@ -170,7 +172,7 @@
     <Compile Include="ML\StockRiseDataFeature.cs" />
     <Compile Include="ML\TrainingMetrics.cs" />
     <Compile Include="ML\TrainingResult.cs" />
-    <Compile Include="ML\Transforms\BinaryClassificationFeatureSelectorTransform.cs" />
+    <Compile Include="ML\Transforms\FeatureFilterTransform.cs" />
     <Compile Include="ML\Transforms\FeatureSelectorTransform.cs" />
     <Compile Include="ML\Transforms\RegressionFeatureVector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,14 +1,17 @@
-﻿using Microsoft.ML;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.ML;
 using Microsoft.ML.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Transforms
 {
-    public class BinaryClassificationFeatureSelectorTransform : ITransformer
+    public class FeatureFilterTransform : ITransformer
     {
         private int[] _featureIndices;
         private string _inputColumnName;
@@ -17,7 +20,7 @@ namespace GimmeMillions.Domain.ML.Transforms
 
         public bool IsRowToRowMapper => true;
 
-        public BinaryClassificationFeatureSelectorTransform(MLContext mLContext,
+        public FeatureFilterTransform(MLContext mLContext,
             int[] featureIndices,
             string inputColumnName = "Features",
             string outputColumnName = "Label")
@@ -28,9 +31,38 @@ namespace GimmeMillions.Domain.ML.Transforms
             _featureIndices = featureIndices;
         }
 
+        public static Result<FeatureFilterTransform> LoadFromFile(string fileName,
+            MLContext mLContext, 
+            string inputColumnName = "Features",
+            string outputColumnName = "Label")
+        {
+            if (!File.Exists(fileName))
+            {
+                return Result.Failure<FeatureFilterTransform>($"BinaryClassificationFeatureSelectorTransform model named {fileName} could not be found");
+            }
+            var json = File.ReadAllText(fileName);
+            return Result.Ok(new FeatureFilterTransform(mLContext, 
+                JsonConvert.DeserializeObject<int[]>(json),
+                inputColumnName, outputColumnName));
+        }
+
+        public void SaveToFile(string fileName)
+        {
+            File.WriteAllText(fileName, JsonConvert.SerializeObject(_featureIndices, Formatting.Indented));
+        }
+
         public DataViewSchema GetOutputSchema(DataViewSchema inputSchema)
         {
-            return inputSchema;
+            var annotationBuilder = new DataViewSchema.Annotations.Builder();
+            annotationBuilder.AddPrimitiveValue<bool>("IsNormalized", BooleanDataViewType.Instance, true);
+            var schemaBuilder = new DataViewSchema.Builder();
+            schemaBuilder.AddColumn(_inputColumnName, new VectorDataViewType((
+                (VectorDataViewType)inputSchema[_inputColumnName].Type).ItemType, _featureIndices.Length), 
+                annotationBuilder.ToAnnotations());
+            schemaBuilder.AddColumn(_outputColumnName, inputSchema[_outputColumnName].Type);
+
+            var schema = schemaBuilder.ToSchema();
+            return schema;
         }
 
         public IRowToRowMapper GetRowToRowMapper(DataViewSchema inputSchema)
@@ -40,6 +72,8 @@ namespace GimmeMillions.Domain.ML.Transforms
 
         public void Save(ModelSaveContext ctx)
         {
+            //Not sure how I'm suppose to go about implementing this!!!
+            //ModelSaveContext is just an empty class with a bunch of internals that I can't use
             throw new NotImplementedException();
         }
 

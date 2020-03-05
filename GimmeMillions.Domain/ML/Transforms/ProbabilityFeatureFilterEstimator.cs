@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Transforms
 {
-    public class BinaryClassificationFeatureSelectorEstimator : IEstimator<ITransformer>
+    public class ProbabilityFeatureFilterEstimator : IEstimator<ITransformer>
     {
         private string _inputColumnName;
         private string _outputColumnName;
@@ -17,7 +17,7 @@ namespace GimmeMillions.Domain.ML.Transforms
         private bool _inclusive;
         private MLContext _mLContext;
 
-        public BinaryClassificationFeatureSelectorEstimator(MLContext mLContext, 
+        public ProbabilityFeatureFilterEstimator(MLContext mLContext, 
             string inputColumnName = "Features", 
             string outputColumnName = "Label",
             float lowerStdev = 0.0f,
@@ -34,7 +34,7 @@ namespace GimmeMillions.Domain.ML.Transforms
 
         public ITransformer Fit(IDataView input)
         {
-            return new BinaryClassificationFeatureSelectorTransform(_mLContext, GetFeatureSelectionIndices(input), _inputColumnName, _outputColumnName);
+            return new FeatureFilterTransform(_mLContext, GetFeatureSelectionIndices(input), _inputColumnName, _outputColumnName);
         }
 
         public SchemaShape GetOutputSchema(SchemaShape inputSchema)
