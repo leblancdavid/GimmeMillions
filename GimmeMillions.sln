@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationTest", "Apps\Simu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelTrainer", "Apps\ModelTrainer\ModelTrainer.csproj", "{EFA59C21-ACF7-4EA0-9EDF-A0C6A822EB9B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelTestSimulation", "Apps\ModelTestSimulation\ModelTestSimulation.csproj", "{9EB544E6-1F0E-4122-870C-37A9C0E14857}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,14 @@ Global
 		{EFA59C21-ACF7-4EA0-9EDF-A0C6A822EB9B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EFA59C21-ACF7-4EA0-9EDF-A0C6A822EB9B}.Release|x64.ActiveCfg = Release|Any CPU
 		{EFA59C21-ACF7-4EA0-9EDF-A0C6A822EB9B}.Release|x64.Build.0 = Release|Any CPU
+		{9EB544E6-1F0E-4122-870C-37A9C0E14857}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EB544E6-1F0E-4122-870C-37A9C0E14857}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EB544E6-1F0E-4122-870C-37A9C0E14857}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9EB544E6-1F0E-4122-870C-37A9C0E14857}.Debug|x64.Build.0 = Debug|Any CPU
+		{9EB544E6-1F0E-4122-870C-37A9C0E14857}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EB544E6-1F0E-4122-870C-37A9C0E14857}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EB544E6-1F0E-4122-870C-37A9C0E14857}.Release|x64.ActiveCfg = Release|Any CPU
+		{9EB544E6-1F0E-4122-870C-37A9C0E14857}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,6 +105,7 @@ Global
 		{BC7B0190-4F97-4727-B827-187BB4E24324} = {B0E16F1D-5F27-4C13-9117-2D625BB588F6}
 		{4BC2FE6A-05C8-454F-89BA-4EE3112DC44D} = {0EBDE5AA-DB44-4830-9234-5DAA16386E4A}
 		{EFA59C21-ACF7-4EA0-9EDF-A0C6A822EB9B} = {0EBDE5AA-DB44-4830-9234-5DAA16386E4A}
+		{9EB544E6-1F0E-4122-870C-37A9C0E14857} = {0EBDE5AA-DB44-4830-9234-5DAA16386E4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1AC6AAE2-C385-494A-B0BB-CE2501C90DB9}

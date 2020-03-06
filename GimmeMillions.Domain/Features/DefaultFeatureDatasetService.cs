@@ -142,7 +142,7 @@ namespace GimmeMillions.Domain.Features
                     $"No training data found for symbol '{symbol}' between specified dates");
             }
 
-            return Result.Ok<IEnumerable<(FeatureVector Input, StockData Output)>>(trainingData);
+            return Result.Ok<IEnumerable<(FeatureVector Input, StockData Output)>>(trainingData.OrderBy(x => x.Output.Date));
         }
 
         Result<FeatureVector> TryGetFromCache(DateTime date)

@@ -81,6 +81,8 @@ namespace GimmeMillions.Domain.ML.Binary
                 _featureSelector = selectorLoad.Value;
                 _predictor = _mLContext.Model.Load($"{directory}/{Metadata.StockSymbol}-predictor.zip", out schema);
 
+                _model = _dataNormalizer.Append(_featureSelector).Append(_predictor);
+
                 return Result.Ok();
             }
             catch (Exception ex)
