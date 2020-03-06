@@ -24,7 +24,7 @@ namespace ModelTrainer
         static void Main(string[] args)
         {
             string dictionaryToUse = "FeatureDictionaryJsonRepositoryTests.ShouldAddFeatureDictionaries";
-            string stock = "AMZN";
+            string stock = "S";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
             var model = new MLStockBinaryFastForestModel();

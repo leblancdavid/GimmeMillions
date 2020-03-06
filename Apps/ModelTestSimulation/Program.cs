@@ -25,13 +25,13 @@ namespace ModelTestSimulation
         static void Main(string[] args)
         {
             string dictionaryToUse = "FeatureDictionaryJsonRepositoryTests.ShouldAddFeatureDictionaries";
-            string stock = "AMZN";
+            string stock = "S";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
             var model = new MLStockBinaryFastForestModel();
 
-            var startDate = new DateTime(2004, 1, 2);
-            var endDate = new DateTime(2004, 2, 2);
+            var startDate = new DateTime(2003, 1, 1);
+            var endDate = new DateTime(2004, 1, 1);
             var testSet = datasetService.GetTrainingData(stock, startDate, endDate);
             if(testSet.IsFailure || !testSet.Value.Any())
             {
