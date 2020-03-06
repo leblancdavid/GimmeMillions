@@ -47,5 +47,10 @@ namespace GimmeMillions.DataAccess.Stocks
 
             return stocks;
         }
+
+        public IEnumerable<string> GetSymbols()
+        {
+            return Directory.GetFiles($"{_pathToStocks}");
+        }
     }
 }

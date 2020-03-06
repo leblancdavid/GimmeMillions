@@ -9,5 +9,6 @@ namespace GimmeMillions.Domain.Stocks
     public interface IStockRepository
     {
         IEnumerable<StockData> GetStocks(string symbol);
+        IEnumerable<string> GetSymbols();
     }
 }
