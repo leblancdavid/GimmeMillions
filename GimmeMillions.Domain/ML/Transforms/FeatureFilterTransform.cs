@@ -60,7 +60,9 @@ namespace GimmeMillions.Domain.ML.Transforms
                 (VectorDataViewType)inputSchema[_inputColumnName].Type).ItemType, _featureIndices.Length), 
                 annotationBuilder.ToAnnotations());
             schemaBuilder.AddColumn(_outputColumnName, inputSchema[_outputColumnName].Type);
-
+            schemaBuilder.AddColumn("Value", inputSchema["Value"].Type);
+            schemaBuilder.AddColumn("DayOfTheWeek", inputSchema["DayOfTheWeek"].Type);
+            schemaBuilder.AddColumn("Month", inputSchema["Month"].Type);
             var schema = schemaBuilder.ToSchema();
             return schema;
         }
@@ -81,8 +83,11 @@ namespace GimmeMillions.Domain.ML.Transforms
         {
             var features = input.GetColumn<float[]>(_inputColumnName).ToArray();
             var labels = input.GetColumn<bool>(_outputColumnName).ToArray();
+            var values = input.GetColumn<float>("Value").ToArray();
+            var dayOfTheWeek = input.GetColumn<float>("DayOfTheWeek").ToArray();
+            var month = input.GetColumn<float>("Month").ToArray();
 
-            var output = new List<BinaryClassificationFeatureVector>();
+            var output = new List<StockRiseDataFeature>();
             for(int i = 0; i < features.Length; ++i)
             {
                 var filtered = new float[_featureIndices.Length];
@@ -90,12 +95,11 @@ namespace GimmeMillions.Domain.ML.Transforms
                 {
                     filtered[j] = features[i][_featureIndices[j]];
                 }
-                output.Add(new BinaryClassificationFeatureVector(filtered, labels[i]));
+                output.Add(new StockRiseDataFeature(filtered, labels[i], values[i], dayOfTheWeek[i], month[i]));
             }
 
             int featureDimension = _featureIndices.Length;
-            var definedSchema = SchemaDefinition.Create(typeof(BinaryClassificationFeatureVector));
-            var featureColumn = definedSchema["Features"].ColumnType as VectorDataViewType;
+            var definedSchema = SchemaDefinition.Create(typeof(StockRiseDataFeature));
             var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
             definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
             return _mLContext.Data.LoadFromEnumerable(output, definedSchema);

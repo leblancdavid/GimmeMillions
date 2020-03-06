@@ -25,13 +25,13 @@ namespace ModelTestSimulation
         static void Main(string[] args)
         {
             string dictionaryToUse = "FeatureDictionaryJsonRepositoryTests.ShouldAddFeatureDictionaries";
-            string stock = "S";
+            string stock = "AMZN";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
             var model = new MLStockBinaryFastForestModel();
 
-            var startDate = new DateTime(2018, 1, 1);
-            var endDate = new DateTime(2018, 6, 1);
+            var startDate = new DateTime(2019, 6, 1);
+            var endDate = new DateTime(2019, 7, 1);
             var testSet = datasetService.GetTrainingData(stock, startDate, endDate);
             if(testSet.IsFailure || !testSet.Value.Any())
             {
@@ -55,6 +55,7 @@ namespace ModelTestSimulation
 
             decimal currentMoney = 1000.0m;
             double accuracy = 0.0;
+            double bettingAccuracy = 0.0, totalBets = 0.0;
             foreach(var sample in testSet.Value)
             {
                 var prediction = model.Predict(sample.Input);
@@ -65,8 +66,15 @@ namespace ModelTestSimulation
                         accuracy++;
                     }
 
-                    //if(prediction.Value.Score < model.Metadata.AverageUpperProbability / 1.5f)
-                    currentMoney = currentMoney * (1.0m + sample.Output.PercentDayChange / 100m);
+                    if(prediction.Value.Probability > 0.75)
+                    {
+                        currentMoney = currentMoney * (1.0m + sample.Output.PercentDayChange / 100m); 
+                        if (sample.Output.PercentDayChange > 0)
+                        {
+                            bettingAccuracy++;
+                        }
+                        totalBets++;
+                    }
                 
                 }
                 else
@@ -82,6 +90,7 @@ namespace ModelTestSimulation
 
             Console.WriteLine("-=== Done ===-");
             Console.WriteLine($"Final accuracy: {accuracy / testSet.Value.Count()}");
+            Console.WriteLine($"Betting accuracy: {bettingAccuracy / totalBets}");
 
             Console.ReadKey();
         }

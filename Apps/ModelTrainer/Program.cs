@@ -24,26 +24,28 @@ namespace ModelTrainer
         static void Main(string[] args)
         {
             string dictionaryToUse = "FeatureDictionaryJsonRepositoryTests.ShouldAddFeatureDictionaries";
-            string stock = "S";
+            string stock = "AMZN";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
             var model = new MLStockBinaryFastForestModel();
 
             var startDate = new DateTime(2010, 1, 1);
-            var endDate = new DateTime(2019, 6, 1);
+            var endDate = new DateTime(2019, 6, 14);
             var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
-            int numTestExamples = 60;
-            var testSet = dataset.Value.Skip(dataset.Value.Count() - numTestExamples);
-            var trainingSet = dataset.Value.Take(dataset.Value.Count() - numTestExamples);
+            var filteredDataset = dataset.Value;
+            int numTestExamples = 20;
 
-            model.Parameters.PcaRank = 128;
-            model.Parameters.FeatureSelectionRank = model.Parameters.PcaRank * 10;
-            model.Parameters.NumIterations = 0;
-            model.Parameters.NumCrossValidations = 0;
-            model.Parameters.NumOfTrees = 32;
+            var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
+            var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
+
+            model.Parameters.PcaRank = 120;
+            model.Parameters.FeatureSelectionRank = 3000;
+            model.Parameters.NumIterations = 2;
+            model.Parameters.NumCrossValidations = 1;
+            model.Parameters.NumOfTrees = 64;
             model.Parameters.NumOfLeaves = 8;
-            model.Parameters.MinNumOfLeaves = 3;
+            model.Parameters.MinNumOfLeaves = 1;
 
             Console.WriteLine($"-=== Training ===-");
             Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank} \t PCA: { model.Parameters.PcaRank}");

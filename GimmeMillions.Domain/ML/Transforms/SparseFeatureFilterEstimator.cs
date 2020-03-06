@@ -40,7 +40,6 @@ namespace GimmeMillions.Domain.ML.Transforms
         {
             var differences = GetFeatureUsage(input);
             var orderedDifferences = differences.OrderByDescending(x => x.Usage).ToArray();
-            //var orderedDifferences = differences.OrderBy(x => x.FeatureDifference);
             var indicesToKeep = orderedDifferences.Take(_rank).Select(x => x.Index);
 
             return indicesToKeep.ToArray();
