@@ -41,7 +41,7 @@ namespace GimmeMillions.Domain.ML.Transforms
             var differences = GetAbsoluteDifference(input);
             var orderedDifferences = differences.OrderByDescending(x => x.FeatureDifference).ToArray();
             //var orderedDifferences = differences.OrderBy(x => x.FeatureDifference);
-            var indicesToKeep = orderedDifferences.Take(_rank).Select(x => x.Index);
+            var indicesToKeep = orderedDifferences.Skip((int)(differences.Length * 0.45)).Take(_rank).Select(x => x.Index);
 
             return indicesToKeep.ToArray();
         }
@@ -106,6 +106,7 @@ namespace GimmeMillions.Domain.ML.Transforms
             for (int i = 0; i < p.Length; ++i)
             {
                 p[i] = (Math.Abs((negativeVar[i] / negativeTotal) - (positiveVar[i] / positiveTotal)), i);
+                //p[i] = ((positiveVar[i] / positiveTotal) - (negativeVar[i] / negativeTotal), i);
             }
             return p;
         }

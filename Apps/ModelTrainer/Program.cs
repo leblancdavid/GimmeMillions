@@ -29,23 +29,28 @@ namespace ModelTrainer
 
             var model = new MLStockBinaryFastForestModel();
 
-            var startDate = new DateTime(2000, 1, 1);
-            var endDate = new DateTime(2004, 1, 1);
+            var startDate = new DateTime(2010, 1, 1);
+            var endDate = new DateTime(2019, 6, 1);
             var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
+
+            int numTestExamples = 60;
+            var testSet = dataset.Value.Skip(dataset.Value.Count() - numTestExamples);
+            var trainingSet = dataset.Value.Take(dataset.Value.Count() - numTestExamples);
+
             model.Parameters.PcaRank = 128;
             model.Parameters.FeatureSelectionRank = model.Parameters.PcaRank * 10;
-            model.Parameters.NumIterations = 10;
-            model.Parameters.NumCrossValidations = 12;
-            model.Parameters.NumOfTrees = 512;
-            model.Parameters.NumOfLeaves = 16;
-            model.Parameters.MinNumOfLeaves = 5;
+            model.Parameters.NumIterations = 0;
+            model.Parameters.NumCrossValidations = 0;
+            model.Parameters.NumOfTrees = 32;
+            model.Parameters.NumOfLeaves = 8;
+            model.Parameters.MinNumOfLeaves = 3;
 
             Console.WriteLine($"-=== Training ===-");
             Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank} \t PCA: { model.Parameters.PcaRank}");
             Console.WriteLine($"Number of Trees: { model.Parameters.NumOfTrees} \t Number of Leaves: { model.Parameters.NumOfLeaves}");
             Console.WriteLine($"Pca Rank: {model.Parameters.PcaRank}");
             Stopwatch stopwatch = Stopwatch.StartNew();
-            var trainingResult = model.Train(dataset.Value, 0.0);
+            var trainingResult = model.Train(trainingSet, 0.0);
             stopwatch.Stop();
 
             Console.WriteLine($"-=== Training done ===-");
@@ -60,11 +65,24 @@ namespace ModelTrainer
             Console.WriteLine($"-=== Results ===-");
             Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
             Console.WriteLine($"-=== Saving Model... ===-");
-
             model.Save(_pathToModels);
+
+            Console.WriteLine($"-=== Testing Model... ===-");
+            double accuracy = 0.0;
+            foreach (var testExample in testSet)
+            {
+                var prediction = model.Predict(testExample.Input); 
+                if ((prediction.IsSuccess && prediction.Value.PredictedLabel && testExample.Output.PercentDayChange > 0) ||
+                    (prediction.IsSuccess && !prediction.Value.PredictedLabel && testExample.Output.PercentDayChange <= 0))
+                {
+                    accuracy++;
+                }
+            }
+
+            Console.WriteLine($"Test Accuracy: {accuracy / numTestExamples}");
             Console.WriteLine($"-=========================================================================================-");
 
-            Console.ReadLine();
+            Console.ReadKey();
         }
 
         private static IFeatureDatasetService GetBoWFeatureDatasetService(string dictionaryToUse)

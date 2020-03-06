@@ -49,7 +49,7 @@ namespace SimulationTest
                 Console.WriteLine($"Starting with $1000, when investing a {predictorAccuracy}, you would end up on average with ${endingMoney}");
             }
 
-            Console.ReadLine();
+            Console.ReadKey();
             
 
         }

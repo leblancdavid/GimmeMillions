@@ -105,11 +105,13 @@ namespace GimmeMillions.Domain.ML.Binary
 
             var score = prediction.GetColumn<float>("Score").ToArray();
             var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
+            var probability = prediction.GetColumn<float>("Probability").ToArray();
 
             return Result.Ok(new StockPrediction()
             {
                 Score = score[0],
-                PredictedLabel = predictedLabel[0]
+                PredictedLabel = predictedLabel[0],
+                Probability = probability[0]
             });
         }
 
@@ -162,11 +164,19 @@ namespace GimmeMillions.Domain.ML.Binary
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
             Metadata.StockSymbol = firstFeature.Output.Symbol;
 
-            _dataNormalizer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true).Fit(dataViewData);
+            //_dataNormalizer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true).Fit(dataViewData);
+            //var normalizedData = _dataNormalizer.Transform(dataViewData);
+
+            _dataNormalizer = _mLContext.Transforms.NormalizeMinMax("Features").Fit(dataViewData);
             var normalizedData = _dataNormalizer.Transform(dataViewData);
 
-            _featureSelector = (FeatureFilterTransform)(new MaxVarianceFeatureFilterEstimator(_mLContext,
-                rank: Parameters.FeatureSelectionRank)
+            //_featureSelector = (FeatureFilterTransform)(new MaxVarianceFeatureFilterEstimator(_mLContext,
+            //    rank: Parameters.FeatureSelectionRank)
+            //    .Fit(normalizedData));
+            //var selectedFeaturesData = _featureSelector.Transform(normalizedData);
+
+            _featureSelector = (FeatureFilterTransform)(new ProbabilityFeatureFilterEstimator(_mLContext,
+                lowerStdev: -3.5f, upperStdev: -1.5f)
                 .Fit(normalizedData));
             var selectedFeaturesData = _featureSelector.Transform(normalizedData);
 
@@ -183,26 +193,41 @@ namespace GimmeMillions.Domain.ML.Binary
                 trainData = selectedFeaturesData;
             }
 
-            var trainingResults = GetBestTrainingModel(trainData);
-            _predictor = trainingResults.Model;
-
+            //var trainingResults = GetBestTrainingModel(trainData);
+            //_predictor = trainingResults.Model;
+            _predictor = TrainModel(trainData);
             _model = _dataNormalizer.Append(_featureSelector).Append(_predictor);
-
-            UpdateMetadata(trainingResults);
 
             if (testData != null)
             {
                 var positivePrediction = _predictor.Transform(testData);
-                var testResults = _mLContext.BinaryClassification.EvaluateNonCalibrated(positivePrediction);
+                var testResults = _mLContext.BinaryClassification.Evaluate(positivePrediction);
 
                 return Result.Ok<ModelMetrics>(new ModelMetrics(testResults));
             }
 
-            return Result.Ok<ModelMetrics>(new ModelMetrics(trainingResults.Metrics));
+            var trainResults = _mLContext.BinaryClassification.Evaluate(_predictor.Transform(trainData));
+            Metadata.TrainingResults = new ModelMetrics(trainResults);
+            return Result.Ok<ModelMetrics>(new ModelMetrics(trainResults));
 
         }
 
-        private CrossValidationResult<BinaryClassificationMetrics> GetBestTrainingModel(IDataView dataViewData)
+        private ITransformer TrainModel(IDataView dataViewData)
+        {
+            int numberOfTrees = Parameters.NumOfTrees;
+            int numberOfLeaves = Parameters.NumOfLeaves;
+
+            return _mLContext.Transforms.ProjectToPrincipalComponents(
+                outputColumnName: "Features",
+                rank: Parameters.PcaRank, overSampling: Parameters.PcaRank)
+            .Append(_mLContext.BinaryClassification.Trainers.FastTree(
+                featureColumnName: "Features",
+                numberOfLeaves: numberOfLeaves,
+                numberOfTrees: numberOfTrees,
+                minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves)).Fit(dataViewData);
+        }
+
+        private CrossValidationResult<CalibratedBinaryClassificationMetrics> GetBestTrainingModel(IDataView dataViewData)
         {
             int crossValidations = Parameters.NumCrossValidations;
             int iterations = Parameters.NumIterations;
@@ -212,18 +237,18 @@ namespace GimmeMillions.Domain.ML.Binary
             var trainer = _mLContext.Transforms.ProjectToPrincipalComponents(
                 outputColumnName: "Features",
                 rank: Parameters.PcaRank, overSampling: Parameters.PcaRank)
-            .Append(_mLContext.BinaryClassification.Trainers.FastForest(
+            .Append(_mLContext.BinaryClassification.Trainers.FastTree(
                 featureColumnName: "Features",
                 numberOfLeaves: numberOfLeaves,
                 numberOfTrees: numberOfTrees,
                 minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
 
-            //CrossValidationResult<CalibratedBinaryClassificationMetrics> bestCvResult = null;
-            CrossValidationResult<BinaryClassificationMetrics> bestCvResult = null;
+            CrossValidationResult<CalibratedBinaryClassificationMetrics> bestCvResult = null;
+            //CrossValidationResult<BinaryClassificationMetrics> bestCvResult = null;
             for (int it = 0; it < iterations; ++it)
             {
-                //var cvResults = _mLContext.BinaryClassification.CrossValidate(dataViewData, trainer, crossValidations);
-                var cvResults = _mLContext.BinaryClassification.CrossValidateNonCalibrated(dataViewData, trainer, crossValidations);
+                var cvResults = _mLContext.BinaryClassification.CrossValidate(dataViewData, trainer, crossValidations);
+                //var cvResults = _mLContext.BinaryClassification.CrossValidateNonCalibrated(dataViewData, trainer, crossValidations);
 
                 if (bestCvResult == null)
                     bestCvResult = cvResults.FirstOrDefault();
@@ -237,10 +262,11 @@ namespace GimmeMillions.Domain.ML.Binary
                 }
             }
 
+            UpdateMetadata(bestCvResult);
             return bestCvResult;
         }
 
-        private void UpdateMetadata(CrossValidationResult<BinaryClassificationMetrics> crossValidationResult)
+        private void UpdateMetadata(CrossValidationResult<CalibratedBinaryClassificationMetrics> crossValidationResult)
         {
             Metadata.Parameters = Parameters;
             Metadata.TrainingResults = new ModelMetrics(crossValidationResult.Metrics);

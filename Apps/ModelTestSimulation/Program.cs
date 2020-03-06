@@ -30,8 +30,8 @@ namespace ModelTestSimulation
 
             var model = new MLStockBinaryFastForestModel();
 
-            var startDate = new DateTime(2003, 1, 1);
-            var endDate = new DateTime(2004, 1, 1);
+            var startDate = new DateTime(2018, 1, 1);
+            var endDate = new DateTime(2018, 6, 1);
             var testSet = datasetService.GetTrainingData(stock, startDate, endDate);
             if(testSet.IsFailure || !testSet.Value.Any())
             {
@@ -77,7 +77,7 @@ namespace ModelTestSimulation
                     }
                 }
 
-                Console.WriteLine($"{sample.Output.Date.ToString("MM/dd/yyyy")}, Actual: {sample.Output.PercentDayChange}%, Prediction: {prediction.Value.Score}, Current money: ${currentMoney}");
+                Console.WriteLine($"{sample.Output.Date.ToString("MM/dd/yyyy")}, Actual: {sample.Output.PercentDayChange}%, Prediction: {prediction.Value.Probability}, Current money: ${currentMoney}");
             }
 
             Console.WriteLine("-=== Done ===-");
