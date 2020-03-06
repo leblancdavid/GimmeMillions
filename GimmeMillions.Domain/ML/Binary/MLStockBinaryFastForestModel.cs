@@ -175,8 +175,8 @@ namespace GimmeMillions.Domain.ML.Binary
             //    .Fit(normalizedData));
             //var selectedFeaturesData = _featureSelector.Transform(normalizedData);
 
-            _featureSelector = (FeatureFilterTransform)(new ProbabilityFeatureFilterEstimator(_mLContext,
-                lowerStdev: -3.5f, upperStdev: -1.5f)
+            _featureSelector = (FeatureFilterTransform)(new SparseFeatureFilterEstimator(_mLContext,
+                rank: Parameters.FeatureSelectionRank)
                 .Fit(normalizedData));
             var selectedFeaturesData = _featureSelector.Transform(normalizedData);
 
