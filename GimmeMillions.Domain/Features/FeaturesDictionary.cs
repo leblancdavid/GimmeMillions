@@ -30,7 +30,7 @@ namespace GimmeMillions.Domain.Features
 
                 return FeatureTable[i];
             }
-            private set { FeatureTable[i] = value; }
+            set { FeatureTable[i] = value; }
         }
 
         public FeaturesDictionary()

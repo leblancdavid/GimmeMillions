@@ -19,15 +19,20 @@ namespace GimmeMillions.Domain.Tests.Features
         public void AddArticlesToFeatureDictionary()
         {
 
-            var featureDictionary = CreateTestFeatureDictionary("FeaturesDictionaryTests.AddArticlesToFeatureDictionary", _pathToArticles, _pathToLanguage);
+            var featureDictionary = CreateTestFeatureDictionary("FeaturesDictionaryTests.AddArticlesToFeatureDictionary", 
+                _pathToArticles, _pathToLanguage, new DateTime(2000, 1, 1), new DateTime(2000, 1, 2));
             featureDictionary.Size.Should().BeGreaterThan(0);
         }
 
-        public static FeaturesDictionary CreateTestFeatureDictionary(string dictionaryId, string pathToArticles, string pathToLanguage)
+        public static FeaturesDictionary CreateTestFeatureDictionary(
+            string dictionaryId, 
+            string pathToArticles, 
+            string pathToLanguage,
+            DateTime startDate,
+            DateTime endDate)
         {
             var articlesRepo = new NYTArticleRepository(pathToArticles);
-            var currentDate = new DateTime(2000, 1, 1);
-            var endDate = new DateTime(2000, 4, 1);
+            var currentDate = startDate;
             var featureChecker = new UsaLanguageChecker();
             featureChecker.Load(new StreamReader($"{pathToLanguage}/usa.txt"));
             var textProcessor = new DefaultTextProcessor(featureChecker);
@@ -37,10 +42,10 @@ namespace GimmeMillions.Domain.Tests.Features
             while (currentDate <= endDate)
             {
                 var articles = articlesRepo.GetArticles(currentDate);
-                foreach (var article in articles)
+                Parallel.ForEach(articles, article =>
                 {
                     featureDictionary.AddArticle(article, textProcessor);
-                }
+                });
                 currentDate = currentDate.AddDays(1.0);
             }
 
