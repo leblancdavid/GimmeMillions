@@ -23,7 +23,7 @@ namespace ModelTrainer
         static string _pathToModels = "../../../../Repository/Models";
         static void Main(string[] args)
         {
-            string dictionaryToUse = "FeatureDictionaryJsonRepositoryTests.ShouldAddFeatureDictionaries";
+            string dictionaryToUse = "USA";
             string stock = "AMZN";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
@@ -34,17 +34,17 @@ namespace ModelTrainer
             var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
             var filteredDataset = dataset.Value;
-            int numTestExamples = 20;
+            int numTestExamples = 90;
 
             var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
             var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
 
-            model.Parameters.PcaRank = 120;
-            model.Parameters.FeatureSelectionRank = 3000;
-            model.Parameters.NumIterations = 2;
+            model.Parameters.PcaRank = 100;
+            model.Parameters.FeatureSelectionRank = 1000;
+            model.Parameters.NumIterations = 1;
             model.Parameters.NumCrossValidations = 1;
-            model.Parameters.NumOfTrees = 64;
-            model.Parameters.NumOfLeaves = 8;
+            model.Parameters.NumOfTrees = 512;
+            model.Parameters.NumOfLeaves = 16;
             model.Parameters.MinNumOfLeaves = 1;
 
             Console.WriteLine($"-=== Training ===-");
@@ -52,7 +52,7 @@ namespace ModelTrainer
             Console.WriteLine($"Number of Trees: { model.Parameters.NumOfTrees} \t Number of Leaves: { model.Parameters.NumOfLeaves}");
             Console.WriteLine($"Pca Rank: {model.Parameters.PcaRank}");
             Stopwatch stopwatch = Stopwatch.StartNew();
-            var trainingResult = model.Train(trainingSet, 0.0);
+            var trainingResult = model.Train(trainingSet, 0.05);
             stopwatch.Stop();
 
             Console.WriteLine($"-=== Training done ===-");
@@ -67,7 +67,7 @@ namespace ModelTrainer
             Console.WriteLine($"-=== Results ===-");
             Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
             Console.WriteLine($"-=== Saving Model... ===-");
-            model.Save(_pathToModels);
+            //model.Save(_pathToModels);
 
             Console.WriteLine($"-=== Testing Model... ===-");
             double accuracy = 0.0;

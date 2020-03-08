@@ -24,14 +24,14 @@ namespace ModelTestSimulation
 
         static void Main(string[] args)
         {
-            string dictionaryToUse = "FeatureDictionaryJsonRepositoryTests.ShouldAddFeatureDictionaries";
+            string dictionaryToUse = "USA";
             string stock = "AMZN";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
             var model = new MLStockBinaryFastForestModel();
 
-            var startDate = new DateTime(2019, 6, 1);
-            var endDate = new DateTime(2019, 7, 1);
+            var startDate = new DateTime(2019, 4, 1);
+            var endDate = new DateTime(2019, 10, 1);
             var testSet = datasetService.GetTrainingData(stock, startDate, endDate);
             if(testSet.IsFailure || !testSet.Value.Any())
             {
@@ -66,7 +66,7 @@ namespace ModelTestSimulation
                         accuracy++;
                     }
 
-                    if(prediction.Value.Probability > 0.75)
+                    if(prediction.Value.Probability > 0.5)
                     {
                         currentMoney = currentMoney * (1.0m + sample.Output.PercentDayChange / 100m); 
                         if (sample.Output.PercentDayChange > 0)
