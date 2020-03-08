@@ -180,19 +180,23 @@ namespace GimmeMillions.Domain.ML.Binary
             _dataSchema = trainingDataView.Schema; 
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
             Metadata.StockSymbol = firstFeature.Output.Symbol;
-  
 
-            //_dataNormalizer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true).Fit(dataViewData);
-            //var normalizedData = _dataNormalizer.Transform(dataViewData);
 
-            _dataNormalizer = _mLContext.Transforms.NormalizeMinMax("Features")
-                .Fit(trainingDataView);
-            var normalizedData = _dataNormalizer.Transform(trainingDataView);
+            //_dataNormalizer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true).Fit(trainingDataView);
+            //var normalizedData = _dataNormalizer.Transform(trainingDataView);
+            //var featureSelector = _mLContext.Transforms.FeatureSelection.SelectFeaturesBasedOnMutualInformation("Features", slotsInOutput: Parameters.FeatureSelectionRank)
+            //    .Fit(trainingDataView);
+            //var selectedFeaturesData = featureSelector.Transform(trainingDataView);
 
             _featureSelector = (FeatureFilterTransform)(new MaxVarianceFeatureFilterEstimator(_mLContext,
                 rank: Parameters.FeatureSelectionRank))
-                .Fit(normalizedData);
-            var selectedFeaturesData = _featureSelector.Transform(normalizedData);
+                .Fit(trainingDataView);
+            var selectedFeaturesData = _featureSelector.Transform(trainingDataView);
+
+            _dataNormalizer = _mLContext.Transforms.NormalizeMinMax("Features")
+                .Fit(selectedFeaturesData);
+            var normalizedData = _dataNormalizer.Transform(selectedFeaturesData);
+
 
             //_featureSelector = (FeatureFilterTransform)(new MaxVarianceFeatureFilterEstimator(_mLContext,
             //    rank: (int)(firstFeature.Input.Length / 3))
@@ -201,19 +205,16 @@ namespace GimmeMillions.Domain.ML.Binary
 
             //var trainingResults = GetBestTrainingModel(trainData);
             //_predictor = trainingResults.Model;
-            _predictor = TrainModel(selectedFeaturesData);
-            _model = _dataNormalizer.Append(_featureSelector).Append(_predictor);
+            _predictor = TrainModel(normalizedData);
+            _model = _featureSelector.Append(_dataNormalizer).Append(_predictor);
+            // _model = _dataNormalizer.Append(_featureSelector).Append(_predictor);
+            //_model = _featureSelector.Append(_predictor);
             //_model = _dataNormalizer.Append(_predictor);
 
             if (testDataset.Any())
             {
-                var positivePrediction = _predictor.Transform(
-                    _featureSelector.Transform(
-                    _dataNormalizer.Transform(testDataView)));
+                var positivePrediction = _model.Transform(testDataView);
                 var testViewScores = positivePrediction.GetColumn<float>("Score").ToArray();
-
-                var positivePrediction_Model = _model.Transform(testDataView);
-                var testViewScores_Model = positivePrediction_Model.GetColumn<float>("Score").ToArray();
 
                 var testResults = _mLContext.BinaryClassification.EvaluateNonCalibrated(positivePrediction);
 

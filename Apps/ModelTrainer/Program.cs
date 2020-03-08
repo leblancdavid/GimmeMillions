@@ -39,12 +39,12 @@ namespace ModelTrainer
             var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
             var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
 
-            model.Parameters.PcaRank = 100;
-            model.Parameters.FeatureSelectionRank = 1000;
+            model.Parameters.PcaRank = 500;
+            model.Parameters.FeatureSelectionRank = 400000;
             model.Parameters.NumIterations = 1;
             model.Parameters.NumCrossValidations = 1;
-            model.Parameters.NumOfTrees = 512;
-            model.Parameters.NumOfLeaves = 16;
+            model.Parameters.NumOfTrees = 256;
+            model.Parameters.NumOfLeaves = 4;
             model.Parameters.MinNumOfLeaves = 1;
 
             Console.WriteLine($"-=== Training ===-");
@@ -52,7 +52,7 @@ namespace ModelTrainer
             Console.WriteLine($"Number of Trees: { model.Parameters.NumOfTrees} \t Number of Leaves: { model.Parameters.NumOfLeaves}");
             Console.WriteLine($"Pca Rank: {model.Parameters.PcaRank}");
             Stopwatch stopwatch = Stopwatch.StartNew();
-            var trainingResult = model.Train(trainingSet, 0.05);
+            var trainingResult = model.Train(trainingSet, 0.01);
             stopwatch.Stop();
 
             Console.WriteLine($"-=== Training done ===-");
