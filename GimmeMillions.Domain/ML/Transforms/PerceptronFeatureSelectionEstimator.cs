@@ -71,9 +71,9 @@ namespace GimmeMillions.Domain.ML.Transforms
             int numSlice = _featureSize / _sliceSize;
             for(int j = 0; j <= numSlice; ++j)
             {
-                var remainingIndices = sortedContributions.Skip(j * _sliceSize);
+                var remainingIndices = sortedContributions.Skip(j * _sliceSize - 1);
                 var indicesToUse = remainingIndices.Take(_sliceSize).Select(x => x.Index).ToArray();
-                if(!indicesToUse.Any())
+                if(indicesToUse.Count() != _sliceSize)
                 {
                     indicesToUse = remainingIndices.Select(x => x.Index).ToArray();
                 }
@@ -87,7 +87,14 @@ namespace GimmeMillions.Domain.ML.Transforms
 
                 foreach (var index in indicesToUse)
                 {
-                    _featureContribution[index].Weight += results.PositivePrecision;
+                    if (results.PositivePrecision > 0.99 || results.PositivePrecision < 0.01)
+                    {
+                        _featureContribution[index].Weight += 0.5;
+                    }
+                    else
+                    {
+                        _featureContribution[index].Weight += results.PositivePrecision;
+                    }
                 }
 
             }

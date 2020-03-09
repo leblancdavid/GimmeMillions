@@ -169,7 +169,7 @@ namespace GimmeMillions.Domain.ML.Binary
             var trainingDataView = _mLContext.Data.LoadFromEnumerable(
                 trainingDataset.Select(x =>
                 {
-                    var normVector = x.Input.GetMinMaxNormalized();
+                    var normVector = x.Input;
                     return new StockRiseDataFeature(
                     normVector.Data, x.Output.PercentDayChange >= 0,
                     (float)x.Output.PercentDayChange,
@@ -180,7 +180,7 @@ namespace GimmeMillions.Domain.ML.Binary
             var validationDataView = _mLContext.Data.LoadFromEnumerable(
                 validationDataset.Select(x =>
                 {
-                    var normVector = x.Input.GetMinMaxNormalized();
+                    var normVector = x.Input;
                     return new StockRiseDataFeature(
                     normVector.Data, x.Output.PercentDayChange >= 0,
                     (float)x.Output.PercentDayChange,
@@ -191,7 +191,7 @@ namespace GimmeMillions.Domain.ML.Binary
             var testDataView = _mLContext.Data.LoadFromEnumerable(
                 testDataset.Select(x =>
                 {
-                    var normVector = x.Input.GetMinMaxNormalized();
+                    var normVector = x.Input;
                     return new StockRiseDataFeature(
                     normVector.Data, x.Output.PercentDayChange >= 0,
                     (float)x.Output.PercentDayChange,
