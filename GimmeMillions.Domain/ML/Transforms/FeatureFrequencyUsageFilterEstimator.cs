@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Transforms
 {
-    public class SparseFeatureFilterEstimator : IEstimator<ITransformer>
+    public class FeatureFrequencyUsageFilterEstimator : IEstimator<ITransformer>
     {
         private string _inputColumnName;
         private string _outputColumnName;
         private int _rank;
         private MLContext _mLContext;
 
-        public SparseFeatureFilterEstimator(MLContext mLContext,
+        public FeatureFrequencyUsageFilterEstimator(MLContext mLContext,
             string inputColumnName = "Features",
             string outputColumnName = "Label",
             int rank = 1000)
@@ -39,7 +39,7 @@ namespace GimmeMillions.Domain.ML.Transforms
         private int[] GetFeatureSelectionIndices(IDataView input)
         {
             var differences = GetFeatureUsage(input);
-            var orderedDifferences = differences.OrderByDescending(x => x.Usage).ToArray();
+            var orderedDifferences = differences.OrderByDescending(x => x.Usage).ToList();
             var indicesToKeep = orderedDifferences.Take(_rank).Select(x => x.Index);
 
             return indicesToKeep.ToArray();

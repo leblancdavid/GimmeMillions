@@ -157,7 +157,7 @@ namespace GimmeMillions.Domain.ML.Binary
             var firstFeature = dataset.FirstOrDefault();
 
             int numTestSamples = (int)(dataset.Count() * testFraction);
-            int numValidationSamples = numTestSamples;
+            int numValidationSamples = 40;
             int numTrainingSamples = (int)(dataset.Count() - numValidationSamples - numTestSamples);
 
             var trainingDataset = dataset.Take(numTrainingSamples);
@@ -218,7 +218,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 var positivePrediction = _model.Transform(testDataView);
                 var testViewScores = positivePrediction.GetColumn<float>("Score").ToArray();
 
-                var testResults = _mLContext.BinaryClassification.Evaluate(positivePrediction);
+                var testResults = _mLContext.BinaryClassification.EvaluateNonCalibrated(positivePrediction);
 
                 var testSamplePredictions = new List<StockPrediction>();
                 foreach (var testSample in testDataset)
@@ -230,7 +230,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 return Result.Ok<ModelMetrics>(new ModelMetrics(testResults));
             }
 
-            var trainResults = _mLContext.BinaryClassification.Evaluate(_predictor.Transform(trainingDataView));
+            var trainResults = _mLContext.BinaryClassification.EvaluateNonCalibrated(_predictor.Transform(trainingDataView));
             Metadata.TrainingResults = new ModelMetrics(trainResults);
             return Result.Ok<ModelMetrics>(new ModelMetrics(trainResults));
 
@@ -240,47 +240,53 @@ namespace GimmeMillions.Domain.ML.Binary
         {
             int numberOfTrees = Parameters.NumOfTrees;
             int numberOfLeaves = Parameters.NumOfLeaves;
-            CalibratedBinaryClassificationMetrics bestResults = null;
-            var randomFeatureSelection = (FeatureFilterTransform)(new PerceptronFeatureSelectionEstimator(_mLContext,
-                featureSize: featureSize,
-                iterations: 10,
+            BinaryClassificationMetrics bestResults = null;
+
+            //int filteredSize = (int)(featureSize / 3);
+            //var frequencyUsageSelection = (FeatureFilterTransform)(new FeatureFrequencyUsageFilterEstimator(_mLContext,
+            //    rank: filteredSize))
+            //   .Fit(trainingData);
+            //var frequencyUsageData = frequencyUsageSelection.Transform(trainingData);
+
+            //var randomFeatureSelection = (FeatureFilterTransform)(new PerceptronFeatureSelectionEstimator(_mLContext,
+            //    featureSize: filteredSize,
+            //    iterations: 10,
+            //    rank: Parameters.FeatureSelectionRank))
+            //   .Fit(frequencyUsageData);
+            //var selectedFeaturesData = randomFeatureSelection.Transform(frequencyUsageData);
+
+            var featureSelector = (FeatureFilterTransform)(new MaxVarianceFeatureFilterEstimator(_mLContext,
                 rank: Parameters.FeatureSelectionRank))
                .Fit(trainingData);
-            var selectedFeaturesData = randomFeatureSelection.Transform(trainingData);
-            
-            for (int i = 0; i < Parameters.NumIterations; ++i)
-            {
-                //var randomFeatureSelection = (FeatureFilterTransform)(new RandomSelectionFeatureFilterEstimator(_mLContext,
-                //   rank: Parameters.FeatureSelectionRank))
-                //   .Fit(trainingData);
-                //    var selectedFeaturesData = randomFeatureSelection.Transform(trainingData);
-                var predictor = _mLContext.Transforms.NormalizeMeanVariance("Features")
+            var selectedFeaturesData = featureSelector.Transform(trainingData);
+
+            //var randomFeatureSelection = new RandomSelectionFeatureFilterEstimator(_mLContext,
+            //   rank: Parameters.FeatureSelectionRank);
+            var pipeline = _mLContext.Transforms.NormalizeMinMax("Features")
                     .Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.PcaRank, overSampling: Parameters.PcaRank))
                     .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
-                    .Append(_mLContext.BinaryClassification.Trainers.FastTree(
-                    numberOfLeaves: numberOfLeaves, numberOfTrees: numberOfTrees,
-                    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves,
-                    featureColumnName: "Features")).Fit(selectedFeaturesData);
+                    .Append(_mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 5));
 
-                //var predictor = _mLContext.Transforms.NormalizeMinMax("Features")
-                //    .Append(_mLContext.Transforms.ApproximatedKernelMap("Features", "Features", rank: Parameters.PcaRank, generator: new GaussianKernel()))
-                //    .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
-                //    .Append(_mLContext.BinaryClassification.Trainers.FastTree(
-                //    numberOfLeaves: numberOfLeaves, numberOfTrees: numberOfTrees,
-                //    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves,
-                //    featureColumnName: "Features")).Fit(trainingData);
+            for (int i = 0; i < Parameters.NumIterations; ++i)
+            {
+                //var featureSelector = randomFeatureSelection.Fit(frequencyUsageData);
+                //var selectedFeaturesData = featureSelector.Transform(frequencyUsageData);
+
+                var predictor = pipeline.Fit(selectedFeaturesData);
 
                 //var testModel = predictor;
-                var testModel = randomFeatureSelection.Append(predictor);
+                //var testModel = frequencyUsageSelection.Append(featureSelector.Append(predictor));
+                //var testModel = frequencyUsageSelection.Append(predictor);
+                var testModel = featureSelector.Append(predictor);
 
                 var predictions = testModel.Transform(validationData);
 
-                var validationResults = _mLContext.BinaryClassification.Evaluate(predictions);
+                var validationResults = _mLContext.BinaryClassification.EvaluateNonCalibrated(predictions);
 
-                if(bestResults == null || validationResults.Accuracy > bestResults.Accuracy)
+                if (bestResults == null || validationResults.PositivePrecision > bestResults.PositivePrecision)
                 {
                     bestResults = validationResults;
-                    Console.WriteLine($"Best validation accuracy: {bestResults.Accuracy}");
+                    Console.WriteLine($"Best validation accuracy: {bestResults.PositivePrecision}");
                     _model = testModel;
                 }
 

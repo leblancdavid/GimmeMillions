@@ -34,25 +34,25 @@ namespace ModelTrainer
             var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
             var filteredDataset = dataset.Value;
-            int numTestExamples = 90;
+            int numTestExamples = 30;
 
             var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
             var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
 
-            model.Parameters.PcaRank = 200;
+            model.Parameters.PcaRank = 100;
             model.Parameters.FeatureSelectionRank = 2000;
-            model.Parameters.NumIterations = 100;
+            model.Parameters.NumIterations = 200;
             model.Parameters.NumCrossValidations = 5;
-            model.Parameters.NumOfTrees = 50;
-            model.Parameters.NumOfLeaves = 10;
-            model.Parameters.MinNumOfLeaves = 10;
+            model.Parameters.NumOfTrees = 80;
+            model.Parameters.NumOfLeaves = 20;
+            model.Parameters.MinNumOfLeaves = 1;
 
             Console.WriteLine($"-=== Training ===-");
             Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank} \t PCA: { model.Parameters.PcaRank}");
             Console.WriteLine($"Number of Trees: { model.Parameters.NumOfTrees} \t Number of Leaves: { model.Parameters.NumOfLeaves}");
             Console.WriteLine($"Pca Rank: {model.Parameters.PcaRank}");
             Stopwatch stopwatch = Stopwatch.StartNew();
-            var trainingResult = model.Train(trainingSet, 0.05);
+            var trainingResult = model.Train(trainingSet, 0.02);
             stopwatch.Stop();
 
             Console.WriteLine($"-=== Training done ===-");
@@ -66,6 +66,7 @@ namespace ModelTrainer
 
             Console.WriteLine($"-=== Results ===-");
             Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
+            Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Positive Precision: {trainingResult.Value.PositivePrecision}");
             Console.WriteLine($"-=== Saving Model... ===-");
             //model.Save(_pathToModels);
 

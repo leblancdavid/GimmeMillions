@@ -31,7 +31,7 @@ namespace GimmeMillions.Domain.ML.Transforms
             _outputColumnName = outputColumnName;
             _mLContext = mLContext;
             _rank = rank;
-            _sliceSize = rank / 2;
+            _sliceSize = _rank;
 
             _featureContribution = new (int Index, double Weight)[_featureSize];
             for(int i = 0; i < _featureSize; ++i)
@@ -52,16 +52,17 @@ namespace GimmeMillions.Domain.ML.Transforms
 
         private int[] GetFeatureSelectionIndices(IDataView input)
         {
-            
-            var indicesToKeep = new int[_rank];
+            var dataNormalizer = _mLContext.Transforms.NormalizeMinMax("Features").Fit(input);
+            var normalizedData = dataNormalizer.Transform(input);
+
             Random rnd = new Random();
             for (int i = 0; i < _iterations; ++i)
             {
-                RunIterationUpdateWeights(input, rnd);
+                RunIterationUpdateWeights(normalizedData, rnd);
             }
-            var indicesToUse = _featureContribution.OrderByDescending(x => x.Weight)
-                .Take(_rank).Select(x => x.Index).ToArray();
-            return indicesToKeep;
+            var sortedFeatures = _featureContribution.OrderByDescending(x => x.Weight).ToList();
+            var indicesToUse = sortedFeatures.Take(_rank).Select(x => x.Index).ToArray();
+            return indicesToUse;
         }
 
         private void RunIterationUpdateWeights(IDataView input, Random rnd)
@@ -81,8 +82,9 @@ namespace GimmeMillions.Domain.ML.Transforms
                     indicesToUse,
                     _inputColumnName, _outputColumnName);
 
-                var filteredDataView = filter.Transform(input);
-                var AP = _mLContext.BinaryClassification.Trainers.AveragedPerceptron().Fit(filteredDataView).Transform(filteredDataView);
+                var filteredDataView = filter.Transform(input); 
+                //var AP = _mLContext.BinaryClassification.Trainers.FastTree(numberOfLeaves: 2, numberOfTrees: 10).Fit(filteredDataView).Transform(filteredDataView);
+                var AP = _mLContext.BinaryClassification.Trainers.LinearSvm().Fit(filteredDataView).Transform(filteredDataView);
                 var results = _mLContext.BinaryClassification.EvaluateNonCalibrated(AP);
 
                 foreach (var index in indicesToUse)

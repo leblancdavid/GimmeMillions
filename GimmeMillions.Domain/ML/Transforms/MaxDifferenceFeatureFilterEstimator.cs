@@ -39,7 +39,7 @@ namespace GimmeMillions.Domain.ML.Transforms
         private int[] GetFeatureSelectionIndices(IDataView input)
         {
             var differences = GetAbsoluteDifference(input);
-            var orderedDifferences = differences.OrderByDescending(x => x.FeatureDifference);
+            var orderedDifferences = differences.OrderByDescending(x => x.FeatureDifference).ToList();
             //var orderedDifferences = differences.OrderBy(x => x.FeatureDifference);
             var indicesToKeep = orderedDifferences.Take(_rank).Select(x => x.Index);
           
@@ -82,7 +82,7 @@ namespace GimmeMillions.Domain.ML.Transforms
             var p = new (float FeatureDifference, int Index)[positiveScore.Length];
             for (int i = 0; i < p.Length; ++i)
             {
-                p[i] = ((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal), i);
+                p[i] = (Math.Abs((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal)), i);
                 //p[i] = ((negativeScore[i]) - (positiveScore[i]), i);
             }
             return p;
