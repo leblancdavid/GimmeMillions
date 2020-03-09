@@ -13,7 +13,7 @@ namespace GimmeMillions.Domain.ML.Binary
     public interface IBinaryStockPredictionModel<TParams>
     {
         TParams Parameters { get; set; }
-        BinaryPredictionModelMetadata<FastTreeBinaryModelParameters> Metadata { get; }
+        BinaryPredictionModelMetadata<TParams> Metadata { get; }
 
         Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction);
         Result<StockPrediction> Predict(FeatureVector Input);

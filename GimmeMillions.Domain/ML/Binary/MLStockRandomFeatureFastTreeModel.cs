@@ -17,7 +17,7 @@ using static Microsoft.ML.TrainCatalogBase;
 
 namespace GimmeMillions.Domain.ML.Binary
 {
-    public class FastTreeBinaryModelParameters
+    public class RandomFastTreeBinaryModelParameters
     {
         public int NumCrossValidations { get; set; }
         public int NumIterations { get; set; }
@@ -26,7 +26,7 @@ namespace GimmeMillions.Domain.ML.Binary
         public int MinNumOfLeaves { get; set; }
         public int PcaRank { get; set; }
         public int FeatureSelectionRank { get; set; }
-        public FastTreeBinaryModelParameters()
+        public RandomFastTreeBinaryModelParameters()
         {
             NumCrossValidations = 10;
             NumIterations = 10;
@@ -40,7 +40,7 @@ namespace GimmeMillions.Domain.ML.Binary
 
     }
 
-    public class MLStockBinaryFastForestModel : IBinaryStockPredictionModel<FastTreeBinaryModelParameters>
+    public class MLStockRandomFeatureFastTreeModel : IBinaryStockPredictionModel<RandomFastTreeBinaryModelParameters>
     {
         private MLContext _mLContext;
         private int _seed;
@@ -50,15 +50,15 @@ namespace GimmeMillions.Domain.ML.Binary
         private ITransformer _model;
 
         private DataViewSchema _dataSchema;
-        public FastTreeBinaryModelParameters Parameters { get; set; }
-        public BinaryPredictionModelMetadata<FastTreeBinaryModelParameters> Metadata { get; private set; }
+        public RandomFastTreeBinaryModelParameters Parameters { get; set; }
+        public BinaryPredictionModelMetadata<RandomFastTreeBinaryModelParameters> Metadata { get; private set; }
 
-        public MLStockBinaryFastForestModel()
+        public MLStockRandomFeatureFastTreeModel()
         {
-            Metadata = new BinaryPredictionModelMetadata<FastTreeBinaryModelParameters>();
+            Metadata = new BinaryPredictionModelMetadata<RandomFastTreeBinaryModelParameters>();
             _seed = 27;
             _mLContext = new MLContext(_seed);
-            Parameters = new FastTreeBinaryModelParameters();
+            Parameters = new RandomFastTreeBinaryModelParameters();
 
         }
 
@@ -68,13 +68,13 @@ namespace GimmeMillions.Domain.ML.Binary
             {
                 string directory = $"{pathToModel}/{encoding}";
 
-                Metadata = JsonConvert.DeserializeObject<BinaryPredictionModelMetadata<FastTreeBinaryModelParameters>>(
+                Metadata = JsonConvert.DeserializeObject<BinaryPredictionModelMetadata<RandomFastTreeBinaryModelParameters>>(
                     File.ReadAllText($"{ directory}/{symbol}-meta.json"));
 
                 DataViewSchema schema = null;
                 _dataNormalizer = _mLContext.Model.Load($"{directory}/{Metadata.StockSymbol}-normalizer.zip", out schema);
                 var selectorLoad = FeatureFilterTransform.LoadFromFile($"{ directory}/{ Metadata.StockSymbol}-selector.json", _mLContext);
-                if(selectorLoad.IsFailure)
+                if (selectorLoad.IsFailure)
                 {
                     return Result.Failure(selectorLoad.Error);
                 }
@@ -139,7 +139,7 @@ namespace GimmeMillions.Domain.ML.Binary
 
                 return Result.Ok();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Result.Failure($"Unable to save the model: {ex.Message}");
             }
@@ -156,33 +156,31 @@ namespace GimmeMillions.Domain.ML.Binary
             // of the features vector known at runtime).
             var firstFeature = dataset.FirstOrDefault();
 
-            //int numTestSamples = (int)(dataset.Count() * testFraction);
-            //int numValidationSamples = numTestSamples;
-            int numValidationSamples = 20;
-            int numTestSamples = 20;
+            int numTestSamples = (int)(dataset.Count() * testFraction);
+            int numValidationSamples = numTestSamples;
             int numTrainingSamples = (int)(dataset.Count() - numValidationSamples - numTestSamples);
 
             var trainingDataset = dataset.Take(numTrainingSamples);
             var validationDataset = dataset.Skip(numTrainingSamples).Take(numValidationSamples);
             var testDataset = dataset.Skip(numTrainingSamples + numValidationSamples);
 
-           
+
             //Load the data into a view
             var trainingDataView = _mLContext.Data.LoadFromEnumerable(
                 trainingDataset.Select(x =>
                 {
-                    var normVector = x.Input;
+                    var normVector = x.Input.GetMinMaxNormalized();
                     return new StockRiseDataFeature(
                     normVector.Data, x.Output.PercentDayChange >= 0,
                     (float)x.Output.PercentDayChange,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.Month / 12.0f);
-                }), 
+                }),
                 GetSchemaDefinition(firstFeature.Input));
 
             var validationDataView = _mLContext.Data.LoadFromEnumerable(
                 validationDataset.Select(x =>
                 {
-                    var normVector = x.Input;
+                    var normVector = x.Input.GetMinMaxNormalized();
                     return new StockRiseDataFeature(
                     normVector.Data, x.Output.PercentDayChange >= 0,
                     (float)x.Output.PercentDayChange,
@@ -193,7 +191,7 @@ namespace GimmeMillions.Domain.ML.Binary
             var testDataView = _mLContext.Data.LoadFromEnumerable(
                 testDataset.Select(x =>
                 {
-                    var normVector = x.Input;
+                    var normVector = x.Input.GetMinMaxNormalized();
                     return new StockRiseDataFeature(
                     normVector.Data, x.Output.PercentDayChange >= 0,
                     (float)x.Output.PercentDayChange,
@@ -201,36 +199,15 @@ namespace GimmeMillions.Domain.ML.Binary
                 }),
                 GetSchemaDefinition(firstFeature.Input));
 
-            _dataSchema = trainingDataView.Schema; 
+            _dataSchema = trainingDataView.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
             Metadata.StockSymbol = firstFeature.Output.Symbol;
 
+            _model = TrainRandomFeatures(trainingDataView, validationDataView, firstFeature.Input.Length);
 
-            //_dataNormalizer = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true).Fit(trainingDataView);
-            //var normalizedData = _dataNormalizer.Transform(trainingDataView);
-            //var featureSelector = _mLContext.Transforms.FeatureSelection.SelectFeaturesBasedOnMutualInformation("Features", slotsInOutput: Parameters.FeatureSelectionRank)
-            //    .Fit(trainingDataView);
-            //var selectedFeaturesData = featureSelector.Transform(trainingDataView);
-
-            _featureSelector = (FeatureFilterTransform)(new MaxVarianceFeatureFilterEstimator(_mLContext,
-                rank: Parameters.FeatureSelectionRank))
-                .Fit(trainingDataView);
-            var selectedFeaturesData = _featureSelector.Transform(trainingDataView);
-
-            _dataNormalizer = _mLContext.Transforms.NormalizeMinMax("Features")
-                .Fit(selectedFeaturesData);
-            var normalizedData = _dataNormalizer.Transform(selectedFeaturesData);
-
-
-            //_featureSelector = (FeatureFilterTransform)(new MaxVarianceFeatureFilterEstimator(_mLContext,
-            //    rank: (int)(firstFeature.Input.Length / 3))
-            //    .Fit(normalizedData));
-            //var selectedFeaturesData = _featureSelector.Transform(normalizedData);
-
-            var trainingResults = GetBestTrainingModel(normalizedData);
-            _predictor = trainingResults.Model;
+            //_predictor = trainingResults.Model;
             //_predictor = TrainModel(selectedFeaturesData);
-            _model = _featureSelector.Append(_dataNormalizer).Append(_predictor);
+            //_model = _featureSelector.Append(_dataNormalizer).Append(_predictor);
             // _model = _dataNormalizer.Append(_featureSelector).Append(_predictor);
             //_model = _featureSelector.Append(_predictor);
             //_model = _dataNormalizer.Append(_predictor);
@@ -244,7 +221,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 var testResults = _mLContext.BinaryClassification.Evaluate(positivePrediction);
 
                 var testSamplePredictions = new List<StockPrediction>();
-                foreach(var testSample in testDataset)
+                foreach (var testSample in testDataset)
                 {
                     testSamplePredictions.Add(Predict(testSample.Input).Value);
                 }
@@ -259,51 +236,60 @@ namespace GimmeMillions.Domain.ML.Binary
 
         }
 
-        private ITransformer TrainModel(IDataView dataViewData)
+        private ITransformer TrainRandomFeatures(IDataView trainingData, IDataView validationData, int featureSize)
         {
             int numberOfTrees = Parameters.NumOfTrees;
             int numberOfLeaves = Parameters.NumOfLeaves;
-
-            //return _mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month")
-            //    .Append(_mLContext.BinaryClassification.Trainers.FastTree(numberOfLeaves: numberOfLeaves, numberOfTrees: numberOfTrees, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves, featureColumnName: "Features")).Fit(dataViewData);
-            return _mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.PcaRank, overSampling: Parameters.PcaRank)
-                .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
-                .Append(_mLContext.BinaryClassification.Trainers.FastTree(numberOfLeaves: numberOfLeaves, numberOfTrees: numberOfTrees, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves, featureColumnName: "Features")).Fit(dataViewData);
-
-        }
-
-        private CrossValidationResult<CalibratedBinaryClassificationMetrics> GetBestTrainingModel(IDataView dataViewData)
-        {
-            int crossValidations = Parameters.NumCrossValidations;
-            int iterations = Parameters.NumIterations;
-            int numberOfTrees = Parameters.NumOfTrees;
-            int numberOfLeaves = Parameters.NumOfLeaves;
-
-            var trainer = _mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month")
-                .Append(_mLContext.BinaryClassification.Trainers.FastTree(numberOfLeaves: numberOfLeaves, numberOfTrees: numberOfTrees, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves, featureColumnName: "Features"));
-            CrossValidationResult<CalibratedBinaryClassificationMetrics> bestCvResult = null;
-            //CrossValidationResult<BinaryClassificationMetrics> bestCvResult = null;
-            for (int it = 0; it < iterations; ++it)
+            CalibratedBinaryClassificationMetrics bestResults = null;
+            var randomFeatureSelection = (FeatureFilterTransform)(new PerceptronFeatureSelectionEstimator(_mLContext,
+                featureSize: featureSize,
+                iterations: 10,
+                rank: Parameters.FeatureSelectionRank))
+               .Fit(trainingData);
+            var selectedFeaturesData = randomFeatureSelection.Transform(trainingData);
+            
+            for (int i = 0; i < Parameters.NumIterations; ++i)
             {
-                var cvResults = _mLContext.BinaryClassification.CrossValidate(dataViewData, trainer, crossValidations);
-                //var cvResults = _mLContext.BinaryClassification.CrossValidateNonCalibrated(dataViewData, trainer, crossValidations);
+                //var randomFeatureSelection = (FeatureFilterTransform)(new RandomSelectionFeatureFilterEstimator(_mLContext,
+                //   rank: Parameters.FeatureSelectionRank))
+                //   .Fit(trainingData);
+                //    var selectedFeaturesData = randomFeatureSelection.Transform(trainingData);
+                var predictor = _mLContext.Transforms.NormalizeMeanVariance("Features")
+                    .Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.PcaRank, overSampling: Parameters.PcaRank))
+                    .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
+                    .Append(_mLContext.BinaryClassification.Trainers.FastTree(
+                    numberOfLeaves: numberOfLeaves, numberOfTrees: numberOfTrees,
+                    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves,
+                    featureColumnName: "Features")).Fit(selectedFeaturesData);
 
-                if (bestCvResult == null)
-                    bestCvResult = cvResults.FirstOrDefault();
+                //var predictor = _mLContext.Transforms.NormalizeMinMax("Features")
+                //    .Append(_mLContext.Transforms.ApproximatedKernelMap("Features", "Features", rank: Parameters.PcaRank, generator: new GaussianKernel()))
+                //    .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
+                //    .Append(_mLContext.BinaryClassification.Trainers.FastTree(
+                //    numberOfLeaves: numberOfLeaves, numberOfTrees: numberOfTrees,
+                //    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves,
+                //    featureColumnName: "Features")).Fit(trainingData);
 
-                foreach (var cv in cvResults)
+                //var testModel = predictor;
+                var testModel = randomFeatureSelection.Append(predictor);
+
+                var predictions = testModel.Transform(validationData);
+
+                var validationResults = _mLContext.BinaryClassification.Evaluate(predictions);
+
+                if(bestResults == null || validationResults.Accuracy > bestResults.Accuracy)
                 {
-                    if (cv.Metrics.AreaUnderPrecisionRecallCurve > bestCvResult.Metrics.AreaUnderPrecisionRecallCurve)
-                    {
-                        bestCvResult = cv;
-                    }
+                    bestResults = validationResults;
+                    Console.WriteLine($"Best validation accuracy: {bestResults.Accuracy}");
+                    _model = testModel;
                 }
+
+
             }
 
-            UpdateMetadata(bestCvResult);
-            return bestCvResult;
+            return _model;
         }
-
+   
         private void UpdateMetadata(CrossValidationResult<CalibratedBinaryClassificationMetrics> crossValidationResult)
         {
             Metadata.Parameters = Parameters;
@@ -316,7 +302,7 @@ namespace GimmeMillions.Domain.ML.Binary
             Metadata.AverageUpperProbability = 0.0f;
             for (int i = 0; i < probabilities.Length; ++i)
             {
-                if(probabilities[i] >= 0.0f)
+                if (probabilities[i] >= 0.0f)
                 {
                     Metadata.AverageUpperProbability += probabilities[i];
                     upperCount++;

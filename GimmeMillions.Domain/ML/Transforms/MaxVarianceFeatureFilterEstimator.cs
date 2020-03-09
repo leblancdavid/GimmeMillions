@@ -105,7 +105,7 @@ namespace GimmeMillions.Domain.ML.Transforms
             var p = new (float FeatureDifference, int Index)[positiveAvg.Length];
             for (int i = 0; i < p.Length; ++i)
             {
-                p[i] = (Math.Abs((negativeVar[i] / negativeTotal) - (positiveVar[i] / positiveTotal)), i);
+                p[i] = (Math.Abs((negativeVar[i] / negativeTotal) + (positiveVar[i] / positiveTotal)), i);
                 //p[i] = ((positiveVar[i] / positiveTotal) - (negativeVar[i] / negativeTotal), i);
             }
             return p;

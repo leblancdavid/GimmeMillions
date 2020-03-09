@@ -40,5 +40,19 @@ namespace GimmeMillions.Domain.Features
         {
         }
 
+        public FeatureVector GetMinMaxNormalized()
+        {
+            var normalizedVector = new FeatureVector(Data.Length, Date, Encoding);
+
+            float min = Data.Min();
+            float max = Data.Max();
+            for(int i = 0; i < Data.Length; ++i)
+            {
+                normalizedVector.Data[i] = (Data[i] - min) / (max - min);
+            }
+
+            return normalizedVector;
+        }
+
     }
 }

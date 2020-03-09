@@ -27,7 +27,7 @@ namespace ModelTrainer
             string stock = "AMZN";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
-            var model = new MLStockBinaryFastForestModel();
+            var model = new MLStockRandomFeatureFastTreeModel();
 
             var startDate = new DateTime(2010, 1, 1);
             var endDate = new DateTime(2019, 6, 14);
@@ -39,20 +39,20 @@ namespace ModelTrainer
             var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
             var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
 
-            model.Parameters.PcaRank = 500;
-            model.Parameters.FeatureSelectionRank = 400000;
-            model.Parameters.NumIterations = 1;
-            model.Parameters.NumCrossValidations = 1;
-            model.Parameters.NumOfTrees = 256;
-            model.Parameters.NumOfLeaves = 4;
-            model.Parameters.MinNumOfLeaves = 1;
+            model.Parameters.PcaRank = 200;
+            model.Parameters.FeatureSelectionRank = 2000;
+            model.Parameters.NumIterations = 100;
+            model.Parameters.NumCrossValidations = 5;
+            model.Parameters.NumOfTrees = 50;
+            model.Parameters.NumOfLeaves = 10;
+            model.Parameters.MinNumOfLeaves = 10;
 
             Console.WriteLine($"-=== Training ===-");
             Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank} \t PCA: { model.Parameters.PcaRank}");
             Console.WriteLine($"Number of Trees: { model.Parameters.NumOfTrees} \t Number of Leaves: { model.Parameters.NumOfLeaves}");
             Console.WriteLine($"Pca Rank: {model.Parameters.PcaRank}");
             Stopwatch stopwatch = Stopwatch.StartNew();
-            var trainingResult = model.Train(trainingSet, 0.01);
+            var trainingResult = model.Train(trainingSet, 0.05);
             stopwatch.Stop();
 
             Console.WriteLine($"-=== Training done ===-");
