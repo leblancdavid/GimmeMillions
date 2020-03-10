@@ -24,7 +24,7 @@ namespace ModelTrainer
         static void Main(string[] args)
         {
             string dictionaryToUse = "USA";
-            string stock = "AMZN";
+            string stock = "S";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
             var model = new MLStockRandomFeatureFastTreeModel();
@@ -40,11 +40,11 @@ namespace ModelTrainer
             var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
 
             model.Parameters.PcaRank = 100;
-            model.Parameters.FeatureSelectionRank = 1500;
-            model.Parameters.NumIterations = 100;
+            model.Parameters.FeatureSelectionRank = 2000;
+            model.Parameters.NumIterations = 1;
             model.Parameters.NumCrossValidations = 5;
-            model.Parameters.NumOfTrees = 256;
-            model.Parameters.NumOfLeaves = 20;
+            model.Parameters.NumOfTrees = 500;
+            model.Parameters.NumOfLeaves = 100;
             model.Parameters.MinNumOfLeaves = 1;
 
             Console.WriteLine($"-=== Training ===-");

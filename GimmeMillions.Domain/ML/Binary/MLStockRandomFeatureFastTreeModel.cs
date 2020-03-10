@@ -243,33 +243,26 @@ namespace GimmeMillions.Domain.ML.Binary
             int numberOfLeaves = Parameters.NumOfLeaves;
             BinaryClassificationMetrics bestResults = null;
 
-            int filteredSize = (int)(featureSize / 2);
-            var frequencyUsageSelection = (FeatureFilterTransform)(new FeatureFrequencyUsageFilterEstimator(_mLContext,
-                rank: filteredSize))
-               .Fit(trainingData);
-            var frequencyUsageData = frequencyUsageSelection.Transform(trainingData);
-
-            //var featureSelector = (FeatureFilterTransform)(new PerceptronFeatureSelectionEstimator(_mLContext,
-            //    featureSize: filteredSize,
-            //    iterations: 5,
-            //    rank: Parameters.FeatureSelectionRank))
-            //   .Fit(frequencyUsageData);
-            //var selectedFeaturesData = featureSelector.Transform(frequencyUsageData);
-
             var featureSelector = (FeatureFilterTransform)(new MaxVarianceFeatureFilterEstimator(_mLContext,
                 rank: Parameters.FeatureSelectionRank))
-               .Fit(frequencyUsageData);
-            var selectedFeaturesData = featureSelector.Transform(frequencyUsageData);
+               .Fit(trainingData);
+            var selectedFeaturesData = featureSelector.Transform(trainingData);
 
             //var randomFeatureSelection = new RandomSelectionFeatureFilterEstimator(_mLContext,
             //   rank: Parameters.FeatureSelectionRank);
-            var pipeline = _mLContext.Transforms.NormalizeMeanVariance("Features")
-                    .Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.PcaRank, overSampling: Parameters.PcaRank))
-                    .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
-                    .Append(_mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 100));
+            var pipeline = _mLContext.Transforms.NormalizeSupervisedBinning("Features", fixZero: false)
+                    //.Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.PcaRank, overSampling: Parameters.PcaRank))
+                    //.Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
+                    //.Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek"))
+                    //.Append(_mLContext.Transforms.NormalizeMinMax("Features"))
+                    .Append(_mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 10));
+                    //.Append(_mLContext.BinaryClassification.Trainers.SdcaLogisticRegression());
+                    //.Append(_mLContext.BinaryClassification.Trainers.AveragedPerceptron());
+                    //.Append(_mLContext.BinaryClassification.Trainers.SymbolicSgdLogisticRegression());
+                    //.Append(_mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression());
                     //.Append(_mLContext.BinaryClassification.Trainers.FastForest(
                     //    numberOfTrees: numberOfTrees, numberOfLeaves: numberOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
-
+            //
             for (int i = 0; i < Parameters.NumIterations; ++i)
             {
                 //var featureSelector = randomFeatureSelection.Fit(frequencyUsageData);
@@ -278,9 +271,9 @@ namespace GimmeMillions.Domain.ML.Binary
                 var predictor = pipeline.Fit(selectedFeaturesData);
 
                 //var testModel = predictor;
-                var testModel = frequencyUsageSelection.Append(featureSelector.Append(predictor));
+                //var testModel = frequencyUsageSelection.Append(featureSelector.Append(predictor));
                 //var testModel = frequencyUsageSelection.Append(predictor);
-                //var testModel = featureSelector.Append(predictor);
+                var testModel = featureSelector.Append(predictor);
 
                 var predictions = testModel.Transform(validationData);
 

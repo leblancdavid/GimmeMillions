@@ -106,6 +106,7 @@ namespace GimmeMillions.Domain.ML.Transforms
                 negativeVar[i] = (float)Math.Sqrt(negativeVar[i] / negativeTotal);
 
                 p[i] = ((float)(positiveAvg[i] - negativeAvg[i]) / (positiveVar[i] + negativeVar[i]), i);
+                //p[i] = ((float)(negativeAvg[i] - positiveAvg[i]) / (positiveVar[i] + negativeVar[i]), i);
             }
 
             return p;
