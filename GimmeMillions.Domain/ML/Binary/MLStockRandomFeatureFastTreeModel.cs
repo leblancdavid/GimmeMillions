@@ -157,7 +157,7 @@ namespace GimmeMillions.Domain.ML.Binary
             var firstFeature = dataset.FirstOrDefault();
 
             int numTestSamples = (int)(dataset.Count() * testFraction);
-            int numValidationSamples = 40;
+            int numValidationSamples = 30;
             int numTrainingSamples = (int)(dataset.Count() - numValidationSamples - numTestSamples);
 
             var trainingDataset = dataset.Take(numTrainingSamples);
@@ -238,34 +238,37 @@ namespace GimmeMillions.Domain.ML.Binary
 
         private ITransformer TrainRandomFeatures(IDataView trainingData, IDataView validationData, int featureSize)
         {
+            Console.WriteLine($"-==== Begin Training ====-");
             int numberOfTrees = Parameters.NumOfTrees;
             int numberOfLeaves = Parameters.NumOfLeaves;
             BinaryClassificationMetrics bestResults = null;
 
-            //int filteredSize = (int)(featureSize / 3);
-            //var frequencyUsageSelection = (FeatureFilterTransform)(new FeatureFrequencyUsageFilterEstimator(_mLContext,
-            //    rank: filteredSize))
-            //   .Fit(trainingData);
-            //var frequencyUsageData = frequencyUsageSelection.Transform(trainingData);
+            int filteredSize = (int)(featureSize / 2);
+            var frequencyUsageSelection = (FeatureFilterTransform)(new FeatureFrequencyUsageFilterEstimator(_mLContext,
+                rank: filteredSize))
+               .Fit(trainingData);
+            var frequencyUsageData = frequencyUsageSelection.Transform(trainingData);
 
-            //var randomFeatureSelection = (FeatureFilterTransform)(new PerceptronFeatureSelectionEstimator(_mLContext,
+            //var featureSelector = (FeatureFilterTransform)(new PerceptronFeatureSelectionEstimator(_mLContext,
             //    featureSize: filteredSize,
-            //    iterations: 10,
+            //    iterations: 5,
             //    rank: Parameters.FeatureSelectionRank))
             //   .Fit(frequencyUsageData);
-            //var selectedFeaturesData = randomFeatureSelection.Transform(frequencyUsageData);
+            //var selectedFeaturesData = featureSelector.Transform(frequencyUsageData);
 
             var featureSelector = (FeatureFilterTransform)(new MaxVarianceFeatureFilterEstimator(_mLContext,
                 rank: Parameters.FeatureSelectionRank))
-               .Fit(trainingData);
-            var selectedFeaturesData = featureSelector.Transform(trainingData);
+               .Fit(frequencyUsageData);
+            var selectedFeaturesData = featureSelector.Transform(frequencyUsageData);
 
             //var randomFeatureSelection = new RandomSelectionFeatureFilterEstimator(_mLContext,
             //   rank: Parameters.FeatureSelectionRank);
-            var pipeline = _mLContext.Transforms.NormalizeMinMax("Features")
+            var pipeline = _mLContext.Transforms.NormalizeMeanVariance("Features")
                     .Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.PcaRank, overSampling: Parameters.PcaRank))
                     .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
-                    .Append(_mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 5));
+                    .Append(_mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 100));
+                    //.Append(_mLContext.BinaryClassification.Trainers.FastForest(
+                    //    numberOfTrees: numberOfTrees, numberOfLeaves: numberOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
 
             for (int i = 0; i < Parameters.NumIterations; ++i)
             {
@@ -275,9 +278,9 @@ namespace GimmeMillions.Domain.ML.Binary
                 var predictor = pipeline.Fit(selectedFeaturesData);
 
                 //var testModel = predictor;
-                //var testModel = frequencyUsageSelection.Append(featureSelector.Append(predictor));
+                var testModel = frequencyUsageSelection.Append(featureSelector.Append(predictor));
                 //var testModel = frequencyUsageSelection.Append(predictor);
-                var testModel = featureSelector.Append(predictor);
+                //var testModel = featureSelector.Append(predictor);
 
                 var predictions = testModel.Transform(validationData);
 
@@ -286,7 +289,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 if (bestResults == null || validationResults.PositivePrecision > bestResults.PositivePrecision)
                 {
                     bestResults = validationResults;
-                    Console.WriteLine($"Best validation accuracy: {bestResults.PositivePrecision}");
+                    Console.WriteLine($"Accuracy: {validationResults.Accuracy}, PP: {validationResults.PositivePrecision}, PR: {validationResults.PositiveRecall}");
                     _model = testModel;
                 }
 

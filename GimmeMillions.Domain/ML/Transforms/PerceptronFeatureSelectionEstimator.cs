@@ -31,7 +31,7 @@ namespace GimmeMillions.Domain.ML.Transforms
             _outputColumnName = outputColumnName;
             _mLContext = mLContext;
             _rank = rank;
-            _sliceSize = _rank;
+            _sliceSize = _featureSize / 2;
 
             _featureContribution = new (int Index, double Weight)[_featureSize];
             for(int i = 0; i < _featureSize; ++i)
@@ -63,6 +63,32 @@ namespace GimmeMillions.Domain.ML.Transforms
             var sortedFeatures = _featureContribution.OrderByDescending(x => x.Weight).ToList();
             var indicesToUse = sortedFeatures.Take(_rank).Select(x => x.Index).ToArray();
             return indicesToUse;
+            //double bestPrecision = 0.0;
+            //int[] bestIndices = null;
+            //for (int i = 0; i < _iterations; ++i)
+            //{
+            //    var currentIndices = _featureContribution.OrderBy(x => rnd.Next())
+            //        .Take(_rank).Select(x => x.Index).ToArray();
+
+            //    var filter = new FeatureFilterTransform(_mLContext,
+            //        currentIndices,
+            //        _inputColumnName, _outputColumnName);
+
+            //    var filteredDataView = filter.Transform(input);
+            //    var results = _mLContext.BinaryClassification.EvaluateNonCalibrated(
+            //        _mLContext.BinaryClassification.Trainers.LinearSvm()
+            //            .Fit(filteredDataView).Transform(filteredDataView));
+
+            //    if (results.Accuracy > bestPrecision)
+            //    {
+            //        Console.WriteLine($"Accuracy: {results.Accuracy}, PP: {results.PositivePrecision}, PR: {results.PositiveRecall}");
+            //        bestIndices = currentIndices;
+            //        bestPrecision = results.Accuracy;
+
+            //    }
+            //}
+
+            //return bestIndices;
         }
 
         private void RunIterationUpdateWeights(IDataView input, Random rnd)
@@ -84,19 +110,12 @@ namespace GimmeMillions.Domain.ML.Transforms
 
                 var filteredDataView = filter.Transform(input); 
                 //var AP = _mLContext.BinaryClassification.Trainers.FastTree(numberOfLeaves: 2, numberOfTrees: 10).Fit(filteredDataView).Transform(filteredDataView);
-                var AP = _mLContext.BinaryClassification.Trainers.LinearSvm().Fit(filteredDataView).Transform(filteredDataView);
+                var AP = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 10).Fit(filteredDataView).Transform(filteredDataView);
                 var results = _mLContext.BinaryClassification.EvaluateNonCalibrated(AP);
 
                 foreach (var index in indicesToUse)
                 {
-                    if (results.PositivePrecision > 0.99 || results.PositivePrecision < 0.01)
-                    {
-                        _featureContribution[index].Weight += 0.5;
-                    }
-                    else
-                    {
-                        _featureContribution[index].Weight += results.PositivePrecision;
-                    }
+                    _featureContribution[index].Weight += results.Accuracy;
                 }
 
             }

@@ -81,6 +81,7 @@ namespace GimmeMillions.Domain.ML.Transforms
                 }
             }
 
+            var p = new (float FeatureDifference, int Index)[positiveAvg.Length];
             for (int i = 0; i < featureLength; ++i)
             {
                 positiveAvg[i] /= positiveTotal;
@@ -93,21 +94,20 @@ namespace GimmeMillions.Domain.ML.Transforms
                 {
                     if (labels[j])
                     {
-                        positiveVar[i] += Math.Abs(features[j][i] - positiveAvg[i]);
+                        positiveVar[i] += (float)Math.Pow(features[j][i] - positiveAvg[i], 2.0);
                     }
                     else
                     {
-                        negativeVar[i] += Math.Abs(features[j][i] - negativeAvg[i]);
+                        negativeVar[i] += (float)Math.Pow(features[j][i] - negativeAvg[i], 2.0);
                     }
                 }
+
+                positiveVar[i] = (float)Math.Sqrt(positiveVar[i] / positiveTotal);
+                negativeVar[i] = (float)Math.Sqrt(negativeVar[i] / negativeTotal);
+
+                p[i] = ((float)(positiveAvg[i] - negativeAvg[i]) / (positiveVar[i] + negativeVar[i]), i);
             }
 
-            var p = new (float FeatureDifference, int Index)[positiveAvg.Length];
-            for (int i = 0; i < p.Length; ++i)
-            {
-                p[i] = (Math.Abs((negativeVar[i] / negativeTotal) + (positiveVar[i] / positiveTotal)), i);
-                //p[i] = ((positiveVar[i] / positiveTotal) - (negativeVar[i] / negativeTotal), i);
-            }
             return p;
         }
     }
