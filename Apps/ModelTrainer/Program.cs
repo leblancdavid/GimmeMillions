@@ -40,12 +40,12 @@ namespace ModelTrainer
             var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
 
             model.Parameters.PcaRank = 100;
-            model.Parameters.FeatureSelectionRank = 2000;
+            model.Parameters.FeatureSelectionRank = 5000;
             model.Parameters.NumIterations = 1;
             model.Parameters.NumCrossValidations = 5;
-            model.Parameters.NumOfTrees = 500;
-            model.Parameters.NumOfLeaves = 100;
-            model.Parameters.MinNumOfLeaves = 1;
+            model.Parameters.NumOfTrees = 100;
+            model.Parameters.NumOfLeaves = 20;
+            model.Parameters.MinNumOfLeaves = 10;
 
             Console.WriteLine($"-=== Training ===-");
             Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank} \t PCA: { model.Parameters.PcaRank}");
@@ -67,6 +67,7 @@ namespace ModelTrainer
             Console.WriteLine($"-=== Results ===-");
             Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
             Console.WriteLine($"Positive Precision: {trainingResult.Value.PositivePrecision} \t Positive Recall: {trainingResult.Value.PositiveRecall}");
+            Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Negative Recall: {trainingResult.Value.NegativeRecall}");
             Console.WriteLine($"-=== Saving Model... ===-");
             //model.Save(_pathToModels);
 

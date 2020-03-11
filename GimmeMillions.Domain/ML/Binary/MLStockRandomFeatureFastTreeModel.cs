@@ -173,7 +173,7 @@ namespace GimmeMillions.Domain.ML.Binary
                     return new StockRiseDataFeature(
                     normVector.Data, x.Output.PercentDayChange >= 0,
                     (float)x.Output.PercentDayChange,
-                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.Month / 12.0f);
+                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
                 GetSchemaDefinition(firstFeature.Input));
 
@@ -184,7 +184,7 @@ namespace GimmeMillions.Domain.ML.Binary
                     return new StockRiseDataFeature(
                     normVector.Data, x.Output.PercentDayChange >= 0,
                     (float)x.Output.PercentDayChange,
-                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.Month / 12.0f);
+                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
                 GetSchemaDefinition(firstFeature.Input));
 
@@ -195,7 +195,7 @@ namespace GimmeMillions.Domain.ML.Binary
                     return new StockRiseDataFeature(
                     normVector.Data, x.Output.PercentDayChange >= 0,
                     (float)x.Output.PercentDayChange,
-                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.Month / 12.0f);
+                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
                 GetSchemaDefinition(firstFeature.Input));
 
@@ -243,26 +243,35 @@ namespace GimmeMillions.Domain.ML.Binary
             int numberOfLeaves = Parameters.NumOfLeaves;
             BinaryClassificationMetrics bestResults = null;
 
+            var normalizer = _mLContext.Transforms.NormalizeLogMeanVariance("Features").Fit(trainingData);
+            var normalizedData = normalizer.Transform(trainingData);
+
+            var removeLowUsage = (FeatureFilterTransform)(new FeatureFrequencyUsageFilterEstimator(_mLContext,
+                rank: (int)(featureSize * 0.25)))
+               .Fit(normalizedData);
+            var filteredData = removeLowUsage.Transform(normalizedData);
+
             var featureSelector = (FeatureFilterTransform)(new MaxVarianceFeatureFilterEstimator(_mLContext,
                 rank: Parameters.FeatureSelectionRank))
-               .Fit(trainingData);
-            var selectedFeaturesData = featureSelector.Transform(trainingData);
+               .Fit(filteredData);
+            var selectedFeaturesData = featureSelector.Transform(filteredData);
 
             //var randomFeatureSelection = new RandomSelectionFeatureFilterEstimator(_mLContext,
             //   rank: Parameters.FeatureSelectionRank);
-            var pipeline = _mLContext.Transforms.NormalizeSupervisedBinning("Features", fixZero: false)
-                    //.Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.PcaRank, overSampling: Parameters.PcaRank))
-                    //.Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
+
+            //var pipeline = _mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month")
+            //        .Append(_mLContext.BinaryClassification.Trainers.SymbolicSgdLogisticRegression());
+
+            var pipeline = _mLContext.Transforms.NormalizeSupervisedBinning("Features")
+                    .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
                     //.Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek"))
                     //.Append(_mLContext.Transforms.NormalizeMinMax("Features"))
-                    .Append(_mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 10));
+                    //.Append(_mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 25));
                     //.Append(_mLContext.BinaryClassification.Trainers.SdcaLogisticRegression());
                     //.Append(_mLContext.BinaryClassification.Trainers.AveragedPerceptron());
                     //.Append(_mLContext.BinaryClassification.Trainers.SymbolicSgdLogisticRegression());
-                    //.Append(_mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression());
-                    //.Append(_mLContext.BinaryClassification.Trainers.FastForest(
-                    //    numberOfTrees: numberOfTrees, numberOfLeaves: numberOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
-            //
+                    .Append(_mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression());
+
             for (int i = 0; i < Parameters.NumIterations; ++i)
             {
                 //var featureSelector = randomFeatureSelection.Fit(frequencyUsageData);
@@ -271,11 +280,16 @@ namespace GimmeMillions.Domain.ML.Binary
                 var predictor = pipeline.Fit(selectedFeaturesData);
 
                 //var testModel = predictor;
-                //var testModel = frequencyUsageSelection.Append(featureSelector.Append(predictor));
-                //var testModel = frequencyUsageSelection.Append(predictor);
-                var testModel = featureSelector.Append(predictor);
+                var testModel = normalizer.Append(removeLowUsage.Append(featureSelector.Append(predictor)));
+                //var testModel = removeLowUsage.Append(normalizer.Append(featureSelector.Append(predictor)));
+                //var testModel = removeLowUsage.Append(featureSelector.Append(predictor));
+                //var testModel = removeLowUsage.Append(predictor);
+                //var testModel = featureSelector.Append(predictor);
 
                 var predictions = testModel.Transform(validationData);
+                //var probabilies = predictions.GetColumn<float>("Probability").ToArray();
+                var score = predictions.GetColumn<float>("Score").ToArray();
+                var labels = validationData.GetColumn<bool>("Label").ToArray();
 
                 var validationResults = _mLContext.BinaryClassification.EvaluateNonCalibrated(predictions);
 
