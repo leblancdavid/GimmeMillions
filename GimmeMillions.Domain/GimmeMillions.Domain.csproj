@@ -180,6 +180,8 @@
     <Compile Include="ML\Transforms\RandomSelectionFeatureFilterEstimator.cs" />
     <Compile Include="ML\Transforms\RegressionFeatureVector.cs" />
     <Compile Include="ML\Transforms\FeatureFrequencyUsageFilterEstimator.cs" />
+    <Compile Include="ML\Transforms\SupervisedNormalizerEstimator.cs" />
+    <Compile Include="ML\Transforms\SupervisedNormalizerTransform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stocks\IStockRepository.cs" />
     <Compile Include="Stocks\StockData.cs" />

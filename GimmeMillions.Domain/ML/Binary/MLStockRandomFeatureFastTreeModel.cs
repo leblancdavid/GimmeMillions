@@ -243,27 +243,36 @@ namespace GimmeMillions.Domain.ML.Binary
             int numberOfLeaves = Parameters.NumOfLeaves;
             BinaryClassificationMetrics bestResults = null;
 
-            var normalizer = _mLContext.Transforms.NormalizeLogMeanVariance("Features").Fit(trainingData);
-            var normalizedData = normalizer.Transform(trainingData);
+            //var normalizer = _mLContext.Transforms.NormalizeGlobalContrast("Features").Fit(trainingData);
+            //var normalizedData = normalizer.Transform(trainingData);
 
-            var removeLowUsage = (FeatureFilterTransform)(new FeatureFrequencyUsageFilterEstimator(_mLContext,
-                rank: (int)(featureSize * 0.25)))
-               .Fit(normalizedData);
-            var filteredData = removeLowUsage.Transform(normalizedData);
+            //var removeLowUsage = (FeatureFilterTransform)(new FeatureFrequencyUsageFilterEstimator(_mLContext,
+            //    rank: (int)(featureSize * 0.5)))
+            //   .Fit(normalizedData);
+            //var filteredData = removeLowUsage.Transform(normalizedData);
 
-            var featureSelector = (FeatureFilterTransform)(new MaxVarianceFeatureFilterEstimator(_mLContext,
-                rank: Parameters.FeatureSelectionRank))
-               .Fit(filteredData);
-            var selectedFeaturesData = featureSelector.Transform(filteredData);
+            var supervisedNormalizer = (SupervisedNormalizerTransform)new SupervisedNormalizerEstimator(_mLContext)
+               .Fit(trainingData);
+            var normalizedData = supervisedNormalizer.Transform(trainingData);
+
+            //var featureSelector = (FeatureFilterTransform)new MaxVarianceFeatureFilterEstimator(_mLContext,
+            //    rank: Parameters.FeatureSelectionRank)
+            //   .Fit(normalizedData);
+            //var selectedFeaturesData = featureSelector.Transform(normalizedData);
 
             //var randomFeatureSelection = new RandomSelectionFeatureFilterEstimator(_mLContext,
             //   rank: Parameters.FeatureSelectionRank);
 
             //var pipeline = _mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month")
-            //        .Append(_mLContext.BinaryClassification.Trainers.SymbolicSgdLogisticRegression());
+            //        //.Append(_mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression());
+            //        .Append(_mLContext.BinaryClassification.Trainers.FastForest(
+            //            numberOfLeaves: numberOfLeaves,
+            //            numberOfTrees: numberOfTrees,
+            //            minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
 
             var pipeline = _mLContext.Transforms.NormalizeSupervisedBinning("Features")
-                    .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
+                    .Append(_mLContext.Transforms.NormalizeMinMax("Features"))
+                    //.Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
                     //.Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek"))
                     //.Append(_mLContext.Transforms.NormalizeMinMax("Features"))
                     //.Append(_mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 25));
@@ -271,26 +280,38 @@ namespace GimmeMillions.Domain.ML.Binary
                     //.Append(_mLContext.BinaryClassification.Trainers.AveragedPerceptron());
                     //.Append(_mLContext.BinaryClassification.Trainers.SymbolicSgdLogisticRegression());
                     .Append(_mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression());
+                    //.Append(_mLContext.BinaryClassification.Trainers.FastTree(
+                    //    numberOfLeaves: numberOfLeaves, 
+                    //    numberOfTrees: numberOfTrees, 
+                    //    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
+                    //.Append(_mLContext.BinaryClassification.Trainers.FastForest(
+                    //    numberOfLeaves: numberOfLeaves,
+                    //    numberOfTrees: numberOfTrees,
+                    //    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
 
             for (int i = 0; i < Parameters.NumIterations; ++i)
             {
                 //var featureSelector = randomFeatureSelection.Fit(frequencyUsageData);
                 //var selectedFeaturesData = featureSelector.Transform(frequencyUsageData);
 
-                var predictor = pipeline.Fit(selectedFeaturesData);
+                var predictor = pipeline.Fit(normalizedData);
 
                 //var testModel = predictor;
-                var testModel = normalizer.Append(removeLowUsage.Append(featureSelector.Append(predictor)));
+                //var testModel = normalizer.Append(supervisedNormalizer.Append(predictor));
+                //var testModel = normalizer.Append(removeLowUsage.Append(supervisedNormalizer.Append(predictor)));
+                //var testModel = removeLowUsage.Append(normalizer.Append(predictor));
                 //var testModel = removeLowUsage.Append(normalizer.Append(featureSelector.Append(predictor)));
                 //var testModel = removeLowUsage.Append(featureSelector.Append(predictor));
                 //var testModel = removeLowUsage.Append(predictor);
-                //var testModel = featureSelector.Append(predictor);
+                var testModel = supervisedNormalizer.Append(predictor);
+                //var testModel = supervisedNormalizer.Append(featureSelector.Append(predictor));
 
                 var predictions = testModel.Transform(validationData);
-                //var probabilies = predictions.GetColumn<float>("Probability").ToArray();
                 var score = predictions.GetColumn<float>("Score").ToArray();
                 var labels = validationData.GetColumn<bool>("Label").ToArray();
 
+                //var probabilies = predictions.GetColumn<float>("Probability").ToArray();
+                //var validationResults = _mLContext.BinaryClassification.Evaluate(predictions);
                 var validationResults = _mLContext.BinaryClassification.EvaluateNonCalibrated(predictions);
 
                 if (bestResults == null || validationResults.PositivePrecision > bestResults.PositivePrecision)
