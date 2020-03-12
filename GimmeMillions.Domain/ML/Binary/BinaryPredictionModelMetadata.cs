@@ -22,6 +22,8 @@ namespace GimmeMillions.Domain.ML.Binary
         }
         public float AverageUpperProbability { get; set; }
         public float AverageLowerProbability { get; set; }
+        public float AverageUpperScore { get; set; }
+        public float AverageLowerScore { get; set; }
         public string FeatureEncoding { get; set; }
 
         public BinaryPredictionModelMetadata()
