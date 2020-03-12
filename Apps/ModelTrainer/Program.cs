@@ -34,13 +34,13 @@ namespace ModelTrainer
             var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
             var filteredDataset = dataset.Value;
-            int numTestExamples = 15;
+            int numTestExamples = 5;
 
             var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
             var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
 
             model.Parameters.PcaRank = 100;
-            model.Parameters.FeatureSelectionRank = 500;
+            model.Parameters.FeatureSelectionRank = 1000;
             model.Parameters.NumIterations = 1;
             model.Parameters.NumCrossValidations = 5;
             model.Parameters.NumOfTrees = 50;
