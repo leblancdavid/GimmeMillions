@@ -50,8 +50,10 @@ namespace GimmeMillions.Domain.Features
             var articleDate = stock.Date.AddDays(-1.0);
             var articlesToExtract = new List<(Article Article, float Weight)>();
             articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-1.0)).Select(x => (x, 1.0f)));
-            articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-2.0)).Select(x => (x, 0.6f)));
-            articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-3.0)).Select(x => (x, 0.3f)));
+            articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-2.0)).Select(x => (x, 0.8f)));
+            articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-3.0)).Select(x => (x, 0.6f)));
+            articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-4.0)).Select(x => (x, 0.4f)));
+            articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-5.0)).Select(x => (x, 0.2f)));
 
             if (!articlesToExtract.Any())
                 return Result.Failure<(FeatureVector Input, StockData Output)>(
@@ -78,8 +80,10 @@ namespace GimmeMillions.Domain.Features
             var articleDate = date.AddDays(-1.0);
             var articlesToExtract = new List<(Article Article, float Weight)>();
             articlesToExtract.AddRange(_articleRepository.GetArticles(date.AddDays(-1.0)).Select(x => (x, 1.0f)));
-            articlesToExtract.AddRange(_articleRepository.GetArticles(date.AddDays(-2.0)).Select(x => (x, 0.6f)));
-            articlesToExtract.AddRange(_articleRepository.GetArticles(date.AddDays(-3.0)).Select(x => (x, 0.3f)));
+            articlesToExtract.AddRange(_articleRepository.GetArticles(date.AddDays(-2.0)).Select(x => (x, 0.8f)));
+            articlesToExtract.AddRange(_articleRepository.GetArticles(date.AddDays(-3.0)).Select(x => (x, 0.6f)));
+            articlesToExtract.AddRange(_articleRepository.GetArticles(date.AddDays(-4.0)).Select(x => (x, 0.4f)));
+            articlesToExtract.AddRange(_articleRepository.GetArticles(date.AddDays(-5.0)).Select(x => (x, 0.2f)));
             if (!articlesToExtract.Any())
                 return Result.Failure<FeatureVector>(
                     $"No articles found on {articleDate.ToString("yyyy/MM/dd")}"); ;
@@ -119,8 +123,10 @@ namespace GimmeMillions.Domain.Features
                         var articlesToExtract = new List<(Article Article, float Weight)>();
 
                         articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-1.0)).Select(x => (x, 1.0f)));
-                        articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-2.0)).Select(x => (x, 0.6f)));
-                        articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-3.0)).Select(x => (x, 0.3f)));
+                        articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-2.0)).Select(x => (x, 0.8f)));
+                        articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-3.0)).Select(x => (x, 0.6f)));
+                        articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-4.0)).Select(x => (x, 0.4f)));
+                        articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-5.0)).Select(x => (x, 0.2f)));
                         if (!articlesToExtract.Any())
                             return;
 

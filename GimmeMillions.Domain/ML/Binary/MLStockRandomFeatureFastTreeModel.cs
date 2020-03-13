@@ -185,17 +185,22 @@ namespace GimmeMillions.Domain.ML.Binary
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
             Metadata.StockSymbol = firstFeature.Output.Symbol;
 
-            var normalizer = _mLContext.Transforms.NormalizeSupervisedBinning("Features").Fit(trainData);
-            var normalizedData = normalizer.Transform(trainData);
+            //var normalizer = _mLContext.Transforms.NormalizeSupervisedBinning("Features").Fit(trainData);
+            //var normalizedData = normalizer.Transform(trainData);
             //var filterFeatures = (FeatureFilterTransform)new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: (int)(firstFeature.Input.Length * 0.75))
             //   .Fit(trainData);
             //var filteredData = filterFeatures.Transform(trainData);
-            var featureSelector = (FeatureFilterTransform)new MaxVarianceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank)
-               .Fit(normalizedData);
-            var featureSelectedData = featureSelector.Transform(normalizedData);
+            //var featureSelector = (FeatureFilterTransform)new MaxVarianceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank)
+            //   .Fit(normalizedData);
+            //var featureSelectedData = featureSelector.Transform(normalizedData);
 
-            var pipeline = _mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month")
-                .Append(_mLContext.BinaryClassification.Trainers.SdcaLogisticRegression());
+            var pipeline = _mLContext.Transforms.NormalizeSupervisedBinning("Features")
+                .Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.PcaRank, overSampling: Parameters.PcaRank))
+                //.Append(new MaxVarianceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank))
+                //.Append(_mLContext.Transforms.ProjectToPrincipalComponents(""))
+                   .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
+                   //.Append(_mLContext.BinaryClassification.Trainers.SdcaLogisticRegression());
+                   .Append(_mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression());
                    //.Append(_mLContext.BinaryClassification.Trainers.FastTree(
                    //    numberOfLeaves: Parameters.NumOfLeaves,
                    //    numberOfTrees: Parameters.NumOfTrees,
@@ -222,14 +227,14 @@ namespace GimmeMillions.Domain.ML.Binary
 
             if (Parameters.NumCrossValidations > 1)
             {
-                var cvResults = _mLContext.BinaryClassification.CrossValidate(featureSelectedData, pipeline, Parameters.NumCrossValidations);
+                var cvResults = _mLContext.BinaryClassification.CrossValidate(trainData, pipeline, Parameters.NumCrossValidations);
                 UpdateMetadata(cvResults);
             }
             
-            var predictor = pipeline.Fit(featureSelectedData);
+            var predictor = pipeline.Fit(trainData);
             //_model = featureSelector.Append(predictor);
-            _model = normalizer.Append(featureSelector.Append(predictor));
-            //_model = predictor;
+            //_model = normalizer.Append(featureSelector.Append(predictor));
+            _model = predictor;
             if (testData != null)
             {
                 var testPredictions = _model.Transform(testData);

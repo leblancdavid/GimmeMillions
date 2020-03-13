@@ -11,14 +11,17 @@ namespace GimmeMillions.Domain.Features
     {
         private FeaturesDictionary _featuresDictionary;
         private ITextProcessor _textProcessor;
+        private int _version = 2;
         public string Encoding { get; set; }
 
         public BagOfWordsFeatureVectorExtractor(FeaturesDictionary featuresDictionary,
-            ITextProcessor textProcessor)
+            ITextProcessor textProcessor,
+            int version = 2)
         {
             _featuresDictionary = featuresDictionary;
             _textProcessor = textProcessor;
-            Encoding = $"BoW-{_featuresDictionary.DictionaryId}";
+            _version = version;
+            Encoding = $"BoW-v{_version}-{_featuresDictionary.DictionaryId}";
         }
 
 
@@ -35,7 +38,12 @@ namespace GimmeMillions.Domain.Features
             {
                 ProcessAndUpdateVector(article, vector);
             });
-            
+
+            for (int i = 0; i < vector.Length; ++i)
+            {
+                vector[i] /= articles.Count();
+            }
+
             return vector;
 
         }
