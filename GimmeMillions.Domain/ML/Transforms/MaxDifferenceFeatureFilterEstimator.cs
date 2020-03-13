@@ -70,11 +70,15 @@ namespace GimmeMillions.Domain.ML.Transforms
                 {
                     if (labels[j])
                     {
-                        positiveScore[i] += features[j][i];
+                        //positiveScore[i] += features[j][i];
+                        if (features[j][i] > 0.0f)
+                            positiveScore[i]++;
                     }
                     else
                     {
-                        negativeScore[i] += features[j][i];
+                        //negativeScore[i] += features[j][i];
+                        if (features[j][i] > 0.0f)
+                            negativeScore[i]++;
                     }
                 }
             }
@@ -82,8 +86,10 @@ namespace GimmeMillions.Domain.ML.Transforms
             var p = new (float FeatureDifference, int Index)[positiveScore.Length];
             for (int i = 0; i < p.Length; ++i)
             {
-                p[i] = (Math.Abs((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal)), i);
-                //p[i] = ((negativeScore[i]) - (positiveScore[i]), i);
+                //p[i] = (Math.Abs((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal)), i);
+                p[i] = (negativeScore[i] - positiveScore[i], i);
+                //p[i] = (positiveScore[i] - negativeScore[i], i);
+                //p[i] = (Math.Abs(negativeScore[i] - positiveScore[i]), i);
             }
             return p;
         }

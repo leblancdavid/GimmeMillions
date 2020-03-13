@@ -29,8 +29,8 @@ namespace ModelTrainer
 
             var model = new MLStockRandomFeatureFastTreeModel();
 
-            var startDate = new DateTime(2010, 1, 1);
-            var endDate = new DateTime(2019, 6, 14);
+            var startDate = new DateTime(2005, 1, 1);
+            var endDate = new DateTime(2020, 3, 1);
             var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
             var filteredDataset = dataset.Value;
@@ -42,7 +42,7 @@ namespace ModelTrainer
             model.Parameters.PcaRank = 200;
             model.Parameters.FeatureSelectionRank = 1000;
             model.Parameters.NumIterations = 1;
-            model.Parameters.NumCrossValidations = 8;
+            model.Parameters.NumCrossValidations = 5;
             model.Parameters.NumOfTrees = 50;
             model.Parameters.NumOfLeaves = 10;
             model.Parameters.MinNumOfLeaves = 1;

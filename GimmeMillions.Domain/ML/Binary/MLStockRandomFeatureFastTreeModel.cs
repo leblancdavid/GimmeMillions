@@ -194,13 +194,14 @@ namespace GimmeMillions.Domain.ML.Binary
             //   .Fit(normalizedData);
             //var featureSelectedData = featureSelector.Transform(normalizedData);
 
-            var pipeline = _mLContext.Transforms.NormalizeSupervisedBinning("Features")
-                .Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.PcaRank, overSampling: Parameters.PcaRank))
+            var pipeline = new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank)
+                .Append(_mLContext.Transforms.NormalizeSupervisedBinning("Features"))
+                //.Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.PcaRank, overSampling: Parameters.PcaRank))
                 //.Append(new MaxVarianceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank))
                 //.Append(_mLContext.Transforms.ProjectToPrincipalComponents(""))
                    .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
-                   //.Append(_mLContext.BinaryClassification.Trainers.SdcaLogisticRegression());
-                   .Append(_mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression());
+                   .Append(_mLContext.BinaryClassification.Trainers.SdcaLogisticRegression());
+                   //.Append(_mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression());
                    //.Append(_mLContext.BinaryClassification.Trainers.FastTree(
                    //    numberOfLeaves: Parameters.NumOfLeaves,
                    //    numberOfTrees: Parameters.NumOfTrees,
