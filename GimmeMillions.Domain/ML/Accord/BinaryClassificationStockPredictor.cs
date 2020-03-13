@@ -20,7 +20,7 @@ namespace GimmeMillions.Domain.ML.Accord
     public class AccordClassificationStockPredictor : IStockPredictionModel
     {
         private int _rank = 500;
-        private int _pcaRank = 300;
+        private int _pcaRank = 400;
         private IDataTransformer _filterTransformer;
         private IDataTransformer _supervisedNormalizer;
         private PrincipalComponentAnalysis _pca;
