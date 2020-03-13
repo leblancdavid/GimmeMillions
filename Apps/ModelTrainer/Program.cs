@@ -2,6 +2,7 @@
 using GimmeMillions.DataAccess.Features;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.ML.Accord;
 using GimmeMillions.Domain.ML.Binary;
 using System;
 using System.Collections.Generic;
@@ -27,30 +28,30 @@ namespace ModelTrainer
             string stock = "AMZN";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
-            var model = new MLStockRandomFeatureFastTreeModel();
-
+            //var model = new MLStockRandomFeatureFastTreeModel();
+            var model = new AccordClassificationStockPredictor();
             var startDate = new DateTime(2005, 1, 1);
             var endDate = new DateTime(2020, 3, 1);
             var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
             var filteredDataset = dataset.Value;
-            int numTestExamples = 60;
+            int numTestExamples = 30;
 
             var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
             var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
 
-            model.Parameters.PcaRank = 200;
-            model.Parameters.FeatureSelectionRank = 1000;
-            model.Parameters.NumIterations = 1;
-            model.Parameters.NumCrossValidations = 5;
-            model.Parameters.NumOfTrees = 50;
-            model.Parameters.NumOfLeaves = 10;
-            model.Parameters.MinNumOfLeaves = 1;
+            //model.Parameters.PcaRank = 200;
+            //model.Parameters.FeatureSelectionRank = 1000;
+            //model.Parameters.NumIterations = 1;
+            //model.Parameters.NumCrossValidations = 5;
+            //model.Parameters.NumOfTrees = 50;
+            //model.Parameters.NumOfLeaves = 10;
+            //model.Parameters.MinNumOfLeaves = 1;
 
-            Console.WriteLine($"-=== Training ===-");
-            Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank} \t PCA: { model.Parameters.PcaRank}");
-            Console.WriteLine($"Number of Trees: { model.Parameters.NumOfTrees} \t Number of Leaves: { model.Parameters.NumOfLeaves}");
-            Console.WriteLine($"Pca Rank: {model.Parameters.PcaRank}");
+            //Console.WriteLine($"-=== Training ===-");
+            //Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank} \t PCA: { model.Parameters.PcaRank}");
+            //Console.WriteLine($"Number of Trees: { model.Parameters.NumOfTrees} \t Number of Leaves: { model.Parameters.NumOfLeaves}");
+            //Console.WriteLine($"Pca Rank: {model.Parameters.PcaRank}");
             Stopwatch stopwatch = Stopwatch.StartNew();
             var trainingResult = model.Train(trainingSet, 0.0);
             stopwatch.Stop();
@@ -75,11 +76,17 @@ namespace ModelTrainer
             double accuracy = 0.0;
             foreach (var testExample in testSet)
             {
-                var prediction = model.Predict(testExample.Input); 
-                if ((prediction.IsSuccess && prediction.Value.PredictedLabel && testExample.Output.PercentDayChange > 0) ||
-                    (prediction.IsSuccess && !prediction.Value.PredictedLabel && testExample.Output.PercentDayChange <= 0))
+                var prediction = model.Predict(testExample.Input);
+               if ((prediction.PredictedLabel && testExample.Output.PercentDayChange > 0) ||
+                    (!prediction.PredictedLabel && testExample.Output.PercentDayChange <= 0))
                 {
                     accuracy++;
+                    Console.WriteLine($"Good! Probability: {prediction.Probability}");
+
+                }
+               else
+                {
+                    Console.WriteLine($"Bad! Probability: {prediction.Probability}");
                 }
             }
 

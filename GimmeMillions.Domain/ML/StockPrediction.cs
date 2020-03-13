@@ -2,8 +2,8 @@
 {
     public class StockPrediction
     {
-        public float Score { get; set; }
+        public double Score { get; set; }
         public bool PredictedLabel { get; set; }
-        public float Probability { get; set; }
+        public double Probability { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.ML.Binary;
 using GimmeMillions.Domain.Stocks;
 using Microsoft.ML;
 using Microsoft.ML.Data;
@@ -159,6 +160,26 @@ namespace GimmeMillions.Domain.ML
 
             return Result.Ok(new TrainingResult());
 
+        }
+
+        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Result<StockPrediction> Predict(FeatureVector Input)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Result Load(string pathToModel, string symbol, string encoding)
+        {
+            throw new NotImplementedException();
+        }
+
+        StockPrediction IStockPredictionModel.Predict(FeatureVector Input)
+        {
+            throw new NotImplementedException();
         }
     }
 }

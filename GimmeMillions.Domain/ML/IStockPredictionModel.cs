@@ -1,4 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
+using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.ML.Binary;
+using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +15,9 @@ namespace GimmeMillions.Domain.ML
         string StockSymbol { get; }
         bool IsTrained { get; }
 
-        Result<TrainingResult> Train(DateTime startDate, DateTime endDate, double testFraction);
-        Result<StockPrediction> Predict(DateTime date);
-        Result<StockPrediction> PredictLatest();
+        Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction);
+        StockPrediction Predict(FeatureVector Input);
         Result Save(string pathToModel);
-        Result Load(string pathToModel);
+        Result Load(string pathToModel, string symbol, string encoding);
     }
 }
