@@ -51,6 +51,51 @@ namespace GimmeMillions.DataAccess.Tests.Features
         }
 
         [Fact]
+        public void ShouldAddFeatureDictionary_USA_NoShortWords()
+        {
+            var featureChecker = new UsaLanguageChecker();
+            featureChecker.Load(new StreamReader($"{_pathToLanguage}/usa-no-small-words.txt"));
+
+            int index = 0;
+            var featureDictionary = new FeaturesDictionary();
+            featureDictionary.DictionaryId = "USA-f2";
+            foreach (var word in featureChecker.LanguageSet)
+            {
+                featureDictionary[word] = index;
+                index++;
+            }
+
+            var repo = new FeatureDictionaryJsonRepository(_pathToDictionary);
+            var result = repo.AddOrUpdate(featureDictionary);
+
+
+            result.IsSuccess.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ShouldAddFeatureDictionary_Google_medium_and_large_words()
+        {
+            var featureChecker = new UsaLanguageChecker();
+            featureChecker.Load(new StreamReader($"{_pathToLanguage}/google-10000-english-usa-no-swears-medium+long.txt"));
+
+            int index = 0;
+            var featureDictionary = new FeaturesDictionary();
+            featureDictionary.DictionaryId = "Google-M+L";
+            foreach (var word in featureChecker.LanguageSet)
+            {
+                featureDictionary[word] = index;
+                index++;
+            }
+
+            var repo = new FeatureDictionaryJsonRepository(_pathToDictionary);
+            var result = repo.AddOrUpdate(featureDictionary);
+
+
+            result.IsSuccess.Should().BeTrue();
+        }
+
+
+        [Fact]
         public void ShouldGetFeatureDictionary()
         {
             var repo = new FeatureDictionaryJsonRepository(_pathToDictionary);

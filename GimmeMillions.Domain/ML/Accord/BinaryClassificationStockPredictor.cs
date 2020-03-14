@@ -19,7 +19,7 @@ namespace GimmeMillions.Domain.ML.Accord
 {
     public class AccordClassificationStockPredictor : IStockPredictionModel
     {
-        private int _rank = 500;
+        private int _rank = 485;
         private int _pcaRank = 400;
         private IDataTransformer _filterTransformer;
         private IDataTransformer _supervisedNormalizer;
@@ -63,7 +63,7 @@ namespace GimmeMillions.Domain.ML.Accord
             var trainer = new SequentialMinimalOptimization<Gaussian>()
             {
                 UseComplexityHeuristic = true,
-                UseKernelEstimation = true // estimate the kernel from the data
+                UseKernelEstimation = false // estimate the kernel from the data
             };
 
             // Create a new Cross-validation algorithm passing the data set size and the number of folds
@@ -207,7 +207,7 @@ namespace GimmeMillions.Domain.ML.Accord
                 //p[i] = ((negativeScore[i] - positiveScore[i]) / (positiveVar[i] + negativeVar[i]), i);
                 //p[i] = ((float)Math.Abs(negativeAvg[i] - positiveAvg[i]) / (positiveVar[i] + negativeVar[i]), i);
                 p[i] = ((negativeScore[i] - positiveScore[i]), i);
-                //p[i] = ((float)(negativeScore[i]), i);
+                //p[i] = ((negativeScore[i]), i);
                 //p[i] = ((float)(positiveScore[i]), i);
                 //p[i] = ((float)(positiveAvg[i] - negativeAvg[i]), i);
                 //p[i] = ((float)Math.Abs(positiveAvg[i] - negativeAvg[i]), i);
@@ -229,7 +229,7 @@ namespace GimmeMillions.Domain.ML.Accord
             //var variances = GetAbsoluteVariance(inputs, outputs); 
             //var orderedDifferences = variances.OrderByDescending(x => x.Variance).ToList();
 
-            var indicesToKeep = orderedDifferences.Skip(rank).Take(rank).Select(x => x.Index);
+            var indicesToKeep = orderedDifferences.Take(rank).Select(x => x.Index);
             return indicesToKeep.ToArray();
         }
 
@@ -280,16 +280,16 @@ namespace GimmeMillions.Domain.ML.Accord
                 {
                     if (outputs[j] > 0)
                     {
-                        statistics[i].pStdev += (float)Math.Pow(inputs[j][i] - statistics[i].pMean, 2.0);
+                        statistics[i].pStdev += Math.Pow(inputs[j][i] - statistics[i].pMean, 2.0);
                     }
                     else
                     {
-                        statistics[i].nStdev += (float)Math.Pow(inputs[j][i] - statistics[i].nMean, 2.0);
+                        statistics[i].nStdev += Math.Pow(inputs[j][i] - statistics[i].nMean, 2.0);
                     }
                 }
 
-                statistics[i].pStdev = (float)Math.Sqrt(statistics[i].pStdev / positiveTotal);
-                statistics[i].nStdev = (float)Math.Sqrt(statistics[i].nStdev / negativeTotal);
+                statistics[i].pStdev = Math.Sqrt(statistics[i].pStdev / positiveTotal);
+                statistics[i].nStdev = Math.Sqrt(statistics[i].nStdev / negativeTotal);
             }
 
             return statistics;

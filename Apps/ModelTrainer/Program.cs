@@ -24,7 +24,7 @@ namespace ModelTrainer
         static string _pathToModels = "../../../../Repository/Models";
         static void Main(string[] args)
         {
-            string dictionaryToUse = "USA";
+            string dictionaryToUse = "Google-M+L";
             string stock = "AMZN";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
@@ -35,7 +35,7 @@ namespace ModelTrainer
             var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
             var filteredDataset = dataset.Value;
-            int numTestExamples = 30;
+            int numTestExamples = 60;
 
             var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
             var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
