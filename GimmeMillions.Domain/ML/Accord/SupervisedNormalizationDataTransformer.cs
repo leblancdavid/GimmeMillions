@@ -48,7 +48,9 @@ namespace GimmeMillions.Domain.ML.Accord
                 {
                     neg = 0.0;
                 }
-                normalized[j] = Math.Abs(pos) - Math.Abs(neg);
+                normalized[j] = pos + neg;
+                //normalized[j] = neg;
+                //normalized[j] = pos;
             }
             return normalized;
         }

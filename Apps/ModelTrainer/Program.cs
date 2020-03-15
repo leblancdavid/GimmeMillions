@@ -24,18 +24,18 @@ namespace ModelTrainer
         static string _pathToModels = "../../../../Repository/Models";
         static void Main(string[] args)
         {
-            string dictionaryToUse = "Google-M+L";
-            string stock = "AMZN";
+            string dictionaryToUse = "USA";
+            string stock = "F";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
             //var model = new MLStockRandomFeatureFastTreeModel();
             var model = new AccordClassificationStockPredictor();
-            var startDate = new DateTime(2005, 1, 1);
+            var startDate = new DateTime(2000, 1, 1);
             var endDate = new DateTime(2020, 3, 1);
             var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
             var filteredDataset = dataset.Value;
-            int numTestExamples = 60;
+            int numTestExamples = 30;
 
             var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
             var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);

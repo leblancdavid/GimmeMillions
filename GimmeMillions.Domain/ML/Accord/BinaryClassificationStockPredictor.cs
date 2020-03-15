@@ -19,7 +19,7 @@ namespace GimmeMillions.Domain.ML.Accord
 {
     public class AccordClassificationStockPredictor : IStockPredictionModel
     {
-        private int _rank = 485;
+        private int _rank = 500;
         private int _pcaRank = 400;
         private IDataTransformer _filterTransformer;
         private IDataTransformer _supervisedNormalizer;
@@ -43,6 +43,14 @@ namespace GimmeMillions.Domain.ML.Accord
                     _filterTransformer.Transform(
                         inputData)));
 
+            //var transformed = _pca.Transform(
+            //        _filterTransformer.Transform(
+            //            inputData));
+
+            //var transformed = _lda.Transform(
+            //        _filterTransformer.Transform(
+            //            inputData));
+
             return new StockPrediction()
             {
                 PredictedLabel = _svm.Decide(transformed),
@@ -63,28 +71,18 @@ namespace GimmeMillions.Domain.ML.Accord
             var trainer = new SequentialMinimalOptimization<Gaussian>()
             {
                 UseComplexityHeuristic = true,
-                UseKernelEstimation = false // estimate the kernel from the data
+                UseKernelEstimation = true // estimate the kernel from the data
             };
 
-            // Create a new Cross-validation algorithm passing the data set size and the number of folds
-            //var crossvalidation = new CrossValidation<SupportVectorMachine<Gaussian, double[]>, double[]>()
-            //{
-            //    K = 5,
-            //    Learner = (s) => new SequentialMinimalOptimization<Gaussian, double[]>()
-            //    {
-            //        UseKernelEstimation = true,
-            //        UseComplexityHeuristic = true,
-            //    },
-            //    Loss = (expected, actual, p) => new ZeroOneLoss(expected).Loss(actual),
-            //    Stratify = false
-            //};
-            //crossvalidation.ParallelOptions.MaxDegreeOfParallelism = 4;
+            
 
-            var outputs = dataset.Select(x => x.Output.PercentDayChange >= 0 ? 1 : -1).ToArray();
+            var outputs = dataset.Select(x => x.Output.PercentDayChange >= 0 ? 1 : 0).ToArray();
             var inputs = GetSupervisedNormalizedFeatures(
                 GetFilteredFeatures(dataset.Select(x => Array.ConvertAll(x.Input.Data, y => (double)y)).ToArray(), outputs, _rank),
                 outputs);
 
+            //var inputs = GetFilteredFeatures(dataset.Select(x => Array.ConvertAll(x.Input.Data, y => (double)y)).ToArray(), outputs, _rank);
+            
             _pca = new PrincipalComponentAnalysis()
             {
                 Method = PrincipalComponentMethod.Center,
@@ -94,17 +92,38 @@ namespace GimmeMillions.Domain.ML.Accord
             _pca.NumberOfOutputs = _pcaRank;
             var pcaTransformed = _pca.Transform(inputs);
 
+            //_lda = new LinearDiscriminantAnalysis();
+            //_lda.Learn(inputs, outputs);
+            //var ldaTransformed = _lda.Transform(inputs);
+
             // Compute the cross-validation
+            // Create a new Cross-validation algorithm passing the data set size and the number of folds
+            var crossvalidation = new CrossValidation<SupportVectorMachine<Gaussian, double[]>, double[]>()
+            {
+                K = 5,
+                Learner = (s) => new SequentialMinimalOptimization<Gaussian, double[]>()
+                {
+                    UseKernelEstimation = true,
+                    UseComplexityHeuristic = true,
+                },
+                Loss = (expected, actual, p) => new ZeroOneLoss(expected).Loss(actual),
+                Stratify = false
+            };
+            crossvalidation.ParallelOptions.MaxDegreeOfParallelism = 4;
+            var results = crossvalidation.Learn(pcaTransformed, outputs);
+
             _svm = trainer.Learn(pcaTransformed, outputs);
 
             // If desired, compute an aggregate confusion matrix for the validation sets:
-            //GeneralConfusionMatrix gcm = result.To(pcaTransformed, outputs);
-            //double accuracy = gcm.Accuracy;
-            //double error = gcm.Error;
+            GeneralConfusionMatrix gcm = results.ToConfusionMatrix(pcaTransformed, outputs);
 
             return Result.Ok(new ModelMetrics()
             {
-                Accuracy = 1.0,
+                Accuracy = gcm.Accuracy,
+                PositivePrecision = gcm.Precision[0],
+                PositiveRecall = gcm.Recall[0],
+                NegativePrecision = gcm.Precision[1],
+                NegativeRecall = gcm.Recall[1]
             });
 
         }
@@ -155,7 +174,7 @@ namespace GimmeMillions.Domain.ML.Accord
             var positiveVar = new double[featureLength];
             var negativeVar = new double[featureLength];
             double negativeTotal = outputs.Sum(x => x > 0 ? 1.0 : 0.0),
-                positiveTotal = outputs.Sum(x => x < 0 ? 1.0 : 0.0);
+                positiveTotal = outputs.Sum(x => x < 1 ? 1.0 : 0.0);
 
             for (int i = 0; i < featureLength; ++i)
             {
@@ -166,15 +185,15 @@ namespace GimmeMillions.Domain.ML.Accord
                 {
                     if (outputs[j] > 0)
                     {
-                        positiveScore[i] += inputs[j][i];
-                        //if (inputs[j][i] > 0.0)
-                        //    positiveScore[i]++;
+                        //positiveScore[i] += inputs[j][i];
+                        if (inputs[j][i] > 0.0)
+                            positiveScore[i]++;
                     }
                     else
                     {
-                        negativeScore[i] += inputs[j][i];
-                        //if (inputs[j][i] > 0.0)
-                        //    negativeScore[i]++;
+                        //negativeScore[i] += inputs[j][i];
+                        if (inputs[j][i] > 0.0)
+                            negativeScore[i]++;
                     }
                 }
             }
@@ -203,14 +222,14 @@ namespace GimmeMillions.Domain.ML.Accord
                 positiveVar[i] = Math.Sqrt(positiveVar[i] / positiveTotal);
                 negativeVar[i] = Math.Sqrt(negativeVar[i] / negativeTotal);
 
-                //p[i] = ((float)(positiveAvg[i] - negativeAvg[i]) / (positiveVar[i] + negativeVar[i]), i);
+                //p[i] = ((float)(positiveScore[i] - negativeScore[i]) / (positiveVar[i] + negativeVar[i]), i);
                 //p[i] = ((negativeScore[i] - positiveScore[i]) / (positiveVar[i] + negativeVar[i]), i);
                 //p[i] = ((float)Math.Abs(negativeAvg[i] - positiveAvg[i]) / (positiveVar[i] + negativeVar[i]), i);
-                p[i] = ((negativeScore[i] - positiveScore[i]), i);
+                //p[i] = (negativeScore[i] - positiveScore[i], i);
                 //p[i] = ((negativeScore[i]), i);
-                //p[i] = ((float)(positiveScore[i]), i);
-                //p[i] = ((float)(positiveAvg[i] - negativeAvg[i]), i);
-                //p[i] = ((float)Math.Abs(positiveAvg[i] - negativeAvg[i]), i);
+                //p[i] = (positiveScore[i], i);
+                p[i] = (positiveScore[i] - negativeScore[i], i);
+                //p[i] = (Math.Abs(positiveScore[i] - negativeScore[i]), i);
                 if (double.IsNaN(p[i].FeatureDifference))
                 {
                     p[i].FeatureDifference = 0.0;
@@ -229,7 +248,9 @@ namespace GimmeMillions.Domain.ML.Accord
             //var variances = GetAbsoluteVariance(inputs, outputs); 
             //var orderedDifferences = variances.OrderByDescending(x => x.Variance).ToList();
 
-            var indicesToKeep = orderedDifferences.Take(rank).Select(x => x.Index);
+            //var indicesToKeep = orderedDifferences.Take(rank).Select(x => x.Index);
+            int skipUnimportantWords = 0;
+            var indicesToKeep = orderedDifferences.Skip(skipUnimportantWords).Take(rank).Select(x => x.Index);
             return indicesToKeep.ToArray();
         }
 
@@ -254,7 +275,7 @@ namespace GimmeMillions.Domain.ML.Accord
             int featureLength = inputs.First().Length;
             var statistics = new (double pMean, double pStdev, double nMean, double nStdev)[featureLength];
             double negativeTotal = outputs.Sum(x => x > 0 ? 1.0 : 0.0),
-                positiveTotal = outputs.Sum(x => x < 0 ? 1.0 : 0.0);
+                positiveTotal = outputs.Sum(x => x < 1 ? 1.0 : 0.0);
 
             for (int i = 0; i < featureLength; ++i)
             {
