@@ -21,6 +21,7 @@ namespace ModelTrainer
         static string _pathToLanguage = "../../../../Repository/Languages";
         static string _pathToStocks = "../../../../Repository/Stocks";
         static string _pathToCache = "../../../../Repository/Cache";
+        static string _pathToRecommendationConfigs = "../../../../Repository/Recommendations";
         static void Main(string[] args)
         {
             string dictionaryToUse = "USA";
