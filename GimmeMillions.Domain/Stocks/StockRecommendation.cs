@@ -11,6 +11,7 @@ namespace GimmeMillions.Domain.Stocks
     {
         public string Symbol { get; private set; }
         public double RecommendedInvestmentPercentage { get; set; }
+
         public StockPrediction Prediction { get; private set; }
 
         public StockRecommendation(string symbol, StockPrediction prediction)

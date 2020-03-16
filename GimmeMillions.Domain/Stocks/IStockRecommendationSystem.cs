@@ -16,5 +16,7 @@ namespace GimmeMillions.Domain.Stocks
         Result RetrainModels(DateTime startTime, DateTime endTime);
         IEnumerable<StockRecommendation> GetRecommendationsForToday();
         IEnumerable<StockRecommendation> GetRecommendations(DateTime date);
+        IEnumerable<StockRecommendation> GetAllRecommendationsForToday();
+        IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date);
     }
 }

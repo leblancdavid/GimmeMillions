@@ -37,37 +37,37 @@ namespace GimmeMillions.Domain.Stocks
             stockPredictionModel.Save(_pathToModels);
         }
 
-        public IEnumerable<StockRecommendation> GetRecommendations(DateTime date)
+        public IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date)
         {
             var recommendations = new List<StockRecommendation>();
             var feature = _featureDatasetService.GetData(date);
-            if(feature.IsFailure)
+            if (feature.IsFailure)
             {
                 return recommendations;
             }
 
-            var totalScore = 0.0;
-            foreach(var model in _models)
+            foreach (var model in _models)
             {
                 var result = model.Predict(feature.Value);
-                if(result.PredictedLabel)
-                {
-                    totalScore += result.Score;
-                    recommendations.Add(new StockRecommendation(model.StockSymbol, result));
-                }
+                recommendations.Add(new StockRecommendation(model.StockSymbol, result));
             }
 
-            foreach(var recommendation in recommendations)
-            {
-                recommendation.RecommendedInvestmentPercentage = recommendation.Prediction.Score / totalScore;
-            }
+            return recommendations.OrderByDescending(x => x.Prediction.Score);
+        }
 
-            return recommendations.OrderByDescending(x => x.RecommendedInvestmentPercentage);
+        public IEnumerable<StockRecommendation> GetAllRecommendationsForToday()
+        {
+            return GetAllRecommendations(DateTime.Today);
+        }
+
+        public IEnumerable<StockRecommendation> GetRecommendations(DateTime date)
+        {
+            return GetAllRecommendations(date).Where(x => x.Prediction.Score > 0.0);
         }
 
         public IEnumerable<StockRecommendation> GetRecommendationsForToday()
         {
-            return GetRecommendations(DateTime.Today);
+            return GetAllRecommendations(DateTime.Today).Where(x => x.Prediction.Score > 0.0);
         }
 
         public Result LoadConfiguration(string configurationFile)
