@@ -179,8 +179,8 @@ namespace GimmeMillions.Domain.ML.Binary
             var pipeline = _mLContext.Transforms.FeatureSelection.SelectFeaturesBasedOnMutualInformation("Features", slotsInOutput: Parameters.FeatureSelectionRank)
                     .Append(_mLContext.Transforms.NormalizeSupervisedBinning("Features"))
                    .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
-                   .Append(_mLContext.BinaryClassification.Trainers.FastTree(numberOfTrees: Parameters.NumOfTrees, numberOfLeaves: Parameters.NumOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
-
+                   //.Append(_mLContext.BinaryClassification.Trainers.FastTree(numberOfTrees: Parameters.NumOfTrees, numberOfLeaves: Parameters.NumOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
+                   .Append(_mLContext.BinaryClassification.Trainers.SymbolicSgdLogisticRegression());
             if (Parameters.NumCrossValidations > 1)
             {
                 var cvResults = _mLContext.BinaryClassification.CrossValidate(trainData, pipeline, Parameters.NumCrossValidations);
