@@ -178,6 +178,7 @@
     <Compile Include="ML\Binary\MLStockRandomFeatureFastTreeModel.cs" />
     <Compile Include="ML\Binary\ModelMetrics.cs" />
     <Compile Include="ML\Binary\IBinaryStockPredictionModel.cs" />
+    <Compile Include="ML\IStockPredictionModelLoader.cs" />
     <Compile Include="ML\Transforms\MaxDifferenceFeatureFilterEstimator.cs" />
     <Compile Include="ML\Transforms\MaxVarianceFeatureFilterEstimator.cs" />
     <Compile Include="ML\Transforms\PerceptronFeatureSelectionEstimator.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="Stocks\StockData.cs" />
     <Compile Include="Stocks\StockRecommendation.cs" />
     <Compile Include="Stocks\StockRecommendationSystem.cs" />
+    <Compile Include="Stocks\StockRecommendationSystemConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

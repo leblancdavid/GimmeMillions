@@ -56,6 +56,9 @@ namespace GimmeMillions.Domain.ML.Binary
         public string StockSymbol => Metadata.StockSymbol;
 
         public bool IsTrained => Metadata.IsTrained;
+
+        public string Encoding => Metadata.FeatureEncoding;
+
         public MLStockRandomFeatureFastTreeModel()
         {
             Metadata = new BinaryPredictionModelMetadata<RandomFastTreeBinaryModelParameters>();

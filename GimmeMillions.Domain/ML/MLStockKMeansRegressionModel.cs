@@ -21,6 +21,8 @@ namespace GimmeMillions.Domain.ML
         private int _seed;
         public string StockSymbol { get; private set; }
         public bool IsTrained { get; private set; }
+        public string Encoding { get; private set; }
+
         public MLStockKMeansRegressionModel(IFeatureDatasetService featureDatasetService, string symbol)
         {
             StockSymbol = symbol;

@@ -30,6 +30,8 @@ namespace GimmeMillions.Domain.ML.Accord
 
         public bool IsTrained { get; set; }
 
+        public string Encoding { get; set; }
+
         public Result Load(string pathToModel, string symbol, string encoding)
         {
             throw new NotImplementedException();

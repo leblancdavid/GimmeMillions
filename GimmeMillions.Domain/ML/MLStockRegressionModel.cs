@@ -24,7 +24,9 @@ namespace GimmeMillions.Domain.ML
 
         public bool IsTrained { get; private set; }
 
-        public MLStockRegressionModel(IFeatureDatasetService featureDatasetService, string symbol)
+        public string Encoding { get; private set; }
+
+    public MLStockRegressionModel(IFeatureDatasetService featureDatasetService, string symbol)
         {
             StockSymbol = symbol;
             _featureDatasetService = featureDatasetService;

@@ -57,6 +57,8 @@ namespace GimmeMillions.Domain.ML.Binary
 
         public bool IsTrained => Metadata.IsTrained;
 
+        public string Encoding => Metadata.FeatureEncoding;
+
         public MLStockBinaryFastForestModel()
         {
             Metadata = new BinaryPredictionModelMetadata<FastTreeBinaryModelParameters>();
