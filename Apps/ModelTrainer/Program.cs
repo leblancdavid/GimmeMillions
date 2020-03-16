@@ -29,7 +29,7 @@ namespace ModelTrainer
             string dictionaryToUse = "USA";
 
             var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "HPE", "VZ", "S", "MFA", "ADT", "INVA", "LGND", "LXRX", "XBI",
-             "IWM", "AMZN", "GOOG", "AAPL", "VIR", "BNTX", "RAD", "WBA", "TBIO", "DRQ", "CNX", "BOOM", "VNOM"};
+             "IWM", "AMZN", "GOOG", "AAPL", "BNTX", "RAD", "WBA", "TBIO", "DRQ", "CNX", "BOOM", "VNOM"};
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
             var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
