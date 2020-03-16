@@ -67,7 +67,8 @@ namespace GimmeMillions.Domain.Stocks
             return GetRecommendations(DateTime.Today);
         }
 
-        public Result LoadConfiguration(string configurationFile, IStockPredictionModelLoader modelLoader)
+        public Result LoadConfiguration<TModel>(string configurationFile)
+            where TModel : IStockPredictionModel, new()
         {
             if (!File.Exists(configurationFile))
             {
@@ -79,10 +80,15 @@ namespace GimmeMillions.Domain.Stocks
             _models = new List<IStockPredictionModel>();
             foreach (var models in _systemConfiguration.Models)
             {
-                var loadedModel = modelLoader.LoadModel(models.PathToModel, models.Symbol, models.Encoding);
-                if(loadedModel.IsSuccess)
+                var model = new TModel();
+                var loadResult = model.Load(models.PathToModel, models.Symbol, models.Encoding);
+                if (loadResult.IsSuccess)
                 {
-                    _models.Add(loadedModel.Value);
+                    _models.Add(model);
+                }
+                else
+                {
+                    return loadResult;
                 }
             }
 
