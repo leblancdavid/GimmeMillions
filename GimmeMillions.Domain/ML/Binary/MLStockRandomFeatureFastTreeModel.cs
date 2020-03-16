@@ -53,6 +53,9 @@ namespace GimmeMillions.Domain.ML.Binary
         public RandomFastTreeBinaryModelParameters Parameters { get; set; }
         public BinaryPredictionModelMetadata<RandomFastTreeBinaryModelParameters> Metadata { get; private set; }
 
+        public string StockSymbol => Metadata.StockSymbol;
+
+        public bool IsTrained => Metadata.IsTrained;
         public MLStockRandomFeatureFastTreeModel()
         {
             Metadata = new BinaryPredictionModelMetadata<RandomFastTreeBinaryModelParameters>();
@@ -91,7 +94,7 @@ namespace GimmeMillions.Domain.ML.Binary
             }
         }
 
-        public Result<StockPrediction> Predict(FeatureVector input)
+        public StockPrediction Predict(FeatureVector input)
         {
             //Load the data into a view
             var inputDataView = _mLContext.Data.LoadFromEnumerable(
@@ -108,13 +111,13 @@ namespace GimmeMillions.Domain.ML.Binary
             var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
             //var probability = prediction.GetColumn<float>("Probability").ToArray();
 
-            return Result.Ok(new StockPrediction()
+            return new StockPrediction()
             {
                 Score = score[0],
                 PredictedLabel = predictedLabel[0],
                 //Probability = probability[0]
                 Probability = predictedLabel[0] ? 1.0f : 0.0f
-            });
+            };
         }
 
         public Result Save(string pathToModel)

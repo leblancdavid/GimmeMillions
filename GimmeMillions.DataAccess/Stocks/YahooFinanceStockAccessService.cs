@@ -17,6 +17,11 @@ namespace GimmeMillions.DataAccess.Stocks
             _pathToStocks = pathToStocks;
         }
 
+        public IEnumerable<StockData> GetStocks(string symbol)
+        {
+            return _stockRepository.GetStocks(symbol);
+        }
+
         public IEnumerable<StockData> UpdateStocks(string symbol, DateTime startDate, DateTime endDate)
         {
             //F?period1=76204800&period2=1584316800&interval=1d&events=history

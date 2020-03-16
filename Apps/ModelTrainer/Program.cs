@@ -21,7 +21,6 @@ namespace ModelTrainer
         static string _pathToLanguage = "../../../../Repository/Languages";
         static string _pathToStocks = "../../../../Repository/Stocks";
         static string _pathToCache = "../../../../Repository/Cache";
-        static string _pathToModels = "../../../../Repository/Models";
         static void Main(string[] args)
         {
             string dictionaryToUse = "USA";
@@ -107,8 +106,8 @@ namespace ModelTrainer
 
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
-            var stocksRepo = new StockDataRepository(_pathToStocks); 
-            
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
+
             var cache = new FeatureJsonCache(_pathToCache);
 
             return new DefaultFeatureDatasetService(bow, articlesRepo, stocksRepo, cache);
