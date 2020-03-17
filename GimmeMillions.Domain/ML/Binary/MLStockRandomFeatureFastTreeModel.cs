@@ -191,46 +191,19 @@ namespace GimmeMillions.Domain.ML.Binary
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
             Metadata.StockSymbol = firstFeature.Output.Symbol;
 
-            //var normalizer = _mLContext.Transforms.NormalizeSupervisedBinning("Features").Fit(trainData);
-            //var normalizedData = normalizer.Transform(trainData);
-            //var filterFeatures = (FeatureFilterTransform)new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: (int)(firstFeature.Input.Length * 0.75))
-            //   .Fit(trainData);
-            //var filteredData = filterFeatures.Transform(trainData);
-            //var featureSelector = (FeatureFilterTransform)new MaxVarianceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank)
-            //   .Fit(normalizedData);
-            //var featureSelectedData = featureSelector.Transform(normalizedData);
-
-            var pipeline = new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank)
-                .Append(_mLContext.Transforms.NormalizeSupervisedBinning("Features"))
-                //.Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.PcaRank, overSampling: Parameters.PcaRank))
-                //.Append(new MaxVarianceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank))
-                //.Append(_mLContext.Transforms.ProjectToPrincipalComponents(""))
-                   .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
-                   .Append(_mLContext.BinaryClassification.Trainers.SdcaLogisticRegression());
+            var pipeline = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: (int)(firstFeature.Input.Length * 0.5))
+                .Append(new MaxVarianceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank))
+                //.Append(_mLContext.Transforms.NormalizeMinMax("Features"))
+                //.Append(_mLContext.Transforms.NormalizeSupervisedBinning("Features", "Features", "Value", fixZero: false))
+                .Append(_mLContext.Transforms.NormalizeMinMax("Features"))
+                .Append(new PcaEstimator(_mLContext, rank: Parameters.PcaRank))
+                .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
+                .Append(_mLContext.BinaryClassification.Trainers.SymbolicSgdLogisticRegression());
                    //.Append(_mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression());
                    //.Append(_mLContext.BinaryClassification.Trainers.FastTree(
                    //    numberOfLeaves: Parameters.NumOfLeaves,
                    //    numberOfTrees: Parameters.NumOfTrees,
                    //    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
-
-            //var pipeline = _mLContext.Transforms.NormalizeSupervisedBinning("Features")
-            //        .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
-            //        //.Append(_mLContext.Transforms.NormalizeMinMax("Features"))
-            //        //.Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek"))
-            //        //.Append(_mLContext.Transforms.NormalizeMinMax("Features"))
-            //        //.Append(_mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 25));
-            //        //.Append(_mLContext.BinaryClassification.Trainers.SdcaLogisticRegression());
-            //        //.Append(_mLContext.BinaryClassification.Trainers.AveragedPerceptron());
-            //        //.Append(_mLContext.BinaryClassification.Trainers.SymbolicSgdLogisticRegression());
-            //        //.Append(_mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression());
-            //        .Append(_mLContext.BinaryClassification.Trainers.FastTree(
-            //            numberOfLeaves: Parameters.NumOfLeaves,
-            //            numberOfTrees: Parameters.NumOfTrees,
-            //            minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
-            //.Append(_mLContext.BinaryClassification.Trainers.FastForest(
-            //    numberOfLeaves: numberOfLeaves,
-            //    numberOfTrees: numberOfTrees,
-            //    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
 
             if (Parameters.NumCrossValidations > 1)
             {

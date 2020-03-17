@@ -40,7 +40,8 @@ namespace ModelTrainer
             double totalCount = 0.0, totalAccuracy = 0.0;
             foreach(var stock in stocks)
             {
-                var model = new MLStockBinaryFastForestModel();
+                //var model = new MLStockBinaryFastForestModel();
+                var model = new MLStockRandomFeatureFastTreeModel();
                 var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
                 var filteredDataset = dataset.Value;
@@ -49,8 +50,8 @@ namespace ModelTrainer
                 var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
                 var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
 
-                model.Parameters.PcaRank = 200;
-                model.Parameters.FeatureSelectionRank = 2000;
+                model.Parameters.PcaRank = 800;
+                model.Parameters.FeatureSelectionRank = 1000;
                 model.Parameters.NumIterations = 1;
                 model.Parameters.NumCrossValidations = 0;
                 model.Parameters.NumOfTrees = 100;
@@ -77,8 +78,9 @@ namespace ModelTrainer
                 //Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
                 //Console.WriteLine($"Positive Precision: {trainingResult.Value.PositivePrecision} \t Positive Recall: {trainingResult.Value.PositiveRecall}");
                 //Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Negative Recall: {trainingResult.Value.NegativeRecall}");
-                Console.WriteLine($"-=== Saving Model {stock} ===-");
-                model.Save(_pathToModels);
+
+                //Console.WriteLine($"-=== Saving Model {stock} ===-");
+                //model.Save(_pathToModels);
 
                 Console.WriteLine($"-=== Testing Model  {stock} ===-");
                 double accuracy = 0.0;
