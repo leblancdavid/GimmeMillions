@@ -16,7 +16,7 @@ namespace GimmeMillions.Domain.ML.Binary
         BinaryPredictionModelMetadata<TParams> Metadata { get; }
 
         Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction);
-        Result<StockPrediction> Predict(FeatureVector Input);
+        StockPrediction Predict(FeatureVector Input);
         Result Save(string pathToModel);
         Result Load(string pathToModel, string symbol, string encoding);
     }

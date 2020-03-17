@@ -34,8 +34,8 @@ namespace GimmeMillions.Domain.ML.Binary
             NumOfLeaves = 20;
             MinNumOfLeaves = 1;
 
-            PcaRank = 20;
-            FeatureSelectionRank = 100;
+            PcaRank = 100;
+            FeatureSelectionRank = 500;
         }
 
     }
@@ -91,7 +91,7 @@ namespace GimmeMillions.Domain.ML.Binary
             }
         }
 
-        public Result<StockPrediction> Predict(FeatureVector input)
+        public StockPrediction Predict(FeatureVector input)
         {
             //Load the data into a view
             var inputDataView = _mLContext.Data.LoadFromEnumerable(
@@ -106,15 +106,15 @@ namespace GimmeMillions.Domain.ML.Binary
 
             var score = prediction.GetColumn<float>("Score").ToArray();
             var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
-            //var probability = prediction.GetColumn<float>("Probability").ToArray();
+            var probability = prediction.GetColumn<float>("Probability").ToArray();
 
-            return Result.Ok(new StockPrediction()
+            return new StockPrediction()
             {
                 Score = score[0],
                 PredictedLabel = predictedLabel[0],
-                //Probability = probability[0]
-                Probability = predictedLabel[0] ? 1.0f : 0.0f
-            });
+                Probability = probability[0]
+                //Probability = predictedLabel[0] ? 1.0f : 0.0f
+            };
         }
 
         public Result Save(string pathToModel)

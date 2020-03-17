@@ -25,11 +25,11 @@ namespace ModelTrainer
         static void Main(string[] args)
         {
             string dictionaryToUse = "USA";
-            string stock = "F";
+            string stock = "S";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
-            //var model = new MLStockRandomFeatureFastTreeModel();
-            var model = new AccordClassificationStockPredictor();
+            var model = new MLStockRandomFeatureFastTreeModel();
+            //var model = new AccordClassificationStockPredictor();
             var startDate = new DateTime(2000, 1, 1);
             var endDate = new DateTime(2020, 3, 1);
             var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
@@ -40,13 +40,13 @@ namespace ModelTrainer
             var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
             var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
 
-            //model.Parameters.PcaRank = 200;
-            //model.Parameters.FeatureSelectionRank = 1000;
-            //model.Parameters.NumIterations = 1;
-            //model.Parameters.NumCrossValidations = 5;
-            //model.Parameters.NumOfTrees = 50;
-            //model.Parameters.NumOfLeaves = 10;
-            //model.Parameters.MinNumOfLeaves = 1;
+            model.Parameters.PcaRank = 200;
+            model.Parameters.FeatureSelectionRank = 500;
+            model.Parameters.NumIterations = 1;
+            model.Parameters.NumCrossValidations = 5;
+            model.Parameters.NumOfTrees = 50;
+            model.Parameters.NumOfLeaves = 10;
+            model.Parameters.MinNumOfLeaves = 1;
 
             //Console.WriteLine($"-=== Training ===-");
             //Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank} \t PCA: { model.Parameters.PcaRank}");

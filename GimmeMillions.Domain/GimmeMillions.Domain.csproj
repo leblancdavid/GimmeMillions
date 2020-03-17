@@ -180,6 +180,8 @@
     <Compile Include="ML\Binary\IBinaryStockPredictionModel.cs" />
     <Compile Include="ML\Transforms\MaxDifferenceFeatureFilterEstimator.cs" />
     <Compile Include="ML\Transforms\MaxVarianceFeatureFilterEstimator.cs" />
+    <Compile Include="ML\Transforms\PcaEstimator.cs" />
+    <Compile Include="ML\Transforms\PcaTransform.cs" />
     <Compile Include="ML\Transforms\PerceptronFeatureSelectionEstimator.cs" />
     <Compile Include="ML\Transforms\ProbabilityFeatureFilterEstimator.cs" />
     <Compile Include="ML\Transforms\BinaryClassificationFeatureVector.cs" />
