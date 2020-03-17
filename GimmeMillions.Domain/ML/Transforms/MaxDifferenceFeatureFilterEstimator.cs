@@ -60,25 +60,34 @@ namespace GimmeMillions.Domain.ML.Transforms
             var negativeScore = new float[featureLength];
             float negativeTotal = labels.Sum(x => !x ? 1.0f: 0.0f), 
                 positiveTotal = labels.Sum(x => x ? 1.0f : 0.0f);
+            if(negativeTotal > positiveTotal)
+            {
+                Console.WriteLine("!!!Mostly negative!!!");
+            }
+            else
+            {
+                Console.WriteLine("!!!Mostly positive!!!");
+            }
+
 
             for (int i = 0; i < featureLength; ++i)
             {
                 //Initialize with a 1
-                positiveScore[i] = 1.0f;
-                negativeScore[i] = 1.0f;
+                //positiveScore[i] = 1.0f;
+                //negativeScore[i] = 1.0f;
                 for (int j = 0; j < features.Length; ++j)
                 {
                     if (labels[j])
                     {
-                        //positiveScore[i] += features[j][i];
-                        if (features[j][i] > 0.0f)
-                            positiveScore[i]++;
+                        positiveScore[i] += features[j][i];
+                        //if (features[j][i] > 0.0f)
+                        //    positiveScore[i]++;
                     }
                     else
                     {
-                        //negativeScore[i] += features[j][i];
-                        if (features[j][i] > 0.0f)
-                            negativeScore[i]++;
+                        negativeScore[i] += features[j][i];
+                        //if (features[j][i] > 0.0f)
+                        //    negativeScore[i]++;
                     }
                 }
             }
@@ -86,7 +95,11 @@ namespace GimmeMillions.Domain.ML.Transforms
             var p = new (float FeatureDifference, int Index)[positiveScore.Length];
             for (int i = 0; i < p.Length; ++i)
             {
-                p[i] = (Math.Abs((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal)), i);
+                //p[i] = ((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal), i);
+                if(negativeTotal > positiveTotal)
+                    p[i] = ((positiveScore[i] / positiveTotal) - (negativeScore[i] / negativeTotal), i);
+                else
+                    p[i] = ((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal), i);
                 //p[i] = (negativeScore[i] - positiveScore[i], i);
                 //p[i] = (positiveScore[i] - negativeScore[i], i);
                 //p[i] = (Math.Abs(negativeScore[i] - positiveScore[i]), i);

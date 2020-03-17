@@ -28,8 +28,8 @@ namespace ModelTrainer
         {
             string dictionaryToUse = "USA";
 
-            var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "HPE", "VZ", "S", "MFA", "ADT", "INVA", "LGND", "LXRX", "XBI",
-             "IWM", "AMZN", "GOOG", "AAPL", "BNTX", "RAD", "WBA", "TBIO", "DRQ", "CNX", "BOOM", "VNOM"};
+            var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "VZ", "S", "INVA", "LGND", "LXRX", "XBI",
+             "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM"};
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
             var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
@@ -50,13 +50,13 @@ namespace ModelTrainer
                 var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
                 var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
 
-                model.Parameters.PcaRank = 50;
+                model.Parameters.PcaRank = 100;
                 model.Parameters.FeatureSelectionRank = 100;
                 model.Parameters.NumIterations = 1;
-                model.Parameters.NumCrossValidations = 4;
-                model.Parameters.NumOfTrees = 100;
-                model.Parameters.NumOfLeaves = 20;
-                model.Parameters.MinNumOfLeaves = 10;
+                model.Parameters.NumCrossValidations = 0;
+                model.Parameters.NumOfTrees = 2000;
+                model.Parameters.NumOfLeaves = 25;
+                model.Parameters.MinNumOfLeaves = 1;
 
                 Console.WriteLine($"-=== Training {stock} ===-");
                 Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank}");
@@ -75,9 +75,9 @@ namespace ModelTrainer
                 }
 
                 //Console.WriteLine($"-=== Results {stock} ===-");
-                Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
-                Console.WriteLine($"Positive Precision: {trainingResult.Value.PositivePrecision} \t Positive Recall: {trainingResult.Value.PositiveRecall}");
-                Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Negative Recall: {trainingResult.Value.NegativeRecall}");
+                //Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
+                //Console.WriteLine($"Positive Precision: {trainingResult.Value.PositivePrecision} \t Positive Recall: {trainingResult.Value.PositiveRecall}");
+                //Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Negative Recall: {trainingResult.Value.NegativeRecall}");
 
                 //Console.WriteLine($"-=== Saving Model {stock} ===-");
                 //model.Save(_pathToModels);
