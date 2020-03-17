@@ -193,17 +193,19 @@ namespace GimmeMillions.Domain.ML.Binary
 
             var pipeline = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: (int)(firstFeature.Input.Length * 0.5))
                 .Append(new MaxVarianceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank))
+                //.Append(_mLContext.Transforms.Conversion.MapKeyToValue("Label", "Value"))
                 //.Append(_mLContext.Transforms.NormalizeMinMax("Features"))
-                //.Append(_mLContext.Transforms.NormalizeSupervisedBinning("Features", "Features", "Value", fixZero: false))
-                .Append(_mLContext.Transforms.NormalizeMinMax("Features"))
+                //.Append(new SupervisedNormalizerEstimator(_mLContext))
+                //.Append(_mLContext.Transforms.NormalizeSupervisedBinning("Features", "Features", "DayOfTheWeek", fixZero: false))
+                //.Append(_mLContext.Transforms.NormalizeMinMax("Features"))
                 .Append(new PcaEstimator(_mLContext, rank: Parameters.PcaRank))
                 .Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
-                .Append(_mLContext.BinaryClassification.Trainers.SymbolicSgdLogisticRegression());
+                //.Append(_mLContext.BinaryClassification.Trainers.SymbolicSgdLogisticRegression());
                    //.Append(_mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression());
-                   //.Append(_mLContext.BinaryClassification.Trainers.FastTree(
-                   //    numberOfLeaves: Parameters.NumOfLeaves,
-                   //    numberOfTrees: Parameters.NumOfTrees,
-                   //    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
+                   .Append(_mLContext.BinaryClassification.Trainers.FastTree(
+                       numberOfLeaves: Parameters.NumOfLeaves,
+                       numberOfTrees: Parameters.NumOfTrees,
+                       minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
 
             if (Parameters.NumCrossValidations > 1)
             {

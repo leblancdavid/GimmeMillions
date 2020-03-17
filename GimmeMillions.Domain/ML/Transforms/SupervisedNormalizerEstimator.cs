@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Transforms
 {
-    public class SupervisedNormalizerEstimator : IEstimator<ITransformer>
+    public class SupervisedNormalizerEstimator : IEstimator<SupervisedNormalizerTransform>
     {
         private string _inputColumnName;
         private string _outputColumnName;
@@ -23,7 +23,7 @@ namespace GimmeMillions.Domain.ML.Transforms
             _mLContext = mLContext;
         }
 
-        public ITransformer Fit(IDataView input)
+        public SupervisedNormalizerTransform Fit(IDataView input)
         {
             return new SupervisedNormalizerTransform(_mLContext, ComputeDataStatistics(input), _inputColumnName, _outputColumnName);
         }

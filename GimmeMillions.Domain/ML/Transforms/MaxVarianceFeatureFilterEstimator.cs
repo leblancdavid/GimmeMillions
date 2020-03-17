@@ -109,9 +109,19 @@ namespace GimmeMillions.Domain.ML.Transforms
                 //if(positiveTotal < negativeTotal)
                 //    p[i] = ((float)(negativeAvg[i] - positiveAvg[i]) / (positiveVar[i] + negativeVar[i]), i);
                 //else
-                    p[i] = ((float)(positiveAvg[i] - negativeAvg[i]) / (positiveVar[i] + negativeVar[i]), i);
+                //p[i] = ((float)(positiveAvg[i] - negativeAvg[i]) / (positiveVar[i] + negativeVar[i]), i);
                 //p[i] = ((float)Math.Abs(negativeAvg[i] - positiveAvg[i]) / (positiveVar[i] + negativeVar[i]), i);
-                //p[i] = ((float)(negativeAvg[i] - positiveAvg[i]), i);
+                //if (positiveTotal < negativeTotal)
+                //{
+                //    //p[i] = ((float)(negativeAvg[i] - positiveAvg[i]), i);
+                //    p[i] = (positiveVar[i], i);
+                //}
+                //else
+                //{
+                //    p[i] = (negativeVar[i], i);
+                //}
+                //p[i] = (positiveVar[i] + negativeVar[i], i);
+                p[i] = (Math.Max(negativeVar[i], positiveVar[i]), i);
                 //p[i] = ((float)(positiveAvg[i] - negativeAvg[i]), i);
                 //p[i] = ((float)Math.Abs(positiveAvg[i] - negativeAvg[i]), i);
             }
