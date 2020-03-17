@@ -132,7 +132,7 @@ namespace GimmeMillions.Domain.Tests.ML
             var testExample = datasetService.GetData(symbol, new DateTime(1, 1, 1));
             testExample.IsSuccess.Should().BeTrue();
             var preLoadPrediction = model.Predict(testExample.Value.Input);
-            preLoadPrediction.IsSuccess.Should().BeTrue();
+            
 
             var saveResult = model.Save(_pathToModels);
             saveResult.IsSuccess.Should().BeTrue();
@@ -141,10 +141,9 @@ namespace GimmeMillions.Domain.Tests.ML
             loadResult.IsSuccess.Should().BeTrue();
 
             var postLoadPrediction = model.Predict(testExample.Value.Input);
-            postLoadPrediction.IsSuccess.Should().BeTrue();
 
-            preLoadPrediction.Value.PredictedLabel.Should().Be(postLoadPrediction.Value.PredictedLabel);
-            preLoadPrediction.Value.Score.Should().Be(postLoadPrediction.Value.Score);
+            preLoadPrediction.PredictedLabel.Should().Be(postLoadPrediction.PredictedLabel);
+            preLoadPrediction.Score.Should().Be(postLoadPrediction.Score);
         }
 
         private IFeatureDatasetService GetTestBoWFeatureDatasetService()
@@ -158,7 +157,7 @@ namespace GimmeMillions.Domain.Tests.ML
 
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
-            var stocksRepo = new StockDataRepository(_pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
             var cache = new FeatureJsonCache(_pathToCache);
 

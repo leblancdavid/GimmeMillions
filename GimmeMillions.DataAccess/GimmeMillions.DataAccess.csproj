@@ -79,6 +79,7 @@
     <Compile Include="Keys\NYTApiAccessKeyRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stocks\StockDataRepository.cs" />
+    <Compile Include="Stocks\YahooFinanceStockAccessService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GimmeMillions.Domain\GimmeMillions.Domain.csproj">

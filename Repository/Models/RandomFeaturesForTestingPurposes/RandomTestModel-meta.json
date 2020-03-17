@@ -1,0 +1,26 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.51832819458718737,
+    "Accuracy": 0.486013986013986,
+    "PositivePrecision": 0.5,
+    "PositiveRecall": 0.18367346938775511,
+    "NegativePrecision": 0.48275862068965519,
+    "NegativeRecall": 0.80575539568345322,
+    "F1Score": 0.26865671641791045,
+    "AreaUnderPrecisionRecallCurve": 0.52444203818928692
+  },
+  "StockSymbol": "RandomTestModel",
+  "Parameters": {
+    "NumCrossValidations": 10,
+    "NumIterations": 1,
+    "NumOfTrees": 20,
+    "NumOfLeaves": 4,
+    "MinNumOfLeaves": 5,
+    "PcaRank": 10,
+    "FeatureSelectionRank": 100
+  },
+  "IsTrained": true,
+  "AverageUpperProbability": 0.6598775,
+  "AverageLowerProbability": -1.082513,
+  "FeatureEncoding": "RandomFeaturesForTestingPurposes"
+}

@@ -14,13 +14,13 @@ namespace GimmeMillions.Domain.Features
     {
         private IFeatureVectorExtractor _featureVectorExtractor;
         private IArticleRepository _articleRepository;
-        private IStockRepository _stockRepository;
+        private IStockAccessService _stockRepository;
         private IFeatureCache _featureCache;
 
         public bool RefreshCache { get; set; }
         public DefaultFeatureDatasetService(IFeatureVectorExtractor featureVectorExtractor,
             IArticleRepository articleRepository,
-            IStockRepository stockRepository,
+            IStockAccessService stockRepository,
             IFeatureCache featureCache = null,
             bool refreshCache = false)
         {
@@ -100,7 +100,7 @@ namespace GimmeMillions.Domain.Features
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol,
             DateTime startDate = default(DateTime), DateTime endDate = default(DateTime))
         {
-            var stocks = _stockRepository.GetStocks(symbol);
+            var stocks = _stockRepository.UpdateStocks(symbol, startDate, endDate);
             if(!stocks.Any())
             {
                 return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(

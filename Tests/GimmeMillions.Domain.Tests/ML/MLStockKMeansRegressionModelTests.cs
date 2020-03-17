@@ -41,7 +41,7 @@ namespace GimmeMillions.Domain.Tests.ML
 
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
-            var stocksRepo = new StockDataRepository(_pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
             return new DefaultFeatureDatasetService(bow, articlesRepo, stocksRepo);
         }
 

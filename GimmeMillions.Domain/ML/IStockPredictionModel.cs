@@ -13,6 +13,7 @@ namespace GimmeMillions.Domain.ML
     public interface IStockPredictionModel
     {
         string StockSymbol { get; }
+        string Encoding { get; }
         bool IsTrained { get; }
 
         Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction);

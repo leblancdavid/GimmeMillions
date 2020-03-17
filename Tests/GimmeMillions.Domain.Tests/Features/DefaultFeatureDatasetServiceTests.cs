@@ -25,7 +25,7 @@ namespace GimmeMillions.Domain.Tests.Features
         {
             var bow = GetTestBoWFeatureExtractor();
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
-            var stocksRepo = new StockDataRepository(_pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
             var featureDatasetService = new DefaultFeatureDatasetService(bow, articlesRepo, stocksRepo);
             var trainingData = featureDatasetService.GetTrainingData("IWM");

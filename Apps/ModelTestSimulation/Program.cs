@@ -59,14 +59,14 @@ namespace ModelTestSimulation
             foreach(var sample in testSet.Value)
             {
                 var prediction = model.Predict(sample.Input);
-                if (prediction.IsSuccess && prediction.Value.PredictedLabel)
+                if (prediction.PredictedLabel)
                 {
                     if(sample.Output.PercentDayChange > 0)
                     {
                         accuracy++;
                     }
 
-                    if(prediction.Value.Probability > 0.5)
+                    if(prediction.Probability > 0.5)
                     {
                         currentMoney = currentMoney * (1.0m + sample.Output.PercentDayChange / 100m); 
                         if (sample.Output.PercentDayChange > 0)
@@ -85,7 +85,7 @@ namespace ModelTestSimulation
                     }
                 }
 
-                Console.WriteLine($"{sample.Output.Date.ToString("MM/dd/yyyy")}, Actual: {sample.Output.PercentDayChange}%, Prediction: {prediction.Value.Probability}, Current money: ${currentMoney}");
+                Console.WriteLine($"{sample.Output.Date.ToString("MM/dd/yyyy")}, Actual: {sample.Output.PercentDayChange}%, Prediction: {prediction.Probability}, Current money: ${currentMoney}");
             }
 
             Console.WriteLine("-=== Done ===-");
@@ -106,7 +106,7 @@ namespace ModelTestSimulation
 
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
-            var stocksRepo = new StockDataRepository(_pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
             var cache = new FeatureJsonCache(_pathToCache);
 
