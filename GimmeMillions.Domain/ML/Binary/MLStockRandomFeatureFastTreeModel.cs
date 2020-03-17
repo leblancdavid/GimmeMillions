@@ -111,15 +111,15 @@ namespace GimmeMillions.Domain.ML.Binary
             var prediction = _model.Transform(inputDataView);
 
             var score = prediction.GetColumn<float>("Score").ToArray();
-            var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
+            //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
            // var probability = prediction.GetColumn<float>("Probability").ToArray();
 
             return new StockPrediction()
             {
                 Score = score[0],
-                PredictedLabel = predictedLabel[0],
+                PredictedLabel = score[0] > 0.0f,
                 //Probability = probability[0]
-                Probability = predictedLabel[0] ? 1.0f : 0.0f
+                Probability = score[0]
             };
         }
 
@@ -195,9 +195,11 @@ namespace GimmeMillions.Domain.ML.Binary
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
             Metadata.StockSymbol = firstFeature.Output.Symbol;
 
-            var pipeline = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: (int)(firstFeature.Input.Length * 0.5))
+            int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.75);
+            var pipeline = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength)
                 //.Append(new MaxVarianceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank))
                 .Append(new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank))
+                //.Append(new PerceptronFeatureSelectionEstimator(_mLContext, filteredFeatureLength, 50, Parameters.FeatureSelectionRank))
                    //.Append(_mLContext.Transforms.Conversion.MapKeyToValue("Label", "Value"))
                    //.Append(_mLContext.Transforms.NormalizeMinMax("Features"))
                    //.Append(new SupervisedNormalizerEstimator(_mLContext))
@@ -205,16 +207,22 @@ namespace GimmeMillions.Domain.ML.Binary
                    //.Append(_mLContext.Transforms.NormalizeMinMax("Features"))
                    //.Append(new PcaEstimator(_mLContext, rank: Parameters.PcaRank))
                    //.Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
+                   //.Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek"))
                    //.Append(_mLContext.BinaryClassification.Trainers.SymbolicSgdLogisticRegression());
                    //.Append(_mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression());
                    .Append(_mLContext.BinaryClassification.Trainers.FastForest(
                        numberOfLeaves: Parameters.NumOfLeaves,
                        numberOfTrees: Parameters.NumOfTrees,
                        minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
-                   //.Append(_mLContext.BinaryClassification.Trainers.FastTree(
-                   //    numberOfLeaves: Parameters.NumOfLeaves,
-                   //    numberOfTrees: Parameters.NumOfTrees,
-                   //    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
+            //.Append(_mLContext.BinaryClassification.Trainers.FastTree(
+            //    numberOfLeaves: Parameters.NumOfLeaves,
+            //    numberOfTrees: Parameters.NumOfTrees,
+            //    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
+            //.Append(_mLContext.Regression.Trainers.FastForest(
+            //    labelColumnName: "Value",
+            //    numberOfLeaves: Parameters.NumOfLeaves,
+            //    numberOfTrees: Parameters.NumOfTrees,
+            //    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
 
             if (Parameters.NumCrossValidations > 1)
             {

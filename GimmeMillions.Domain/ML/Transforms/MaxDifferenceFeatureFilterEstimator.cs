@@ -96,10 +96,13 @@ namespace GimmeMillions.Domain.ML.Transforms
             for (int i = 0; i < p.Length; ++i)
             {
                 //p[i] = ((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal), i);
-                if(negativeTotal > positiveTotal)
-                    p[i] = ((positiveScore[i] / positiveTotal) - (negativeScore[i] / negativeTotal), i);
-                else
-                    p[i] = ((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal), i);
+                //if(negativeTotal > positiveTotal)
+                //    p[i] = ((positiveScore[i] / positiveTotal) - (negativeScore[i] / negativeTotal), i);
+                //else
+                //    p[i] = ((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal), i);
+
+                p[i] = ((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal), i);
+                //p[i] = ((positiveScore[i] / positiveTotal) - (negativeScore[i] / negativeTotal), i);
                 //p[i] = (negativeScore[i] - positiveScore[i], i);
                 //p[i] = (positiveScore[i] - negativeScore[i], i);
                 //p[i] = (Math.Abs(negativeScore[i] - positiveScore[i]), i);

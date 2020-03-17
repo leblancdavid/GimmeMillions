@@ -51,7 +51,7 @@ namespace ModelTrainer
                 var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
 
                 model.Parameters.PcaRank = 100;
-                model.Parameters.FeatureSelectionRank = 100;
+                model.Parameters.FeatureSelectionRank = 150;
                 model.Parameters.NumIterations = 1;
                 model.Parameters.NumCrossValidations = 0;
                 model.Parameters.NumOfTrees = 2000;

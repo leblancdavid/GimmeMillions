@@ -31,7 +31,7 @@ namespace GimmeMillions.Domain.ML.Transforms
             _outputColumnName = outputColumnName;
             _mLContext = mLContext;
             _rank = rank;
-            _sliceSize = _featureSize / 2;
+            _sliceSize = _rank / 2;
 
             _featureContribution = new (int Index, double Weight)[_featureSize];
             for(int i = 0; i < _featureSize; ++i)
