@@ -1,13 +1,11 @@
-﻿using Accord.Statistics.Analysis;
+﻿using Accord.IO;
+using Accord.Statistics.Analysis;
 using CSharpFunctionalExtensions;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Transforms
 {
@@ -16,15 +14,17 @@ namespace GimmeMillions.Domain.ML.Transforms
         private PrincipalComponentAnalysis _pca;
         private string _inputColumnName;
         private string _outputColumnName;
+        private MLContext _mLContext;
         public bool IsRowToRowMapper => true;
-        public PcaTransform(PrincipalComponentAnalysis pca,
+        public PcaTransform(MLContext mLContext, 
+            PrincipalComponentAnalysis pca,
             string inputColumnName = "Features",
             string outputColumnName = "Label")
         {
+            _mLContext = mLContext;
             _pca = pca;
             _inputColumnName = inputColumnName;
             _outputColumnName = outputColumnName;
-            // _pca.NumberOfOutputs = _pcaRank;
         }
 
         public static Result<PcaTransform> LoadFromFile(string fileName,
@@ -32,21 +32,13 @@ namespace GimmeMillions.Domain.ML.Transforms
            string inputColumnName = "Features",
            string outputColumnName = "Label")
         {
-
-            throw new NotImplementedException();
-
-            //if (!File.Exists(fileName))
-            //{
-            //    return Result.Failure<PcaTransform>($"BinaryClassificationFeatureSelectorTransform model named {fileName} could not be found");
-            //}
-            //var json = File.ReadAllText(fileName);
-            //return Result.Ok(new FeatureFilterTransform(mLContext,
-            //    JsonConvert.DeserializeObject<int[]>(json),
-            //    inputColumnName, outputColumnName));
+            var pca = Serializer.Load<PrincipalComponentAnalysis>(fileName);
+            return Result.Ok(new PcaTransform(mLContext, pca, inputColumnName, outputColumnName));
         }
 
         public void SaveToFile(string fileName)
         {
+            Serializer.Save(_pca, fileName);
             //File.WriteAllText(fileName, JsonConvert.SerializeObject(_featureIndices, Formatting.Indented));
         }
 
