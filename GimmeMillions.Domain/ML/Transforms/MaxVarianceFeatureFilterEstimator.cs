@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Transforms
 {
-    public class MaxVarianceFeatureFilterEstimator : IEstimator<ITransformer>
+    public class MaxVarianceFeatureFilterEstimator : IEstimator<FeatureFilterTransform>
     {
         private string _inputColumnName;
         private string _outputColumnName;
@@ -26,7 +26,7 @@ namespace GimmeMillions.Domain.ML.Transforms
             _rank = rank;
         }
 
-        public ITransformer Fit(IDataView input)
+        public FeatureFilterTransform Fit(IDataView input)
         {
             return new FeatureFilterTransform(_mLContext, GetFeatureSelectionIndices(input), _inputColumnName, _outputColumnName);
         }

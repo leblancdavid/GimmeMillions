@@ -187,18 +187,22 @@ namespace GimmeMillions.Domain.ML.Binary
                 trainData = datasetView;
             }
 
-            //var normalizer = _mLContext.Transforms.NormalizeSupervisedBinning("Features").Fit(trainData);
-            //var normalizedData = normalizer.Transform(trainData);
-            //var normalizedFeatures = normalizedData.GetColumn<float[]>("Features").ToArray();
+            var positiveResults = TryModel(trainData, firstFeature.Input.Length, Parameters.FeatureSelectionRank, true);
+            var negativeResults = TryModel(trainData, firstFeature.Input.Length, Parameters.FeatureSelectionRank, false);
+            bool usePositiveSort = true;
+            if(positiveResults.Accuracy < negativeResults.Accuracy)
+            {
+                usePositiveSort = false;
+            }
 
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
             Metadata.StockSymbol = firstFeature.Output.Symbol;
 
-            int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.75);
+            int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.5);
             var pipeline = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength)
                 //.Append(new MaxVarianceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank))
-                .Append(new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank))
+                .Append(new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank, positiveSort: usePositiveSort))
                 //.Append(new PerceptronFeatureSelectionEstimator(_mLContext, filteredFeatureLength, 50, Parameters.FeatureSelectionRank))
                    //.Append(_mLContext.Transforms.Conversion.MapKeyToValue("Label", "Value"))
                    //.Append(_mLContext.Transforms.NormalizeMinMax("Features"))
@@ -315,6 +319,17 @@ namespace GimmeMillions.Domain.ML.Binary
                 Metadata.AverageUpperProbability = 0.0f;
                 Metadata.AverageUpperScore = 0.0f;
             }
+        }
+
+        private BinaryClassificationMetrics TryModel(IDataView trainingData, int featureLength, int rank, bool positiveSort)
+        {
+            int filteredFeatureLength = (int)(featureLength * 0.5);
+            var pipeline = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength)
+                .Append(new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: rank, positiveSort: positiveSort))
+                   .Append(_mLContext.BinaryClassification.Trainers.LinearSvm());
+
+            return _mLContext.BinaryClassification.EvaluateNonCalibrated(
+                pipeline.Fit(trainingData).Transform(trainingData));
         }
 
         private SchemaDefinition GetSchemaDefinition(FeatureVector vector)
