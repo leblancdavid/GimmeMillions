@@ -22,14 +22,17 @@ namespace ModelTrainer
         static string _pathToLanguage = "../../../../Repository/Languages";
         static string _pathToStocks = "../../../../Repository/Stocks";
         static string _pathToCache = "../../../../Repository/Cache";
-        static string _pathToRecommendationConfigs = "../../../../Repository/Recommendations";
+        //static string _pathToRecommendationConfigs = "../../../../Repository/Recommendations";
         static string _pathToModels = "../../../../Repository/Models";
         static void Main(string[] args)
         {
             string dictionaryToUse = "USA";
 
             var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "VZ", "S", "INVA", "LGND", "LXRX", "XBI",
-             "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM"};
+             "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM", "FAST", "DAL", "ZNH", "ARNC",
+             "AAL", "GFL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA-PH", "DRE", "NLY", "MPW", "C", "WFC",
+            "HSBC", "BAC", "RY", "AXP", "FB", "DIS", "BHP", "BBL", "DD", "GOLD", "DUK", "EXC", "FE", "EIX",
+            "CMS", "MCD", "SBUX", "LOW", "HMC", "HD", "GM", "ROST", "BBY", "MAR", "KO", "PEP", "GIS"};
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
             var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
@@ -41,7 +44,7 @@ namespace ModelTrainer
             foreach(var stock in stocks)
             {
                 //var model = new MLStockBinaryFastForestModel();
-                var model = new MLStockRandomFeatureFastTreeModel();
+                var model = new MLStockFastForestModel();
                 var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
                 var filteredDataset = dataset.Value;
@@ -50,13 +53,11 @@ namespace ModelTrainer
                 var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
                 var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
 
-                model.Parameters.PcaRank = 100;
                 model.Parameters.FeatureSelectionRank = 125;
-                model.Parameters.NumIterations = 1;
-                model.Parameters.NumCrossValidations = 0;
+                model.Parameters.NumCrossValidations = 5;
                 model.Parameters.NumOfTrees = 2000;
                 model.Parameters.NumOfLeaves = 25;
-                model.Parameters.MinNumOfLeaves = 1;
+                model.Parameters.MinNumOfLeaves = 10;
 
                 Console.WriteLine($"-=== Training {stock} ===-");
                 Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank}");

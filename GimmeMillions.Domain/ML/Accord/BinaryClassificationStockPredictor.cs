@@ -25,7 +25,6 @@ namespace GimmeMillions.Domain.ML.Accord
         private IDataTransformer _filterTransformer;
         private IDataTransformer _supervisedNormalizer;
         private PrincipalComponentAnalysis _pca;
-        private SupportVectorMachine<Gaussian> _svm;
         private RandomForest _rt;
 
         public string StockSymbol { get; set; }

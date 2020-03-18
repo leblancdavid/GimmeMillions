@@ -17,54 +17,51 @@ using static Microsoft.ML.TrainCatalogBase;
 
 namespace GimmeMillions.Domain.ML.Binary
 {
-    public class RandomFastTreeBinaryModelParameters
+    public class FastForestBinaryModelParameters
     {
         public int NumCrossValidations { get; set; }
-        public int NumIterations { get; set; }
         public int NumOfTrees { get; set; }
         public int NumOfLeaves { get; set; }
         public int MinNumOfLeaves { get; set; }
-        public int PcaRank { get; set; }
         public int FeatureSelectionRank { get; set; }
-        public RandomFastTreeBinaryModelParameters()
+        public FastForestBinaryModelParameters()
         {
             NumCrossValidations = 10;
-            NumIterations = 10;
             NumOfTrees = 100;
             NumOfLeaves = 20;
             MinNumOfLeaves = 1;
-
-            PcaRank = 100;
             FeatureSelectionRank = 500;
         }
 
     }
 
-    public class MLStockRandomFeatureFastTreeModel : IBinaryStockPredictionModel<RandomFastTreeBinaryModelParameters>
+    public class MLStockFastForestModel : IBinaryStockPredictionModel<FastForestBinaryModelParameters>
     {
         private MLContext _mLContext;
         private int _seed;
-        private ITransformer _dataNormalizer;
-        private FeatureFilterTransform _featureSelector;
-        private ITransformer _predictor;
+        private FeatureFilterTransform _frequencyUsageTransform;
+        private FeatureFilterTransform _maxDifferenceFilterTransform;
         private ITransformer _model;
 
         private DataViewSchema _dataSchema;
-        public RandomFastTreeBinaryModelParameters Parameters { get; set; }
-        public BinaryPredictionModelMetadata<RandomFastTreeBinaryModelParameters> Metadata { get; private set; }
+        private string _modelId = "FFModel-v1";
+        public FastForestBinaryModelParameters Parameters { get; set; }
+        public BinaryPredictionModelMetadata<FastForestBinaryModelParameters> Metadata { get; private set; }
 
         public string StockSymbol => Metadata.StockSymbol;
 
         public bool IsTrained => Metadata.IsTrained;
 
         public string Encoding => Metadata.FeatureEncoding;
+        
 
-        public MLStockRandomFeatureFastTreeModel()
+        public MLStockFastForestModel()
         {
-            Metadata = new BinaryPredictionModelMetadata<RandomFastTreeBinaryModelParameters>();
+            Metadata = new BinaryPredictionModelMetadata<FastForestBinaryModelParameters>();
+            Metadata.ModelId = "FFModel-v1";
             _seed = 27;
             _mLContext = new MLContext(_seed);
-            Parameters = new RandomFastTreeBinaryModelParameters();
+            Parameters = new FastForestBinaryModelParameters();
 
         }
 
@@ -72,22 +69,26 @@ namespace GimmeMillions.Domain.ML.Binary
         {
             try
             {
-                string directory = $"{pathToModel}/{encoding}";
+                string directory = $"{pathToModel}/{_modelId}/{encoding}";
 
-                Metadata = JsonConvert.DeserializeObject<BinaryPredictionModelMetadata<RandomFastTreeBinaryModelParameters>>(
-                    File.ReadAllText($"{ directory}/{symbol}-meta.json"));
+                Metadata = JsonConvert.DeserializeObject<BinaryPredictionModelMetadata<FastForestBinaryModelParameters>>(
+                    File.ReadAllText($"{ directory}/{symbol}-Meta.json"));
+
+                var maxDiffLoad = FeatureFilterTransform.LoadFromFile($"{ directory}/{Metadata.StockSymbol}-MaxDiffFilterTransform.json", _mLContext);
+                if (maxDiffLoad.IsFailure)
+                {
+                    return Result.Failure(maxDiffLoad.Error);
+                }
+                _maxDifferenceFilterTransform = maxDiffLoad.Value;
+                var usageLoad = FeatureFilterTransform.LoadFromFile($"{ directory}/{Metadata.StockSymbol}-FrequencyUsageTransform.json", _mLContext);
+                if (usageLoad.IsFailure)
+                {
+                    return Result.Failure(usageLoad.Error);
+                }
+                _frequencyUsageTransform = usageLoad.Value;
 
                 DataViewSchema schema = null;
-                _dataNormalizer = _mLContext.Model.Load($"{directory}/{Metadata.StockSymbol}-normalizer.zip", out schema);
-                var selectorLoad = FeatureFilterTransform.LoadFromFile($"{ directory}/{ Metadata.StockSymbol}-selector.json", _mLContext);
-                if (selectorLoad.IsFailure)
-                {
-                    return Result.Failure(selectorLoad.Error);
-                }
-                _featureSelector = selectorLoad.Value;
-                _predictor = _mLContext.Model.Load($"{directory}/{Metadata.StockSymbol}-predictor.zip", out schema);
-
-                _model = _dataNormalizer.Append(_featureSelector).Append(_predictor);
+                _model = _mLContext.Model.Load($"{directory}/{Metadata.StockSymbol}-Model.zip", out schema);
 
                 return Result.Ok();
             }
@@ -108,7 +109,9 @@ namespace GimmeMillions.Domain.ML.Binary
                 },
                 GetSchemaDefinition(input));
 
-            var prediction = _model.Transform(inputDataView);
+            var prediction = _model.Transform(
+                _maxDifferenceFilterTransform.Transform(
+                    _frequencyUsageTransform.Transform(inputDataView)));
 
             var score = prediction.GetColumn<float>("Score").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
@@ -132,16 +135,16 @@ namespace GimmeMillions.Domain.ML.Binary
                     return Result.Failure("Model has not been trained or loaded");
                 }
 
-                string directory = $"{pathToModel}/{Metadata.FeatureEncoding}";
+                string directory = $"{pathToModel}/{_modelId}/{Metadata.FeatureEncoding}";
                 if (!Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);
                 }
 
-                File.WriteAllText($"{directory}/{Metadata.StockSymbol}-meta.json", JsonConvert.SerializeObject(Metadata, Formatting.Indented));
-                _mLContext.Model.Save(_dataNormalizer, _dataSchema, $"{directory}/{Metadata.StockSymbol}-normalizer.zip");
-                _featureSelector.SaveToFile($"{ directory}/{ Metadata.StockSymbol}-selector.json");
-                _mLContext.Model.Save(_predictor, _dataSchema, $"{directory}/{Metadata.StockSymbol}-predictor.zip");
+                File.WriteAllText($"{directory}/{Metadata.StockSymbol}-Metadata.json", JsonConvert.SerializeObject(Metadata, Formatting.Indented));
+                _maxDifferenceFilterTransform.SaveToFile($"{ directory}/{ Metadata.StockSymbol}-MaxDiffFilterTransform.json");
+                _frequencyUsageTransform.SaveToFile($"{ directory}/{ Metadata.StockSymbol}-FrequencyUsageTransform.json");
+                _mLContext.Model.Save(_model, _dataSchema, $"{directory}/{Metadata.StockSymbol}-Model.zip");
 
                 return Result.Ok();
             }
@@ -187,62 +190,45 @@ namespace GimmeMillions.Domain.ML.Binary
                 trainData = datasetView;
             }
 
-            var positiveResults = TryModel(trainData, firstFeature.Input.Length, Parameters.FeatureSelectionRank, true, 0.05);
-            Console.WriteLine($"Positive validation accuracy: {positiveResults.Accuracy}");
-            var negativeResults = TryModel(trainData, firstFeature.Input.Length, Parameters.FeatureSelectionRank, false, 0.05);
-            Console.WriteLine($"Negative validation accuracy: {negativeResults.Accuracy}");
+            int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.5);
+            var frequencyUsageEstimator = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength);
+            _frequencyUsageTransform = frequencyUsageEstimator.Fit(trainData);
+            var mostUsedData = _frequencyUsageTransform.Transform(trainData);
+
+            var positiveResults = TryModel(mostUsedData, Parameters.FeatureSelectionRank, true);
+            Console.WriteLine($"Positive Acc: {positiveResults.Accuracy}, AoC: {positiveResults.AreaUnderPrecisionRecallCurve}, PP: {positiveResults.PositivePrecision}");
+            var negativeResults = TryModel(mostUsedData, Parameters.FeatureSelectionRank, false);
+            Console.WriteLine($"Negative Acc: {negativeResults.Accuracy}, AoC: {negativeResults.AreaUnderPrecisionRecallCurve}, PP: {negativeResults.PositivePrecision}");
             bool usePositiveSort = true;
-            if(positiveResults.Accuracy < negativeResults.Accuracy)
+            Metadata.TrainingResults = positiveResults;
+            if (positiveResults.Accuracy < negativeResults.Accuracy)
             {
                 usePositiveSort = false;
+                Metadata.TrainingResults = negativeResults;
             }
+
+            var maxDifferenceFilterEstimator = new MaxDifferenceFeatureFilterEstimator(_mLContext,
+                rank: Parameters.FeatureSelectionRank, positiveSort: usePositiveSort);
+            _maxDifferenceFilterTransform = maxDifferenceFilterEstimator.Fit(mostUsedData);
+            var maxDifferenceData = _maxDifferenceFilterTransform.Transform(mostUsedData);
 
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
             Metadata.StockSymbol = firstFeature.Output.Symbol;
 
-            int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.5);
-            var pipeline = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength)
-                //.Append(new MaxVarianceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank))
-                .Append(new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank, positiveSort: usePositiveSort))
-                //.Append(new PerceptronFeatureSelectionEstimator(_mLContext, filteredFeatureLength, 50, Parameters.FeatureSelectionRank))
-                   //.Append(_mLContext.Transforms.Conversion.MapKeyToValue("Label", "Value"))
-                   //.Append(_mLContext.Transforms.NormalizeMinMax("Features"))
-                   //.Append(new SupervisedNormalizerEstimator(_mLContext))
-                   //.Append(_mLContext.Transforms.NormalizeSupervisedBinning("Features", "Features", "DayOfTheWeek", fixZero: false))
-                   //.Append(_mLContext.Transforms.NormalizeMinMax("Features"))
-                   //.Append(new PcaEstimator(_mLContext, rank: Parameters.PcaRank))
-                   //.Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek", "Month"))
-                   //.Append(_mLContext.Transforms.Concatenate("Features", "Features", "DayOfTheWeek"))
-                   //.Append(_mLContext.BinaryClassification.Trainers.SymbolicSgdLogisticRegression());
-                   //.Append(_mLContext.BinaryClassification.Trainers.LbfgsLogisticRegression());
-                   .Append(_mLContext.BinaryClassification.Trainers.FastForest(
+            var ffEstimator = _mLContext.BinaryClassification.Trainers.FastForest(
                        numberOfLeaves: Parameters.NumOfLeaves,
                        numberOfTrees: Parameters.NumOfTrees,
-                       minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
-            //.Append(_mLContext.BinaryClassification.Trainers.FastTree(
-            //    numberOfLeaves: Parameters.NumOfLeaves,
-            //    numberOfTrees: Parameters.NumOfTrees,
-            //    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
-            //.Append(_mLContext.Regression.Trainers.FastForest(
-            //    labelColumnName: "Value",
-            //    numberOfLeaves: Parameters.NumOfLeaves,
-            //    numberOfTrees: Parameters.NumOfTrees,
-            //    minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
+                       minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
 
-            if (Parameters.NumCrossValidations > 1)
-            {
-                var cvResults = _mLContext.BinaryClassification.CrossValidate(trainData, pipeline, Parameters.NumCrossValidations);
-                UpdateMetadata(cvResults);
-            }
-            
-            var predictor = pipeline.Fit(trainData);
-            //_model = featureSelector.Append(predictor);
-            //_model = normalizer.Append(featureSelector.Append(predictor));
-            _model = predictor;
+            _model = ffEstimator.Fit(maxDifferenceData);
+
             if (testData != null)
             {
-                var testPredictions = _model.Transform(testData);
+                var testPredictions = _model.Transform(
+                    _maxDifferenceFilterTransform.Transform(
+                        _frequencyUsageTransform.Transform(testData)));
+
                 var testResults = _mLContext.BinaryClassification.Evaluate(testPredictions);
 
                 Metadata.TrainingResults = new ModelMetrics(testResults);
@@ -323,26 +309,43 @@ namespace GimmeMillions.Domain.ML.Binary
             }
         }
 
-        private BinaryClassificationMetrics TryModel(IDataView data, 
-            int featureLength, 
+        private ModelMetrics TryModel(IDataView data,
             int rank, 
-            bool positiveSort, 
-            double validationFraction = 0.2)
+            bool positiveSort)
         {
-            var dataSplit = _mLContext.Data.TrainTestSplit(data, testFraction: validationFraction);
-            var trainingData = dataSplit.TrainSet;
-            var validationData = dataSplit.TestSet;
 
-            int filteredFeatureLength = (int)(featureLength * 0.5);
-            var pipeline = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength)
-                .Append(new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: rank, positiveSort: positiveSort))
-                 .Append(_mLContext.BinaryClassification.Trainers.FastForest(
-                       numberOfLeaves: Parameters.NumOfLeaves,
-                       numberOfTrees: Parameters.NumOfTrees,
-                       minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
+            var pipeline = new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: rank, positiveSort: positiveSort)
+                 .Append(_mLContext.BinaryClassification.Trainers.FastTree());
 
-            return _mLContext.BinaryClassification.EvaluateNonCalibrated(
-                pipeline.Fit(trainingData).Transform(validationData));
+            var cvResults = _mLContext.BinaryClassification.CrossValidate(data, pipeline, Parameters.NumCrossValidations);
+            return CrossValidationResultsToMetrics(cvResults);
+        }
+
+        private ModelMetrics CrossValidationResultsToMetrics(IReadOnlyList<CrossValidationResult<CalibratedBinaryClassificationMetrics>> crossValidationResults)
+        {
+            var metrics = new ModelMetrics();
+            foreach (var fold in crossValidationResults)
+            {
+                metrics.Accuracy += fold.Metrics.Accuracy;
+                metrics.AreaUnderPrecisionRecallCurve += fold.Metrics.AreaUnderPrecisionRecallCurve;
+                metrics.AreaUnderRocCurve += fold.Metrics.AreaUnderRocCurve;
+                metrics.F1Score += fold.Metrics.F1Score;
+                metrics.NegativePrecision += fold.Metrics.NegativePrecision;
+                metrics.NegativeRecall += fold.Metrics.NegativeRecall;
+                metrics.PositivePrecision += fold.Metrics.PositivePrecision;
+                metrics.PositiveRecall += fold.Metrics.PositiveRecall;
+            }
+
+            metrics.Accuracy /= crossValidationResults.Count();
+            metrics.AreaUnderPrecisionRecallCurve /= crossValidationResults.Count();
+            metrics.AreaUnderRocCurve /= crossValidationResults.Count();
+            metrics.F1Score /= crossValidationResults.Count();
+            metrics.NegativePrecision /= crossValidationResults.Count();
+            metrics.NegativeRecall /= crossValidationResults.Count();
+            metrics.PositivePrecision /= crossValidationResults.Count();
+            metrics.PositiveRecall /= crossValidationResults.Count();
+
+            return metrics;
         }
 
         private SchemaDefinition GetSchemaDefinition(FeatureVector vector)
