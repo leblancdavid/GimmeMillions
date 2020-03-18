@@ -56,7 +56,7 @@ namespace GimmeMillions.Domain.ML.Transforms
             var predictions = new List<KnnPrediction>();
             foreach(var vector in inputFeatures)
             {
-                predictions.Add(GetPrediction(vector, 10));
+                predictions.Add(GetPrediction(vector, 9));
             }
             var definedSchema = SchemaDefinition.Create(typeof(KnnPrediction));
             return _mLContext.Data.LoadFromEnumerable(predictions, definedSchema);
@@ -70,16 +70,26 @@ namespace GimmeMillions.Domain.ML.Transforms
         }
         private KnnPrediction GetPrediction(float[] input, int nearestNeigbors)
         {
-            var distances = ComputeDistances(input).Take(nearestNeigbors);
-            var positiveSum = distances.Sum(x => x.Label ? x.Distance : 0.0);
-            var negativeSum = distances.Sum(x => !x.Label ? x.Distance : 0.0);
+            var distances = ComputeDistances(input).Take(nearestNeigbors).ToArray();
+            var positiveExamples = distances.Where(x => x.Label);
+            double positiveSum = positiveExamples.Sum(x => x.Distance);
+            if(positiveExamples.Any())
+            {
+                positiveSum /= positiveExamples.Count();
+            }
+            var negativeExmples = distances.Where(x => !x.Label);
+            double negativeSum = negativeExmples.Sum(x => x.Distance);
+            if (negativeExmples.Any())
+            {
+                negativeSum /= negativeExmples.Count();
+            }
 
             double p = negativeSum / (negativeSum + positiveSum);
             return new KnnPrediction()
             {
                 Probability = (float)p,
                 PredictedLabel = p > 0.5f,
-                Score = (float)(positiveSum - negativeSum)
+                Score = (float)(negativeSum - positiveSum)
             };
         }
 

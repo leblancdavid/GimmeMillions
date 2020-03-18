@@ -45,12 +45,21 @@ namespace ModelTrainer
             {
                 //var model = new MLStockBinaryFastForestModel();
                 Console.WriteLine($"-=== Loading training data for {stock} ===-");
-                var model = new MLStockFastForestModel();
-                model.Parameters.FeatureSelectionRank = 500;
-                model.Parameters.NumCrossValidations = 10;
-                model.Parameters.NumOfTrees = 2000;
-                model.Parameters.NumOfLeaves = 20;
-                model.Parameters.MinNumOfLeaves = 20;
+                //var model = new MLStockFastForestModel();
+                //model.Parameters.FeatureSelectionRank = 500;
+                //model.Parameters.NumCrossValidations = 10;
+                //model.Parameters.NumOfTrees = 2000;
+                //model.Parameters.NumOfLeaves = 20;
+                //model.Parameters.MinNumOfLeaves = 20;
+
+                var model = new MLStockKnnBruteForceModel();
+
+                ////var model = new MLStock();
+                //model.Parameters.FeatureSelectionRank = 500;
+                //model.Parameters.NumCrossValidations = 10;
+                //model.Parameters.NumOfTrees = 2000;
+                //model.Parameters.NumOfLeaves = 20;
+                //model.Parameters.MinNumOfLeaves = 20;
 
                 //var model = new MLStockPcaSvmModel();
                 //model.Parameters.FeatureSelectionRank = 500;
@@ -71,7 +80,7 @@ namespace ModelTrainer
                 //Console.WriteLine($"Pca Rank: { model.Parameters.PcaRank}");
 
                 Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank}");
-                Console.WriteLine($"Number of Trees: { model.Parameters.NumOfTrees} \t Number of Leaves: { model.Parameters.NumOfLeaves}");
+               // Console.WriteLine($"Number of Trees: { model.Parameters.NumOfTrees} \t Number of Leaves: { model.Parameters.NumOfLeaves}");
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
                 var trainingResult = model.Train(trainingSet, 0.0);

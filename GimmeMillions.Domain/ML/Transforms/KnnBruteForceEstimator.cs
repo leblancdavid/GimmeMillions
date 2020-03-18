@@ -20,7 +20,7 @@ namespace GimmeMillions.Domain.ML.Transforms
         }
         public KnnBruteForceTransform Fit(IDataView input)
         {
-            throw new NotImplementedException();
+            return new KnnBruteForceTransform(_mLContext, input);
         }
 
         public SchemaShape GetOutputSchema(SchemaShape inputSchema)
