@@ -198,7 +198,7 @@ namespace GimmeMillions.Domain.ML.Binary
             Console.WriteLine($"Negative Acc: {negativeResults.Accuracy}, AoC: {negativeResults.AreaUnderPrecisionRecallCurve}, PP: {negativeResults.PositivePrecision}");
             bool usePositiveSort = true;
             Metadata.TrainingResults = positiveResults;
-            if (positiveResults.Accuracy < negativeResults.Accuracy)
+            if (positiveResults.AreaUnderPrecisionRecallCurve < negativeResults.AreaUnderPrecisionRecallCurve)
             {
                 usePositiveSort = false;
                 Metadata.TrainingResults = negativeResults;

@@ -30,7 +30,7 @@ namespace ModelTrainer
 
             var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "VZ", "S", "INVA", "LGND", "LXRX", "XBI",
              "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM", "FAST", "DAL", "ZNH", "ARNC",
-             "AAL", "GFL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA-PH", "DRE", "NLY", "MPW", "C", "WFC",
+             "AAL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA-PH", "DRE", "NLY", "MPW", "C", "WFC",
             "HSBC", "BAC", "RY", "AXP", "FB", "DIS", "BHP", "BBL", "DD", "GOLD", "DUK", "EXC", "FE", "EIX",
             "CMS", "MCD", "SBUX", "LOW", "HMC", "HD", "GM", "ROST", "BBY", "MAR", "KO", "PEP", "GIS"};
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
@@ -45,7 +45,18 @@ namespace ModelTrainer
             {
                 //var model = new MLStockBinaryFastForestModel();
                 Console.WriteLine($"-=== Loading training data for {stock} ===-");
-                var model = new MLStockFastForestModel();
+                //var model = new MLStockFastForestModel();
+                //model.Parameters.FeatureSelectionRank = 200;
+                //model.Parameters.NumCrossValidations = 10;
+                //model.Parameters.NumOfTrees = 2000;
+                //model.Parameters.NumOfLeaves = 25;
+                //model.Parameters.MinNumOfLeaves = 10;
+
+                var model = new MLStockPcaSvmModel();
+                model.Parameters.FeatureSelectionRank = 200;
+                model.Parameters.NumCrossValidations = 10;
+                model.Parameters.PcaRank = 100;
+
                 var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
                 var filteredDataset = dataset.Value;
@@ -54,15 +65,12 @@ namespace ModelTrainer
                 var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
                 var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
 
-                model.Parameters.FeatureSelectionRank = 500;
-                model.Parameters.NumCrossValidations = 10;
-                model.Parameters.NumOfTrees = 2000;
-                model.Parameters.NumOfLeaves = 25;
-                model.Parameters.MinNumOfLeaves = 10;
 
                 Console.WriteLine($"-=== Training {stock} ===-");
                 Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank}");
-                Console.WriteLine($"Number of Trees: { model.Parameters.NumOfTrees} \t Number of Leaves: { model.Parameters.NumOfLeaves}");
+                Console.WriteLine($"Pca Rank: { model.Parameters.PcaRank}");
+               
+                //Console.WriteLine($"Number of Trees: { model.Parameters.NumOfTrees} \t Number of Leaves: { model.Parameters.NumOfLeaves}");
                 Stopwatch stopwatch = Stopwatch.StartNew();
                 var trainingResult = model.Train(trainingSet, 0.0);
                 stopwatch.Stop();
@@ -81,8 +89,8 @@ namespace ModelTrainer
                 Console.WriteLine($"Positive Precision: {trainingResult.Value.PositivePrecision} \t Positive Recall: {trainingResult.Value.PositiveRecall}");
                 Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Negative Recall: {trainingResult.Value.NegativeRecall}");
 
-                Console.WriteLine($"-=== Saving Model {stock} ===-");
-                model.Save(_pathToModels);
+                //Console.WriteLine($"-=== Saving Model {stock} ===-");
+                //model.Save(_pathToModels);
 
                 Console.WriteLine($"-=== Testing Model  {stock} ===-");
                 double accuracy = 0.0;

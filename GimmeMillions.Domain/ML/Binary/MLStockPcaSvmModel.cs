@@ -35,6 +35,7 @@ namespace GimmeMillions.Domain.ML.Binary
         private FeatureFilterTransform _frequencyUsageTransform;
         private FeatureFilterTransform _maxDifferenceFilterTransform;
         private PcaTransform _pcaTransform;
+        private SupervisedNormalizerTransform _normTransform;
         private ITransformer _model;
 
         private DataViewSchema _dataSchema;
@@ -104,8 +105,9 @@ namespace GimmeMillions.Domain.ML.Binary
                 GetSchemaDefinition(input));
 
             var prediction = _model.Transform(
-                _maxDifferenceFilterTransform.Transform(
-                    _frequencyUsageTransform.Transform(inputDataView)));
+                _normTransform.Transform(
+                    _maxDifferenceFilterTransform.Transform(
+                        _frequencyUsageTransform.Transform(inputDataView))));
 
             var score = prediction.GetColumn<float>("Score").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
@@ -185,13 +187,13 @@ namespace GimmeMillions.Domain.ML.Binary
             }
 
             int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.5);
-            var frequencyUsageEstimator = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength);
+            var frequencyUsageEstimator = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength, skip: 0);
             _frequencyUsageTransform = frequencyUsageEstimator.Fit(trainData);
             var mostUsedData = _frequencyUsageTransform.Transform(trainData);
 
-            var positiveResults = TryModel(mostUsedData, Parameters.FeatureSelectionRank, true);
+            var positiveResults = TryModel(mostUsedData, true);
             Console.WriteLine($"Positive Acc: {positiveResults.Accuracy}, AoC: {positiveResults.AreaUnderPrecisionRecallCurve}, PP: {positiveResults.PositivePrecision}");
-            var negativeResults = TryModel(mostUsedData, Parameters.FeatureSelectionRank, false);
+            var negativeResults = TryModel(mostUsedData, false);
             Console.WriteLine($"Negative Acc: {negativeResults.Accuracy}, AoC: {negativeResults.AreaUnderPrecisionRecallCurve}, PP: {negativeResults.PositivePrecision}");
             bool usePositiveSort = true;
             Metadata.TrainingResults = positiveResults;
@@ -206,16 +208,22 @@ namespace GimmeMillions.Domain.ML.Binary
             _maxDifferenceFilterTransform = maxDifferenceFilterEstimator.Fit(mostUsedData);
             var maxDifferenceData = _maxDifferenceFilterTransform.Transform(mostUsedData);
 
+            //var pcaEstimator = new PcaEstimator(_mLContext, rank: Parameters.PcaRank);
+            //_pcaTransform = pcaEstimator.Fit(maxDifferenceData);
+            //var pcaData = _pcaTransform.Transform(maxDifferenceData);
+
+            var normalizerEstimator = new SupervisedNormalizerEstimator(_mLContext);
+            _normTransform = normalizerEstimator.Fit(maxDifferenceData);
+            var normalizedData = _normTransform.Transform(maxDifferenceData);
+
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
             Metadata.StockSymbol = firstFeature.Output.Symbol;
 
-            //var ffEstimator = _mLContext.BinaryClassification.Trainers.FastForest(
-            //           numberOfLeaves: Parameters.NumOfLeaves,
-            //           numberOfTrees: Parameters.NumOfTrees,
-            //           minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
+            var estimator = _mLContext.Transforms.NormalizeMinMax("Features").
+                Append(_mLContext.BinaryClassification.Trainers.FastTree());
 
-            //_model = ffEstimator.Fit(maxDifferenceData);
+            _model = estimator.Fit(normalizedData);
 
             if (testData != null)
             {
@@ -231,14 +239,18 @@ namespace GimmeMillions.Domain.ML.Binary
         }
 
         private ModelMetrics TryModel(IDataView data,
-            int rank,
             bool positiveSort)
         {
-            var filteredData = (new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: rank, positiveSort: positiveSort))
+            var filteredData = (new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: Parameters.FeatureSelectionRank, positiveSort: positiveSort))
                 .Fit(data).Transform(data);
-            var pipeline = _mLContext.BinaryClassification.Trainers.FastForest();
 
-            var cvResults = _mLContext.BinaryClassification.CrossValidateNonCalibrated(filteredData, pipeline, Parameters.NumCrossValidations);
+            //var pcaData = new PcaEstimator(_mLContext, rank: Parameters.PcaRank).Fit(filteredData).Transform(filteredData);
+            var normalizedData = (new SupervisedNormalizerEstimator(_mLContext))
+                .Fit(filteredData).Transform(filteredData);
+            var svm = _mLContext.Transforms.NormalizeMinMax("Features").
+                Append( _mLContext.BinaryClassification.Trainers.FastTree());
+
+            var cvResults = _mLContext.BinaryClassification.CrossValidateNonCalibrated(normalizedData, svm, Parameters.NumCrossValidations);
             return CrossValidationResultsToMetrics(cvResults);
         }
 

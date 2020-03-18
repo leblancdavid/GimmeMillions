@@ -13,16 +13,19 @@ namespace GimmeMillions.Domain.ML.Transforms
         private string _inputColumnName;
         private string _outputColumnName;
         private int _rank;
+        private int _skip;
         private MLContext _mLContext;
 
         public FeatureFrequencyUsageFilterEstimator(MLContext mLContext,
             string inputColumnName = "Features",
             string outputColumnName = "Label",
-            int rank = 1000)
+            int rank = 1000,
+            int skip = 100)
         {
             _inputColumnName = inputColumnName;
             _outputColumnName = outputColumnName;
             _mLContext = mLContext;
+            _skip = skip;
             _rank = rank;
         }
 
@@ -40,7 +43,11 @@ namespace GimmeMillions.Domain.ML.Transforms
         {
             var differences = GetFeatureUsage(input);
             var orderedDifferences = differences.OrderByDescending(x => x.Usage).ToList();
-            var indicesToKeep = orderedDifferences.Skip(100).Take(_rank).Select(x => x.Index);
+            IEnumerable<int> indicesToKeep;
+            if(_skip > 0)
+                indicesToKeep = orderedDifferences.Skip(_skip).Take(_rank).Select(x => x.Index);
+            else
+                indicesToKeep = orderedDifferences.Take(_rank).Select(x => x.Index);
 
             return indicesToKeep.ToArray();
         }
