@@ -187,8 +187,8 @@ namespace GimmeMillions.Domain.ML.Binary
                 trainData = datasetView;
             }
 
-            int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.5);
-            var frequencyUsageEstimator = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength);
+            int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.25);
+            var frequencyUsageEstimator = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength, skip: 0);
             _frequencyUsageTransform = frequencyUsageEstimator.Fit(trainData);
             var mostUsedData = _frequencyUsageTransform.Transform(trainData);
 
@@ -233,86 +233,13 @@ namespace GimmeMillions.Domain.ML.Binary
             return Result.Ok<ModelMetrics>(Metadata.TrainingResults);
         }
 
-        private void UpdateMetadata(IReadOnlyList<CrossValidationResult<CalibratedBinaryClassificationMetrics>> crossValidationResults)
-        {
-            Metadata.Parameters = Parameters;
-            Metadata.TrainingResults = new ModelMetrics();
-
-            float lowerCount = 0.0f, upperCount = 0.0f;
-            Metadata.AverageLowerProbability = 0.0f;
-            Metadata.AverageUpperProbability = 0.0f;
-            Metadata.AverageLowerScore = 0.0f;
-            Metadata.AverageUpperScore = 0.0f;
-            foreach (var fold in crossValidationResults)
-            {
-                Metadata.TrainingResults.Accuracy += fold.Metrics.Accuracy;
-                Metadata.TrainingResults.AreaUnderPrecisionRecallCurve += fold.Metrics.AreaUnderPrecisionRecallCurve;
-                Metadata.TrainingResults.AreaUnderRocCurve += fold.Metrics.AreaUnderRocCurve;
-                Metadata.TrainingResults.F1Score += fold.Metrics.F1Score;
-                Metadata.TrainingResults.NegativePrecision += fold.Metrics.NegativePrecision;
-                Metadata.TrainingResults.NegativeRecall += fold.Metrics.NegativeRecall;
-                Metadata.TrainingResults.PositivePrecision += fold.Metrics.PositivePrecision;
-                Metadata.TrainingResults.PositiveRecall += fold.Metrics.PositiveRecall;
-
-                var probabilities = fold.ScoredHoldOutSet.GetColumn<float>("Probability").ToArray();
-                var scores = fold.ScoredHoldOutSet.GetColumn<float>("Score").ToArray();
-                for (int i = 0; i < probabilities.Length; ++i)
-                {
-                    if (probabilities[i] >= 0.5f)
-                    {
-                        Metadata.AverageUpperProbability += probabilities[i];
-                        Metadata.AverageUpperScore += scores[i];
-                        upperCount++;
-                    }
-                    else
-                    {
-                        Metadata.AverageLowerProbability += probabilities[i];
-                        Metadata.AverageLowerScore += scores[i];
-                        lowerCount++;
-                    }
-                }
-
-            }
-
-            Metadata.TrainingResults.Accuracy /= crossValidationResults.Count();
-            Metadata.TrainingResults.AreaUnderPrecisionRecallCurve /= crossValidationResults.Count();
-            Metadata.TrainingResults.AreaUnderRocCurve /= crossValidationResults.Count();
-            Metadata.TrainingResults.F1Score /= crossValidationResults.Count();
-            Metadata.TrainingResults.NegativePrecision /= crossValidationResults.Count();
-            Metadata.TrainingResults.NegativeRecall /= crossValidationResults.Count();
-            Metadata.TrainingResults.PositivePrecision /= crossValidationResults.Count();
-            Metadata.TrainingResults.PositiveRecall /= crossValidationResults.Count();
-
-            if (lowerCount > 0)
-            {
-                Metadata.AverageLowerProbability /= lowerCount;
-                Metadata.AverageLowerScore /= lowerCount;
-            }
-            else
-            {
-                Metadata.AverageLowerProbability = 0.0f;
-                Metadata.AverageLowerScore = 0.0f;
-            }
-
-            if (upperCount > 0)
-            {
-                Metadata.AverageUpperProbability /= upperCount;
-                Metadata.AverageUpperScore /= upperCount;
-            }
-            else
-            {
-                Metadata.AverageUpperProbability = 0.0f;
-                Metadata.AverageUpperScore = 0.0f;
-            }
-        }
-
         private ModelMetrics TryModel(IDataView data,
             int rank, 
             bool positiveSort)
         {
             var filteredData = (new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: rank, positiveSort: positiveSort))
                 .Fit(data).Transform(data);
-            var pipeline = _mLContext.BinaryClassification.Trainers.FastForest();
+            var pipeline = _mLContext.BinaryClassification.Trainers.FastTree();
 
             var cvResults = _mLContext.BinaryClassification.CrossValidateNonCalibrated(filteredData, pipeline, Parameters.NumCrossValidations);
             return CrossValidationResultsToMetrics(cvResults);

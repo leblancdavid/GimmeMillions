@@ -105,9 +105,9 @@ namespace GimmeMillions.Domain.ML.Binary
                 GetSchemaDefinition(input));
 
             var prediction = _model.Transform(
-                _normTransform.Transform(
+                    //_normTransform.Transform(
                     _maxDifferenceFilterTransform.Transform(
-                        _frequencyUsageTransform.Transform(inputDataView))));
+                        _frequencyUsageTransform.Transform(inputDataView)));//);
 
             var score = prediction.GetColumn<float>("Score").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
@@ -197,7 +197,7 @@ namespace GimmeMillions.Domain.ML.Binary
             Console.WriteLine($"Negative Acc: {negativeResults.Accuracy}, AoC: {negativeResults.AreaUnderPrecisionRecallCurve}, PP: {negativeResults.PositivePrecision}");
             bool usePositiveSort = true;
             Metadata.TrainingResults = positiveResults;
-            if (positiveResults.Accuracy < negativeResults.Accuracy)
+            if (positiveResults.AreaUnderPrecisionRecallCurve < negativeResults.AreaUnderPrecisionRecallCurve)
             {
                 usePositiveSort = false;
                 Metadata.TrainingResults = negativeResults;
@@ -212,18 +212,20 @@ namespace GimmeMillions.Domain.ML.Binary
             //_pcaTransform = pcaEstimator.Fit(maxDifferenceData);
             //var pcaData = _pcaTransform.Transform(maxDifferenceData);
 
-            var normalizerEstimator = new SupervisedNormalizerEstimator(_mLContext);
-            _normTransform = normalizerEstimator.Fit(maxDifferenceData);
-            var normalizedData = _normTransform.Transform(maxDifferenceData);
+            //var normalizerEstimator = new SupervisedNormalizerEstimator(_mLContext);
+            //_normTransform = normalizerEstimator.Fit(maxDifferenceData);
+            //var normalizedData = _normTransform.Transform(maxDifferenceData);
 
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
             Metadata.StockSymbol = firstFeature.Output.Symbol;
 
-            var estimator = _mLContext.Transforms.NormalizeMinMax("Features").
-                Append(_mLContext.BinaryClassification.Trainers.FastTree());
+            var estimator = _mLContext.Transforms.NormalizeMinMax("Features")
+                .Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.PcaRank, overSampling: Parameters.PcaRank))
+                //.Append(_mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 10));
+                .Append(_mLContext.BinaryClassification.Trainers.FastTree());
 
-            _model = estimator.Fit(normalizedData);
+            _model = estimator.Fit(maxDifferenceData);
 
             if (testData != null)
             {
@@ -245,12 +247,14 @@ namespace GimmeMillions.Domain.ML.Binary
                 .Fit(data).Transform(data);
 
             //var pcaData = new PcaEstimator(_mLContext, rank: Parameters.PcaRank).Fit(filteredData).Transform(filteredData);
-            var normalizedData = (new SupervisedNormalizerEstimator(_mLContext))
-                .Fit(filteredData).Transform(filteredData);
-            var svm = _mLContext.Transforms.NormalizeMinMax("Features").
-                Append( _mLContext.BinaryClassification.Trainers.FastTree());
+            //var normalizedData = (new SupervisedNormalizerEstimator(_mLContext))
+            //    .Fit(filteredData).Transform(filteredData);
+            var svm = _mLContext.Transforms.NormalizeMinMax("Features")
+                .Append( _mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.PcaRank, overSampling: Parameters.PcaRank))
+                //.Append( _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 10));
+                .Append(_mLContext.BinaryClassification.Trainers.FastTree());
 
-            var cvResults = _mLContext.BinaryClassification.CrossValidateNonCalibrated(normalizedData, svm, Parameters.NumCrossValidations);
+            var cvResults = _mLContext.BinaryClassification.CrossValidateNonCalibrated(filteredData, svm, Parameters.NumCrossValidations);
             return CrossValidationResultsToMetrics(cvResults);
         }
 
