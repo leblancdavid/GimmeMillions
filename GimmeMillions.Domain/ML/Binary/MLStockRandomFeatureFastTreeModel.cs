@@ -187,8 +187,10 @@ namespace GimmeMillions.Domain.ML.Binary
                 trainData = datasetView;
             }
 
-            var positiveResults = TryModel(trainData, firstFeature.Input.Length, Parameters.FeatureSelectionRank, true);
-            var negativeResults = TryModel(trainData, firstFeature.Input.Length, Parameters.FeatureSelectionRank, false);
+            var positiveResults = TryModel(trainData, firstFeature.Input.Length, Parameters.FeatureSelectionRank, true, 0.05);
+            Console.WriteLine($"Positive validation accuracy: {positiveResults.Accuracy}");
+            var negativeResults = TryModel(trainData, firstFeature.Input.Length, Parameters.FeatureSelectionRank, false, 0.05);
+            Console.WriteLine($"Negative validation accuracy: {negativeResults.Accuracy}");
             bool usePositiveSort = true;
             if(positiveResults.Accuracy < negativeResults.Accuracy)
             {
@@ -321,15 +323,26 @@ namespace GimmeMillions.Domain.ML.Binary
             }
         }
 
-        private BinaryClassificationMetrics TryModel(IDataView trainingData, int featureLength, int rank, bool positiveSort)
+        private BinaryClassificationMetrics TryModel(IDataView data, 
+            int featureLength, 
+            int rank, 
+            bool positiveSort, 
+            double validationFraction = 0.2)
         {
+            var dataSplit = _mLContext.Data.TrainTestSplit(data, testFraction: validationFraction);
+            var trainingData = dataSplit.TrainSet;
+            var validationData = dataSplit.TestSet;
+
             int filteredFeatureLength = (int)(featureLength * 0.5);
             var pipeline = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength)
                 .Append(new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: rank, positiveSort: positiveSort))
-                   .Append(_mLContext.BinaryClassification.Trainers.LinearSvm());
+                 .Append(_mLContext.BinaryClassification.Trainers.FastForest(
+                       numberOfLeaves: Parameters.NumOfLeaves,
+                       numberOfTrees: Parameters.NumOfTrees,
+                       minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves));
 
             return _mLContext.BinaryClassification.EvaluateNonCalibrated(
-                pipeline.Fit(trainingData).Transform(trainingData));
+                pipeline.Fit(trainingData).Transform(validationData));
         }
 
         private SchemaDefinition GetSchemaDefinition(FeatureVector vector)
