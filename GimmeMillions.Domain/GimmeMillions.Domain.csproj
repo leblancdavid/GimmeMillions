@@ -180,6 +180,8 @@
     <Compile Include="ML\Binary\ModelMetrics.cs" />
     <Compile Include="ML\Binary\IBinaryStockPredictionModel.cs" />
     <Compile Include="ML\IStockPredictionModelLoader.cs" />
+    <Compile Include="ML\Transforms\KnnBruteForceEstimator.cs" />
+    <Compile Include="ML\Transforms\KnnBruteForceTransform.cs" />
     <Compile Include="ML\Transforms\MaxDifferenceFeatureFilterEstimator.cs" />
     <Compile Include="ML\Transforms\MaxVarianceFeatureFilterEstimator.cs" />
     <Compile Include="ML\Transforms\PcaEstimator.cs" />
