@@ -5,14 +5,11 @@ using GimmeMillions.Domain.Stocks;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using Microsoft.ML.Trainers.FastTree;
-using Microsoft.ML.Transforms;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static Microsoft.ML.TrainCatalogBase;
 
 namespace GimmeMillions.Domain.ML.Binary
@@ -313,15 +310,15 @@ namespace GimmeMillions.Domain.ML.Binary
             int rank, 
             bool positiveSort)
         {
+            var filteredData = (new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: rank, positiveSort: positiveSort))
+                .Fit(data).Transform(data);
+            var pipeline = _mLContext.BinaryClassification.Trainers.FastForest();
 
-            var pipeline = new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: rank, positiveSort: positiveSort)
-                 .Append(_mLContext.BinaryClassification.Trainers.FastTree());
-
-            var cvResults = _mLContext.BinaryClassification.CrossValidate(data, pipeline, Parameters.NumCrossValidations);
+            var cvResults = _mLContext.BinaryClassification.CrossValidateNonCalibrated(filteredData, pipeline, Parameters.NumCrossValidations);
             return CrossValidationResultsToMetrics(cvResults);
         }
 
-        private ModelMetrics CrossValidationResultsToMetrics(IReadOnlyList<CrossValidationResult<CalibratedBinaryClassificationMetrics>> crossValidationResults)
+        private ModelMetrics CrossValidationResultsToMetrics(IReadOnlyList<CrossValidationResult<BinaryClassificationMetrics>> crossValidationResults)
         {
             var metrics = new ModelMetrics();
             foreach (var fold in crossValidationResults)

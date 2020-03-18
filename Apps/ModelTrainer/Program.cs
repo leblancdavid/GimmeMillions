@@ -38,23 +38,24 @@ namespace ModelTrainer
             var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
 
             var startDate = new DateTime(2000, 1, 1);
-            var endDate = new DateTime(2020, 1, 1);
+            var endDate = DateTime.Today;
 
             double totalCount = 0.0, totalAccuracy = 0.0;
             foreach(var stock in stocks)
             {
                 //var model = new MLStockBinaryFastForestModel();
+                Console.WriteLine($"-=== Loading training data for {stock} ===-");
                 var model = new MLStockFastForestModel();
                 var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
                 var filteredDataset = dataset.Value;
-                int numTestExamples = 20;
+                int numTestExamples = 10;
 
                 var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
                 var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
 
-                model.Parameters.FeatureSelectionRank = 125;
-                model.Parameters.NumCrossValidations = 5;
+                model.Parameters.FeatureSelectionRank = 500;
+                model.Parameters.NumCrossValidations = 10;
                 model.Parameters.NumOfTrees = 2000;
                 model.Parameters.NumOfLeaves = 25;
                 model.Parameters.MinNumOfLeaves = 10;
@@ -76,12 +77,12 @@ namespace ModelTrainer
                 }
 
                 //Console.WriteLine($"-=== Results {stock} ===-");
-                //Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
-                //Console.WriteLine($"Positive Precision: {trainingResult.Value.PositivePrecision} \t Positive Recall: {trainingResult.Value.PositiveRecall}");
-                //Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Negative Recall: {trainingResult.Value.NegativeRecall}");
+                Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
+                Console.WriteLine($"Positive Precision: {trainingResult.Value.PositivePrecision} \t Positive Recall: {trainingResult.Value.PositiveRecall}");
+                Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Negative Recall: {trainingResult.Value.NegativeRecall}");
 
-                //Console.WriteLine($"-=== Saving Model {stock} ===-");
-                //model.Save(_pathToModels);
+                Console.WriteLine($"-=== Saving Model {stock} ===-");
+                model.Save(_pathToModels);
 
                 Console.WriteLine($"-=== Testing Model  {stock} ===-");
                 double accuracy = 0.0;

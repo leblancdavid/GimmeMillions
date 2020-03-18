@@ -175,7 +175,7 @@
     <Compile Include="ML\Accord\IDataTransformer.cs" />
     <Compile Include="ML\Accord\SupervisedNormalizationDataTransformer.cs" />
     <Compile Include="ML\Binary\BinaryPredictionModelMetadata.cs" />
-    <Compile Include="ML\Binary\MLStockRandomFeatureFastTreeModel.cs" />
+    <Compile Include="ML\Binary\MLStockFastForestModel.cs" />
     <Compile Include="ML\Binary\ModelMetrics.cs" />
     <Compile Include="ML\Binary\IBinaryStockPredictionModel.cs" />
     <Compile Include="ML\IStockPredictionModelLoader.cs" />
