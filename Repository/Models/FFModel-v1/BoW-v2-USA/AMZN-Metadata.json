@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.5289117235883154,
+    "Accuracy": 0.51757560229214361,
+    "PositivePrecision": 0.52406023696459214,
+    "PositiveRecall": 0.55807596013508287,
+    "NegativePrecision": 0.51076145153876484,
+    "NegativeRecall": 0.47629955937684237,
+    "F1Score": 0.53987057802240157,
+    "AreaUnderPrecisionRecallCurve": 0.5346212460104276
+  },
+  "StockSymbol": "AMZN",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "FFModel-v1"
+}

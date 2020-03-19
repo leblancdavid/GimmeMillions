@@ -317,4 +317,3 @@ ASALocalRun/
 # Ignore the Repository Articles, it's too much for git!
 Repository/Articles/
 Repository/Cache/
-Repository/Models/

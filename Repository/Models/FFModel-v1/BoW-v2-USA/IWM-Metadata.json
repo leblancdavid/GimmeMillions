@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.55336816268507483,
+    "Accuracy": 0.5486376001312433,
+    "PositivePrecision": 0.56063632393861962,
+    "PositiveRecall": 0.6037360301648238,
+    "NegativePrecision": 0.53271477124385924,
+    "NegativeRecall": 0.48827591561035738,
+    "F1Score": 0.58119325624313944,
+    "AreaUnderPrecisionRecallCurve": 0.55505153796910256
+  },
+  "StockSymbol": "IWM",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "FFModel-v1"
+}

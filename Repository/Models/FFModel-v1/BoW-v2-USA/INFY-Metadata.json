@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.54137139023887981,
+    "Accuracy": 0.53179883044029164,
+    "PositivePrecision": 0.53967435125518726,
+    "PositiveRecall": 0.56917348415413727,
+    "NegativePrecision": 0.52322300258591281,
+    "NegativeRecall": 0.49337060368751684,
+    "F1Score": 0.55360565246840332,
+    "AreaUnderPrecisionRecallCurve": 0.53741033239467817
+  },
+  "StockSymbol": "INFY",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "FFModel-v1"
+}

@@ -187,7 +187,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 trainData = datasetView;
             }
 
-            int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.25);
+            int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.75);
             var frequencyUsageEstimator = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength, skip: 0);
             _frequencyUsageTransform = frequencyUsageEstimator.Fit(trainData);
             var mostUsedData = _frequencyUsageTransform.Transform(trainData);

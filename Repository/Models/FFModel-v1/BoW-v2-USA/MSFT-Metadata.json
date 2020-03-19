@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.51565780359439517,
+    "Accuracy": 0.51240253588085982,
+    "PositivePrecision": 0.52003618821898334,
+    "PositiveRecall": 0.54611832956022055,
+    "NegativePrecision": 0.50391620352751487,
+    "NegativeRecall": 0.47768611707583475,
+    "F1Score": 0.53246474496438823,
+    "AreaUnderPrecisionRecallCurve": 0.52195430307061885
+  },
+  "StockSymbol": "MSFT",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "FFModel-v1"
+}
