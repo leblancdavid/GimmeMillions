@@ -52,11 +52,17 @@ namespace GimmeMillions.Domain.ML.Transforms
 
         public IDataView Transform(IDataView input)
         {
-            var inputFeatures = input.GetColumn<float[]>("Features");
-            var predictions = new List<KnnPrediction>();
-            foreach(var vector in inputFeatures)
+            var inputFeatures = input.GetColumn<float[]>("Features").ToArray();
+            var labelColumn = input.Schema.GetColumnOrNull("Label");
+            var labels = new bool[inputFeatures.Length];
+            if(labelColumn != null)
             {
-                predictions.Add(GetPrediction(vector, 9));
+                labels = input.GetColumn<bool>("Label").ToArray();
+            }
+            var predictions = new List<KnnPrediction>();
+            for(int i = 0; i < inputFeatures.Length; ++i)
+            {
+                predictions.Add(GetPrediction(inputFeatures[i], 1, labels[i]));
             }
             var definedSchema = SchemaDefinition.Create(typeof(KnnPrediction));
             return _mLContext.Data.LoadFromEnumerable(predictions, definedSchema);
@@ -67,8 +73,9 @@ namespace GimmeMillions.Domain.ML.Transforms
             public float Score;
             public float Probability;
             public bool PredictedLabel;
+            public bool Label;
         }
-        private KnnPrediction GetPrediction(float[] input, int nearestNeigbors)
+        private KnnPrediction GetPrediction(float[] input, int nearestNeigbors, bool expectedLabel)
         {
             var distances = ComputeDistances(input).Take(nearestNeigbors).ToArray();
             var positiveExamples = distances.Where(x => x.Label);
@@ -84,12 +91,13 @@ namespace GimmeMillions.Domain.ML.Transforms
                 negativeSum /= negativeExmples.Count();
             }
 
-            double p = negativeSum / (negativeSum + positiveSum);
+            double p = (double)positiveExamples.Count() / (nearestNeigbors);
             return new KnnPrediction()
             {
                 Probability = (float)p,
                 PredictedLabel = p > 0.5f,
-                Score = (float)(negativeSum - positiveSum)
+                Score = (float)(negativeSum - positiveSum),
+                Label = expectedLabel
             };
         }
 

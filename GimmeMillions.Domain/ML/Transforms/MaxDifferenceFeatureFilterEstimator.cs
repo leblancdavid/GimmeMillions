@@ -90,6 +90,7 @@ namespace GimmeMillions.Domain.ML.Transforms
                 {
                     p[i] = ((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal), i);
                 }
+                p[i] = (Math.Abs((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal)), i);
             }
             return p;
         }

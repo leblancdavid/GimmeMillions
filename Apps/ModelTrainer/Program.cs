@@ -53,6 +53,7 @@ namespace ModelTrainer
                 //model.Parameters.MinNumOfLeaves = 20;
 
                 var model = new MLStockKnnBruteForceModel();
+                model.Parameters.FeatureSelectionRank = 50000;
 
                 ////var model = new MLStock();
                 //model.Parameters.FeatureSelectionRank = 500;
@@ -69,7 +70,7 @@ namespace ModelTrainer
                 var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
                 var filteredDataset = dataset.Value;
-                int numTestExamples = 10;
+                int numTestExamples = 60;
 
                 var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
                 var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
@@ -96,9 +97,9 @@ namespace ModelTrainer
                 }
 
                 //Console.WriteLine($"-=== Results {stock} ===-");
-                Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
-                Console.WriteLine($"Positive Precision: {trainingResult.Value.PositivePrecision} \t Positive Recall: {trainingResult.Value.PositiveRecall}");
-                Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Negative Recall: {trainingResult.Value.NegativeRecall}");
+                //Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
+                //Console.WriteLine($"Positive Precision: {trainingResult.Value.PositivePrecision} \t Positive Recall: {trainingResult.Value.PositiveRecall}");
+                //Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Negative Recall: {trainingResult.Value.NegativeRecall}");
 
                 //Console.WriteLine($"-=== Saving Model {stock} ===-");
                 //model.Save(_pathToModels);

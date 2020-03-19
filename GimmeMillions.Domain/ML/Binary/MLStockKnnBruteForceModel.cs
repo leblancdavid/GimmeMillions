@@ -33,6 +33,7 @@ namespace GimmeMillions.Domain.ML.Binary
         private FeatureFilterTransform _frequencyUsageTransform;
         private FeatureFilterTransform _maxDifferenceFilterTransform;
         private KnnBruteForceTransform _model;
+        private ITransformer _normalizer;
 
         private DataViewSchema _dataSchema;
         private string _modelId = "KnnBF-v1";
@@ -101,9 +102,9 @@ namespace GimmeMillions.Domain.ML.Binary
                 GetSchemaDefinition(input));
 
             var prediction = _model.Transform(
-                    //_normTransform.Transform(
+                    _normalizer.Transform(
                     _maxDifferenceFilterTransform.Transform(
-                        _frequencyUsageTransform.Transform(inputDataView)));//);
+                        _frequencyUsageTransform.Transform(inputDataView))));
 
             var score = prediction.GetColumn<float>("Score").ToArray();
             var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
@@ -181,35 +182,38 @@ namespace GimmeMillions.Domain.ML.Binary
                 trainData = datasetView;
             }
 
-            int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.5);
-            var frequencyUsageEstimator = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength, skip: 0);
+            int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.75);
+            var frequencyUsageEstimator = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength, skip: 100);
             _frequencyUsageTransform = frequencyUsageEstimator.Fit(trainData);
             var mostUsedData = _frequencyUsageTransform.Transform(trainData);
 
-            var positiveResults = TryModel(mostUsedData, true);
-            Console.WriteLine($"Positive Acc: {positiveResults.Accuracy}, AoC: {positiveResults.AreaUnderPrecisionRecallCurve}, PP: {positiveResults.PositivePrecision}");
-            var negativeResults = TryModel(mostUsedData, false);
-            Console.WriteLine($"Negative Acc: {negativeResults.Accuracy}, AoC: {negativeResults.AreaUnderPrecisionRecallCurve}, PP: {negativeResults.PositivePrecision}");
-            bool usePositiveSort = true;
-            Metadata.TrainingResults = positiveResults;
-            if (positiveResults.AreaUnderPrecisionRecallCurve < negativeResults.AreaUnderPrecisionRecallCurve)
-            {
-                usePositiveSort = false;
-                Metadata.TrainingResults = negativeResults;
-            }
+            //var positiveResults = TryModel(mostUsedData, true);
+            //Console.WriteLine($"Positive Acc: {positiveResults.Accuracy}, AoC: {positiveResults.AreaUnderPrecisionRecallCurve}, PP: {positiveResults.PositivePrecision}");
+            //var negativeResults = TryModel(mostUsedData, false);
+            //Console.WriteLine($"Negative Acc: {negativeResults.Accuracy}, AoC: {negativeResults.AreaUnderPrecisionRecallCurve}, PP: {negativeResults.PositivePrecision}");
+            //bool usePositiveSort = true;
+            //Metadata.TrainingResults = positiveResults;
+            //if (positiveResults.AreaUnderPrecisionRecallCurve < negativeResults.AreaUnderPrecisionRecallCurve)
+            //{
+            //    usePositiveSort = false;
+            //    Metadata.TrainingResults = negativeResults;
+            //}
 
             var maxDifferenceFilterEstimator = new MaxDifferenceFeatureFilterEstimator(_mLContext,
-                rank: Parameters.FeatureSelectionRank, positiveSort: usePositiveSort);
+                rank: Parameters.FeatureSelectionRank, positiveSort: false);
             _maxDifferenceFilterTransform = maxDifferenceFilterEstimator.Fit(mostUsedData);
             var maxDifferenceData = _maxDifferenceFilterTransform.Transform(mostUsedData);
 
+            var normalizingEstimator = _mLContext.Transforms.NormalizeMeanVariance("Features");
+            _normalizer = normalizingEstimator.Fit(maxDifferenceData);
+            var normalizedData = _normalizer.Transform(maxDifferenceData);
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
             Metadata.StockSymbol = firstFeature.Output.Symbol;
 
             var estimator = new KnnBruteForceEstimator(_mLContext);
 
-            _model = estimator.Fit(maxDifferenceData);
+            _model = estimator.Fit(normalizedData);
 
             if (testData != null)
             {
