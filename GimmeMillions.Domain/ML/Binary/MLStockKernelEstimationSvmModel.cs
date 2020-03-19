@@ -14,7 +14,7 @@ using static Microsoft.ML.TrainCatalogBase;
 
 namespace GimmeMillions.Domain.ML.Binary
 {
-    public class KernelEstimationFastForestBinaryModelParameters
+    public class KernelEstimationSvmModelParameters
     {
         public int NumCrossValidations { get; set; }
         public int NumOfTrees { get; set; }
@@ -23,7 +23,7 @@ namespace GimmeMillions.Domain.ML.Binary
         public int FeatureSelectionRank { get; set; }
         public int KernelRank { get; set; }
         public int NumIterations { get; set; }
-        public KernelEstimationFastForestBinaryModelParameters()
+        public KernelEstimationSvmModelParameters()
         {
             NumCrossValidations = 5;
             NumIterations = 10;
@@ -36,7 +36,7 @@ namespace GimmeMillions.Domain.ML.Binary
 
     }
 
-    public class MLStockKernelEstimationFastForestModel : IBinaryStockPredictionModel<KernelEstimationFastForestBinaryModelParameters>
+    public class MLStockKernelEstimationSvmModel : IBinaryStockPredictionModel<KernelEstimationSvmModelParameters>
     {
         private MLContext _mLContext;
         private int _seed;
@@ -46,9 +46,9 @@ namespace GimmeMillions.Domain.ML.Binary
         private ITransformer _model;
 
         private DataViewSchema _dataSchema;
-        private string _modelId = "FFModel-v1";
-        public KernelEstimationFastForestBinaryModelParameters Parameters { get; set; }
-        public BinaryPredictionModelMetadata<KernelEstimationFastForestBinaryModelParameters> Metadata { get; private set; }
+        private string _modelId = "KernelSvmModel-v1";
+        public KernelEstimationSvmModelParameters Parameters { get; set; }
+        public BinaryPredictionModelMetadata<KernelEstimationSvmModelParameters> Metadata { get; private set; }
 
         public string StockSymbol => Metadata.StockSymbol;
 
@@ -57,13 +57,13 @@ namespace GimmeMillions.Domain.ML.Binary
         public string Encoding => Metadata.FeatureEncoding;
         
 
-        public MLStockKernelEstimationFastForestModel()
+        public MLStockKernelEstimationSvmModel()
         {
-            Metadata = new BinaryPredictionModelMetadata<KernelEstimationFastForestBinaryModelParameters>();
-            Metadata.ModelId = "KernelFFModel-v1";
+            Metadata = new BinaryPredictionModelMetadata<KernelEstimationSvmModelParameters>();
+            Metadata.ModelId = _modelId;
             _seed = 27;
             _mLContext = new MLContext(_seed);
-            Parameters = new KernelEstimationFastForestBinaryModelParameters();
+            Parameters = new KernelEstimationSvmModelParameters();
 
         }
 
@@ -73,7 +73,7 @@ namespace GimmeMillions.Domain.ML.Binary
             {
                 string directory = $"{pathToModel}/{_modelId}/{encoding}";
 
-                Metadata = JsonConvert.DeserializeObject<BinaryPredictionModelMetadata<KernelEstimationFastForestBinaryModelParameters>>(
+                Metadata = JsonConvert.DeserializeObject<BinaryPredictionModelMetadata<KernelEstimationSvmModelParameters>>(
                     File.ReadAllText($"{ directory}/{symbol}-Metadata.json"));
 
                 var maxDiffLoad = FeatureFilterTransform.LoadFromFile($"{ directory}/{Metadata.StockSymbol}-MaxDiffFilterTransform.json", _mLContext);
@@ -149,7 +149,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 _maxDifferenceFilterTransform.SaveToFile($"{ directory}/{ Metadata.StockSymbol}-MaxDiffFilterTransform.json");
                 _frequencyUsageTransform.SaveToFile($"{ directory}/{ Metadata.StockSymbol}-FrequencyUsageTransform.json");
                 _mLContext.Model.Save(_model, _dataSchema, $"{directory}/{Metadata.StockSymbol}-Model.zip");
-                _mLContext.Model.Save(_model, _dataSchema, $"{directory}/{Metadata.StockSymbol}-Kernel.zip");
+                _mLContext.Model.Save(_kernelTransform, _dataSchema, $"{directory}/{Metadata.StockSymbol}-Kernel.zip");
 
                 return Result.Ok();
             }
@@ -223,12 +223,18 @@ namespace GimmeMillions.Domain.ML.Binary
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
             Metadata.StockSymbol = firstFeature.Output.Symbol;
 
-            var ffEstimator = _mLContext.BinaryClassification.Trainers.FastForest(
-                       numberOfLeaves: Parameters.NumOfLeaves,
-                       numberOfTrees: Parameters.NumOfTrees,
-                       minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
+            //var ffEstimator = _mLContext.BinaryClassification.Trainers.FastForest(
+            //           numberOfLeaves: Parameters.NumOfLeaves,
+            //           numberOfTrees: Parameters.NumOfTrees,
+            //           minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
 
-            _model = ffEstimator.Fit(kernelTransformedData);
+            var pipeline = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 10);
+            //var pipeline = _mLContext.BinaryClassification.Trainers.FastTree();
+            //var pipeline = _mLContext.BinaryClassification.Trainers.FastForest(
+            //           numberOfLeaves: Parameters.NumOfLeaves,
+            //           numberOfTrees: Parameters.NumOfTrees,
+            //           minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
+            _model = pipeline.Fit(kernelTransformedData);
 
             if (testData != null)
             {
@@ -256,15 +262,22 @@ namespace GimmeMillions.Domain.ML.Binary
             double bestAccuracy = 0.0;
             ModelMetrics bestMetrics = null;
             kernelTransform = null;
+            //var pcaEstimator = _mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.KernelRank, overSampling: Parameters.KernelRank);
+            var pcaEstimator = _mLContext.Transforms.NormalizeMeanVariance("Features")
+                .Append(_mLContext.Transforms.ApproximatedKernelMap("Features", rank: Parameters.KernelRank, useCosAndSinBases: true));
             for (int i = 0; i < Parameters.NumIterations; ++i)
             {
-                var kT = _mLContext.Transforms.ApproximatedKernelMap("Features", rank: Parameters.KernelRank).Fit(filteredData); 
+                var kT = pcaEstimator.Fit(filteredData); 
                 var kernelData = kT.Transform(filteredData);
-                var pipeline = _mLContext.BinaryClassification.Trainers.FastTree();
+
+                //var kdTest = kernelData.GetColumn<float[]>("Features").ToArray();
+
+                var pipeline = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 1);
+                //var pipeline = _mLContext.BinaryClassification.Trainers.FastTree();
                 var cvResults = CrossValidationResultsToMetrics(
                     _mLContext.BinaryClassification.CrossValidateNonCalibrated(kernelData, pipeline, Parameters.NumCrossValidations));
 
-                Console.WriteLine($"{positiveSort}({i}): {cvResults.Accuracy}");
+                //Console.WriteLine($"{positiveSort}({i}): {cvResults.Accuracy}");
                 if(cvResults.Accuracy > bestAccuracy)
                 {
                     kernelTransform = kT;

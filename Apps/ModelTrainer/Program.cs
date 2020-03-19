@@ -52,14 +52,14 @@ namespace ModelTrainer
                 //model.Parameters.NumOfLeaves = 20;
                 //model.Parameters.MinNumOfLeaves = 20;
 
-                var model = new MLStockKernelEstimationFastForestModel();
+                var model = new MLStockKernelEstimationSvmModel();
                 model.Parameters.FeatureSelectionRank = 500;
                 model.Parameters.NumCrossValidations = 5;
                 model.Parameters.NumOfTrees = 2000;
                 model.Parameters.NumOfLeaves = 20;
                 model.Parameters.MinNumOfLeaves = 20;
                 model.Parameters.NumIterations = 10;
-                model.Parameters.KernelRank = 250;
+                model.Parameters.KernelRank = 300;
 
                 //var model = new MLStockKnnBruteForceModel();
                 //model.Parameters.FeatureSelectionRank = 50000;
