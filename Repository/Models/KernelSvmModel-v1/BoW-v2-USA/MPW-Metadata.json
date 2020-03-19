@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.71068592281494314,
+    "Accuracy": 0.65351017991765425,
+    "PositivePrecision": 0.64250404345868728,
+    "PositiveRecall": 0.78304437824911111,
+    "NegativePrecision": 0.67622463730800919,
+    "NegativeRecall": 0.50671545178620325,
+    "F1Score": 0.70498254972710184,
+    "AreaUnderPrecisionRecallCurve": 0.72007216094477555
+  },
+  "StockSymbol": "MPW",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSvmModel-v1"
+}

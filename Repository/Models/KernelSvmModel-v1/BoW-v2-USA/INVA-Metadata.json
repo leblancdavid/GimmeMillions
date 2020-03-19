@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.627662441938061,
+    "Accuracy": 0.566037435036643,
+    "PositivePrecision": 0.54209753710418351,
+    "PositiveRecall": 0.88851208217534428,
+    "NegativePrecision": 0.68995057133551652,
+    "NegativeRecall": 0.23812995308754331,
+    "F1Score": 0.67298696030427219,
+    "AreaUnderPrecisionRecallCurve": 0.60673423974782392
+  },
+  "StockSymbol": "INVA",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSvmModel-v1"
+}

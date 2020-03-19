@@ -30,32 +30,31 @@ namespace ModelTestSimulation
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
             var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
             var stockRepository = new StockDataRepository(_pathToStocks);
-            //var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "VZ", "S", "INVA", "LGND", "LXRX", "XBI",
-            // "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM", "FAST", "DAL", "ZNH", "ARNC",
-            // "AAL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA-PH", "DRE", "NLY", "MPW", "C", "WFC",
-            //"HSBC", "BAC", "RY", "AXP", "FB", "DIS", "BHP", "BBL", "DD", "GOLD", "DUK", "EXC", "FE", "EIX",
-            //"CMS", "MCD", "SBUX", "LOW", "HMC", "HD", "GM", "ROST", "BBY", "MAR", "KO", "PEP", "GIS"};
+            var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "VZ", "S", "INVA", "LGND", "LXRX", "XBI",
+             "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM", "FAST", "DAL", "ZNH", "ARNC",
+             "AAL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA-PH", "DRE", "NLY", "MPW", "C", "WFC",
+            "HSBC", "BAC", "RY", "AXP", "FB", "DIS", "BHP", "BBL", "DD", "GOLD", "DUK", "EXC", "FE", "EIX",
+            "CMS", "MCD", "SBUX", "LOW", "HMC", "HD", "GM", "ROST", "BBY", "MAR", "KO", "PEP", "GIS", "GE" };
 
-            //var stockRepository = new StockDataRepository(_pathToStocks);
-            //var stockAccess = new YahooFinanceStockAccessService(stockRepository, _pathToStocks);
+            var stockAccess = new YahooFinanceStockAccessService(stockRepository, _pathToStocks);
 
-            //foreach (var stock in stocks)
-            //{
-            //    Console.WriteLine($"-=== Loading model for {stock} ===-");
-            //    var model = new MLStockFastForestModel();
-            //    var loadResult = model.Load(_pathToModels, stock, "BoW-v2-USA");
-            //    if(loadResult.IsFailure)
-            //    {
-            //        Console.WriteLine($"-!!! Failed to load model for {stock} !!!-");
-            //        continue;
-            //    }
-            //    recommendationSystem.AddModel(model);
+            foreach (var stock in stocks)
+            {
+                Console.WriteLine($"-=== Loading model for {stock} ===-");
+                var model = new MLStockKernelEstimationSvmModel();
+                var loadResult = model.Load(_pathToModels, stock, "BoW-v2-USA");
+                if (loadResult.IsFailure)
+                {
+                    Console.WriteLine($"-!!! Failed to load model for {stock} !!!-");
+                    continue;
+                }
+                recommendationSystem.AddModel(model);
 
-            //    stockAccess.UpdateStocks(stock);
-            //}
+                stockAccess.UpdateStocks(stock);
+            }
 
-            //recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/FF-config-v1");
-            recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/FF-config-v1");
+            recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/KernelSvm-config-v1");
+            //recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelSvm-config-v1");
             var startDate = new DateTime(2019, 1, 1);
             var endDate = new DateTime(2020, 3, 18);
             var currentDate = startDate;

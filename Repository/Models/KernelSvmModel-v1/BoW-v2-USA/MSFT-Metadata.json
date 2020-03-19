@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.62316767005748941,
+    "Accuracy": 0.57262345338522691,
+    "PositivePrecision": 0.55545520949838578,
+    "PositiveRecall": 0.83312750590043161,
+    "NegativePrecision": 0.63832684981424359,
+    "NegativeRecall": 0.297916691356453,
+    "F1Score": 0.66591915311953431,
+    "AreaUnderPrecisionRecallCurve": 0.62469089525725674
+  },
+  "StockSymbol": "MSFT",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSvmModel-v1"
+}

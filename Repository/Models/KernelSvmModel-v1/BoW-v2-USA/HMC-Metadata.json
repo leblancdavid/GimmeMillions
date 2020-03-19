@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.69874571571134247,
+    "Accuracy": 0.64828985584237309,
+    "PositivePrecision": 0.64620824348855632,
+    "PositiveRecall": 0.74950875769689906,
+    "NegativePrecision": 0.6677023352990259,
+    "NegativeRecall": 0.53827059986795422,
+    "F1Score": 0.68919698071531976,
+    "AreaUnderPrecisionRecallCurve": 0.69254711140395231
+  },
+  "StockSymbol": "HMC",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSvmModel-v1"
+}

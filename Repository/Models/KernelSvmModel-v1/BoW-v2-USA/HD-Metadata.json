@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.618492483451347,
+    "Accuracy": 0.5906693772347047,
+    "PositivePrecision": 0.59530058472283631,
+    "PositiveRecall": 0.65223242234163159,
+    "NegativePrecision": 0.59215001901964137,
+    "NegativeRecall": 0.52541832801407229,
+    "F1Score": 0.61884060490246329,
+    "AreaUnderPrecisionRecallCurve": 0.62606977163976629
+  },
+  "StockSymbol": "HD",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSvmModel-v1"
+}

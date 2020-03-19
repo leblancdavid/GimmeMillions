@@ -32,7 +32,9 @@ namespace ModelTrainer
              "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM", "FAST", "DAL", "ZNH", "ARNC",
              "AAL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA-PH", "DRE", "NLY", "MPW", "C", "WFC",
             "HSBC", "BAC", "RY", "AXP", "FB", "DIS", "BHP", "BBL", "DD", "GOLD", "DUK", "EXC", "FE", "EIX",
-            "CMS", "MCD", "SBUX", "LOW", "HMC", "HD", "GM", "ROST", "BBY", "MAR", "KO", "PEP", "GIS"};
+            "CMS", "MCD", "SBUX", "LOW", "HMC", "HD", "GM", "ROST", "BBY", "MAR", "KO", "PEP", "GIS", "GE", "ET",
+            "T", "PFE", "PBR", "GILD", "CSCO", "NOK", "MGM", "XOM", "HAL", "JPM", "CMCSA", "MS", "CVX", "PCG", "MRK",
+            "V", "EBAY", "WMT", "LUV", "NKE", "JNJ", "SYF", "HLT", "CVS"};
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
             var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
@@ -58,7 +60,7 @@ namespace ModelTrainer
                 model.Parameters.NumOfTrees = 2000;
                 model.Parameters.NumOfLeaves = 20;
                 model.Parameters.MinNumOfLeaves = 20;
-                model.Parameters.NumIterations = 10;
+                model.Parameters.NumIterations = 20;
                 model.Parameters.KernelRank = 300;
 
                 //var model = new MLStockKnnBruteForceModel();
@@ -79,7 +81,7 @@ namespace ModelTrainer
                 var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
                 var filteredDataset = dataset.Value;
-                int numTestExamples = 10;
+                int numTestExamples = 0;
 
                 var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
                 var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
@@ -113,32 +115,32 @@ namespace ModelTrainer
                 Console.WriteLine($"-=== Saving Model {stock} ===-");
                 model.Save(_pathToModels);
 
-                Console.WriteLine($"-=== Testing Model  {stock} ===-");
-                double accuracy = 0.0;
-                foreach (var testExample in testSet)
-                {
-                    var prediction = model.Predict(testExample.Input);
-                    if ((prediction.PredictedLabel && testExample.Output.PercentDayChange > 0) ||
-                         (!prediction.PredictedLabel && testExample.Output.PercentDayChange <= 0))
-                    {
-                        accuracy++;
-                        //Console.WriteLine($"Good! Probability: {prediction.Probability}");
+                //Console.WriteLine($"-=== Testing Model  {stock} ===-");
+                //double accuracy = 0.0;
+                //foreach (var testExample in testSet)
+                //{
+                //    var prediction = model.Predict(testExample.Input);
+                //    if ((prediction.PredictedLabel && testExample.Output.PercentDayChange > 0) ||
+                //         (!prediction.PredictedLabel && testExample.Output.PercentDayChange <= 0))
+                //    {
+                //        accuracy++;
+                //        //Console.WriteLine($"Good! Probability: {prediction.Probability}");
 
-                    }
-                    else
-                    {
-                        //Console.WriteLine($"Bad! Probability: {prediction.Probability}");
-                    }
-                }
+                //    }
+                //    else
+                //    {
+                //        //Console.WriteLine($"Bad! Probability: {prediction.Probability}");
+                //    }
+                //}
 
-                Console.WriteLine($"Test Accuracy {stock}: {accuracy / numTestExamples}");
-                totalAccuracy += accuracy;
-                totalCount += numTestExamples;
-                Console.WriteLine($"Running Accuracy: {totalAccuracy / totalCount}");
+                //Console.WriteLine($"Test Accuracy {stock}: {accuracy / numTestExamples}");
+                //totalAccuracy += accuracy;
+                //totalCount += numTestExamples;
+                //Console.WriteLine($"Running Accuracy: {totalAccuracy / totalCount}");
             }
             
             Console.WriteLine($"-=========================================================================================-");
-            Console.WriteLine($"Total Accuracy: {totalAccuracy / totalCount}");
+            //Console.WriteLine($"Total Accuracy: {totalAccuracy / totalCount}");
 
             Console.ReadKey();
         }
