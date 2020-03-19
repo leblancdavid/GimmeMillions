@@ -34,7 +34,7 @@ namespace GimmeMillions.Domain.Stocks
                 _pathToModels,
                 stockPredictionModel.Encoding, 
                 stockPredictionModel.GetType()));
-            stockPredictionModel.Save(_pathToModels);
+            //stockPredictionModel.Save(_pathToModels);
         }
 
         public IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date)
