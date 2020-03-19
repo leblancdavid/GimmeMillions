@@ -1,0 +1,58 @@
+﻿using GimmeMillions.DataAccess.Articles;
+using GimmeMillions.DataAccess.Features;
+using GimmeMillions.DataAccess.Stocks;
+using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.Stocks;
+using System;
+using System.IO;
+
+namespace RecommendationMaker
+{
+    class Program
+    {
+        static string _pathToArticles = "../../../../Repository/Articles";
+        static string _pathToDictionary = "../../../../Repository/Dictionaries";
+        static string _pathToLanguage = "../../../../Repository/Languages";
+        static string _pathToStocks = "../../../../Repository/Stocks";
+        static string _pathToCache = "../../../../Repository/Cache";
+        static string _pathToModels = "../../../../Repository/Models";
+        static string _pathToRecommendationConfigs = "../../../../Repository/Recommendations";
+
+        static void Main(string[] args)
+        {
+            string dictionaryToUse = "USA";
+            var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
+            var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
+
+            Console.WriteLine("Loading system...");
+            recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelSvm-config-v1");
+            var recommendations = recommendationSystem.GetAllRecommendations(DateTime.Today);
+
+            Console.WriteLine("Today's recommended stocks:");
+            foreach(var r in recommendations)
+            {
+                Console.WriteLine($"{r.Symbol}: {r.Prediction.Score}");
+            }
+
+            Console.ReadKey();
+        }
+
+        private static IFeatureDatasetService GetBoWFeatureDatasetService(string dictionaryToUse)
+        {
+            var featureChecker = new UsaLanguageChecker();
+            featureChecker.Load(new StreamReader($"{_pathToLanguage}/usa.txt"));
+            var textProcessor = new DefaultTextProcessor(featureChecker);
+
+            var dictionaryRepo = new FeatureDictionaryJsonRepository(_pathToDictionary);
+            var dictionary = dictionaryRepo.GetFeatureDictionary(dictionaryToUse);
+
+            var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
+            var articlesRepo = new NYTArticleRepository(_pathToArticles);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
+
+            var cache = new FeatureJsonCache(_pathToCache);
+
+            return new DefaultFeatureDatasetService(bow, articlesRepo, stocksRepo, cache);
+        }
+    }
+}
