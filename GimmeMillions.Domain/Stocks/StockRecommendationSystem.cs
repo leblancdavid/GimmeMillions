@@ -60,14 +60,21 @@ namespace GimmeMillions.Domain.Stocks
             return GetAllRecommendations(DateTime.Today);
         }
 
-        public IEnumerable<StockRecommendation> GetRecommendations(DateTime date)
+        public IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keepTop = 10)
         {
-            return GetAllRecommendations(date).Where(x => x.Prediction.Score > 0.0);
+            var recommendations = GetAllRecommendations(date).Take(keepTop);
+            var scoreSum = recommendations.Sum(x => x.Prediction.Score);
+            foreach(var r in recommendations)
+            {
+                r.RecommendedInvestmentPercentage = r.Prediction.Score / scoreSum;
+            }
+
+            return recommendations;
         }
 
-        public IEnumerable<StockRecommendation> GetRecommendationsForToday()
+        public IEnumerable<StockRecommendation> GetRecommendationsForToday(int keepTop = 10)
         {
-            return GetAllRecommendations(DateTime.Today).Where(x => x.Prediction.Score > 0.0);
+            return GetRecommendations(DateTime.Today, keepTop);
         }
 
         public Result LoadConfiguration(string configurationFile)

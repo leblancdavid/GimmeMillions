@@ -175,6 +175,7 @@
     <Compile Include="ML\Accord\IDataTransformer.cs" />
     <Compile Include="ML\Accord\SupervisedNormalizationDataTransformer.cs" />
     <Compile Include="ML\Binary\BinaryPredictionModelMetadata.cs" />
+    <Compile Include="ML\Binary\MLStockKernelEstimationFastForestModel.cs" />
     <Compile Include="ML\Binary\MLStockFastForestModel.cs" />
     <Compile Include="ML\Binary\MLStockKnnBruteForceModel.cs" />
     <Compile Include="ML\Binary\MLStockPcaSvmModel.cs" />

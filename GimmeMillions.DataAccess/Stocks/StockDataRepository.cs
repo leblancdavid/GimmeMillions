@@ -1,7 +1,9 @@
-﻿using GimmeMillions.Domain.Stocks;
+﻿using CSharpFunctionalExtensions;
+using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace GimmeMillions.DataAccess.Stocks
 {
@@ -11,6 +13,16 @@ namespace GimmeMillions.DataAccess.Stocks
         public StockDataRepository(string pathToStocks)
         {
             _pathToStocks = pathToStocks;
+        }
+
+        public Result<StockData> GetStock(string symbol, DateTime date)
+        {
+            var stockFound = GetStocks(symbol, date, date);
+            if(!stockFound.Any())
+            {
+                return Result.Failure<StockData>($"Unable to retrieve stock {symbol} for date {date.ToString("MM/dd/yyyy")}");
+            }
+            return Result.Ok(stockFound.First());
         }
 
         public IEnumerable<StockData> GetStocks(string symbol)
@@ -46,6 +58,11 @@ namespace GimmeMillions.DataAccess.Stocks
             }
 
             return stocks;
+        }
+
+        public IEnumerable<StockData> GetStocks(string symbol, DateTime start, DateTime end)
+        {
+            return GetStocks(symbol).Where(x => x.Date >= start && x.Date <= end);
         }
 
         public IEnumerable<string> GetSymbols()

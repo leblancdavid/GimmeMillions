@@ -45,12 +45,21 @@ namespace ModelTrainer
             {
                 //var model = new MLStockBinaryFastForestModel();
                 Console.WriteLine($"-=== Loading training data for {stock} ===-");
-                var model = new MLStockFastForestModel();
+                //var model = new MLStockFastForestModel();
+                //model.Parameters.FeatureSelectionRank = 500;
+                //model.Parameters.NumCrossValidations = 10;
+                //model.Parameters.NumOfTrees = 2000;
+                //model.Parameters.NumOfLeaves = 20;
+                //model.Parameters.MinNumOfLeaves = 20;
+
+                var model = new MLStockKernelEstimationFastForestModel();
                 model.Parameters.FeatureSelectionRank = 500;
-                model.Parameters.NumCrossValidations = 10;
+                model.Parameters.NumCrossValidations = 5;
                 model.Parameters.NumOfTrees = 2000;
                 model.Parameters.NumOfLeaves = 20;
                 model.Parameters.MinNumOfLeaves = 20;
+                model.Parameters.NumIterations = 10;
+                model.Parameters.KernelRank = 250;
 
                 //var model = new MLStockKnnBruteForceModel();
                 //model.Parameters.FeatureSelectionRank = 50000;

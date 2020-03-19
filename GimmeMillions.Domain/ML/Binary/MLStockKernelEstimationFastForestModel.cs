@@ -14,36 +14,41 @@ using static Microsoft.ML.TrainCatalogBase;
 
 namespace GimmeMillions.Domain.ML.Binary
 {
-    public class FastForestBinaryModelParameters
+    public class KernelEstimationFastForestBinaryModelParameters
     {
         public int NumCrossValidations { get; set; }
         public int NumOfTrees { get; set; }
         public int NumOfLeaves { get; set; }
         public int MinNumOfLeaves { get; set; }
         public int FeatureSelectionRank { get; set; }
-        public FastForestBinaryModelParameters()
+        public int KernelRank { get; set; }
+        public int NumIterations { get; set; }
+        public KernelEstimationFastForestBinaryModelParameters()
         {
-            NumCrossValidations = 10;
+            NumCrossValidations = 5;
+            NumIterations = 10;
             NumOfTrees = 100;
             NumOfLeaves = 20;
             MinNumOfLeaves = 1;
             FeatureSelectionRank = 500;
+            KernelRank = 250;
         }
 
     }
 
-    public class MLStockFastForestModel : IBinaryStockPredictionModel<FastForestBinaryModelParameters>
+    public class MLStockKernelEstimationFastForestModel : IBinaryStockPredictionModel<KernelEstimationFastForestBinaryModelParameters>
     {
         private MLContext _mLContext;
         private int _seed;
         private FeatureFilterTransform _frequencyUsageTransform;
         private FeatureFilterTransform _maxDifferenceFilterTransform;
+        private ITransformer _kernelTransform;
         private ITransformer _model;
 
         private DataViewSchema _dataSchema;
         private string _modelId = "FFModel-v1";
-        public FastForestBinaryModelParameters Parameters { get; set; }
-        public BinaryPredictionModelMetadata<FastForestBinaryModelParameters> Metadata { get; private set; }
+        public KernelEstimationFastForestBinaryModelParameters Parameters { get; set; }
+        public BinaryPredictionModelMetadata<KernelEstimationFastForestBinaryModelParameters> Metadata { get; private set; }
 
         public string StockSymbol => Metadata.StockSymbol;
 
@@ -52,13 +57,13 @@ namespace GimmeMillions.Domain.ML.Binary
         public string Encoding => Metadata.FeatureEncoding;
         
 
-        public MLStockFastForestModel()
+        public MLStockKernelEstimationFastForestModel()
         {
-            Metadata = new BinaryPredictionModelMetadata<FastForestBinaryModelParameters>();
-            Metadata.ModelId = "FFModel-v1";
+            Metadata = new BinaryPredictionModelMetadata<KernelEstimationFastForestBinaryModelParameters>();
+            Metadata.ModelId = "KernelFFModel-v1";
             _seed = 27;
             _mLContext = new MLContext(_seed);
-            Parameters = new FastForestBinaryModelParameters();
+            Parameters = new KernelEstimationFastForestBinaryModelParameters();
 
         }
 
@@ -68,7 +73,7 @@ namespace GimmeMillions.Domain.ML.Binary
             {
                 string directory = $"{pathToModel}/{_modelId}/{encoding}";
 
-                Metadata = JsonConvert.DeserializeObject<BinaryPredictionModelMetadata<FastForestBinaryModelParameters>>(
+                Metadata = JsonConvert.DeserializeObject<BinaryPredictionModelMetadata<KernelEstimationFastForestBinaryModelParameters>>(
                     File.ReadAllText($"{ directory}/{symbol}-Metadata.json"));
 
                 var maxDiffLoad = FeatureFilterTransform.LoadFromFile($"{ directory}/{Metadata.StockSymbol}-MaxDiffFilterTransform.json", _mLContext);
@@ -86,6 +91,7 @@ namespace GimmeMillions.Domain.ML.Binary
 
                 DataViewSchema schema = null;
                 _model = _mLContext.Model.Load($"{directory}/{Metadata.StockSymbol}-Model.zip", out schema);
+                _kernelTransform = _mLContext.Model.Load($"{directory}/{Metadata.StockSymbol}-Kernel.zip", out schema);
 
                 return Result.Ok();
             }
@@ -107,8 +113,9 @@ namespace GimmeMillions.Domain.ML.Binary
                 GetSchemaDefinition(input));
 
             var prediction = _model.Transform(
-                _maxDifferenceFilterTransform.Transform(
-                    _frequencyUsageTransform.Transform(inputDataView)));
+                _kernelTransform.Transform(
+                    _maxDifferenceFilterTransform.Transform(
+                        _frequencyUsageTransform.Transform(inputDataView))));
 
             var score = prediction.GetColumn<float>("Score").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
@@ -142,6 +149,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 _maxDifferenceFilterTransform.SaveToFile($"{ directory}/{ Metadata.StockSymbol}-MaxDiffFilterTransform.json");
                 _frequencyUsageTransform.SaveToFile($"{ directory}/{ Metadata.StockSymbol}-FrequencyUsageTransform.json");
                 _mLContext.Model.Save(_model, _dataSchema, $"{directory}/{Metadata.StockSymbol}-Model.zip");
+                _mLContext.Model.Save(_model, _dataSchema, $"{directory}/{Metadata.StockSymbol}-Kernel.zip");
 
                 return Result.Ok();
             }
@@ -192,22 +200,24 @@ namespace GimmeMillions.Domain.ML.Binary
             _frequencyUsageTransform = frequencyUsageEstimator.Fit(trainData);
             var mostUsedData = _frequencyUsageTransform.Transform(trainData);
 
-            var positiveResults = TryModel(mostUsedData, Parameters.FeatureSelectionRank, true);
+            FeatureFilterTransform posFeatureTransform;
+            ITransformer posKernelTransform;
+            var positiveResults = TryModel(mostUsedData, Parameters.FeatureSelectionRank, true, out posFeatureTransform, out posKernelTransform);
             Console.WriteLine($"Positive Acc: {positiveResults.Accuracy}, AoC: {positiveResults.AreaUnderPrecisionRecallCurve}, PP: {positiveResults.PositivePrecision}");
-            var negativeResults = TryModel(mostUsedData, Parameters.FeatureSelectionRank, false);
+
+            var negativeResults = TryModel(mostUsedData, Parameters.FeatureSelectionRank, false, out _maxDifferenceFilterTransform, out _kernelTransform);
             Console.WriteLine($"Negative Acc: {negativeResults.Accuracy}, AoC: {negativeResults.AreaUnderPrecisionRecallCurve}, PP: {negativeResults.PositivePrecision}");
-            bool usePositiveSort = true;
-            Metadata.TrainingResults = positiveResults;
-            if (positiveResults.AreaUnderPrecisionRecallCurve < negativeResults.AreaUnderPrecisionRecallCurve)
+            
+            Metadata.TrainingResults = negativeResults;
+            if (positiveResults.AreaUnderPrecisionRecallCurve > negativeResults.AreaUnderPrecisionRecallCurve)
             {
-                usePositiveSort = false;
-                Metadata.TrainingResults = negativeResults;
+                Metadata.TrainingResults = positiveResults;
+                _maxDifferenceFilterTransform = posFeatureTransform;
+                _kernelTransform = posKernelTransform;
             }
 
-            var maxDifferenceFilterEstimator = new MaxDifferenceFeatureFilterEstimator(_mLContext,
-                rank: Parameters.FeatureSelectionRank, positiveSort: usePositiveSort);
-            _maxDifferenceFilterTransform = maxDifferenceFilterEstimator.Fit(mostUsedData);
             var maxDifferenceData = _maxDifferenceFilterTransform.Transform(mostUsedData);
+            var kernelTransformedData = _kernelTransform.Transform(maxDifferenceData);
 
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
@@ -218,13 +228,14 @@ namespace GimmeMillions.Domain.ML.Binary
                        numberOfTrees: Parameters.NumOfTrees,
                        minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
 
-            _model = ffEstimator.Fit(maxDifferenceData);
+            _model = ffEstimator.Fit(kernelTransformedData);
 
             if (testData != null)
             {
                 var testPredictions = _model.Transform(
-                    _maxDifferenceFilterTransform.Transform(
-                        _frequencyUsageTransform.Transform(testData)));
+                    _kernelTransform.Transform(
+                        _maxDifferenceFilterTransform.Transform(
+                            _frequencyUsageTransform.Transform(testData))));
 
                 var testResults = _mLContext.BinaryClassification.Evaluate(testPredictions);
 
@@ -235,14 +246,34 @@ namespace GimmeMillions.Domain.ML.Binary
 
         private ModelMetrics TryModel(IDataView data,
             int rank, 
-            bool positiveSort)
+            bool positiveSort, 
+            out FeatureFilterTransform filterTransform,
+            out ITransformer kernelTransform)
         {
-            var filteredData = (new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: rank, positiveSort: positiveSort))
-                .Fit(data).Transform(data);
-            var pipeline = _mLContext.BinaryClassification.Trainers.FastTree();
+            filterTransform = new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: rank, positiveSort: positiveSort).Fit(data);
+            var filteredData =  filterTransform.Transform(data);
 
-            var cvResults = _mLContext.BinaryClassification.CrossValidateNonCalibrated(filteredData, pipeline, Parameters.NumCrossValidations);
-            return CrossValidationResultsToMetrics(cvResults);
+            double bestAccuracy = 0.0;
+            ModelMetrics bestMetrics = null;
+            kernelTransform = null;
+            for (int i = 0; i < Parameters.NumIterations; ++i)
+            {
+                var kT = _mLContext.Transforms.ApproximatedKernelMap("Features", rank: Parameters.KernelRank).Fit(filteredData); 
+                var kernelData = kT.Transform(filteredData);
+                var pipeline = _mLContext.BinaryClassification.Trainers.FastTree();
+                var cvResults = CrossValidationResultsToMetrics(
+                    _mLContext.BinaryClassification.CrossValidateNonCalibrated(kernelData, pipeline, Parameters.NumCrossValidations));
+
+                Console.WriteLine($"{positiveSort}({i}): {cvResults.Accuracy}");
+                if(cvResults.Accuracy > bestAccuracy)
+                {
+                    kernelTransform = kT;
+                    bestAccuracy = cvResults.Accuracy;
+                    bestMetrics = cvResults;
+                }
+            }
+
+            return bestMetrics;
         }
 
         private ModelMetrics CrossValidationResultsToMetrics(IReadOnlyList<CrossValidationResult<BinaryClassificationMetrics>> crossValidationResults)

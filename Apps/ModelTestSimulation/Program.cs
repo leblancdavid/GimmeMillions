@@ -3,6 +3,7 @@ using GimmeMillions.DataAccess.Features;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML.Binary;
+using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,77 +22,84 @@ namespace ModelTestSimulation
         static string _pathToStocks = "../../../../Repository/Stocks";
         static string _pathToCache = "../../../../Repository/Cache";
         static string _pathToModels = "../../../../Repository/Models";
+        static string _pathToRecommendationConfigs = "../../../../Repository/Recommendations";
 
         static void Main(string[] args)
         {
             string dictionaryToUse = "USA";
-            string stock = "AMZN";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
+            var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
+            var stockRepository = new StockDataRepository(_pathToStocks);
+            //var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "VZ", "S", "INVA", "LGND", "LXRX", "XBI",
+            // "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM", "FAST", "DAL", "ZNH", "ARNC",
+            // "AAL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA-PH", "DRE", "NLY", "MPW", "C", "WFC",
+            //"HSBC", "BAC", "RY", "AXP", "FB", "DIS", "BHP", "BBL", "DD", "GOLD", "DUK", "EXC", "FE", "EIX",
+            //"CMS", "MCD", "SBUX", "LOW", "HMC", "HD", "GM", "ROST", "BBY", "MAR", "KO", "PEP", "GIS"};
 
-            var model = new MLStockBinaryFastForestModel();
+            //var stockRepository = new StockDataRepository(_pathToStocks);
+            //var stockAccess = new YahooFinanceStockAccessService(stockRepository, _pathToStocks);
 
-            var startDate = new DateTime(2019, 4, 1);
-            var endDate = new DateTime(2019, 10, 1);
-            var testSet = datasetService.GetTrainingData(stock, startDate, endDate);
-            if(testSet.IsFailure || !testSet.Value.Any())
-            {
-                Console.WriteLine($"No data found for {stock} from {startDate.ToString("MM/dd/yyyy")} to {endDate.ToString("MM/dd/yyyy")}");
-                return;
-            }
-            string encoding = testSet.Value.First().Input.Encoding;
-            Console.WriteLine("-=== Loading Model ===-");
-            var loadSuccess = model.Load(_pathToModels, stock, encoding);
-            if (loadSuccess.IsFailure)
-            {
-                Console.WriteLine("Couldn't load the model!");
-                return;
-            }
+            //foreach (var stock in stocks)
+            //{
+            //    Console.WriteLine($"-=== Loading model for {stock} ===-");
+            //    var model = new MLStockFastForestModel();
+            //    var loadResult = model.Load(_pathToModels, stock, "BoW-v2-USA");
+            //    if(loadResult.IsFailure)
+            //    {
+            //        Console.WriteLine($"-!!! Failed to load model for {stock} !!!-");
+            //        continue;
+            //    }
+            //    recommendationSystem.AddModel(model);
 
-            Console.WriteLine("-=== Simulating... ===-");
-            var startingPrice = testSet.Value.First().Output.Open;
-            var endingPrice = testSet.Value.Last().Output.Close;
-            var totalPercentChange = (endingPrice - startingPrice) / startingPrice;
-            Console.WriteLine($"Percent change over period {startDate.ToString("MM/dd/yyyy")} to {endDate.ToString("MM/dd/yyyy")}: {totalPercentChange * 100m}%");
+            //    stockAccess.UpdateStocks(stock);
+            //}
 
+            //recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/FF-config-v1");
+            recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/FF-config-v1");
+            var startDate = new DateTime(2019, 1, 1);
+            var endDate = new DateTime(2020, 3, 18);
+            var currentDate = startDate;
             decimal currentMoney = 1000.0m;
-            double accuracy = 0.0;
-            double bettingAccuracy = 0.0, totalBets = 0.0;
-            foreach(var sample in testSet.Value)
+
+            Console.WriteLine($"-=== Testing recommendation model with ${currentMoney.ToString("#.##")} ===-");
+            while (currentDate <= endDate)
             {
-                var prediction = model.Predict(sample.Input);
-                if (prediction.PredictedLabel)
+                if (currentDate.DayOfWeek == DayOfWeek.Saturday || currentDate.DayOfWeek == DayOfWeek.Sunday)
                 {
-                    if(sample.Output.PercentDayChange > 0)
-                    {
-                        accuracy++;
-                    }
-
-                    if(prediction.Probability > 0.5)
-                    {
-                        currentMoney = currentMoney * (1.0m + sample.Output.PercentDayChange / 100m); 
-                        if (sample.Output.PercentDayChange > 0)
-                        {
-                            bettingAccuracy++;
-                        }
-                        totalBets++;
-                    }
-                
-                }
-                else
-                {
-                    if (sample.Output.PercentDayChange < 0)
-                    {
-                        accuracy++;
-                    }
+                    currentDate = currentDate.AddDays(1.0);
+                    continue;
                 }
 
-                Console.WriteLine($"{sample.Output.Date.ToString("MM/dd/yyyy")}, Actual: {sample.Output.PercentDayChange}%, Prediction: {prediction.Probability}, Current money: ${currentMoney}");
+                Console.WriteLine($"Current money: ${currentMoney.ToString("#.##")}");
+                var recommendations = recommendationSystem.GetAllRecommendations(currentDate)
+                    .Where(x => x.Prediction.PredictedLabel).Take(5).ToList();
+                Console.Write("Investments: ");
+                decimal leftover = currentMoney;
+                decimal returnOnInvestment = 0.0m;
+                foreach(var r in recommendations)
+                {
+                    //if (!r.Prediction.PredictedLabel)
+                    //    break;
+
+                    var stock = stockRepository.GetStock(r.Symbol, currentDate);
+                    if(stock.IsFailure)
+                    {
+                        continue;
+                    }
+
+                    //decimal investAmmount = (decimal)r.RecommendedInvestmentPercentage * currentMoney;
+                    decimal investAmmount = currentMoney / recommendations.Count();
+                    Console.Write($"{r.Symbol}: {investAmmount.ToString("#.##")} ({stock.Value.PercentDayChange.ToString("#.##")}%), ");
+                    leftover -= investAmmount;
+                    returnOnInvestment += investAmmount * (1.0m + stock.Value.PercentDayChange / 100m);
+                }
+                Console.Write("\n");
+                currentMoney = leftover + returnOnInvestment;
+
+                currentDate = currentDate.AddDays(1.0);
             }
 
-            Console.WriteLine("-=== Done ===-");
-            Console.WriteLine($"Final accuracy: {accuracy / testSet.Value.Count()}");
-            Console.WriteLine($"Betting accuracy: {bettingAccuracy / totalBets}");
-
+            Console.WriteLine($"-=== Done testing recommendation model, ended with ${currentMoney.ToString("#.##")} ===-");
             Console.ReadKey();
         }
 

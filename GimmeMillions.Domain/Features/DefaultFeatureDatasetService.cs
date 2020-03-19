@@ -100,7 +100,7 @@ namespace GimmeMillions.Domain.Features
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol,
             DateTime startDate = default(DateTime), DateTime endDate = default(DateTime))
         {
-            var stocks = _stockRepository.UpdateStocks(symbol, startDate, endDate);
+            var stocks = _stockRepository.UpdateStocks(symbol);
             if(!stocks.Any())
             {
                 return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(
