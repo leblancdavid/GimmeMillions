@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.71864205696884842,
+    "Accuracy": 0.66096770258065474,
+    "PositivePrecision": 0.63050051178903943,
+    "PositiveRecall": 0.8438997428458459,
+    "NegativePrecision": 0.73786020192252122,
+    "NegativeRecall": 0.45778529766058884,
+    "F1Score": 0.72042616392797965,
+    "AreaUnderPrecisionRecallCurve": 0.71351508076594317
+  },
+  "StockSymbol": "CMCSA",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSvmModel-v1"
+}

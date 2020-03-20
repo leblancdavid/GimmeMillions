@@ -29,20 +29,23 @@ namespace ModelTrainer
         static void Main(string[] args)
         {
             string dictionaryToUse = "USA";
-
-            var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "VZ", "S", "INVA", "LGND", "LXRX", "XBI",
-             "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM", "FAST", "DAL", "ZNH", "ARNC",
-             "AAL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA-PH", "DRE", "NLY", "MPW", "C", "WFC",
-            "HSBC", "BAC", "RY", "AXP", "FB", "DIS", "BHP", "BBL", "DD", "GOLD", "DUK", "EXC", "FE", "EIX",
-            "CMS", "MCD", "SBUX", "LOW", "HMC", "HD", "GM", "ROST", "BBY", "MAR", "KO", "PEP", "GIS", "GE", "ET",
+            var stocks = new string[] { "ET",
             "T", "PFE", "PBR", "GILD", "CSCO", "NOK", "MGM", "XOM", "HAL", "JPM", "CMCSA", "MS", "CVX", "PCG", "MRK",
             "V", "EBAY", "WMT", "LUV", "NKE", "JNJ", "SYF", "HLT", "CVS"};
+
+            //var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "VZ", "S", "INVA", "LGND", "LXRX", "XBI",
+            // "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM", "FAST", "DAL", "ZNH", "ARNC",
+            // "AAL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA-PH", "DRE", "NLY", "MPW", "C", "WFC",
+            //"HSBC", "BAC", "RY", "AXP", "FB", "DIS", "BHP", "BBL", "DD", "GOLD", "DUK", "EXC", "FE", "EIX",
+            //"CMS", "MCD", "SBUX", "LOW", "HMC", "HD", "GM", "ROST", "BBY", "MAR", "KO", "PEP", "GIS", "GE", "ET",
+            //"T", "PFE", "PBR", "GILD", "CSCO", "NOK", "MGM", "XOM", "HAL", "JPM", "CMCSA", "MS", "CVX", "PCG", "MRK",
+            //"V", "EBAY", "WMT", "LUV", "NKE", "JNJ", "SYF", "HLT", "CVS"};
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
             var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
 
-            var startDate = new DateTime(2000, 1, 1);
-            var endDate = DateTime.Today;
+            var startDate = new DateTime(2010, 1, 1);
+            var endDate = DateTime.Today.AddDays(-1.0);
 
             double totalCount = 0.0, totalAccuracy = 0.0;
             foreach(var stock in stocks)

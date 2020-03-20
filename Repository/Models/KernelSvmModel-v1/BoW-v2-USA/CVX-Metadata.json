@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.65980037737964425,
+    "Accuracy": 0.564076205231461,
+    "PositivePrecision": 0.54237348368487059,
+    "PositiveRecall": 0.9428570630266474,
+    "NegativePrecision": 0.73144963144963149,
+    "NegativeRecall": 0.17002068086870298,
+    "F1Score": 0.68822244140097755,
+    "AreaUnderPrecisionRecallCurve": 0.65010672720790974
+  },
+  "StockSymbol": "CVX",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSvmModel-v1"
+}
