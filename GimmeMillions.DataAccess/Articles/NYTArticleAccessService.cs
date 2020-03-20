@@ -23,28 +23,26 @@ namespace GimmeMillions.DataAccess.Articles
             _articleRepository = articleRepository;
 
         }
-        public Result<IEnumerable<Article>> GetArticles(DateTime dateTime, IEnumerable<FilterQuery> filterQueries)
+        public IEnumerable<Article> GetArticles(DateTime dateTime)
         {
             var articles = _articleRepository.GetArticles(dateTime).ToList();
             if(!articles.Any())
             {
-                var articlesGetResult = GetArticlesFromNYTApi(dateTime, filterQueries);
-                if(articlesGetResult.IsFailure)
+                var articlesGetResult = GetArticlesFromNYTApi(dateTime);
+                if(articlesGetResult.Any())
                 {
+                    foreach (var article in articles)
+                    {
+                        _articleRepository.AddOrUpdate(article);
+                    }
                     return articlesGetResult;
-                }
-
-                articles.AddRange(articlesGetResult.Value);
-                foreach(var article in articles)
-                {
-                    _articleRepository.AddOrUpdate(article);
                 }
             }
 
-            return Result.Ok<IEnumerable<Article>>(articles);
+            return articles;
         }
 
-        private Result<IEnumerable<Article>> GetArticlesFromNYTApi(DateTime dateTime, IEnumerable<FilterQuery> filterQueries)
+        private IEnumerable<Article> GetArticlesFromNYTApi(DateTime dateTime)
         {
             var keys = _accessKeyRepository.GetKeys().ToList();
             var articles = new List<Article>();
@@ -82,10 +80,10 @@ namespace GimmeMillions.DataAccess.Articles
 
             if (!articlesRetrieved)
             {
-                return Result.Failure<IEnumerable<Article>>($"Unable to retrieve all the articles for {dateTime.ToString("yyyyMMdd")}");
+                return new List<Article>();
             }
 
-            return Result.Ok<IEnumerable<Article>>(articles);
+            return articles;
         }
     }
 }

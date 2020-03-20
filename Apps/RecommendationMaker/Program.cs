@@ -1,5 +1,6 @@
 ﻿using GimmeMillions.DataAccess.Articles;
 using GimmeMillions.DataAccess.Features;
+using GimmeMillions.DataAccess.Keys;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
@@ -17,6 +18,7 @@ namespace RecommendationMaker
         static string _pathToCache = "../../../../Repository/Cache";
         static string _pathToModels = "../../../../Repository/Models";
         static string _pathToRecommendationConfigs = "../../../../Repository/Recommendations";
+        static string _pathToKeys = "../../../../Repository/Keys";
 
         static void Main(string[] args)
         {
@@ -46,13 +48,15 @@ namespace RecommendationMaker
             var dictionaryRepo = new FeatureDictionaryJsonRepository(_pathToDictionary);
             var dictionary = dictionaryRepo.GetFeatureDictionary(dictionaryToUse);
 
+            var accessKeys = new NYTApiAccessKeyRepository(_pathToKeys);
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
+            var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
             var cache = new FeatureJsonCache(_pathToCache);
 
-            return new DefaultFeatureDatasetService(bow, articlesRepo, stocksRepo, cache);
+            return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, cache);
         }
     }
 }

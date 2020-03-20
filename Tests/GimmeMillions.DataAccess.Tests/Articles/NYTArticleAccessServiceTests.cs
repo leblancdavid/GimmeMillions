@@ -25,10 +25,9 @@ namespace GimmeMillions.DataAccess.Tests.Articles
 
             var accessService = new NYTArticleAccessService(keysRepo, articlesRepo);
 
-            var articles = accessService.GetArticles(new DateTime(2012, 5, 27), new List<FilterQuery>());
+            var articles = accessService.GetArticles(new DateTime(2012, 5, 27));
 
-            articles.IsSuccess.Should().BeTrue();
-            articles.Value.Count().Should().BeGreaterThan(0);
+            articles.Count().Should().BeGreaterThan(0);
 
         }
     }

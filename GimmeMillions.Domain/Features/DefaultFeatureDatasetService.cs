@@ -13,13 +13,13 @@ namespace GimmeMillions.Domain.Features
     public class DefaultFeatureDatasetService : IFeatureDatasetService
     {
         private IFeatureVectorExtractor _featureVectorExtractor;
-        private IArticleRepository _articleRepository;
+        private IArticleAccessService _articleRepository;
         private IStockAccessService _stockRepository;
         private IFeatureCache _featureCache;
 
         public bool RefreshCache { get; set; }
         public DefaultFeatureDatasetService(IFeatureVectorExtractor featureVectorExtractor,
-            IArticleRepository articleRepository,
+            IArticleAccessService articleRepository,
             IStockAccessService stockRepository,
             IFeatureCache featureCache = null,
             bool refreshCache = false)
