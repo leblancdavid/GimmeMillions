@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.67001234018560163,
+    "Accuracy": 0.56271758475680933,
+    "PositivePrecision": 0.54018712961990523,
+    "PositiveRecall": 0.95964330383373553,
+    "NegativePrecision": 0.78764447075209731,
+    "NegativeRecall": 0.15212336402823914,
+    "F1Score": 0.6905591182573193,
+    "AreaUnderPrecisionRecallCurve": 0.65755907198837615
+  },
+  "StockSymbol": "MRK",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

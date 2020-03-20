@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.7092826967341328,
+    "Accuracy": 0.64626012506977992,
+    "PositivePrecision": 0.70821413273443357,
+    "PositiveRecall": 0.43744670764814642,
+    "NegativePrecision": 0.62209498232673743,
+    "NegativeRecall": 0.83593792572516823,
+    "F1Score": 0.53889329333118274,
+    "AreaUnderPrecisionRecallCurve": 0.69590579371155648
+  },
+  "StockSymbol": "GOLD",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

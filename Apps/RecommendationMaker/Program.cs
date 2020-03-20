@@ -27,7 +27,7 @@ namespace RecommendationMaker
             var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
 
             Console.WriteLine("Loading system...");
-            recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelSvm-config-v1");
+            recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelFF-config-v1");
             var recommendations = recommendationSystem.GetAllRecommendations(DateTime.Today);
 
             Console.WriteLine("Today's recommended stocks:");

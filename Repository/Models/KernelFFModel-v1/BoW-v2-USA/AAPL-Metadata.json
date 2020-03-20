@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.68572456736114673,
+    "Accuracy": 0.61409773038354742,
+    "PositivePrecision": 0.59144512947879313,
+    "PositiveRecall": 0.85786626188688031,
+    "NegativePrecision": 0.70811126814276426,
+    "NegativeRecall": 0.35862579290931373,
+    "F1Score": 0.69712797669004445,
+    "AreaUnderPrecisionRecallCurve": 0.67391784737325766
+  },
+  "StockSymbol": "AAPL",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

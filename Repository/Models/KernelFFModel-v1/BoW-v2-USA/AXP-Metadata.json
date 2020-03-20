@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.74037417224422108,
+    "Accuracy": 0.62305960936231808,
+    "PositivePrecision": 0.59214946128576718,
+    "PositiveRecall": 0.95006026636604735,
+    "NegativePrecision": 0.81457309647717557,
+    "NegativeRecall": 0.25338673804140976,
+    "F1Score": 0.72872387067893774,
+    "AreaUnderPrecisionRecallCurve": 0.74861650509843713
+  },
+  "StockSymbol": "AXP",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

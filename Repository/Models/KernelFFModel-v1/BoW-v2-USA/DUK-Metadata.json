@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.73241489559077755,
+    "Accuracy": 0.61814102969486784,
+    "PositivePrecision": 0.58401851405820149,
+    "PositiveRecall": 0.9715088355465733,
+    "NegativePrecision": 0.86836268970865194,
+    "NegativeRecall": 0.21773984235666916,
+    "F1Score": 0.729271792855181,
+    "AreaUnderPrecisionRecallCurve": 0.7362313455942513
+  },
+  "StockSymbol": "DUK",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

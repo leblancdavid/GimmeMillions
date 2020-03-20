@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.64137550741411786,
+    "Accuracy": 0.55150701254257561,
+    "PositivePrecision": 0.74337108822389819,
+    "PositiveRecall": 0.16100306403427073,
+    "NegativePrecision": 0.53063815730904307,
+    "NegativeRecall": 0.94021430483600044,
+    "F1Score": 0.25899403086137807,
+    "AreaUnderPrecisionRecallCurve": 0.64246948568495377
+  },
+  "StockSymbol": "MGM",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

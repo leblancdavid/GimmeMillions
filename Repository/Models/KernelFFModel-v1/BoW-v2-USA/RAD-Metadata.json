@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.63486717878644927,
+    "Accuracy": 0.57741543922001792,
+    "PositivePrecision": 0.55147848780107234,
+    "PositiveRecall": 0.898303461315584,
+    "NegativePrecision": 0.70381329316574825,
+    "NegativeRecall": 0.24782826323978044,
+    "F1Score": 0.6830449801340317,
+    "AreaUnderPrecisionRecallCurve": 0.62194994950788907
+  },
+  "StockSymbol": "RAD",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

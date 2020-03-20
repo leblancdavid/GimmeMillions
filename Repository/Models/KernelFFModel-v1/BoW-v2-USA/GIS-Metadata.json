@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.74476067602645646,
+    "Accuracy": 0.68234034310994907,
+    "PositivePrecision": 0.68978449629494454,
+    "PositiveRecall": 0.7509388668186201,
+    "NegativePrecision": 0.68122931742424886,
+    "NegativeRecall": 0.60708850241450008,
+    "F1Score": 0.71581876032249825,
+    "AreaUnderPrecisionRecallCurve": 0.75033510278211391
+  },
+  "StockSymbol": "GIS",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

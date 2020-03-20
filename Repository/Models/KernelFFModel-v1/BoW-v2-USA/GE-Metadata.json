@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.62010006127895578,
+    "Accuracy": 0.56274398328838338,
+    "PositivePrecision": 0.5375341127200719,
+    "PositiveRecall": 0.94824090359312552,
+    "NegativePrecision": 0.76161345598845587,
+    "NegativeRecall": 0.17278302863613509,
+    "F1Score": 0.68570893284730439,
+    "AreaUnderPrecisionRecallCurve": 0.59703996452724439
+  },
+  "StockSymbol": "GE",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

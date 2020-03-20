@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.61836681894190781,
+    "Accuracy": 0.55685384636679824,
+    "PositivePrecision": 0.53809313931041447,
+    "PositiveRecall": 0.85723750850531977,
+    "NegativePrecision": 0.68610819422361435,
+    "NegativeRecall": 0.24469092655609717,
+    "F1Score": 0.654815906086663,
+    "AreaUnderPrecisionRecallCurve": 0.60083465893481325
+  },
+  "StockSymbol": "DRQ",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.72618736059017208,
+    "Accuracy": 0.66393468618091755,
+    "PositivePrecision": 0.65457046358944626,
+    "PositiveRecall": 0.76492419146652146,
+    "NegativePrecision": 0.67964889387972338,
+    "NegativeRecall": 0.5507741310541221,
+    "F1Score": 0.70514200303745667,
+    "AreaUnderPrecisionRecallCurve": 0.72617755697860309
+  },
+  "StockSymbol": "ATVI",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

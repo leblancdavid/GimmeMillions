@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.66516202830690974,
+    "Accuracy": 0.58692238669479213,
+    "PositivePrecision": 0.55624024371220671,
+    "PositiveRecall": 0.95726441571127785,
+    "NegativePrecision": 0.82096546645842428,
+    "NegativeRecall": 0.199779838159081,
+    "F1Score": 0.70324375719822585,
+    "AreaUnderPrecisionRecallCurve": 0.64371313379647144
+  },
+  "StockSymbol": "WBA",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

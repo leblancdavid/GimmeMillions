@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.69208672994183107,
+    "Accuracy": 0.56764800901054246,
+    "PositivePrecision": 0.54633142897506892,
+    "PositiveRecall": 0.96489214251708866,
+    "NegativePrecision": 0.79554853748402132,
+    "NegativeRecall": 0.14422806265882079,
+    "F1Score": 0.69727450686500725,
+    "AreaUnderPrecisionRecallCurve": 0.68275435745258028
+  },
+  "StockSymbol": "BBY",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.71532555950187837,
+    "Accuracy": 0.61218480159695421,
+    "PositivePrecision": 0.58271998029666139,
+    "PositiveRecall": 0.94138914609273672,
+    "NegativePrecision": 0.80283336126473392,
+    "NegativeRecall": 0.24767202535226268,
+    "F1Score": 0.71894964734452516,
+    "AreaUnderPrecisionRecallCurve": 0.714041140125254
+  },
+  "StockSymbol": "ROST",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

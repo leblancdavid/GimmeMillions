@@ -46,7 +46,8 @@ namespace ModelTestSimulation
             foreach (var stock in stocks)
             {
                 Console.WriteLine($"-=== Loading model for {stock} ===-");
-                var model = new MLStockKernelEstimationSvmModel();
+                //var model = new MLStockKernelEstimationSvmModel();
+                var model = new MLStockKernelEstimationFastForestModel();
                 var loadResult = model.Load(_pathToModels, stock, "BoW-v2-USA");
                 if (loadResult.IsFailure)
                 {
@@ -58,10 +59,12 @@ namespace ModelTestSimulation
                 stockAccess.UpdateStocks(stock);
             }
 
-            recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/KernelSvm-config-v1");
+            //recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/KernelSvm-config-v1");
+            recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/KernelFF-config-v1");
 
 
-            recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelSvm-config-v1");
+            //recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelSvm-config-v1");
+            recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelFF-config-v1");
             var startDate = new DateTime(2019, 1, 1);
             var endDate = new DateTime(2020, 3, 18);
             var currentDate = startDate;
