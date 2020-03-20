@@ -106,7 +106,7 @@ namespace ModelTestSimulation
             }
 
             Console.WriteLine($"-=== Done testing recommendation model, ended with ${currentMoney.ToString("#.##")} ===-");
-            Console.ReadKey();
+            Console.ReadLine();
         }
 
         private static IFeatureDatasetService GetBoWFeatureDatasetService(string dictionaryToUse)

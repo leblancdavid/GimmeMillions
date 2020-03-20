@@ -383,6 +383,156 @@
       "Item2": "../../../../Repository/Models",
       "Item3": "BoW-v2-USA",
       "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "ET",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "T",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "PFE",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "PBR",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "GILD",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "CSCO",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "NOK",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "MGM",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "XOM",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "HAL",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "JPM",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "CMCSA",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "MS",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "CVX",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "PCG",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "MRK",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "V",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "EBAY",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "WMT",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "LUV",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "NKE",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "JNJ",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "SYF",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "HLT",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+    },
+    {
+      "Item1": "CVS",
+      "Item2": "../../../../Repository/Models",
+      "Item3": "BoW-v2-USA",
+      "Item4": "GimmeMillions.Domain.ML.Binary.MLStockKernelEstimationSvmModel, GimmeMillions.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
     }
   ]
 }
