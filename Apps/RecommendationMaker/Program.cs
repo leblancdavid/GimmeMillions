@@ -26,14 +26,24 @@ namespace RecommendationMaker
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
             var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
 
-            Console.WriteLine("Loading system...");
+            Console.WriteLine("Loading peak system...");
             recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelFFPeak-config-v1");
             var recommendations = recommendationSystem.GetAllRecommendations(DateTime.Today);
 
-            Console.WriteLine("Today's recommended stocks:");
+            Console.WriteLine("Today's recommended peak stocks:");
             foreach(var r in recommendations)
             {
-                Console.WriteLine($"{r.Symbol}: {r.Prediction.Score}");
+                Console.WriteLine($"{r.Symbol}: {r.Prediction.Score} ({r.Prediction.Probability})");
+            }
+
+            Console.WriteLine("Loading prediction system...");
+            recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelFF-config-v1");
+            recommendations = recommendationSystem.GetAllRecommendations(DateTime.Today);
+
+            Console.WriteLine("Today's recommended stocks:");
+            foreach (var r in recommendations)
+            {
+                Console.WriteLine($"{r.Symbol}: {r.Prediction.Score} ({r.Prediction.Probability})");
             }
 
             Console.ReadKey();

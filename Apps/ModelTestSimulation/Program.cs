@@ -37,7 +37,7 @@ namespace ModelTestSimulation
 
             var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "VZ", "S", "INVA", "LGND", "LXRX", "XBI",
              "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM", "FAST", "DAL", "ZNH", "ARNC",
-             "AAL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA-PH", "DRE", "NLY", "MPW", "C", "WFC",
+             "AAL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "DRE", "NLY", "MPW", "C", "WFC",
             "HSBC", "BAC", "RY", "AXP", "FB", "DIS", "BHP", "BBL", "DD", "GOLD", "DUK", "EXC", "FE", "EIX",
             "CMS", "MCD", "SBUX", "LOW", "HMC", "HD", "GM", "ROST", "BBY", "MAR", "KO", "PEP", "GIS", "GE", "ET",
             "T", "PFE", "PBR", "GILD", "CSCO", "NOK", "MGM", "XOM", "HAL", "JPM", "CMCSA", "MS", "CVX", "PCG", "MRK",
@@ -49,8 +49,8 @@ namespace ModelTestSimulation
             {
                 Console.WriteLine($"-=== Loading model for {stock} ===-");
                 //var model = new MLStockKernelEstimationSvmModel();
-                //var model = new MLStockKernelEstimationFastForestModel();
-                var model = new MLStockPeakKernelEstimationFastForestModel();
+                var model = new MLStockKernelEstimationFastForestModel();
+                //var model = new MLStockPeakKernelEstimationFastForestModel();
                 //var model = new MLStockKernelEstimationSdcaModel();
                 var loadResult = model.Load(_pathToModels, stock, "BoW-v2-USA");
                 if (loadResult.IsFailure)
@@ -64,12 +64,14 @@ namespace ModelTestSimulation
             }
 
             //recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/KernelSvm-config-v1");
-            recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/KernelFFPeak-config-v1");
+            //recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/KernelFFPeak-config-v1");
+            recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/KernelFF-config-v1");
             //recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/KernelScda-config-v1");
 
 
             //recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelSvm-config-v1");
-            recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelFFPeak-config-v1");
+            //recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelFFPeak-config-v1");
+            recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelFF-config-v1");
             //recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelScda-config-v1");
             var startDate = new DateTime(2019, 1, 1);
             var endDate = new DateTime(2020, 3, 18);
