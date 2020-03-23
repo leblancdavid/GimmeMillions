@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.62944958350811886,
-    "Accuracy": 0.53773248728207379,
-    "PositivePrecision": 0.7647863247863248,
-    "PositiveRecall": 0.0849951957275901,
-    "NegativePrecision": 0.52364358541346445,
-    "NegativeRecall": 0.97652377411987656,
-    "F1Score": 0.15242536530594541,
-    "AreaUnderPrecisionRecallCurve": 0.61496719112818243
+    "AreaUnderRocCurve": 0.57341028717967191,
+    "Accuracy": 0.53715869425538809,
+    "PositivePrecision": 0.611467653351215,
+    "PositiveRecall": 0.21863574979055173,
+    "NegativePrecision": 0.52440412660148472,
+    "NegativeRecall": 0.85305830194484344,
+    "F1Score": 0.31652079544643436,
+    "AreaUnderPrecisionRecallCurve": 0.566002840419815
   },
   "StockSymbol": "ET",
   "Parameters": null,

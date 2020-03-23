@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.75085722393059184,
-    "Accuracy": 0.67939312180039291,
-    "PositivePrecision": 0.65061260767498852,
-    "PositiveRecall": 0.88912979406224635,
-    "NegativePrecision": 0.76564699036868467,
-    "NegativeRecall": 0.42694968286468554,
-    "F1Score": 0.75113051428837319,
-    "AreaUnderPrecisionRecallCurve": 0.7679564804800213
+    "AreaUnderRocCurve": 0.67419733948392069,
+    "Accuracy": 0.62394286909414354,
+    "PositivePrecision": 0.614781933005942,
+    "PositiveRecall": 0.77267137339650771,
+    "NegativePrecision": 0.6459772938181777,
+    "NegativeRecall": 0.45838750261314176,
+    "F1Score": 0.68371014799819907,
+    "AreaUnderPrecisionRecallCurve": 0.67570746196686426
   },
   "StockSymbol": "ORCL",
   "Parameters": null,

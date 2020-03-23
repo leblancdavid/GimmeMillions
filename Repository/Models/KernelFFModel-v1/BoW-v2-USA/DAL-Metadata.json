@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.59785336063584693,
-    "Accuracy": 0.53297380570844932,
-    "PositivePrecision": 0.81420187072455674,
-    "PositiveRecall": 0.089761605649177817,
-    "NegativePrecision": 0.51761005547393657,
-    "NegativeRecall": 0.97569907904189,
-    "F1Score": 0.15718258529451162,
-    "AreaUnderPrecisionRecallCurve": 0.6061597748783496
+    "AreaUnderRocCurve": 0.59092323441095806,
+    "Accuracy": 0.5236282979917295,
+    "PositivePrecision": 0.74821428571428572,
+    "PositiveRecall": 0.0838789306672388,
+    "NegativePrecision": 0.51222529516763493,
+    "NegativeRecall": 0.96360708648788385,
+    "F1Score": 0.14101934768581709,
+    "AreaUnderPrecisionRecallCurve": 0.58967418454664533
   },
   "StockSymbol": "DAL",
   "Parameters": null,

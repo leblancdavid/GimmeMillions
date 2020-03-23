@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.70391584104998284,
+    "Accuracy": 0.65741988290243913,
+    "PositivePrecision": 0.664102492490839,
+    "PositiveRecall": 0.72216360027715587,
+    "NegativePrecision": 0.650211732922266,
+    "NegativeRecall": 0.58498540160640411,
+    "F1Score": 0.69110742312008555,
+    "AreaUnderPrecisionRecallCurve": 0.703317535210289
+  },
+  "StockSymbol": "HPQ",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

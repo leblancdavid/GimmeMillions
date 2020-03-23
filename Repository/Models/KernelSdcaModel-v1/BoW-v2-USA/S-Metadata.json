@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.56287117910589013,
+    "Accuracy": 0.54384591674113558,
+    "PositivePrecision": 0.53602038928251217,
+    "PositiveRecall": 0.6297815083291336,
+    "NegativePrecision": 0.55681466385944967,
+    "NegativeRecall": 0.45982147309557259,
+    "F1Score": 0.578073208302589,
+    "AreaUnderPrecisionRecallCurve": 0.54474717848940668
+  },
+  "StockSymbol": "S",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

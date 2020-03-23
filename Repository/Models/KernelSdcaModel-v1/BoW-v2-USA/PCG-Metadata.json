@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.71831584262122949,
+    "Accuracy": 0.665301476018261,
+    "PositivePrecision": 0.66606995867539542,
+    "PositiveRecall": 0.75013334348201155,
+    "NegativePrecision": 0.66634849084077863,
+    "NegativeRecall": 0.56877815681482835,
+    "F1Score": 0.70494958739839675,
+    "AreaUnderPrecisionRecallCurve": 0.72352546224138936
+  },
+  "StockSymbol": "PCG",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.69014997787230414,
-    "Accuracy": 0.57199038293994264,
-    "PositivePrecision": 0.5499383495569985,
-    "PositiveRecall": 0.968656506796391,
-    "NegativePrecision": 0.826568630515999,
-    "NegativeRecall": 0.14441535699467087,
-    "F1Score": 0.70127664620246766,
-    "AreaUnderPrecisionRecallCurve": 0.68201039712354561
+    "AreaUnderRocCurve": 0.56993029908331327,
+    "Accuracy": 0.51733005671865551,
+    "PositivePrecision": 0.6326404751349336,
+    "PositiveRecall": 0.09437181914336143,
+    "NegativePrecision": 0.50841533362783076,
+    "NegativeRecall": 0.94377981410516387,
+    "F1Score": 0.16052195842823949,
+    "AreaUnderPrecisionRecallCurve": 0.56704844981568747
   },
   "StockSymbol": "DD",
   "Parameters": null,

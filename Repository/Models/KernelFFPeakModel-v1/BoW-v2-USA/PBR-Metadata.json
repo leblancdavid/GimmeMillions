@@ -1,0 +1,23 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.7729631984504346,
+    "Accuracy": 0.73630180762335,
+    "PositivePrecision": 0.68018734697676986,
+    "PositiveRecall": 0.54108033805111488,
+    "NegativePrecision": 0.75996690344276863,
+    "NegativeRecall": 0.850500986257477,
+    "F1Score": 0.60238743757460578,
+    "AreaUnderPrecisionRecallCurve": 0.6767008699305832
+  },
+  "StockSymbol": "PBR",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFPeakModel-v1",
+  "PeakAverage": 1.6392705731521833,
+  "PeakSelection": 1.6392705731521833
+}

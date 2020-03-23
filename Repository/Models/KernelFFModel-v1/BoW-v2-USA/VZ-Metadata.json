@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.71892349796281063,
-    "Accuracy": 0.65671608391682745,
-    "PositivePrecision": 0.633774046463529,
-    "PositiveRecall": 0.81694379673381368,
-    "NegativePrecision": 0.71464347049461308,
-    "NegativeRecall": 0.48113119898255075,
-    "F1Score": 0.71152497775191059,
-    "AreaUnderPrecisionRecallCurve": 0.71156399206698318
+    "AreaUnderRocCurve": 0.5688313204485097,
+    "Accuracy": 0.53978632993004494,
+    "PositivePrecision": 0.5941087558966538,
+    "PositiveRecall": 0.28823418731875161,
+    "NegativePrecision": 0.52596647914527472,
+    "NegativeRecall": 0.79778534582560789,
+    "F1Score": 0.37924798169306478,
+    "AreaUnderPrecisionRecallCurve": 0.566694824451055
   },
   "StockSymbol": "VZ",
   "Parameters": null,

@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.74129382625460916,
-    "Accuracy": 0.59676383352193985,
-    "PositivePrecision": 0.570914517262328,
-    "PositiveRecall": 0.97863985292424727,
-    "NegativePrecision": 0.88397419481071748,
-    "NegativeRecall": 0.16841925533296745,
-    "F1Score": 0.72029000709946478,
-    "AreaUnderPrecisionRecallCurve": 0.74315165283666673
+    "AreaUnderRocCurve": 0.70353072364687352,
+    "Accuracy": 0.64490170970339267,
+    "PositivePrecision": 0.6620708778827169,
+    "PositiveRecall": 0.65907880867454893,
+    "NegativePrecision": 0.63030184165021619,
+    "NegativeRecall": 0.62885075929428935,
+    "F1Score": 0.65817329653468959,
+    "AreaUnderPrecisionRecallCurve": 0.69417024404204342
   },
   "StockSymbol": "KO",
   "Parameters": null,

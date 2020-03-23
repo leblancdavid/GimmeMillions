@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.68572456736114673,
-    "Accuracy": 0.61409773038354742,
-    "PositivePrecision": 0.59144512947879313,
-    "PositiveRecall": 0.85786626188688031,
-    "NegativePrecision": 0.70811126814276426,
-    "NegativeRecall": 0.35862579290931373,
-    "F1Score": 0.69712797669004445,
-    "AreaUnderPrecisionRecallCurve": 0.67391784737325766
+    "AreaUnderRocCurve": 0.6545018107760382,
+    "Accuracy": 0.61235419340735631,
+    "PositivePrecision": 0.61806657706253354,
+    "PositiveRecall": 0.6455757637690609,
+    "NegativePrecision": 0.60976003727907346,
+    "NegativeRecall": 0.57632596944875758,
+    "F1Score": 0.628515483881033,
+    "AreaUnderPrecisionRecallCurve": 0.6375492649030825
   },
   "StockSymbol": "AAPL",
   "Parameters": null,

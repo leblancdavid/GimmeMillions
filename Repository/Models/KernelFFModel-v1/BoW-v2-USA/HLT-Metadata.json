@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.74605325211586959,
-    "Accuracy": 0.60199998383744857,
-    "PositivePrecision": 0.57018411661467472,
-    "PositiveRecall": 0.96241052482203959,
-    "NegativePrecision": 0.84060314685314685,
-    "NegativeRecall": 0.21133664379218539,
-    "F1Score": 0.7155349483672252,
-    "AreaUnderPrecisionRecallCurve": 0.74839071792012157
+    "AreaUnderRocCurve": 0.76657835900799254,
+    "Accuracy": 0.6845277056816691,
+    "PositivePrecision": 0.64531178960952018,
+    "PositiveRecall": 0.8984288876280806,
+    "NegativePrecision": 0.81530299763522263,
+    "NegativeRecall": 0.45754516379780286,
+    "F1Score": 0.74802226158460183,
+    "AreaUnderPrecisionRecallCurve": 0.761562658796245
   },
   "StockSymbol": "HLT",
   "Parameters": null,

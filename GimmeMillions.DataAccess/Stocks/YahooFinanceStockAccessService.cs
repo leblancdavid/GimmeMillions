@@ -22,6 +22,22 @@ namespace GimmeMillions.DataAccess.Stocks
             return _stockRepository.GetStocks(symbol);
         }
 
+        public IEnumerable<StockData> GetStocks()
+        {
+            var symbols = GetSymbols();
+            var stocks = new List<StockData>();
+            foreach(var symbol in symbols)
+            {
+                stocks.AddRange(GetStocks(symbol));
+            }
+            return stocks;
+        }
+
+        public IEnumerable<string> GetSymbols()
+        {
+            return _stockRepository.GetSymbols();
+        }
+
         public IEnumerable<StockData> UpdateStocks(string symbol)
         {
             try
@@ -37,6 +53,7 @@ namespace GimmeMillions.DataAccess.Stocks
             catch (Exception ex)
             {
                 Console.WriteLine($"Error retrieving stock {symbol}: {ex.Message}");
+                return _stockRepository.GetStocks(symbol);
             }
 
             return _stockRepository.GetStocks(symbol);

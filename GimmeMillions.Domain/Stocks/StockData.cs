@@ -19,6 +19,14 @@ namespace GimmeMillions.Domain.Stocks
             }
         }
 
+        public decimal PercentChangeHighToOpen
+        {
+            get
+            {
+                return 100.0m * (High - Open) / Open;
+            }
+        }
+
         public decimal PercentChange { get; set; }
 
         public StockData(string symbol, DateTime date, 

@@ -1,0 +1,23 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.77774445805147052,
+    "Accuracy": 0.738226924820407,
+    "PositivePrecision": 0.61774136295415238,
+    "PositiveRecall": 0.61833930767082845,
+    "NegativePrecision": 0.80291466282998591,
+    "NegativeRecall": 0.80037557147894844,
+    "F1Score": 0.61551571478432687,
+    "AreaUnderPrecisionRecallCurve": 0.66683165145569523
+  },
+  "StockSymbol": "GILD",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFPeakModel-v1",
+  "PeakAverage": 1.5334211620667662,
+  "PeakSelection": 1.5334211620667662
+}

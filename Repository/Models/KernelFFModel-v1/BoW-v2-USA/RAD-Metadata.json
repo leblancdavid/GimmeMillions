@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.63486717878644927,
-    "Accuracy": 0.57741543922001792,
-    "PositivePrecision": 0.55147848780107234,
-    "PositiveRecall": 0.898303461315584,
-    "NegativePrecision": 0.70381329316574825,
-    "NegativeRecall": 0.24782826323978044,
-    "F1Score": 0.6830449801340317,
-    "AreaUnderPrecisionRecallCurve": 0.62194994950788907
+    "AreaUnderRocCurve": 0.6161915455700181,
+    "Accuracy": 0.57182660206681568,
+    "PositivePrecision": 0.615889886615594,
+    "PositiveRecall": 0.39665429236352567,
+    "NegativePrecision": 0.56136139118958506,
+    "NegativeRecall": 0.74619758641757594,
+    "F1Score": 0.46021389843644966,
+    "AreaUnderPrecisionRecallCurve": 0.60281968818180742
   },
   "StockSymbol": "RAD",
   "Parameters": null,

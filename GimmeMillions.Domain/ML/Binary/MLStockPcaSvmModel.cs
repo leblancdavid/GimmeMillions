@@ -34,8 +34,6 @@ namespace GimmeMillions.Domain.ML.Binary
         private int _seed;
         private FeatureFilterTransform _frequencyUsageTransform;
         private FeatureFilterTransform _maxDifferenceFilterTransform;
-        private PcaTransform _pcaTransform;
-        private SupervisedNormalizerTransform _normTransform;
         private ITransformer _model;
 
         private DataViewSchema _dataSchema;

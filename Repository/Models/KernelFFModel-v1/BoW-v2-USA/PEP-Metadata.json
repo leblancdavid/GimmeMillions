@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.7567829465415441,
-    "Accuracy": 0.64246525274461919,
-    "PositivePrecision": 0.60951951948277161,
-    "PositiveRecall": 0.940318879738777,
-    "NegativePrecision": 0.82722930471092226,
-    "NegativeRecall": 0.29917642086181451,
-    "F1Score": 0.738502708467635,
-    "AreaUnderPrecisionRecallCurve": 0.76357823100824507
+    "AreaUnderRocCurve": 0.74427317928066561,
+    "Accuracy": 0.66957846539505339,
+    "PositivePrecision": 0.64831926676238616,
+    "PositiveRecall": 0.8652280196760499,
+    "NegativePrecision": 0.76915402655975007,
+    "NegativeRecall": 0.44067704799596114,
+    "F1Score": 0.73583281064832562,
+    "AreaUnderPrecisionRecallCurve": 0.74394707532490045
   },
   "StockSymbol": "PEP",
   "Parameters": null,

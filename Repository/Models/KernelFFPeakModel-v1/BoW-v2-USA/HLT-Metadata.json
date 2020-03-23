@@ -1,0 +1,23 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.87649905021795327,
+    "Accuracy": 0.784473780743036,
+    "PositivePrecision": 0.86406831243222371,
+    "PositiveRecall": 0.5060395824271422,
+    "NegativePrecision": 0.76501816522147048,
+    "NegativeRecall": 0.95148821058449329,
+    "F1Score": 0.63374841797909,
+    "AreaUnderPrecisionRecallCurve": 0.82990154983298225
+  },
+  "StockSymbol": "HLT",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFPeakModel-v1",
+  "PeakAverage": 1.0245179287150463,
+  "PeakSelection": 1.0245179287150463
+}

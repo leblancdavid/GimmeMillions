@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.71994625337906126,
-    "Accuracy": 0.6314720038198518,
-    "PositivePrecision": 0.7792917848367048,
-    "PositiveRecall": 0.31608178501535422,
-    "NegativePrecision": 0.59733013656581568,
-    "NegativeRecall": 0.91754821782905727,
-    "F1Score": 0.44422561438222508,
-    "AreaUnderPrecisionRecallCurve": 0.69823733213482286
+    "AreaUnderRocCurve": 0.56526676043374746,
+    "Accuracy": 0.53729400526408477,
+    "PositivePrecision": 0.56577893920037126,
+    "PositiveRecall": 0.28832933071751643,
+    "NegativePrecision": 0.52942280779273443,
+    "NegativeRecall": 0.78139294874386622,
+    "F1Score": 0.3755458582608161,
+    "AreaUnderPrecisionRecallCurve": 0.55781696730212382
   },
   "StockSymbol": "PBR",
   "Parameters": null,

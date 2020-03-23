@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.64137550741411786,
-    "Accuracy": 0.55150701254257561,
-    "PositivePrecision": 0.74337108822389819,
-    "PositiveRecall": 0.16100306403427073,
-    "NegativePrecision": 0.53063815730904307,
-    "NegativeRecall": 0.94021430483600044,
-    "F1Score": 0.25899403086137807,
-    "AreaUnderPrecisionRecallCurve": 0.64246948568495377
+    "AreaUnderRocCurve": 0.62605731303530088,
+    "Accuracy": 0.58208210645013814,
+    "PositivePrecision": 0.63850540254994337,
+    "PositiveRecall": 0.360413010814695,
+    "NegativePrecision": 0.56687191371558421,
+    "NegativeRecall": 0.80024411301385112,
+    "F1Score": 0.44425751529247465,
+    "AreaUnderPrecisionRecallCurve": 0.61271920776664979
   },
   "StockSymbol": "MGM",
   "Parameters": null,

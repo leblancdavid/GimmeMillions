@@ -40,7 +40,7 @@ namespace GimmeMillions.Domain.Stocks
         public IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date)
         {
             var recommendations = new List<StockRecommendation>();
-            var feature = _featureDatasetService.GetData(date);
+            var feature = _featureDatasetService.GetFeatureVector("", date);
             if (feature.IsFailure)
             {
                 return recommendations;
@@ -52,7 +52,7 @@ namespace GimmeMillions.Domain.Stocks
                 recommendations.Add(new StockRecommendation(model.StockSymbol, result));
             }
 
-            return recommendations.OrderByDescending(x => x.Prediction.Score);
+            return recommendations.OrderByDescending(x => x.Prediction.Probability);
         }
 
         public IEnumerable<StockRecommendation> GetAllRecommendationsForToday()

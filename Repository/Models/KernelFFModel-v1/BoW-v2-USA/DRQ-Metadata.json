@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.61836681894190781,
-    "Accuracy": 0.55685384636679824,
-    "PositivePrecision": 0.53809313931041447,
-    "PositiveRecall": 0.85723750850531977,
-    "NegativePrecision": 0.68610819422361435,
-    "NegativeRecall": 0.24469092655609717,
-    "F1Score": 0.654815906086663,
-    "AreaUnderPrecisionRecallCurve": 0.60083465893481325
+    "AreaUnderRocCurve": 0.59656036100121645,
+    "Accuracy": 0.55460797137719342,
+    "PositivePrecision": 0.54083163506024956,
+    "PositiveRecall": 0.81516791331926231,
+    "NegativePrecision": 0.61127209966646279,
+    "NegativeRecall": 0.28865174547419969,
+    "F1Score": 0.64841088250555989,
+    "AreaUnderPrecisionRecallCurve": 0.59598787903038541
   },
   "StockSymbol": "DRQ",
   "Parameters": null,

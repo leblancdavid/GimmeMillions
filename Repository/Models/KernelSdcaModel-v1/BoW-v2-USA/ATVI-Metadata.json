@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.66223202023090344,
+    "Accuracy": 0.62377996064424068,
+    "PositivePrecision": 0.62528052541344381,
+    "PositiveRecall": 0.68102686986964633,
+    "NegativePrecision": 0.62417891730843778,
+    "NegativeRecall": 0.5640008574055424,
+    "F1Score": 0.651006533087043,
+    "AreaUnderPrecisionRecallCurve": 0.65327120105402448
+  },
+  "StockSymbol": "ATVI",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

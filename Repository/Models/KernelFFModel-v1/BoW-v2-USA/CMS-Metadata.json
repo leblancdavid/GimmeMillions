@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.77566855945497593,
-    "Accuracy": 0.71452074939400545,
-    "PositivePrecision": 0.71430298288112881,
-    "PositiveRecall": 0.80684035564285872,
-    "NegativePrecision": 0.71967934640034592,
-    "NegativeRecall": 0.597871794830755,
-    "F1Score": 0.75602951397597506,
-    "AreaUnderPrecisionRecallCurve": 0.79051161107661627
+    "AreaUnderRocCurve": 0.72160365093029044,
+    "Accuracy": 0.66415397985522551,
+    "PositivePrecision": 0.67444952787093615,
+    "PositiveRecall": 0.724424068971292,
+    "NegativePrecision": 0.65528663866579484,
+    "NegativeRecall": 0.59021427703200258,
+    "F1Score": 0.69595574224762957,
+    "AreaUnderPrecisionRecallCurve": 0.72746588457774342
   },
   "StockSymbol": "CMS",
   "Parameters": null,

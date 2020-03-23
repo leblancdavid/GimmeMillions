@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.715096787086017,
+    "Accuracy": 0.65943332756781015,
+    "PositivePrecision": 0.66769065202406619,
+    "PositiveRecall": 0.71909509986513265,
+    "NegativePrecision": 0.64862338435667477,
+    "NegativeRecall": 0.59199555696562045,
+    "F1Score": 0.69214594976230126,
+    "AreaUnderPrecisionRecallCurve": 0.72029381035634277
+  },
+  "StockSymbol": "MPW",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

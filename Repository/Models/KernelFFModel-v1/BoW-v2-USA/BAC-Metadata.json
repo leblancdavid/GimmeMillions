@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.60047834540215972,
-    "Accuracy": 0.55750295693182628,
-    "PositivePrecision": 0.67031778257584707,
-    "PositiveRecall": 0.25968715050879088,
-    "NegativePrecision": 0.54377499743350977,
-    "NegativeRecall": 0.8497065171154059,
-    "F1Score": 0.33217288770840225,
-    "AreaUnderPrecisionRecallCurve": 0.60766870493458869
+    "AreaUnderRocCurve": 0.65782339459066974,
+    "Accuracy": 0.59729302682427721,
+    "PositivePrecision": 0.57140959373397615,
+    "PositiveRecall": 0.84839205720214461,
+    "NegativePrecision": 0.69148115602023985,
+    "NegativeRecall": 0.33530879665155638,
+    "F1Score": 0.68177232400585941,
+    "AreaUnderPrecisionRecallCurve": 0.65130213431588913
   },
   "StockSymbol": "BAC",
   "Parameters": null,

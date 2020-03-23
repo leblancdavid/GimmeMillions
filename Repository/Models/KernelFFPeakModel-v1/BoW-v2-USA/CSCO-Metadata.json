@@ -1,0 +1,23 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.77528349572788424,
+    "Accuracy": 0.70444923173891216,
+    "PositivePrecision": 0.585851034497792,
+    "PositiveRecall": 0.6629048435780952,
+    "NegativePrecision": 0.80508750051640621,
+    "NegativeRecall": 0.72790519475988424,
+    "F1Score": 0.60945518393310272,
+    "AreaUnderPrecisionRecallCurve": 0.67186465009237728
+  },
+  "StockSymbol": "CSCO",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFPeakModel-v1",
+  "PeakAverage": 1.3448143946205371,
+  "PeakSelection": 1.3448143946205371
+}

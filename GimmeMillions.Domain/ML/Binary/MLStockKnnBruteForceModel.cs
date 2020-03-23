@@ -79,7 +79,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 }
                 _frequencyUsageTransform = usageLoad.Value;
 
-                DataViewSchema schema = null;
+                //DataViewSchema schema = null;
                 //_model = _mLContext.Model.Load($"{directory}/{Metadata.StockSymbol}-Model.zip", out schema);
 
                 return Result.Ok();

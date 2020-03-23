@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.73696670068309,
-    "Accuracy": 0.64376984006121074,
-    "PositivePrecision": 0.61012198344244561,
-    "PositiveRecall": 0.91819550608722644,
-    "NegativePrecision": 0.78920876293201858,
-    "NegativeRecall": 0.33263275591711478,
-    "F1Score": 0.73250569555827438,
-    "AreaUnderPrecisionRecallCurve": 0.73905511868610063
+    "AreaUnderRocCurve": 0.70747426158547055,
+    "Accuracy": 0.65111666886631314,
+    "PositivePrecision": 0.63024185443519753,
+    "PositiveRecall": 0.82845423283723818,
+    "NegativePrecision": 0.71898523053350361,
+    "NegativeRecall": 0.45089157593460227,
+    "F1Score": 0.71218350724180046,
+    "AreaUnderPrecisionRecallCurve": 0.69566161925416614
   },
   "StockSymbol": "MAR",
   "Parameters": null,

@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.71532555950187837,
-    "Accuracy": 0.61218480159695421,
-    "PositivePrecision": 0.58271998029666139,
-    "PositiveRecall": 0.94138914609273672,
-    "NegativePrecision": 0.80283336126473392,
-    "NegativeRecall": 0.24767202535226268,
-    "F1Score": 0.71894964734452516,
-    "AreaUnderPrecisionRecallCurve": 0.714041140125254
+    "AreaUnderRocCurve": 0.70025652228342228,
+    "Accuracy": 0.6297600785716041,
+    "PositivePrecision": 0.59663922614663678,
+    "PositiveRecall": 0.8883029468831507,
+    "NegativePrecision": 0.74566124485637508,
+    "NegativeRecall": 0.35163342253506141,
+    "F1Score": 0.71326618660968211,
+    "AreaUnderPrecisionRecallCurve": 0.68919360568995658
   },
   "StockSymbol": "ROST",
   "Parameters": null,

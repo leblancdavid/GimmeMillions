@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.70268613600538121,
-    "Accuracy": 0.61989491506057692,
-    "PositivePrecision": 0.58745862795317694,
-    "PositiveRecall": 0.8948546710231744,
-    "NegativePrecision": 0.74536558076065407,
-    "NegativeRecall": 0.32655298002731969,
-    "F1Score": 0.70879032660580332,
-    "AreaUnderPrecisionRecallCurve": 0.69367293114939055
+    "AreaUnderRocCurve": 0.69022834713541759,
+    "Accuracy": 0.63863328962671484,
+    "PositivePrecision": 0.63001803997865735,
+    "PositiveRecall": 0.77137918729156152,
+    "NegativePrecision": 0.676698426177359,
+    "NegativeRecall": 0.49974670667974408,
+    "F1Score": 0.687569463074835,
+    "AreaUnderPrecisionRecallCurve": 0.67805469931670614
   },
   "StockSymbol": "NKE",
   "Parameters": null,

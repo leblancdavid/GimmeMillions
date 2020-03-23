@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.73201791515319514,
-    "Accuracy": 0.673134623883046,
-    "PositivePrecision": 0.65419181867761833,
-    "PositiveRecall": 0.80555466363789718,
-    "NegativePrecision": 0.71278471175529989,
-    "NegativeRecall": 0.52799764727007437,
-    "F1Score": 0.72043862393607827,
-    "AreaUnderPrecisionRecallCurve": 0.73637005873480765
+    "AreaUnderRocCurve": 0.57643768679051832,
+    "Accuracy": 0.55578460263034457,
+    "PositivePrecision": 0.555110720627944,
+    "PositiveRecall": 0.66629625136912241,
+    "NegativePrecision": 0.56152975212654332,
+    "NegativeRecall": 0.43748364007117291,
+    "F1Score": 0.599078873967205,
+    "AreaUnderPrecisionRecallCurve": 0.57752094920204444
   },
   "StockSymbol": "MSFT",
   "Parameters": null,

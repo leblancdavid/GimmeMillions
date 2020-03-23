@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.64344185642276208,
-    "Accuracy": 0.55468984687587974,
-    "PositivePrecision": 0.53613688961126638,
-    "PositiveRecall": 0.95659564855766044,
-    "NegativePrecision": 0.77740481740481748,
-    "NegativeRecall": 0.14508444965619874,
-    "F1Score": 0.68563193296641189,
-    "AreaUnderPrecisionRecallCurve": 0.62398955974455861
+    "AreaUnderRocCurve": 0.74293170662645636,
+    "Accuracy": 0.66159547029666976,
+    "PositivePrecision": 0.63142140949240688,
+    "PositiveRecall": 0.90768631007468614,
+    "NegativePrecision": 0.77545778282408151,
+    "NegativeRecall": 0.37118845089838037,
+    "F1Score": 0.74414088601794748,
+    "AreaUnderPrecisionRecallCurve": 0.76012681590302811
   },
   "StockSymbol": "BOOM",
   "Parameters": null,

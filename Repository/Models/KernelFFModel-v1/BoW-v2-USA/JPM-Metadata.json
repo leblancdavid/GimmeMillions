@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.73464453020475218,
-    "Accuracy": 0.64028728530784162,
-    "PositivePrecision": 0.60614197565818284,
-    "PositiveRecall": 0.9216332798217568,
-    "NegativePrecision": 0.80054973855213729,
-    "NegativeRecall": 0.32246274423265453,
-    "F1Score": 0.73045591387142006,
-    "AreaUnderPrecisionRecallCurve": 0.73126838658873683
+    "AreaUnderRocCurve": 0.6407929734589618,
+    "Accuracy": 0.59432546297639666,
+    "PositivePrecision": 0.58529253789255475,
+    "PositiveRecall": 0.73589567977819981,
+    "NegativePrecision": 0.623266662822173,
+    "NegativeRecall": 0.44777213040121533,
+    "F1Score": 0.64902539140782223,
+    "AreaUnderPrecisionRecallCurve": 0.63644533154032945
   },
   "StockSymbol": "JPM",
   "Parameters": null,

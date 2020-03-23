@@ -1,12 +1,4 @@
-﻿using Microsoft.ML;
-using Microsoft.ML.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GimmeMillions.Domain.ML.Binary
+﻿namespace GimmeMillions.Domain.ML.Binary
 {
     public class BinaryPredictionModelMetadata<TParams>
     {
@@ -26,7 +18,8 @@ namespace GimmeMillions.Domain.ML.Binary
         public float AverageLowerScore { get; set; }
         public string FeatureEncoding { get; set; }
         public string ModelId { get; set; }
-
+        public double PeakAverage { get; set; }
+        public double PeakSelection { get; set; }
         public BinaryPredictionModelMetadata()
         {
         }

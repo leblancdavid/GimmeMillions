@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.67161420301680086,
-    "Accuracy": 0.56025255498911,
-    "PositivePrecision": 0.53986402582880733,
-    "PositiveRecall": 0.95387357082569435,
-    "NegativePrecision": 0.75209216425567371,
-    "NegativeRecall": 0.14394417962780121,
-    "F1Score": 0.68941256174625343,
-    "AreaUnderPrecisionRecallCurve": 0.654164343674415
+    "AreaUnderRocCurve": 0.71560326633465832,
+    "Accuracy": 0.65889872966919527,
+    "PositivePrecision": 0.64009039287184721,
+    "PositiveRecall": 0.8098429946600556,
+    "NegativePrecision": 0.7008347763660685,
+    "NegativeRecall": 0.49071135475153033,
+    "F1Score": 0.71405289364269253,
+    "AreaUnderPrecisionRecallCurve": 0.71150111637852831
   },
   "StockSymbol": "BHP",
   "Parameters": null,

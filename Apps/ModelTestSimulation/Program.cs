@@ -33,6 +33,8 @@ namespace ModelTestSimulation
             var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
             var stockRepository = new StockDataRepository(_pathToStocks);
 
+            //var stocks = new string[] { "F","INTC" };
+
             var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "VZ", "S", "INVA", "LGND", "LXRX", "XBI",
              "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM", "FAST", "DAL", "ZNH", "ARNC",
              "AAL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA-PH", "DRE", "NLY", "MPW", "C", "WFC",
@@ -47,7 +49,9 @@ namespace ModelTestSimulation
             {
                 Console.WriteLine($"-=== Loading model for {stock} ===-");
                 //var model = new MLStockKernelEstimationSvmModel();
-                var model = new MLStockKernelEstimationFastForestModel();
+                //var model = new MLStockKernelEstimationFastForestModel();
+                var model = new MLStockPeakKernelEstimationFastForestModel();
+                //var model = new MLStockKernelEstimationSdcaModel();
                 var loadResult = model.Load(_pathToModels, stock, "BoW-v2-USA");
                 if (loadResult.IsFailure)
                 {
@@ -60,11 +64,13 @@ namespace ModelTestSimulation
             }
 
             //recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/KernelSvm-config-v1");
-            recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/KernelFF-config-v1");
+            recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/KernelFFPeak-config-v1");
+            //recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/KernelScda-config-v1");
 
 
             //recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelSvm-config-v1");
-            recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelFF-config-v1");
+            recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelFFPeak-config-v1");
+            //recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelScda-config-v1");
             var startDate = new DateTime(2019, 1, 1);
             var endDate = new DateTime(2020, 3, 18);
             var currentDate = startDate;
@@ -98,7 +104,7 @@ namespace ModelTestSimulation
 
                     //decimal investAmmount = (decimal)r.RecommendedInvestmentPercentage * currentMoney;
                     decimal investAmmount = currentMoney / recommendations.Count();
-                    Console.Write($"{r.Symbol}: {investAmmount.ToString("#.##")} ({stock.Value.PercentDayChange.ToString("#.##")}%), ");
+                    Console.Write($"{r.Symbol} (p: {r.Prediction.Probability}): {investAmmount.ToString("#.##")} ({stock.Value.PercentDayChange.ToString("#.##")}%), ");
                     leftover -= investAmmount;
                     returnOnInvestment += investAmmount * (1.0m + stock.Value.PercentDayChange / 100m);
                 }

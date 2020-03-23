@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.58248779729400368,
+    "Accuracy": 0.5643817706562434,
+    "PositivePrecision": 0.57370443435119178,
+    "PositiveRecall": 0.54257803220608425,
+    "NegativePrecision": 0.5560720978343745,
+    "NegativeRecall": 0.586676814337454,
+    "F1Score": 0.557379200467059,
+    "AreaUnderPrecisionRecallCurve": 0.56920072280993028
+  },
+  "StockSymbol": "DRQ",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

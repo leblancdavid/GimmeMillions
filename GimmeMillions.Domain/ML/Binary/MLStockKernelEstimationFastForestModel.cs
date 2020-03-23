@@ -119,14 +119,14 @@ namespace GimmeMillions.Domain.ML.Binary
 
             var score = prediction.GetColumn<float>("Score").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
-           // var probability = prediction.GetColumn<float>("Probability").ToArray();
+            var probability = prediction.GetColumn<float>("Probability").ToArray();
 
             return new StockPrediction()
             {
                 Score = score[0],
                 PredictedLabel = score[0] > 0.0f,
-                //Probability = probability[0]
-                Probability = score[0]
+                Probability = probability[0]
+                //Probability = score[0]
             };
         }
 
@@ -233,7 +233,8 @@ namespace GimmeMillions.Domain.ML.Binary
             var pipeline = _mLContext.BinaryClassification.Trainers.FastForest(
                        numberOfLeaves: Parameters.NumOfLeaves,
                        numberOfTrees: Parameters.NumOfTrees,
-                       minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
+                       minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves)
+                .Append(_mLContext.BinaryClassification.Calibrators.Platt());
             _model = pipeline.Fit(kernelTransformedData);
 
             if (testData != null)

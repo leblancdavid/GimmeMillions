@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.763626351087532,
-    "Accuracy": 0.70034658235058134,
-    "PositivePrecision": 0.68317996814578907,
-    "PositiveRecall": 0.84830577844184274,
-    "NegativePrecision": 0.73965317190807334,
-    "NegativeRecall": 0.5236958875910469,
-    "F1Score": 0.75592533885840418,
-    "AreaUnderPrecisionRecallCurve": 0.77988810142382647
+    "AreaUnderRocCurve": 0.73650157365400493,
+    "Accuracy": 0.6718365743697966,
+    "PositivePrecision": 0.68848353543170082,
+    "PositiveRecall": 0.716848095477961,
+    "NegativePrecision": 0.66647087294399632,
+    "NegativeRecall": 0.61630381615144914,
+    "F1Score": 0.696010127903712,
+    "AreaUnderPrecisionRecallCurve": 0.74498340630411608
   },
   "StockSymbol": "MPW",
   "Parameters": null,

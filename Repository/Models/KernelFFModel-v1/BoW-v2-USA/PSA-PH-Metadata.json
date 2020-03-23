@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.884193316473157,
-    "Accuracy": 0.79948193760262731,
-    "PositivePrecision": 0.77860884751994441,
-    "PositiveRecall": 0.89547470547470565,
-    "NegativePrecision": 0.86022408963585428,
-    "NegativeRecall": 0.68191467974749709,
-    "F1Score": 0.82871131881222271,
-    "AreaUnderPrecisionRecallCurve": 0.90375264214239637
+    "AreaUnderRocCurve": 0.8864212216691385,
+    "Accuracy": 0.80269189331231117,
+    "PositivePrecision": 0.80729091172196732,
+    "PositiveRecall": 0.85229427939105362,
+    "NegativePrecision": 0.81153149386845036,
+    "NegativeRecall": 0.73355317884729643,
+    "F1Score": 0.82544352077756111,
+    "AreaUnderPrecisionRecallCurve": 0.9011925201493598
   },
   "StockSymbol": "PSA-PH",
   "Parameters": null,

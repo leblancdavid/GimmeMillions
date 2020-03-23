@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.68847525743691662,
-    "Accuracy": 0.58867793635274024,
-    "PositivePrecision": 0.5597864133456566,
-    "PositiveRecall": 0.94699842844802473,
-    "NegativePrecision": 0.78738400676179188,
-    "NegativeRecall": 0.2091103271784224,
-    "F1Score": 0.70328828787972,
-    "AreaUnderPrecisionRecallCurve": 0.6689960683339049
+    "AreaUnderRocCurve": 0.59761791245135909,
+    "Accuracy": 0.57090877962333009,
+    "PositivePrecision": 0.55790372775155417,
+    "PositiveRecall": 0.73235097215785316,
+    "NegativePrecision": 0.62131958928585551,
+    "NegativeRecall": 0.40632642484274689,
+    "F1Score": 0.62695944890579369,
+    "AreaUnderPrecisionRecallCurve": 0.577839654116279
   },
   "StockSymbol": "WFC",
   "Parameters": null,

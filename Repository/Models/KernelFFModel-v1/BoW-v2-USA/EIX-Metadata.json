@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.75122931737701448,
-    "Accuracy": 0.65011898496176745,
-    "PositivePrecision": 0.61614806879126838,
-    "PositiveRecall": 0.9460688105518219,
-    "NegativePrecision": 0.83177032602483458,
-    "NegativeRecall": 0.30266458688493642,
-    "F1Score": 0.74535816286218626,
-    "AreaUnderPrecisionRecallCurve": 0.76201242314962025
+    "AreaUnderRocCurve": 0.74393632229997642,
+    "Accuracy": 0.67790182743677851,
+    "PositivePrecision": 0.65819108763903278,
+    "PositiveRecall": 0.848603051767518,
+    "NegativePrecision": 0.73321400749774823,
+    "NegativeRecall": 0.4753036784380068,
+    "F1Score": 0.740171526475942,
+    "AreaUnderPrecisionRecallCurve": 0.750954094692365
   },
   "StockSymbol": "EIX",
   "Parameters": null,

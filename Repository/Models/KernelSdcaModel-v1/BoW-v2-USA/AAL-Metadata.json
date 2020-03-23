@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.66914929778102084,
+    "Accuracy": 0.62643266708934,
+    "PositivePrecision": 0.61747280194781351,
+    "PositiveRecall": 0.59776392787427746,
+    "NegativePrecision": 0.63357473488221161,
+    "NegativeRecall": 0.65228975579370585,
+    "F1Score": 0.60738096267646458,
+    "AreaUnderPrecisionRecallCurve": 0.6501312351141797
+  },
+  "StockSymbol": "AAL",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

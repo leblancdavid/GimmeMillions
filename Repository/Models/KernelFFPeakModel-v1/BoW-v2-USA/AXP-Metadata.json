@@ -1,0 +1,23 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.79830814207524015,
+    "Accuracy": 0.7166798275687748,
+    "PositivePrecision": 0.56444960545899825,
+    "PositiveRecall": 0.69388633533300914,
+    "NegativePrecision": 0.8374852005431096,
+    "NegativeRecall": 0.72794007567273744,
+    "F1Score": 0.61170390836961175,
+    "AreaUnderPrecisionRecallCurve": 0.67186030693976007
+  },
+  "StockSymbol": "AXP",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFPeakModel-v1",
+  "PeakAverage": 1.2095501048738106,
+  "PeakSelection": 1.2095501048738106
+}

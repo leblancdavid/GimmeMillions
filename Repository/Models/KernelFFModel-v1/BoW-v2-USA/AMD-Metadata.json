@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.63037403953843874,
-    "Accuracy": 0.56364345028422291,
-    "PositivePrecision": 0.71827543424317619,
-    "PositiveRecall": 0.22931729112247817,
-    "NegativePrecision": 0.54252676027826252,
-    "NegativeRecall": 0.89399070115678314,
-    "F1Score": 0.3284328719105809,
-    "AreaUnderPrecisionRecallCurve": 0.6279995645168015
+    "AreaUnderRocCurve": 0.681843740027017,
+    "Accuracy": 0.62481744274951778,
+    "PositivePrecision": 0.70760919189730342,
+    "PositiveRecall": 0.40530836973733048,
+    "NegativePrecision": 0.60024730857258146,
+    "NegativeRecall": 0.83025082050418075,
+    "F1Score": 0.50193699382147694,
+    "AreaUnderPrecisionRecallCurve": 0.66828712226422071
   },
   "StockSymbol": "AMD",
   "Parameters": null,

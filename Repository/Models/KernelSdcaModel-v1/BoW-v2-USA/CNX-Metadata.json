@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.57290696173369271,
+    "Accuracy": 0.55562512042766843,
+    "PositivePrecision": 0.55505154126547129,
+    "PositiveRecall": 0.56773838193224957,
+    "NegativePrecision": 0.55640766268215469,
+    "NegativeRecall": 0.54362922668738012,
+    "F1Score": 0.561062817085497,
+    "AreaUnderPrecisionRecallCurve": 0.56510970883951717
+  },
+  "StockSymbol": "CNX",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

@@ -67,5 +67,15 @@ namespace GimmeMillions.Domain.Features
                 closingPrice,
                 (decimal)(_random.NextDouble() * 5.0));
         }
+
+        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default, DateTime endDate = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Result<FeatureVector> GetFeatureVector(string symbol, DateTime date)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

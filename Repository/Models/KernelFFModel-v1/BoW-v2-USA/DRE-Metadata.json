@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.74200973456899155,
-    "Accuracy": 0.67354934360745244,
-    "PositivePrecision": 0.6408974780409521,
-    "PositiveRecall": 0.89362692706910829,
-    "NegativePrecision": 0.77771177228090749,
-    "NegativeRecall": 0.41742230065746505,
-    "F1Score": 0.74575101929594434,
-    "AreaUnderPrecisionRecallCurve": 0.74784679384667
+    "AreaUnderRocCurve": 0.73555837121731893,
+    "Accuracy": 0.67988468777319944,
+    "PositivePrecision": 0.66108898674257288,
+    "PositiveRecall": 0.82372421035766141,
+    "NegativePrecision": 0.7257647827339182,
+    "NegativeRecall": 0.51536719586389368,
+    "F1Score": 0.73178785437244942,
+    "AreaUnderPrecisionRecallCurve": 0.7309457146698225
   },
   "StockSymbol": "DRE",
   "Parameters": null,

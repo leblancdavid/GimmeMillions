@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.6978196380712578,
-    "Accuracy": 0.582687978700042,
-    "PositivePrecision": 0.55501068771083961,
-    "PositiveRecall": 0.965406472101139,
-    "NegativePrecision": 0.8243914341221098,
-    "NegativeRecall": 0.17313904041794323,
-    "F1Score": 0.7047321302311228,
-    "AreaUnderPrecisionRecallCurve": 0.69748295125485
+    "AreaUnderRocCurve": 0.67150227308902555,
+    "Accuracy": 0.62500450503507143,
+    "PositivePrecision": 0.6139864229818468,
+    "PositiveRecall": 0.72953245104643949,
+    "NegativePrecision": 0.65028702985512365,
+    "NegativeRecall": 0.51640860968678926,
+    "F1Score": 0.66447648843528861,
+    "AreaUnderPrecisionRecallCurve": 0.65712075552168248
   },
   "StockSymbol": "EXC",
   "Parameters": null,

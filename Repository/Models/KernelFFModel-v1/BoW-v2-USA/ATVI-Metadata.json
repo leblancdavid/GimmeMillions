@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.72618736059017208,
-    "Accuracy": 0.66393468618091755,
-    "PositivePrecision": 0.65457046358944626,
-    "PositiveRecall": 0.76492419146652146,
-    "NegativePrecision": 0.67964889387972338,
-    "NegativeRecall": 0.5507741310541221,
-    "F1Score": 0.70514200303745667,
-    "AreaUnderPrecisionRecallCurve": 0.72617755697860309
+    "AreaUnderRocCurve": 0.68400436270729714,
+    "Accuracy": 0.635987648038104,
+    "PositivePrecision": 0.64240677493548981,
+    "PositiveRecall": 0.68719478569474668,
+    "NegativePrecision": 0.641259553206341,
+    "NegativeRecall": 0.58074164618542867,
+    "F1Score": 0.65777330604977946,
+    "AreaUnderPrecisionRecallCurve": 0.67006437083305226
   },
   "StockSymbol": "ATVI",
   "Parameters": null,

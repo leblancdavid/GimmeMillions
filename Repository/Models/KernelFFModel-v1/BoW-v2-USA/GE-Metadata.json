@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.62010006127895578,
-    "Accuracy": 0.56274398328838338,
-    "PositivePrecision": 0.5375341127200719,
-    "PositiveRecall": 0.94824090359312552,
-    "NegativePrecision": 0.76161345598845587,
-    "NegativeRecall": 0.17278302863613509,
-    "F1Score": 0.68570893284730439,
-    "AreaUnderPrecisionRecallCurve": 0.59703996452724439
+    "AreaUnderRocCurve": 0.59627876865134244,
+    "Accuracy": 0.56109599676968047,
+    "PositivePrecision": 0.6014791733873448,
+    "PositiveRecall": 0.35905733287148955,
+    "NegativePrecision": 0.54698890069190031,
+    "NegativeRecall": 0.75821826227782618,
+    "F1Score": 0.44317412537493794,
+    "AreaUnderPrecisionRecallCurve": 0.58638892235915
   },
   "StockSymbol": "GE",
   "Parameters": null,

@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.69599619399502755,
-    "Accuracy": 0.6332727531873108,
-    "PositivePrecision": 0.59898622834914161,
-    "PositiveRecall": 0.87643614826920024,
-    "NegativePrecision": 0.74620698086680115,
-    "NegativeRecall": 0.36735465750567009,
-    "F1Score": 0.71100212265285978,
-    "AreaUnderPrecisionRecallCurve": 0.69262882746746057
+    "AreaUnderRocCurve": 0.73225055363237579,
+    "Accuracy": 0.67578380177299369,
+    "PositivePrecision": 0.66692256768431757,
+    "PositiveRecall": 0.79611762544338216,
+    "NegativePrecision": 0.707768889218175,
+    "NegativeRecall": 0.532651288449016,
+    "F1Score": 0.72223879686790071,
+    "AreaUnderPrecisionRecallCurve": 0.73058015252052966
   },
   "StockSymbol": "BBL",
   "Parameters": null,

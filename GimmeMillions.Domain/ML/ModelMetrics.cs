@@ -1,11 +1,6 @@
 ﻿using Microsoft.ML.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace GimmeMillions.Domain.ML.Binary
+namespace GimmeMillions.Domain.ML
 {
     public class ModelMetrics
     {

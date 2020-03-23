@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.71727827166520985,
-    "Accuracy": 0.61509957726624154,
-    "PositivePrecision": 0.58089024248996823,
-    "PositiveRecall": 0.95649564140943721,
-    "NegativePrecision": 0.83646741386467416,
-    "NegativeRecall": 0.24061579430095642,
-    "F1Score": 0.72229079015617259,
-    "AreaUnderPrecisionRecallCurve": 0.71243651265001
+    "AreaUnderRocCurve": 0.58172909647851967,
+    "Accuracy": 0.52500641729523712,
+    "PositivePrecision": 0.33596230323075948,
+    "PositiveRecall": 0.318006832079092,
+    "NegativePrecision": 0.52423914768561275,
+    "NegativeRecall": 0.74302060615467092,
+    "F1Score": "NaN",
+    "AreaUnderPrecisionRecallCurve": 0.579565393752403
   },
   "StockSymbol": "CVS",
   "Parameters": null,

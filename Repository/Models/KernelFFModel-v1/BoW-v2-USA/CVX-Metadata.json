@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.65980037737964425,
-    "Accuracy": 0.564076205231461,
-    "PositivePrecision": 0.54237348368487059,
-    "PositiveRecall": 0.9428570630266474,
-    "NegativePrecision": 0.73144963144963149,
-    "NegativeRecall": 0.17002068086870298,
-    "F1Score": 0.68822244140097755,
-    "AreaUnderPrecisionRecallCurve": 0.65010672720790974
+    "AreaUnderRocCurve": 0.62682049321648337,
+    "Accuracy": 0.58815636577912189,
+    "PositivePrecision": 0.57236108986636014,
+    "PositiveRecall": 0.81148616729068679,
+    "NegativePrecision": 0.65552904412777424,
+    "NegativeRecall": 0.36032280836754216,
+    "F1Score": 0.6663740932263108,
+    "AreaUnderPrecisionRecallCurve": 0.616764432257646
   },
   "StockSymbol": "CVX",
   "Parameters": null,

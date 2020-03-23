@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.73181943444954767,
-    "Accuracy": 0.64424494977945646,
-    "PositivePrecision": 0.61180927854649292,
-    "PositiveRecall": 0.899121645533979,
-    "NegativePrecision": 0.760605399242446,
-    "NegativeRecall": 0.35631778091008032,
-    "F1Score": 0.72768346450459387,
-    "AreaUnderPrecisionRecallCurve": 0.74890728681388619
+    "AreaUnderRocCurve": 0.61100002178437318,
+    "Accuracy": 0.5700638176370395,
+    "PositivePrecision": 0.56249569868688765,
+    "PositiveRecall": 0.74728818350486093,
+    "NegativePrecision": 0.60613790793066857,
+    "NegativeRecall": 0.39216045259417004,
+    "F1Score": 0.63705800574237781,
+    "AreaUnderPrecisionRecallCurve": 0.60133022597118679
   },
   "StockSymbol": "PFE",
   "Parameters": null,

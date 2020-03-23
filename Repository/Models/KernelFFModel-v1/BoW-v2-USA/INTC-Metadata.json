@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.73475631632836136,
-    "Accuracy": 0.65362003833763516,
-    "PositivePrecision": 0.62523661152800425,
-    "PositiveRecall": 0.87818774948821177,
-    "NegativePrecision": 0.75054380913204444,
-    "NegativeRecall": 0.39942630756156,
-    "F1Score": 0.72933488790012391,
-    "AreaUnderPrecisionRecallCurve": 0.73936035639158548
+    "AreaUnderRocCurve": 0.56798864800671534,
+    "Accuracy": 0.51784128222512626,
+    "PositivePrecision": 0.33435052197619519,
+    "PositiveRecall": 0.2898851389416377,
+    "NegativePrecision": 0.51592418986204813,
+    "NegativeRecall": 0.765175180123225,
+    "F1Score": "NaN",
+    "AreaUnderPrecisionRecallCurve": 0.55745556709798127
   },
   "StockSymbol": "INTC",
   "Parameters": null,

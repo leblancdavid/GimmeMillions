@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.67507676382771165,
-    "Accuracy": 0.594877778718578,
-    "PositivePrecision": 0.758696526988015,
-    "PositiveRecall": 0.26097976890353414,
-    "NegativePrecision": 0.56307522293433165,
-    "NegativeRecall": 0.9157876165045945,
-    "F1Score": 0.38393624155520761,
-    "AreaUnderPrecisionRecallCurve": 0.66214270378118079
+    "AreaUnderRocCurve": 0.57686681889496183,
+    "Accuracy": 0.547163073723214,
+    "PositivePrecision": 0.54415768449826429,
+    "PositiveRecall": 0.66452803799519633,
+    "NegativePrecision": 0.58317430135827242,
+    "NegativeRecall": 0.43169432582449108,
+    "F1Score": 0.583744729697719,
+    "AreaUnderPrecisionRecallCurve": 0.55947420491952116
   },
   "StockSymbol": "CNX",
   "Parameters": null,

@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.61153712176383279,
-    "Accuracy": 0.57568868409227891,
-    "PositivePrecision": 0.64454482420557735,
-    "PositiveRecall": 0.36293899564487797,
-    "NegativePrecision": 0.5547420201221922,
-    "NegativeRecall": 0.78982044080828939,
-    "F1Score": 0.45094743194083986,
-    "AreaUnderPrecisionRecallCurve": 0.60810014656725764
+    "AreaUnderRocCurve": 0.62356384556921762,
+    "Accuracy": 0.55824332897990214,
+    "PositivePrecision": 0.72275926951608394,
+    "PositiveRecall": 0.19762907297639307,
+    "NegativePrecision": 0.53963128687884565,
+    "NegativeRecall": 0.9156114045128817,
+    "F1Score": 0.2919183284174941,
+    "AreaUnderPrecisionRecallCurve": 0.62432029669276268
   },
   "StockSymbol": "GOOG",
   "Parameters": null,

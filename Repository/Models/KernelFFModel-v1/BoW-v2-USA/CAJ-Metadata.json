@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.72413307558698559,
-    "Accuracy": 0.66648375315528274,
-    "PositivePrecision": 0.65616153741085159,
-    "PositiveRecall": 0.81193829558048913,
-    "NegativePrecision": 0.70678219495109129,
-    "NegativeRecall": 0.49598207748361273,
-    "F1Score": 0.72051277059826246,
-    "AreaUnderPrecisionRecallCurve": 0.72847858054309333
+    "AreaUnderRocCurve": 0.731848446687196,
+    "Accuracy": 0.67330356803723979,
+    "PositivePrecision": 0.67032461566371548,
+    "PositiveRecall": 0.77926891707165225,
+    "NegativePrecision": 0.70032677841748181,
+    "NegativeRecall": 0.54787793211669522,
+    "F1Score": 0.71382077959448176,
+    "AreaUnderPrecisionRecallCurve": 0.73456883642213222
   },
   "StockSymbol": "CAJ",
   "Parameters": null,

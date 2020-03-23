@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.73276709931737594,
-    "Accuracy": 0.663384789488523,
-    "PositivePrecision": 0.63112380324566886,
-    "PositiveRecall": 0.8880861596806342,
-    "NegativePrecision": 0.76787277659836406,
-    "NegativeRecall": 0.40676171222894253,
-    "F1Score": 0.73720466425164588,
-    "AreaUnderPrecisionRecallCurve": 0.73351394947658322
+    "AreaUnderRocCurve": 0.6031199178869886,
+    "Accuracy": 0.56772364366124184,
+    "PositivePrecision": 0.5747538840044728,
+    "PositiveRecall": 0.59124510074700776,
+    "NegativePrecision": 0.56163789036204259,
+    "NegativeRecall": 0.53945018725718641,
+    "F1Score": 0.57917154710018792,
+    "AreaUnderPrecisionRecallCurve": 0.61062406542606429
   },
   "StockSymbol": "WMT",
   "Parameters": null,

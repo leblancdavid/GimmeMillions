@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.7004350528600316,
-    "Accuracy": 0.64701807532795352,
-    "PositivePrecision": 0.62796473834631561,
-    "PositiveRecall": 0.81063865979020255,
-    "NegativePrecision": 0.69430449206706135,
-    "NegativeRecall": 0.46120873505607174,
-    "F1Score": 0.706582834699693,
-    "AreaUnderPrecisionRecallCurve": 0.70313694670053017
+    "AreaUnderRocCurve": 0.7290709474310012,
+    "Accuracy": 0.65880976237812738,
+    "PositivePrecision": 0.63530868766816251,
+    "PositiveRecall": 0.85723820518632654,
+    "NegativePrecision": 0.725424768889489,
+    "NegativeRecall": 0.42778766457921896,
+    "F1Score": 0.72928606360095671,
+    "AreaUnderPrecisionRecallCurve": 0.73901194885067345
   },
   "StockSymbol": "HSBC",
   "Parameters": null,

@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.69163004377791226,
-    "Accuracy": 0.63476140145277282,
-    "PositivePrecision": 0.61458111654903236,
-    "PositiveRecall": 0.78611153253580834,
-    "NegativePrecision": 0.68731273734561682,
-    "NegativeRecall": 0.47554737478879855,
-    "F1Score": 0.68770870884708124,
-    "AreaUnderPrecisionRecallCurve": 0.68573762137088567
+    "AreaUnderRocCurve": 0.63864008380881454,
+    "Accuracy": 0.60445384507443589,
+    "PositivePrecision": 0.591711518635477,
+    "PositiveRecall": 0.71705293968015094,
+    "NegativePrecision": 0.63416950281371953,
+    "NegativeRecall": 0.48519851606177344,
+    "F1Score": 0.64497089123659934,
+    "AreaUnderPrecisionRecallCurve": 0.62278390405210371
   },
   "StockSymbol": "LGND",
   "Parameters": null,

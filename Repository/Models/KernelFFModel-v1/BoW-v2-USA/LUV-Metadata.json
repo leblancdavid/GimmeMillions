@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.64378009766254307,
-    "Accuracy": 0.5966220768232392,
-    "PositivePrecision": 0.57814747645530717,
-    "PositiveRecall": 0.78561976199526551,
-    "NegativePrecision": 0.66295496194952708,
-    "NegativeRecall": 0.407195221983007,
-    "F1Score": 0.66181963188938187,
-    "AreaUnderPrecisionRecallCurve": 0.63714335309753789
+    "AreaUnderRocCurve": 0.64390594148330937,
+    "Accuracy": 0.59288941805104045,
+    "PositivePrecision": 0.5700307398079566,
+    "PositiveRecall": 0.81973160801688449,
+    "NegativePrecision": 0.66321661971139023,
+    "NegativeRecall": 0.36059102236029172,
+    "F1Score": 0.67087077173895193,
+    "AreaUnderPrecisionRecallCurve": 0.62649485403255167
   },
   "StockSymbol": "LUV",
   "Parameters": null,

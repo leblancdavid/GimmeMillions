@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.62115000456546166,
-    "Accuracy": 0.58250914913474483,
-    "PositivePrecision": 0.55946203551247964,
-    "PositiveRecall": 0.80434213153316247,
-    "NegativePrecision": 0.65697761679210553,
-    "NegativeRecall": 0.35528067078877335,
-    "F1Score": 0.65720594643281616,
-    "AreaUnderPrecisionRecallCurve": 0.60663516908198012
+    "AreaUnderRocCurve": 0.65459394016228,
+    "Accuracy": 0.60362715049331439,
+    "PositivePrecision": 0.57367705443710737,
+    "PositiveRecall": 0.86806763609697657,
+    "NegativePrecision": 0.7080507855620739,
+    "NegativeRecall": 0.330773044850124,
+    "F1Score": 0.69025782514384626,
+    "AreaUnderPrecisionRecallCurve": 0.63777014054694747
   },
   "StockSymbol": "AMZN",
   "Parameters": null,

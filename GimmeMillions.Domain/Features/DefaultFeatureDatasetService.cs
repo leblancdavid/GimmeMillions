@@ -69,7 +69,7 @@ namespace GimmeMillions.Domain.Features
 
         }
 
-        public Result<FeatureVector> GetData(DateTime date)
+        public Result<FeatureVector> GetFeatureVector(string symbol, DateTime date)
         {
             var cacheResult = TryGetFromCache(date);
             if (cacheResult.IsSuccess)
@@ -165,5 +165,20 @@ namespace GimmeMillions.Domain.Features
             return _featureCache.GetFeature(_featureVectorExtractor.Encoding, date);
         }
 
+        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default, DateTime endDate = default)
+        {
+            var trainingData = new List<(FeatureVector Input, StockData Output)>();
+            var stocks = _stockRepository.GetSymbols();
+            foreach(var stock in stocks)
+            {
+                var td = GetTrainingData(stock, startDate, endDate);
+                if(td.IsSuccess)
+                {
+                    trainingData.AddRange(td.Value);
+                }
+            }
+
+            return trainingData;
+        }
     }
 }

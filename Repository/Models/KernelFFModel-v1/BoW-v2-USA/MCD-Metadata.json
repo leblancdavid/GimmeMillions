@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.71838233911863614,
-    "Accuracy": 0.60537656374507032,
-    "PositivePrecision": 0.57373249848080754,
-    "PositiveRecall": 0.94602924842397373,
-    "NegativePrecision": 0.8006690616604939,
-    "NegativeRecall": 0.23469955364833739,
-    "F1Score": 0.71404348092746128,
-    "AreaUnderPrecisionRecallCurve": 0.7080278794289584
+    "AreaUnderRocCurve": 0.73688106214898152,
+    "Accuracy": 0.63168085036117394,
+    "PositivePrecision": 0.59692073478150154,
+    "PositiveRecall": 0.94377576325413481,
+    "NegativePrecision": 0.81842079944774893,
+    "NegativeRecall": 0.27987407574313006,
+    "F1Score": 0.73097470225222416,
+    "AreaUnderPrecisionRecallCurve": 0.73947980499634924
   },
   "StockSymbol": "MCD",
   "Parameters": null,

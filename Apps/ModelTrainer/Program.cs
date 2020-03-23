@@ -44,10 +44,10 @@ namespace ModelTrainer
 
             var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
 
-            var startDate = new DateTime(2010, 1, 1);
+            var startDate = new DateTime(2000, 1, 1);
             var endDate = DateTime.Today.AddDays(-1.0);
 
-            double totalCount = 0.0, totalAccuracy = 0.0;
+            //double totalCount = 0.0, totalAccuracy = 0.0;
             foreach(var stock in stocks)
             {
                 //var model = new MLStockBinaryFastForestModel();
@@ -68,14 +68,23 @@ namespace ModelTrainer
                 //model.Parameters.NumIterations = 20;
                 //model.Parameters.KernelRank = 300;
 
-                var model = new MLStockKernelEstimationFastForestModel();
-                model.Parameters.FeatureSelectionRank = 500;
+                //var model = new MLStockKernelEstimationSdcaModel();
+                //model.Parameters.FeatureSelectionRank = 500;
+                //model.Parameters.NumCrossValidations = 5;
+                //model.Parameters.NumIterations = 20;
+                //model.Parameters.KernelRank = 300;
+
+                //var model = new MLStockKernelEstimationFastForestModel();
+                var model = new MLStockPeakKernelEstimationFastForestModel();
+                model.Parameters.PeakSelection = 1.0;
+                model.Parameters.FeatureSelectionRank = 800;
                 model.Parameters.NumCrossValidations = 5;
                 model.Parameters.NumOfTrees = 2000;
                 model.Parameters.NumOfLeaves = 20;
                 model.Parameters.MinNumOfLeaves = 20;
                 model.Parameters.NumIterations = 20;
-                model.Parameters.KernelRank = 300;
+                model.Parameters.KernelRank = 400;
+                
 
                 //var model = new MLStockKnnBruteForceModel();
                 //model.Parameters.FeatureSelectionRank = 50000;

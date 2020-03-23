@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.716220664093534,
-    "Accuracy": 0.64948735135309266,
-    "PositivePrecision": 0.62068078096742474,
-    "PositiveRecall": 0.8477170067433869,
-    "NegativePrecision": 0.729174832829824,
-    "NegativeRecall": 0.42931370983892192,
-    "F1Score": 0.71572782521754008,
-    "AreaUnderPrecisionRecallCurve": 0.71236422248296571
+    "AreaUnderRocCurve": 0.69535027743238953,
+    "Accuracy": 0.640248478147943,
+    "PositivePrecision": 0.630421807049173,
+    "PositiveRecall": 0.7495680627087199,
+    "NegativePrecision": 0.66335278901177175,
+    "NegativeRecall": 0.52351101976345071,
+    "F1Score": 0.68301760695224345,
+    "AreaUnderPrecisionRecallCurve": 0.68677775066935765
   },
   "StockSymbol": "JNJ",
   "Parameters": null,

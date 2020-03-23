@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.69894739476074041,
-    "Accuracy": 0.57404814719737529,
-    "PositivePrecision": 0.55058186881578053,
-    "PositiveRecall": 0.95638983403719435,
-    "NegativePrecision": 0.77789010989010987,
-    "NegativeRecall": 0.16620517599479617,
-    "F1Score": 0.69824560700283522,
-    "AreaUnderPrecisionRecallCurve": 0.69557982514088879
+    "AreaUnderRocCurve": 0.7331474037516218,
+    "Accuracy": 0.667483351797252,
+    "PositivePrecision": 0.65839822661292824,
+    "PositiveRecall": 0.78574465732245735,
+    "NegativePrecision": 0.69962522178865572,
+    "NegativeRecall": 0.538612103559108,
+    "F1Score": 0.71263932050818768,
+    "AreaUnderPrecisionRecallCurve": 0.7352329039957477
   },
   "StockSymbol": "RY",
   "Parameters": null,

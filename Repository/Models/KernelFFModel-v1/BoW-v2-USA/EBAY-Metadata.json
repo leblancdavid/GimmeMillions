@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.70201179424569593,
-    "Accuracy": 0.629663427735532,
-    "PositivePrecision": 0.60573468290488808,
-    "PositiveRecall": 0.84730438528278584,
-    "NegativePrecision": 0.7240580110571585,
-    "NegativeRecall": 0.40118439097750819,
-    "F1Score": 0.70262444452349793,
-    "AreaUnderPrecisionRecallCurve": 0.69750144064356867
+    "AreaUnderRocCurve": 0.63087050816799206,
+    "Accuracy": 0.58692869584427831,
+    "PositivePrecision": 0.58107042357542071,
+    "PositiveRecall": 0.69345236917825825,
+    "NegativePrecision": 0.62095633032861008,
+    "NegativeRecall": 0.47224142195585583,
+    "F1Score": 0.62158453115725387,
+    "AreaUnderPrecisionRecallCurve": 0.61554212627309179
   },
   "StockSymbol": "EBAY",
   "Parameters": null,

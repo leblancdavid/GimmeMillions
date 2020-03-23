@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.69208672994183107,
-    "Accuracy": 0.56764800901054246,
-    "PositivePrecision": 0.54633142897506892,
-    "PositiveRecall": 0.96489214251708866,
-    "NegativePrecision": 0.79554853748402132,
-    "NegativeRecall": 0.14422806265882079,
-    "F1Score": 0.69727450686500725,
-    "AreaUnderPrecisionRecallCurve": 0.68275435745258028
+    "AreaUnderRocCurve": 0.57592062522063814,
+    "Accuracy": 0.54261352506555627,
+    "PositivePrecision": 0.55514873073389226,
+    "PositiveRecall": 0.52879993920364377,
+    "NegativePrecision": 0.5598450647478399,
+    "NegativeRecall": 0.553855173873699,
+    "F1Score": 0.50758151227471138,
+    "AreaUnderPrecisionRecallCurve": 0.56679262674854347
   },
   "StockSymbol": "BBY",
   "Parameters": null,

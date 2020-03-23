@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.71864205696884842,
-    "Accuracy": 0.66096770258065474,
-    "PositivePrecision": 0.63050051178903943,
-    "PositiveRecall": 0.8438997428458459,
-    "NegativePrecision": 0.73786020192252122,
-    "NegativeRecall": 0.45778529766058884,
-    "F1Score": 0.72042616392797965,
-    "AreaUnderPrecisionRecallCurve": 0.71351508076594317
+    "AreaUnderRocCurve": 0.63218543256064841,
+    "Accuracy": 0.584584752374728,
+    "PositivePrecision": 0.59737115861860779,
+    "PositiveRecall": 0.63449551867239862,
+    "NegativePrecision": 0.59013289925426915,
+    "NegativeRecall": 0.53669771654709764,
+    "F1Score": 0.60321960483913073,
+    "AreaUnderPrecisionRecallCurve": 0.633755083543377
   },
   "StockSymbol": "CMCSA",
   "Parameters": null,

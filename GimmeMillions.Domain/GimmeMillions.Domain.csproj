@@ -146,6 +146,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\CandlestickStockFeatureDatasetService.cs" />
+    <Compile Include="Features\CandlestickStockFeatureExtractor.cs" />
+    <Compile Include="Features\IStockFeatureExtractor.cs" />
     <Compile Include="ML\Accord\BinaryClassificationStockPredictor.cs" />
     <Compile Include="Articles\Article.cs" />
     <Compile Include="Articles\Byline.cs" />
@@ -175,13 +178,18 @@
     <Compile Include="ML\Accord\IDataTransformer.cs" />
     <Compile Include="ML\Accord\SupervisedNormalizationDataTransformer.cs" />
     <Compile Include="ML\Binary\BinaryPredictionModelMetadata.cs" />
+    <Compile Include="ML\Binary\MLStockPeakKernelEstimationFastForestModel.cs" />
     <Compile Include="ML\Binary\MLStockKernelEstimationFastForestModel.cs" />
+    <Compile Include="ML\Binary\MLStockKernelEstimationSdcaModel.cs" />
     <Compile Include="ML\Binary\MLStockKernelEstimationSvmModel.cs" />
     <Compile Include="ML\Binary\MLStockFastForestModel.cs" />
     <Compile Include="ML\Binary\MLStockKnnBruteForceModel.cs" />
     <Compile Include="ML\Binary\MLStockPcaSvmModel.cs" />
-    <Compile Include="ML\Binary\ModelMetrics.cs" />
+    <Compile Include="ML\ModelMetrics.cs" />
     <Compile Include="ML\Binary\IBinaryStockPredictionModel.cs" />
+    <Compile Include="ML\Candlestick\CandlestickPredictionModelMetadata.cs" />
+    <Compile Include="ML\Candlestick\ICandlestickStockPredictionModel.cs" />
+    <Compile Include="ML\Candlestick\MLStockFastForestCandlestickModel.cs" />
     <Compile Include="ML\IStockPredictionModelLoader.cs" />
     <Compile Include="ML\Transforms\KnnBruteForceEstimator.cs" />
     <Compile Include="ML\Transforms\KnnBruteForceTransform.cs" />

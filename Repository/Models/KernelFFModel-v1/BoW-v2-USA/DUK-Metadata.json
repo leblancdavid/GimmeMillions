@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.73241489559077755,
-    "Accuracy": 0.61814102969486784,
-    "PositivePrecision": 0.58401851405820149,
-    "PositiveRecall": 0.9715088355465733,
-    "NegativePrecision": 0.86836268970865194,
-    "NegativeRecall": 0.21773984235666916,
-    "F1Score": 0.729271792855181,
-    "AreaUnderPrecisionRecallCurve": 0.7362313455942513
+    "AreaUnderRocCurve": 0.6941103510525,
+    "Accuracy": 0.64057937441608981,
+    "PositivePrecision": 0.63161042316946925,
+    "PositiveRecall": 0.765676644295093,
+    "NegativePrecision": 0.6686550618348307,
+    "NegativeRecall": 0.505752915155451,
+    "F1Score": 0.68834453484083924,
+    "AreaUnderPrecisionRecallCurve": 0.68774621317140394
   },
   "StockSymbol": "DUK",
   "Parameters": null,

@@ -1,0 +1,23 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.78627275224003346,
+    "Accuracy": 0.75219960381438267,
+    "PositivePrecision": 0.69455032925713867,
+    "PositiveRecall": 0.5737921623367449,
+    "NegativePrecision": 0.77994152818617746,
+    "NegativeRecall": 0.852233744420667,
+    "F1Score": 0.62554406021161613,
+    "AreaUnderPrecisionRecallCurve": 0.68937693006251632
+  },
+  "StockSymbol": "LGND",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFPeakModel-v1",
+  "PeakAverage": 2.4797662697561638,
+  "PeakSelection": 2.4797662697561638
+}

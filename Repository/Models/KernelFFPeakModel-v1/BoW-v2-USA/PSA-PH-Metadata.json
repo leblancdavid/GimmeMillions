@@ -1,0 +1,23 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.91964127364926385,
+    "Accuracy": 0.8361536873322446,
+    "PositivePrecision": 0.81413919413919422,
+    "PositiveRecall": 0.71900183150183161,
+    "NegativePrecision": 0.85045516639257579,
+    "NegativeRecall": 0.90999496987483042,
+    "F1Score": 0.7548922441605368,
+    "AreaUnderPrecisionRecallCurve": 0.86943558762209983
+  },
+  "StockSymbol": "PSA-PH",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFPeakModel-v1",
+  "PeakAverage": 0.37828969321222544,
+  "PeakSelection": 0.37828969321222544
+}

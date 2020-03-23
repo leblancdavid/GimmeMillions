@@ -75,6 +75,11 @@ namespace GimmeMillions.DataAccess.Articles
                             break;
                         }
                     } //otherwise we'll try a different key
+                    break;
+                }
+                if(!articlesRetrieved)
+                {
+                    break;
                 }
             }
 

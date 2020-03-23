@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.65264433434172642,
-    "Accuracy": 0.554609170297401,
-    "PositivePrecision": 0.53414728309793513,
-    "PositiveRecall": 0.95670567924588179,
-    "NegativePrecision": 0.785775843850059,
-    "NegativeRecall": 0.14498826831063674,
-    "F1Score": 0.68463464976329846,
-    "AreaUnderPrecisionRecallCurve": 0.62869865168291761
+    "AreaUnderRocCurve": 0.58166986774560814,
+    "Accuracy": 0.51643797811244962,
+    "PositivePrecision": 0.716112332112332,
+    "PositiveRecall": 0.060213096756932406,
+    "NegativePrecision": 0.50892023805932274,
+    "NegativeRecall": 0.97319484844347159,
+    "F1Score": 0.10687065961500131,
+    "AreaUnderPrecisionRecallCurve": 0.57647391946663029
   },
   "StockSymbol": "XBI",
   "Parameters": null,

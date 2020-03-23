@@ -8,5 +8,7 @@ namespace GimmeMillions.Domain.Stocks
     {
         IEnumerable<StockData> UpdateStocks(string symbol);
         IEnumerable<StockData> GetStocks(string symbol);
+        IEnumerable<StockData> GetStocks();
+        IEnumerable<string> GetSymbols();
     }
 }
