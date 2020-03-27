@@ -27,7 +27,32 @@ namespace GimmeMillions.Domain.Stocks
             }
         }
 
-        public decimal PercentChange { get; set; }
+        public decimal PreviousClose { get; set; }
+
+        public decimal PercentChangeHighToPreviousClose
+        {
+            get
+            {
+                return 100.0m * (High - PreviousClose) / PreviousClose;
+            }
+        }
+
+        public decimal PercentChangeLowToPreviousClose
+        {
+            get
+            {
+                return 100.0m * (Low - PreviousClose) / PreviousClose;
+            }
+        }
+
+
+        public decimal PercentChangeFromPreviousClose
+        {
+            get
+            {
+                return 100.0m * (Close - PreviousClose) / PreviousClose;
+            }
+        }
 
         public StockData(string symbol, DateTime date, 
             decimal open, decimal high, decimal low, decimal close, decimal adjClose)
@@ -39,6 +64,7 @@ namespace GimmeMillions.Domain.Stocks
             Low = low;
             Close = close;
             AdjustedClose = adjClose;
+            PreviousClose = open;
         }
     }
 }
