@@ -28,7 +28,11 @@ namespace RecommendationMaker
 
             Console.WriteLine("Loading peak system...");
             recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelFFPeak-config-v1");
-            var recommendations = recommendationSystem.GetAllRecommendations(DateTime.Today);
+
+            //var date = new DateTime(2019, 10, 30);
+            var date = DateTime.Today;
+
+            var recommendations = recommendationSystem.GetAllRecommendations(date);
 
             Console.WriteLine("Today's recommended peak stocks:");
             foreach(var r in recommendations)
@@ -38,7 +42,7 @@ namespace RecommendationMaker
 
             Console.WriteLine("Loading prediction system...");
             recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelFF-config-v1");
-            recommendations = recommendationSystem.GetAllRecommendations(DateTime.Today);
+            recommendations = recommendationSystem.GetAllRecommendations(date);
 
             Console.WriteLine("Today's recommended stocks:");
             foreach (var r in recommendations)
