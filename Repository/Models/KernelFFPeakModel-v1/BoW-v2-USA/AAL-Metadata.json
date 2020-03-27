@@ -1,0 +1,23 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.82207230200953751,
+    "Accuracy": 0.77668155411309181,
+    "PositivePrecision": 0.74299400649959535,
+    "PositiveRecall": 0.50279735933387393,
+    "NegativePrecision": 0.79063707472692457,
+    "NegativeRecall": 0.9114218471838379,
+    "F1Score": 0.59278166788940412,
+    "AreaUnderPrecisionRecallCurve": 0.71037551817319988
+  },
+  "StockSymbol": "AAL",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFPeakModel-v1",
+  "PeakAverage": 2.3716767709561704,
+  "PeakSelection": 2.3716767709561704
+}

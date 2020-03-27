@@ -1,4 +1,5 @@
 ﻿using Accord.MachineLearning;
+using Accord.MachineLearning.DecisionTrees;
 using Accord.MachineLearning.Performance;
 using Accord.MachineLearning.VectorMachines;
 using Accord.MachineLearning.VectorMachines.Learning;
@@ -19,16 +20,18 @@ namespace GimmeMillions.Domain.ML.Accord
 {
     public class AccordClassificationStockPredictor : IStockPredictionModel
     {
-        private int _rank = 500;
-        private int _pcaRank = 400;
+        private int _rank = 1000;
+        private int _pcaRank = 500;
         private IDataTransformer _filterTransformer;
         private IDataTransformer _supervisedNormalizer;
         private PrincipalComponentAnalysis _pca;
-        private SupportVectorMachine<Gaussian> _svm;
+        private RandomForest _rt;
 
         public string StockSymbol { get; set; }
 
         public bool IsTrained { get; set; }
+
+        public string Encoding { get; set; }
 
         public Result Load(string pathToModel, string symbol, string encoding)
         {
@@ -50,13 +53,19 @@ namespace GimmeMillions.Domain.ML.Accord
             //var transformed = _lda.Transform(
             //        _filterTransformer.Transform(
             //            inputData));
-
             return new StockPrediction()
             {
-                PredictedLabel = _svm.Decide(transformed),
-                Score = _svm.Score(transformed),
-                Probability = _svm.Probability(transformed)
+                PredictedLabel = _rt.Decide(transformed) > 0,
+                //Score = _rt.Score(transformed),
+                //Probability = _rt.Probability(transformed)
             };
+
+            //return new StockPrediction()
+            //{
+            //    PredictedLabel = _svm.Decide(transformed),
+            //    Score = _svm.Score(transformed),
+            //    Probability = _svm.Probability(transformed)
+            //};
         }
 
         public Result Save(string pathToModel)
@@ -68,13 +77,17 @@ namespace GimmeMillions.Domain.ML.Accord
         {
             // Create a new Sequential Minimal Optimization (SMO) learning 
             // algorithm and estimate the complexity parameter C from data
-            var trainer = new SequentialMinimalOptimization<Gaussian>()
+            //var trainer = new SequentialMinimalOptimization<Gaussian>()
+            //{
+            //    UseComplexityHeuristic = true,
+            //    UseKernelEstimation = true // estimate the kernel from the data
+            //};
+
+            var trainer = new RandomForestLearning()
             {
-                UseComplexityHeuristic = true,
-                UseKernelEstimation = true // estimate the kernel from the data
+                NumberOfTrees = 100
             };
 
-            
 
             var outputs = dataset.Select(x => x.Output.PercentDayChange >= 0 ? 1 : 0).ToArray();
             var inputs = GetSupervisedNormalizedFeatures(
@@ -98,32 +111,37 @@ namespace GimmeMillions.Domain.ML.Accord
 
             // Compute the cross-validation
             // Create a new Cross-validation algorithm passing the data set size and the number of folds
-            var crossvalidation = new CrossValidation<SupportVectorMachine<Gaussian, double[]>, double[]>()
-            {
-                K = 5,
-                Learner = (s) => new SequentialMinimalOptimization<Gaussian, double[]>()
-                {
-                    UseKernelEstimation = true,
-                    UseComplexityHeuristic = true,
-                },
-                Loss = (expected, actual, p) => new ZeroOneLoss(expected).Loss(actual),
-                Stratify = false
-            };
-            crossvalidation.ParallelOptions.MaxDegreeOfParallelism = 4;
-            var results = crossvalidation.Learn(pcaTransformed, outputs);
+            //var crossvalidation = new CrossValidation<RandomForestLearning, double[]>()
+            //{
+            //    K = 5,
+            //    //Learner = (s) => new SequentialMinimalOptimization<Gaussian, double[]>()
+            //    //{
+            //    //    UseKernelEstimation = true,
+            //    //    UseComplexityHeuristic = true,
+            //    //},
+            //    Learner = (s) => new RandomForestLearning()
+            //    {
+            //        NumberOfTrees = 100
+            //    },
+            //    Loss = (expected, actual, p) => new ZeroOneLoss(expected).Loss(actual),
+            //    Stratify = false
+            //};
+            //crossvalidation.ParallelOptions.MaxDegreeOfParallelism = 4;
+            //var results = crossvalidation.Learn(pcaTransformed, outputs);
 
-            _svm = trainer.Learn(pcaTransformed, outputs);
+            //_svm = trainer.Learn(pcaTransformed, outputs);
+            _rt = trainer.Learn(pcaTransformed, outputs);
 
             // If desired, compute an aggregate confusion matrix for the validation sets:
-            GeneralConfusionMatrix gcm = results.ToConfusionMatrix(pcaTransformed, outputs);
+            //GeneralConfusionMatrix gcm = results.ToConfusionMatrix(pcaTransformed, outputs);
 
             return Result.Ok(new ModelMetrics()
             {
-                Accuracy = gcm.Accuracy,
-                PositivePrecision = gcm.Precision[0],
-                PositiveRecall = gcm.Recall[0],
-                NegativePrecision = gcm.Precision[1],
-                NegativeRecall = gcm.Recall[1]
+                //Accuracy = gcm.Accuracy,
+                //PositivePrecision = gcm.Precision[0],
+                //PositiveRecall = gcm.Recall[0],
+                //NegativePrecision = gcm.Precision[1],
+                //NegativeRecall = gcm.Recall[1]
             });
 
         }
@@ -249,7 +267,7 @@ namespace GimmeMillions.Domain.ML.Accord
             //var orderedDifferences = variances.OrderByDescending(x => x.Variance).ToList();
 
             //var indicesToKeep = orderedDifferences.Take(rank).Select(x => x.Index);
-            int skipUnimportantWords = 0;
+            int skipUnimportantWords = 25;
             var indicesToKeep = orderedDifferences.Skip(skipUnimportantWords).Take(rank).Select(x => x.Index);
             return indicesToKeep.ToArray();
         }

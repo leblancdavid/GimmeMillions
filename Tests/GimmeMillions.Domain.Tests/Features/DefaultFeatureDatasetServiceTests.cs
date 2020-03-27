@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using GimmeMillions.DataAccess.Articles;
 using GimmeMillions.DataAccess.Features;
+using GimmeMillions.DataAccess.Keys;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using System;
@@ -19,15 +20,18 @@ namespace GimmeMillions.Domain.Tests.Features
         private readonly string _pathToDictionary = "../../../../Repository/Dictionaries";
         private readonly string _pathToLanguage = "../../../../Repository/Languages";
         private readonly string _pathToStocks = "../../../../Repository/Stocks";
+        private readonly string _pathToKeys = "../../../../Repository/Keys";
 
         [Fact]
         public void ShouldGetTrainingData()
         {
             var bow = GetTestBoWFeatureExtractor();
+            var accessKeys = new NYTApiAccessKeyRepository(_pathToKeys);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
-            var stocksRepo = new StockDataRepository(_pathToStocks);
+            var articlesService = new NYTArticleAccessService(accessKeys, articlesRepo);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
-            var featureDatasetService = new DefaultFeatureDatasetService(bow, articlesRepo, stocksRepo);
+            var featureDatasetService = new DefaultFeatureDatasetService(bow, articlesService, stocksRepo);
             var trainingData = featureDatasetService.GetTrainingData("IWM");
 
             trainingData.IsSuccess.Should().BeTrue();

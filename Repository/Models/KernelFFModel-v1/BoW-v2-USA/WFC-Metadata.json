@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.59761791245135909,
+    "Accuracy": 0.57090877962333009,
+    "PositivePrecision": 0.55790372775155417,
+    "PositiveRecall": 0.73235097215785316,
+    "NegativePrecision": 0.62131958928585551,
+    "NegativeRecall": 0.40632642484274689,
+    "F1Score": 0.62695944890579369,
+    "AreaUnderPrecisionRecallCurve": 0.577839654116279
+  },
+  "StockSymbol": "WFC",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

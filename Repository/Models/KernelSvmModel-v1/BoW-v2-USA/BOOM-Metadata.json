@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.55468356742598013,
+    "Accuracy": 0.52188185831190359,
+    "PositivePrecision": 0.59392877582542847,
+    "PositiveRecall": 0.18418276871028377,
+    "NegativePrecision": 0.51109016110993721,
+    "NegativeRecall": 0.86366165452502952,
+    "F1Score": 0.26819743196456269,
+    "AreaUnderPrecisionRecallCurve": 0.559047500524964
+  },
+  "StockSymbol": "BOOM",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSvmModel-v1"
+}

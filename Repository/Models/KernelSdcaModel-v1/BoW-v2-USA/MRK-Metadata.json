@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.61052691311923113,
+    "Accuracy": 0.58740532812099711,
+    "PositivePrecision": 0.59341206067335184,
+    "PositiveRecall": 0.586760324412143,
+    "NegativePrecision": 0.58270960484451884,
+    "NegativeRecall": 0.58807193699941085,
+    "F1Score": 0.58886785346684412,
+    "AreaUnderPrecisionRecallCurve": 0.59187647215464168
+  },
+  "StockSymbol": "MRK",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

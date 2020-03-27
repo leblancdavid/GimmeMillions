@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.69927702947696824,
+    "Accuracy": 0.65198552998317871,
+    "PositivePrecision": 0.65801652650194,
+    "PositiveRecall": 0.73482379187078239,
+    "NegativePrecision": 0.64488507015048846,
+    "NegativeRecall": 0.55628889694572581,
+    "F1Score": 0.6937279548679901,
+    "AreaUnderPrecisionRecallCurve": 0.70444408605369646
+  },
+  "StockSymbol": "HSBC",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

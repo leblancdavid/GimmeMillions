@@ -1,0 +1,23 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.79638655735273334,
+    "Accuracy": 0.7499529401856716,
+    "PositivePrecision": 0.67080324246700762,
+    "PositiveRecall": 0.61601230256352235,
+    "NegativePrecision": 0.7903990213292752,
+    "NegativeRecall": 0.8262495886236314,
+    "F1Score": 0.64149432040392684,
+    "AreaUnderPrecisionRecallCurve": 0.69530854612346715
+  },
+  "StockSymbol": "RY",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFPeakModel-v1",
+  "PeakAverage": 0.85571698949066033,
+  "PeakSelection": 0.85571698949066033
+}

@@ -33,15 +33,15 @@ namespace NytArticleCollector
             {
                 File.WriteAllText(progressFile, JsonConvert.SerializeObject(lastCollectedDate, Formatting.Indented));
                 Console.WriteLine($"Retrieving articles from {lastCollectedDate.ToString("yyyy/MM/dd")}...");
-                var articles = accessService.GetArticles(lastCollectedDate, new List<FilterQuery>());
-                if(articles.IsFailure)
+                var articles = accessService.GetArticles(lastCollectedDate);
+                if(!articles.Any())
                 {
-                    Console.WriteLine($"Could not retrieve articles: '{articles.Error}'");
+                    Console.WriteLine($"Could not retrieve articles");
                     retryCount++;
                 }
                 else
                 {
-                    Console.WriteLine($"Found {articles.Value.Count()} articles for {lastCollectedDate.ToString("yyyy/MM/dd")}");
+                    Console.WriteLine($"Found {articles.Count()} articles for {lastCollectedDate.ToString("yyyy/MM/dd")}");
                     lastCollectedDate = lastCollectedDate.AddDays(1.0);
                     retryCount = 0;
                 }

@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.57446706233528388,
+    "Accuracy": 0.55645604717815034,
+    "PositivePrecision": 0.55760002546053933,
+    "PositiveRecall": 0.54985322123328451,
+    "NegativePrecision": 0.55738002006302012,
+    "NegativeRecall": 0.56338407873014584,
+    "F1Score": 0.55162397129226726,
+    "AreaUnderPrecisionRecallCurve": 0.568021446699011
+  },
+  "StockSymbol": "HAL",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

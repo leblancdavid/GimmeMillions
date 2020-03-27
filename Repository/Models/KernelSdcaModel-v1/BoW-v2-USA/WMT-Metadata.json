@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.58288061153924942,
+    "Accuracy": 0.56296105430863252,
+    "PositivePrecision": 0.57273732873640082,
+    "PositiveRecall": 0.58248956917919514,
+    "NegativePrecision": 0.55518589070855828,
+    "NegativeRecall": 0.54455267586405687,
+    "F1Score": 0.57561474094406428,
+    "AreaUnderPrecisionRecallCurve": 0.58044653556916392
+  },
+  "StockSymbol": "WMT",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

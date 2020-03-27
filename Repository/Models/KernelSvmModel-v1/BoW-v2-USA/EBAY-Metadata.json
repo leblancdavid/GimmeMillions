@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.70201179424569593,
+    "Accuracy": 0.629663427735532,
+    "PositivePrecision": 0.60573468290488808,
+    "PositiveRecall": 0.84730438528278584,
+    "NegativePrecision": 0.7240580110571585,
+    "NegativeRecall": 0.40118439097750819,
+    "F1Score": 0.70262444452349793,
+    "AreaUnderPrecisionRecallCurve": 0.69750144064356867
+  },
+  "StockSymbol": "EBAY",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSvmModel-v1"
+}

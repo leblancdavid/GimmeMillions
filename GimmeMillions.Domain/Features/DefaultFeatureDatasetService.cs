@@ -13,14 +13,14 @@ namespace GimmeMillions.Domain.Features
     public class DefaultFeatureDatasetService : IFeatureDatasetService
     {
         private IFeatureVectorExtractor _featureVectorExtractor;
-        private IArticleRepository _articleRepository;
-        private IStockRepository _stockRepository;
+        private IArticleAccessService _articleRepository;
+        private IStockAccessService _stockRepository;
         private IFeatureCache _featureCache;
 
         public bool RefreshCache { get; set; }
         public DefaultFeatureDatasetService(IFeatureVectorExtractor featureVectorExtractor,
-            IArticleRepository articleRepository,
-            IStockRepository stockRepository,
+            IArticleAccessService articleRepository,
+            IStockAccessService stockRepository,
             IFeatureCache featureCache = null,
             bool refreshCache = false)
         {
@@ -69,7 +69,7 @@ namespace GimmeMillions.Domain.Features
 
         }
 
-        public Result<FeatureVector> GetData(DateTime date)
+        public Result<FeatureVector> GetFeatureVector(string symbol, DateTime date)
         {
             var cacheResult = TryGetFromCache(date);
             if (cacheResult.IsSuccess)
@@ -100,7 +100,7 @@ namespace GimmeMillions.Domain.Features
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol,
             DateTime startDate = default(DateTime), DateTime endDate = default(DateTime))
         {
-            var stocks = _stockRepository.GetStocks(symbol);
+            var stocks = _stockRepository.UpdateStocks(symbol);
             if(!stocks.Any())
             {
                 return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(
@@ -165,5 +165,20 @@ namespace GimmeMillions.Domain.Features
             return _featureCache.GetFeature(_featureVectorExtractor.Encoding, date);
         }
 
+        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default, DateTime endDate = default)
+        {
+            var trainingData = new List<(FeatureVector Input, StockData Output)>();
+            var stocks = _stockRepository.GetSymbols();
+            foreach(var stock in stocks)
+            {
+                var td = GetTrainingData(stock, startDate, endDate);
+                if(td.IsSuccess)
+                {
+                    trainingData.AddRange(td.Value);
+                }
+            }
+
+            return trainingData;
+        }
     }
 }

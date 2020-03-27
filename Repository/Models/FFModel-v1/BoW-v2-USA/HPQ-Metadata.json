@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.58294736738707742,
+    "Accuracy": 0.561298842435121,
+    "PositivePrecision": 0.580098769357939,
+    "PositiveRecall": 0.636777885091927,
+    "NegativePrecision": 0.53549476371342808,
+    "NegativeRecall": 0.4761420473300399,
+    "F1Score": 0.60662321324842006,
+    "AreaUnderPrecisionRecallCurve": 0.59622258123408867
+  },
+  "StockSymbol": "HPQ",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "FFModel-v1"
+}

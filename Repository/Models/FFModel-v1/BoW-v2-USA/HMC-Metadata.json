@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.60782572788090916,
+    "Accuracy": 0.57768354126058852,
+    "PositivePrecision": 0.59306395523229227,
+    "PositiveRecall": 0.65481363097844125,
+    "NegativePrecision": 0.55681818468964106,
+    "NegativeRecall": 0.49100989470311857,
+    "F1Score": 0.62177661505131288,
+    "AreaUnderPrecisionRecallCurve": 0.62282875126799209
+  },
+  "StockSymbol": "HMC",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "FFModel-v1"
+}

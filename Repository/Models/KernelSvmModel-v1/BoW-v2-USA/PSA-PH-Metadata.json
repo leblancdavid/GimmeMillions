@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.88544824373012943,
+    "Accuracy": 0.81035878489326763,
+    "PositivePrecision": 0.84003815580286167,
+    "PositiveRecall": 0.79549722556735181,
+    "NegativePrecision": 0.79088079676314982,
+    "NegativeRecall": 0.80361331135324954,
+    "F1Score": 0.8117895774417514,
+    "AreaUnderPrecisionRecallCurve": 0.90543066674355077
+  },
+  "StockSymbol": "PSA-PH",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSvmModel-v1"
+}

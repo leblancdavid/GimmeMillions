@@ -103,7 +103,18 @@ namespace GimmeMillions.Domain.ML.Transforms
                     {
                         neg = 0.0f;
                     }
-                    normalized[j] = Math.Abs(pos) - Math.Abs(neg);
+
+                    //float pF = 1.0f, nF = 1.0f;
+                    //if (_statistics[j].pMean < _statistics[j].nMean)
+                    //{
+                    //    normalized[j] = pos;
+                    //}
+                    //else
+                    //{
+                    //    normalized[j] = neg;
+                    //}
+
+                    normalized[j] = Math.Abs(neg) - Math.Abs(pos);
                 }
                 output.Add(new StockRiseDataFeature(normalized, labels[i], values[i], dayOfTheWeek[i], month[i]));
             }

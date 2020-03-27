@@ -1,0 +1,23 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.79468142115062856,
+    "Accuracy": 0.72118097954457239,
+    "PositivePrecision": 0.56131576632535285,
+    "PositiveRecall": 0.7364484475984987,
+    "NegativePrecision": 0.84540010272859667,
+    "NegativeRecall": 0.712882129234178,
+    "F1Score": 0.6364113252482666,
+    "AreaUnderPrecisionRecallCurve": 0.68533556476854585
+  },
+  "StockSymbol": "JPM",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFPeakModel-v1",
+  "PeakAverage": 1.283258591907418,
+  "PeakSelection": 1.283258591907418
+}

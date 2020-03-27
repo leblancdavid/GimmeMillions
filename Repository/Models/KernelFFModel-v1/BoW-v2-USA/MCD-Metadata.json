@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.73688106214898152,
+    "Accuracy": 0.63168085036117394,
+    "PositivePrecision": 0.59692073478150154,
+    "PositiveRecall": 0.94377576325413481,
+    "NegativePrecision": 0.81842079944774893,
+    "NegativeRecall": 0.27987407574313006,
+    "F1Score": 0.73097470225222416,
+    "AreaUnderPrecisionRecallCurve": 0.73947980499634924
+  },
+  "StockSymbol": "MCD",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

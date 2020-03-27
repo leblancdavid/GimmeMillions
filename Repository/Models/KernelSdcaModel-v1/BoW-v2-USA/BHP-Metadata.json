@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.69809116617574551,
+    "Accuracy": 0.650415976711352,
+    "PositivePrecision": 0.65107056065626923,
+    "PositiveRecall": 0.72417550917998208,
+    "NegativePrecision": 0.64868149879469306,
+    "NegativeRecall": 0.56712541344474521,
+    "F1Score": 0.6855391116275904,
+    "AreaUnderPrecisionRecallCurve": 0.69378634199507316
+  },
+  "StockSymbol": "BHP",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

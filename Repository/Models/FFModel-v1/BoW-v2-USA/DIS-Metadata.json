@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.5279400533914399,
+    "Accuracy": 0.51451101025040846,
+    "PositivePrecision": 0.52261946813206017,
+    "PositiveRecall": 0.55776815411628267,
+    "NegativePrecision": 0.50509737934977328,
+    "NegativeRecall": 0.46961156214073163,
+    "F1Score": 0.53911221927183806,
+    "AreaUnderPrecisionRecallCurve": 0.52976264961550545
+  },
+  "StockSymbol": "DIS",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "FFModel-v1"
+}

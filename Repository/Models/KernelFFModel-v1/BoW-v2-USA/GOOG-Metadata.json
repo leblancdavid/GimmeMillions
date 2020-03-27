@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.62356384556921762,
+    "Accuracy": 0.55824332897990214,
+    "PositivePrecision": 0.72275926951608394,
+    "PositiveRecall": 0.19762907297639307,
+    "NegativePrecision": 0.53963128687884565,
+    "NegativeRecall": 0.9156114045128817,
+    "F1Score": 0.2919183284174941,
+    "AreaUnderPrecisionRecallCurve": 0.62432029669276268
+  },
+  "StockSymbol": "GOOG",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

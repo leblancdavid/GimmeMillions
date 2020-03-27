@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.62009585134179335,
+    "Accuracy": 0.567134064383257,
+    "PositivePrecision": 0.67347026757401929,
+    "PositiveRecall": 0.24839092756893272,
+    "NegativePrecision": 0.54535693204177782,
+    "NegativeRecall": 0.87886738183502422,
+    "F1Score": 0.35383272356559442,
+    "AreaUnderPrecisionRecallCurve": 0.61218510593045383
+  },
+  "StockSymbol": "LXRX",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSvmModel-v1"
+}

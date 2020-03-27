@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.58385262281347861,
+    "Accuracy": 0.57428458991375941,
+    "PositivePrecision": 0.59064950318728382,
+    "PositiveRecall": 0.65159294253173,
+    "NegativePrecision": 0.55255262298431018,
+    "NegativeRecall": 0.48725906598775948,
+    "F1Score": 0.6186520675882502,
+    "AreaUnderPrecisionRecallCurve": 0.59727036413675272
+  },
+  "StockSymbol": "MPW",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "FFModel-v1"
+}

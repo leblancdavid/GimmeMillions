@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.54100446085869514,
+    "Accuracy": 0.53296785375285582,
+    "PositivePrecision": 0.5413734935611203,
+    "PositiveRecall": 0.57552274726412123,
+    "NegativePrecision": 0.52330543479792235,
+    "NegativeRecall": 0.48866106248527064,
+    "F1Score": 0.5574605773230481,
+    "AreaUnderPrecisionRecallCurve": 0.54040399766630487
+  },
+  "StockSymbol": "EXC",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "FFModel-v1"
+}

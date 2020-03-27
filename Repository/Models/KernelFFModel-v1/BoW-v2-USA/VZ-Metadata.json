@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.5688313204485097,
+    "Accuracy": 0.53978632993004494,
+    "PositivePrecision": 0.5941087558966538,
+    "PositiveRecall": 0.28823418731875161,
+    "NegativePrecision": 0.52596647914527472,
+    "NegativeRecall": 0.79778534582560789,
+    "F1Score": 0.37924798169306478,
+    "AreaUnderPrecisionRecallCurve": 0.566694824451055
+  },
+  "StockSymbol": "VZ",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

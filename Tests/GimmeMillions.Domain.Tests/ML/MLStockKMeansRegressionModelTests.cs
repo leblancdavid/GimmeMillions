@@ -1,5 +1,6 @@
 ﻿using GimmeMillions.DataAccess.Articles;
 using GimmeMillions.DataAccess.Features;
+using GimmeMillions.DataAccess.Keys;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
@@ -19,6 +20,7 @@ namespace GimmeMillions.Domain.Tests.ML
         private readonly string _pathToDictionary = "../../../../../Repository/Dictionaries";
         private readonly string _pathToLanguage = "../../../../../Repository/Languages";
         private readonly string _pathToStocks = "../../../../../Repository/Stocks";
+        private readonly string _pathToKeys = "../../../../Repository/Keys";
 
         [Fact]
         public void ShouldTrainUsingRandomFeatures()
@@ -39,10 +41,14 @@ namespace GimmeMillions.Domain.Tests.ML
             var dictionaryRepo = new FeatureDictionaryJsonRepository(_pathToDictionary);
             var dictionary = dictionaryRepo.GetFeatureDictionary("FeatureDictionaryJsonRepositoryTests.ShouldAddFeatureDictionaries");
 
+            var accessKeys = new NYTApiAccessKeyRepository(_pathToKeys);
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
-            var stocksRepo = new StockDataRepository(_pathToStocks);
-            return new DefaultFeatureDatasetService(bow, articlesRepo, stocksRepo);
+            var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
+
+
+            return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo);
         }
 
         private IFeatureDatasetService GetTestRandomDatasetService(int seed, int featureSize)

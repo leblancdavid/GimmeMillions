@@ -9,6 +9,6 @@ namespace GimmeMillions.Domain.Articles
 {
     public interface IArticleAccessService
     {
-        Result<IEnumerable<Article>> GetArticles(DateTime dateTime, IEnumerable<FilterQuery> filterQueries);
+        IEnumerable<Article> GetArticles(DateTime dateTime);
     }
 }

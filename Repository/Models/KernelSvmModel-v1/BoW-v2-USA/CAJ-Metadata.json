@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.715335392195647,
+    "Accuracy": 0.65957710677489967,
+    "PositivePrecision": 0.66589442966026091,
+    "PositiveRecall": 0.71569673414201385,
+    "NegativePrecision": 0.65290507271546561,
+    "NegativeRecall": 0.595839618685417,
+    "F1Score": 0.68923514689301224,
+    "AreaUnderPrecisionRecallCurve": 0.72459732581174419
+  },
+  "StockSymbol": "CAJ",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSvmModel-v1"
+}

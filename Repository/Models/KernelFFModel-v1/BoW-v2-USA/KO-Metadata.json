@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.70353072364687352,
+    "Accuracy": 0.64490170970339267,
+    "PositivePrecision": 0.6620708778827169,
+    "PositiveRecall": 0.65907880867454893,
+    "NegativePrecision": 0.63030184165021619,
+    "NegativeRecall": 0.62885075929428935,
+    "F1Score": 0.65817329653468959,
+    "AreaUnderPrecisionRecallCurve": 0.69417024404204342
+  },
+  "StockSymbol": "KO",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

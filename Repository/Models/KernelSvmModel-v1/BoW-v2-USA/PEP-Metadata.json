@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.73438224925574414,
+    "Accuracy": 0.65282703369550066,
+    "PositivePrecision": 0.62661273148353724,
+    "PositiveRecall": 0.89267864201574376,
+    "NegativePrecision": 0.76699402584257581,
+    "NegativeRecall": 0.37241820908114071,
+    "F1Score": 0.73384463896495633,
+    "AreaUnderPrecisionRecallCurve": 0.74289670614971937
+  },
+  "StockSymbol": "PEP",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSvmModel-v1"
+}

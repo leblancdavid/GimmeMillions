@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.617754240454552,
+    "Accuracy": 0.58752597484341063,
+    "PositivePrecision": 0.57594522106499046,
+    "PositiveRecall": 0.737339944383162,
+    "NegativePrecision": 0.61284723668263841,
+    "NegativeRecall": 0.42431997521187037,
+    "F1Score": 0.64448021220160312,
+    "AreaUnderPrecisionRecallCurve": 0.61353653019929288
+  },
+  "StockSymbol": "SBUX",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSvmModel-v1"
+}

@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.69022834713541759,
+    "Accuracy": 0.63863328962671484,
+    "PositivePrecision": 0.63001803997865735,
+    "PositiveRecall": 0.77137918729156152,
+    "NegativePrecision": 0.676698426177359,
+    "NegativeRecall": 0.49974670667974408,
+    "F1Score": 0.687569463074835,
+    "AreaUnderPrecisionRecallCurve": 0.67805469931670614
+  },
+  "StockSymbol": "NKE",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.59680499557589628,
+    "Accuracy": 0.58095688724320949,
+    "PositivePrecision": 0.60235435438093465,
+    "PositiveRecall": 0.66672173263271706,
+    "NegativePrecision": 0.5500143211206322,
+    "NegativeRecall": 0.48020354341475358,
+    "F1Score": 0.63253005177974608,
+    "AreaUnderPrecisionRecallCurve": 0.61067228391356765
+  },
+  "StockSymbol": "EIX",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "FFModel-v1"
+}

@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.60542860515646824,
+    "Accuracy": 0.56743011118522912,
+    "PositivePrecision": 0.63193537070566186,
+    "PositiveRecall": 0.291096526983492,
+    "NegativePrecision": 0.54957625519066544,
+    "NegativeRecall": 0.83381088006055781,
+    "F1Score": 0.39340293281144278,
+    "AreaUnderPrecisionRecallCurve": 0.59046485510344149
+  },
+  "StockSymbol": "BAC",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSvmModel-v1"
+}

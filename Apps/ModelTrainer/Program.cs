@@ -1,9 +1,11 @@
 ﻿using GimmeMillions.DataAccess.Articles;
 using GimmeMillions.DataAccess.Features;
+using GimmeMillions.DataAccess.Keys;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML.Accord;
 using GimmeMillions.Domain.ML.Binary;
+using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,77 +23,147 @@ namespace ModelTrainer
         static string _pathToLanguage = "../../../../Repository/Languages";
         static string _pathToStocks = "../../../../Repository/Stocks";
         static string _pathToCache = "../../../../Repository/Cache";
+        //static string _pathToRecommendationConfigs = "../../../../Repository/Recommendations";
         static string _pathToModels = "../../../../Repository/Models";
+        static string _pathToKeys = "../../../../Repository/Keys";
         static void Main(string[] args)
         {
             string dictionaryToUse = "USA";
-            string stock = "F";
+            //var stocks = new string[] { "ET",
+            //"T", "PFE", "PBR", "GILD", "CSCO", "NOK", "MGM", "XOM", "HAL", "JPM", "CMCSA", "MS", "CVX", "PCG", "MRK",
+            //"V", "EBAY", "WMT", "LUV", "NKE", "JNJ", "SYF", "HLT", "CVS"};
+
+            var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "VZ", "S", "INVA", "LGND", "LXRX", "XBI",
+             "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM", "FAST", "DAL", "ZNH", "ARNC",
+             "AAL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA-PH", "DRE", "NLY", "MPW", "C", "WFC",
+            "HSBC", "BAC", "RY", "AXP", "FB", "DIS", "BHP", "BBL", "DD", "GOLD", "DUK", "EXC", "FE", "EIX",
+            "CMS", "MCD", "SBUX", "LOW", "HMC", "HD", "GM", "ROST", "BBY", "MAR", "KO", "PEP", "GIS", "GE", "ET",
+            "T", "PFE", "PBR", "GILD", "CSCO", "NOK", "MGM", "XOM", "HAL", "JPM", "CMCSA", "MS", "CVX", "PCG", "MRK",
+            "V", "EBAY", "WMT", "LUV", "NKE", "JNJ", "SYF", "HLT", "CVS"};
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
-            //var model = new MLStockRandomFeatureFastTreeModel();
-            var model = new AccordClassificationStockPredictor();
+            var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
+
             var startDate = new DateTime(2000, 1, 1);
-            var endDate = new DateTime(2020, 3, 1);
-            var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
+            var endDate = DateTime.Today.AddDays(-1.0);
 
-            var filteredDataset = dataset.Value;
-            int numTestExamples = 30;
-
-            var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
-            var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
-
-            //model.Parameters.PcaRank = 200;
-            //model.Parameters.FeatureSelectionRank = 1000;
-            //model.Parameters.NumIterations = 1;
-            //model.Parameters.NumCrossValidations = 5;
-            //model.Parameters.NumOfTrees = 50;
-            //model.Parameters.NumOfLeaves = 10;
-            //model.Parameters.MinNumOfLeaves = 1;
-
-            //Console.WriteLine($"-=== Training ===-");
-            //Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank} \t PCA: { model.Parameters.PcaRank}");
-            //Console.WriteLine($"Number of Trees: { model.Parameters.NumOfTrees} \t Number of Leaves: { model.Parameters.NumOfLeaves}");
-            //Console.WriteLine($"Pca Rank: {model.Parameters.PcaRank}");
-            Stopwatch stopwatch = Stopwatch.StartNew();
-            var trainingResult = model.Train(trainingSet, 0.0);
-            stopwatch.Stop();
-
-            Console.WriteLine($"-=== Training done ===-");
-            Console.WriteLine($"Training time: {stopwatch.ElapsedMilliseconds / 60000.0}");
-            if (trainingResult.IsFailure)
+            //double totalCount = 0.0, totalAccuracy = 0.0;
+            foreach(var stock in stocks)
             {
-                Console.WriteLine($"Training failed: {trainingResult.Error}");
-                Console.ReadLine();
-                return;
-            }
+                //var model = new MLStockBinaryFastForestModel();
+                Console.WriteLine($"-=== Loading training data for {stock} ===-");
+                //var model = new MLStockFastForestModel();
+                //model.Parameters.FeatureSelectionRank = 500;
+                //model.Parameters.NumCrossValidations = 10;
+                //model.Parameters.NumOfTrees = 2000;
+                //model.Parameters.NumOfLeaves = 20;
+                //model.Parameters.MinNumOfLeaves = 20;
 
-            Console.WriteLine($"-=== Results ===-");
-            Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
-            Console.WriteLine($"Positive Precision: {trainingResult.Value.PositivePrecision} \t Positive Recall: {trainingResult.Value.PositiveRecall}");
-            Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Negative Recall: {trainingResult.Value.NegativeRecall}");
-            Console.WriteLine($"-=== Saving Model... ===-");
-            //model.Save(_pathToModels);
+                //var model = new MLStockKernelEstimationSvmModel();
+                //model.Parameters.FeatureSelectionRank = 500;
+                //model.Parameters.NumCrossValidations = 5;
+                //model.Parameters.NumOfTrees = 2000;
+                //model.Parameters.NumOfLeaves = 20;
+                //model.Parameters.MinNumOfLeaves = 20;
+                //model.Parameters.NumIterations = 20;
+                //model.Parameters.KernelRank = 300;
 
-            Console.WriteLine($"-=== Testing Model... ===-");
-            double accuracy = 0.0;
-            foreach (var testExample in testSet)
-            {
-                var prediction = model.Predict(testExample.Input);
-               if ((prediction.PredictedLabel && testExample.Output.PercentDayChange > 0) ||
-                    (!prediction.PredictedLabel && testExample.Output.PercentDayChange <= 0))
+                //var model = new MLStockKernelEstimationSdcaModel();
+                //model.Parameters.FeatureSelectionRank = 500;
+                //model.Parameters.NumCrossValidations = 5;
+                //model.Parameters.NumIterations = 20;
+                //model.Parameters.KernelRank = 300;
+
+                //var model = new MLStockKernelEstimationFastForestModel();
+                var model = new MLStockPeakKernelEstimationFastForestModel();
+                model.Parameters.PeakSelection = 1.0;
+                model.Parameters.FeatureSelectionRank = 800;
+                model.Parameters.NumCrossValidations = 5;
+                model.Parameters.NumOfTrees = 2000;
+                model.Parameters.NumOfLeaves = 20;
+                model.Parameters.MinNumOfLeaves = 20;
+                model.Parameters.NumIterations = 20;
+                model.Parameters.KernelRank = 400;
+                
+
+                //var model = new MLStockKnnBruteForceModel();
+                //model.Parameters.FeatureSelectionRank = 50000;
+
+                ////var model = new MLStock();
+                //model.Parameters.FeatureSelectionRank = 500;
+                //model.Parameters.NumCrossValidations = 10;
+                //model.Parameters.NumOfTrees = 2000;
+                //model.Parameters.NumOfLeaves = 20;
+                //model.Parameters.MinNumOfLeaves = 20;
+
+                //var model = new MLStockPcaSvmModel();
+                //model.Parameters.FeatureSelectionRank = 500;
+                //model.Parameters.NumCrossValidations = 10;
+                //model.Parameters.PcaRank = 250;
+
+                var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
+
+                var filteredDataset = dataset.Value;
+                int numTestExamples = 0;
+
+                var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
+                var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
+
+
+                Console.WriteLine($"-=== Training {stock} ===-");
+                //Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank}");
+                //Console.WriteLine($"Pca Rank: { model.Parameters.PcaRank}");
+
+                Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank}");
+               // Console.WriteLine($"Number of Trees: { model.Parameters.NumOfTrees} \t Number of Leaves: { model.Parameters.NumOfLeaves}");
+
+                Stopwatch stopwatch = Stopwatch.StartNew();
+                var trainingResult = model.Train(trainingSet, 0.0);
+                stopwatch.Stop();
+
+                Console.WriteLine($"-=== Training done ===-");
+                Console.WriteLine($"Training time: {stopwatch.ElapsedMilliseconds / 60000.0}");
+                if (trainingResult.IsFailure)
                 {
-                    accuracy++;
-                    Console.WriteLine($"Good! Probability: {prediction.Probability}");
+                    Console.WriteLine($"Training failed: {trainingResult.Error}");
+                    Console.ReadLine();
+                    return;
+                }
 
-                }
-               else
-                {
-                    Console.WriteLine($"Bad! Probability: {prediction.Probability}");
-                }
+                Console.WriteLine($"-=== Results {stock} ===-");
+                Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
+                Console.WriteLine($"Positive Precision: {trainingResult.Value.PositivePrecision} \t Positive Recall: {trainingResult.Value.PositiveRecall}");
+                Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Negative Recall: {trainingResult.Value.NegativeRecall}");
+
+                Console.WriteLine($"-=== Saving Model {stock} ===-");
+                model.Save(_pathToModels);
+
+                //Console.WriteLine($"-=== Testing Model  {stock} ===-");
+                //double accuracy = 0.0;
+                //foreach (var testExample in testSet)
+                //{
+                //    var prediction = model.Predict(testExample.Input);
+                //    if ((prediction.PredictedLabel && testExample.Output.PercentDayChange > 0) ||
+                //         (!prediction.PredictedLabel && testExample.Output.PercentDayChange <= 0))
+                //    {
+                //        accuracy++;
+                //        //Console.WriteLine($"Good! Probability: {prediction.Probability}");
+
+                //    }
+                //    else
+                //    {
+                //        //Console.WriteLine($"Bad! Probability: {prediction.Probability}");
+                //    }
+                //}
+
+                //Console.WriteLine($"Test Accuracy {stock}: {accuracy / numTestExamples}");
+                //totalAccuracy += accuracy;
+                //totalCount += numTestExamples;
+                //Console.WriteLine($"Running Accuracy: {totalAccuracy / totalCount}");
             }
-
-            Console.WriteLine($"Test Accuracy: {accuracy / numTestExamples}");
+            
             Console.WriteLine($"-=========================================================================================-");
+            //Console.WriteLine($"Total Accuracy: {totalAccuracy / totalCount}");
 
             Console.ReadKey();
         }
@@ -105,13 +177,15 @@ namespace ModelTrainer
             var dictionaryRepo = new FeatureDictionaryJsonRepository(_pathToDictionary);
             var dictionary = dictionaryRepo.GetFeatureDictionary(dictionaryToUse);
 
+            var accessKeys = new NYTApiAccessKeyRepository(_pathToKeys);
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
-            var stocksRepo = new StockDataRepository(_pathToStocks); 
-            
+            var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
+
             var cache = new FeatureJsonCache(_pathToCache);
 
-            return new DefaultFeatureDatasetService(bow, articlesRepo, stocksRepo, cache);
+            return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, cache);
         }
     }
 }

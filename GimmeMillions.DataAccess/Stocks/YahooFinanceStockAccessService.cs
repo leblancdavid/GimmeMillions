@@ -17,14 +17,44 @@ namespace GimmeMillions.DataAccess.Stocks
             _pathToStocks = pathToStocks;
         }
 
-        public IEnumerable<StockData> UpdateStocks(string symbol, DateTime startDate, DateTime endDate)
+        public IEnumerable<StockData> GetStocks(string symbol)
         {
-            //F?period1=76204800&period2=1584316800&interval=1d&events=history
-            WebClient webClient = new WebClient();
-            int period1 = (Int32)(startDate.ToUniversalTime().Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            int period2 = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            string url = $"{_yahooHistoryBaseURL}{symbol}?period1={period1}&period2={period2}&interval=1d&events=history";
-            webClient.DownloadFile(url, $"{_pathToStocks}/{symbol}");
+            return _stockRepository.GetStocks(symbol);
+        }
+
+        public IEnumerable<StockData> GetStocks()
+        {
+            var symbols = GetSymbols();
+            var stocks = new List<StockData>();
+            foreach(var symbol in symbols)
+            {
+                stocks.AddRange(GetStocks(symbol));
+            }
+            return stocks;
+        }
+
+        public IEnumerable<string> GetSymbols()
+        {
+            return _stockRepository.GetSymbols();
+        }
+
+        public IEnumerable<StockData> UpdateStocks(string symbol)
+        {
+            try
+            {
+                //F?period1=76204800&period2=1584316800&interval=1d&events=history
+                WebClient webClient = new WebClient();
+                DateTime startDate = new DateTime(2000, 1, 1);
+                int period1 = (Int32)(startDate.ToUniversalTime().Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                int period2 = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                string url = $"{_yahooHistoryBaseURL}{symbol}?period1={period1}&period2={period2}&interval=1d&events=history";
+                webClient.DownloadFile(url, $"{_pathToStocks}/{symbol}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving stock {symbol}: {ex.Message}");
+                return _stockRepository.GetStocks(symbol);
+            }
 
             return _stockRepository.GetStocks(symbol);
         }

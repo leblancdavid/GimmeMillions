@@ -1,0 +1,23 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.786750935109063,
+    "Accuracy": 0.73820930600840051,
+    "PositivePrecision": 0.65473635704839128,
+    "PositiveRecall": 0.62683586538354985,
+    "NegativePrecision": 0.78553969737110818,
+    "NegativeRecall": 0.80374932583010072,
+    "F1Score": 0.63920975749103925,
+    "AreaUnderPrecisionRecallCurve": 0.70091797327471439
+  },
+  "StockSymbol": "BHP",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFPeakModel-v1",
+  "PeakAverage": 1.07288466502776,
+  "PeakSelection": 1.07288466502776
+}

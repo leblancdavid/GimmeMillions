@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Transforms
 {
-    public class MaxVarianceFeatureFilterEstimator : IEstimator<ITransformer>
+    public class MaxVarianceFeatureFilterEstimator : IEstimator<FeatureFilterTransform>
     {
         private string _inputColumnName;
         private string _outputColumnName;
@@ -26,7 +26,7 @@ namespace GimmeMillions.Domain.ML.Transforms
             _rank = rank;
         }
 
-        public ITransformer Fit(IDataView input)
+        public FeatureFilterTransform Fit(IDataView input)
         {
             return new FeatureFilterTransform(_mLContext, GetFeatureSelectionIndices(input), _inputColumnName, _outputColumnName);
         }
@@ -106,9 +106,22 @@ namespace GimmeMillions.Domain.ML.Transforms
                 negativeVar[i] = (float)Math.Sqrt(negativeVar[i] / negativeTotal);
 
                 //p[i] = ((float)(positiveAvg[i] - negativeAvg[i]) / (positiveVar[i] + negativeVar[i]), i);
-                p[i] = ((float)(negativeAvg[i] - positiveAvg[i]) / (positiveVar[i] + negativeVar[i]), i);
+                //if(positiveTotal < negativeTotal)
+                //    p[i] = ((float)(negativeAvg[i] - positiveAvg[i]) / (positiveVar[i] + negativeVar[i]), i);
+                //else
+                //p[i] = ((float)(positiveAvg[i] - negativeAvg[i]) / (positiveVar[i] + negativeVar[i]), i);
                 //p[i] = ((float)Math.Abs(negativeAvg[i] - positiveAvg[i]) / (positiveVar[i] + negativeVar[i]), i);
-                //p[i] = ((float)(negativeAvg[i] - positiveAvg[i]), i);
+                //if (positiveTotal < negativeTotal)
+                //{
+                //    //p[i] = ((float)(negativeAvg[i] - positiveAvg[i]), i);
+                //    p[i] = (positiveVar[i], i);
+                //}
+                //else
+                //{
+                //    p[i] = (negativeVar[i], i);
+                //}
+                //p[i] = (positiveVar[i] + negativeVar[i], i);
+                p[i] = (Math.Max(negativeVar[i], positiveVar[i]), i);
                 //p[i] = ((float)(positiveAvg[i] - negativeAvg[i]), i);
                 //p[i] = ((float)Math.Abs(positiveAvg[i] - negativeAvg[i]), i);
             }

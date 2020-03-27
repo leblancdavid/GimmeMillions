@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.562197693733707,
+    "Accuracy": 0.53947074877002843,
+    "PositivePrecision": 0.526556822355676,
+    "PositiveRecall": 0.48850210126783039,
+    "NegativePrecision": 0.55001714943930546,
+    "NegativeRecall": 0.587401136788497,
+    "F1Score": 0.50635115599558711,
+    "AreaUnderPrecisionRecallCurve": 0.53996545983095623
+  },
+  "StockSymbol": "AMD",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "FFModel-v1"
+}

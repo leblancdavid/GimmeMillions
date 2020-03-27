@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.64512576814777722,
+    "Accuracy": 0.60827417495355185,
+    "PositivePrecision": 0.609527289768153,
+    "PositiveRecall": 0.656031918838005,
+    "NegativePrecision": 0.60786940882619778,
+    "NegativeRecall": 0.5587789994588247,
+    "F1Score": 0.63136245758411791,
+    "AreaUnderPrecisionRecallCurve": 0.63064276036711286
+  },
+  "StockSymbol": "EXC",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

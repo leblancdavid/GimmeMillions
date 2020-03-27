@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.61966534602530654,
+    "Accuracy": 0.55982584776116417,
+    "PositivePrecision": 0.7081848510536608,
+    "PositiveRecall": 0.19338650621083164,
+    "NegativePrecision": 0.53741041731055006,
+    "NegativeRecall": 0.92133026523381256,
+    "F1Score": 0.30082603197940461,
+    "AreaUnderPrecisionRecallCurve": 0.61764571254778333
+  },
+  "StockSymbol": "ARNC",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFModel-v1"
+}

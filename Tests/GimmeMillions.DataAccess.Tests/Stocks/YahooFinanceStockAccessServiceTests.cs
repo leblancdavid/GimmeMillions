@@ -19,7 +19,7 @@ namespace GimmeMillions.DataAccess.Tests.Stocks
             string symbol = "F";
             var stockService = new YahooFinanceStockAccessService(repo, _pathToStocks);
 
-            var stocks = stockService.UpdateStocks(symbol, new DateTime(2000, 1, 1), DateTime.Today);
+            var stocks = stockService.UpdateStocks(symbol);
 
             stocks.Count().Should().BeGreaterThan(0);
         }

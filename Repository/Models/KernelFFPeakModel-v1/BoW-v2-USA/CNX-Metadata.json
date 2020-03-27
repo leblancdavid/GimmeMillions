@@ -1,0 +1,23 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.78063315586324289,
+    "Accuracy": 0.73659141577508014,
+    "PositivePrecision": 0.66674492174492173,
+    "PositiveRecall": 0.54148693376722978,
+    "NegativePrecision": 0.7675508854224915,
+    "NegativeRecall": 0.84519113943816249,
+    "F1Score": 0.59590996441297628,
+    "AreaUnderPrecisionRecallCurve": 0.68635739785924965
+  },
+  "StockSymbol": "CNX",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFPeakModel-v1",
+  "PeakAverage": 2.1361844149420737,
+  "PeakSelection": 2.1361844149420737
+}

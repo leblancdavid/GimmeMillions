@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.63297421477338767,
+    "Accuracy": 0.60454625493728653,
+    "PositivePrecision": 0.60862035659966129,
+    "PositiveRecall": 0.63802034360912485,
+    "NegativePrecision": 0.59963142680886949,
+    "NegativeRecall": 0.56954943538474678,
+    "F1Score": 0.62274665429287657,
+    "AreaUnderPrecisionRecallCurve": 0.62114979947431548
+  },
+  "StockSymbol": "WBA",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

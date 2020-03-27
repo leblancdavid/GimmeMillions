@@ -1,0 +1,23 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.777335464916133,
+    "Accuracy": 0.74365159390145652,
+    "PositivePrecision": 0.71003969513966814,
+    "PositiveRecall": 0.52264364490435011,
+    "NegativePrecision": 0.757290384217748,
+    "NegativeRecall": 0.87413442967597665,
+    "F1Score": 0.60064767156843679,
+    "AreaUnderPrecisionRecallCurve": 0.691570794919343
+  },
+  "StockSymbol": "JNJ",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFPeakModel-v1",
+  "PeakAverage": 0.75444454805885808,
+  "PeakSelection": 0.75444454805885808
+}

@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.638928808266099,
+    "Accuracy": 0.60459936282562554,
+    "PositivePrecision": 0.61206167132330935,
+    "PositiveRecall": 0.64447919011017962,
+    "NegativePrecision": 0.59627432284638382,
+    "NegativeRecall": 0.56231103277853323,
+    "F1Score": 0.6274260167757888,
+    "AreaUnderPrecisionRecallCurve": 0.63851881890709417
+  },
+  "StockSymbol": "CSCO",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}

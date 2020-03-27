@@ -1,0 +1,23 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.7766998080401899,
+    "Accuracy": 0.73569327145825891,
+    "PositivePrecision": 0.67280153862978653,
+    "PositiveRecall": 0.58504553765679079,
+    "NegativePrecision": 0.77058813046703833,
+    "NegativeRecall": 0.82592900191301266,
+    "F1Score": 0.62182246923215,
+    "AreaUnderPrecisionRecallCurve": 0.70087937987260029
+  },
+  "StockSymbol": "HAL",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelFFPeakModel-v1",
+  "PeakAverage": 1.621689165485223,
+  "PeakSelection": 1.621689165485223
+}

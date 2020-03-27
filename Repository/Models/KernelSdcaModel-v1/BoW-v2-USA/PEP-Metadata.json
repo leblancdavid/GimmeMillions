@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.71731905300890431,
+    "Accuracy": 0.67312143242638789,
+    "PositivePrecision": 0.67851147002008272,
+    "PositiveRecall": 0.74296419061668384,
+    "NegativePrecision": 0.66578089812822494,
+    "NegativeRecall": 0.59171339009371415,
+    "F1Score": 0.70906283056312769,
+    "AreaUnderPrecisionRecallCurve": 0.71842796778076234
+  },
+  "StockSymbol": "PEP",
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "BoW-v2-USA",
+  "ModelId": "KernelSdcaModel-v1"
+}
