@@ -2,5 +2,6 @@
 {
     public class StockRegressionPrediction
     {
+        public double Score { get; set; }
     }
 }

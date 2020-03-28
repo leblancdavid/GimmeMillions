@@ -196,6 +196,8 @@
     <Compile Include="ML\Regression\MLRegressionStockKernelEstimationLinearModel.cs" />
     <Compile Include="ML\Regression\StockRegressionPrediction.cs" />
     <Compile Include="ML\StockRegressionDataFeature.cs" />
+    <Compile Include="ML\Transforms\FeatureFilterRegressionTransform.cs" />
+    <Compile Include="ML\Transforms\FeatureFrequencyUsageFilterRegressionEstimator.cs" />
     <Compile Include="ML\Transforms\KnnBruteForceEstimator.cs" />
     <Compile Include="ML\Transforms\KnnBruteForceTransform.cs" />
     <Compile Include="ML\Transforms\MaxDifferenceFeatureFilterRegressionEstimator.cs" />

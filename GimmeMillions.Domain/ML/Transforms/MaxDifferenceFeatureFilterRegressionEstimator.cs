@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Transforms
 {
-    public class MaxDifferenceFeatureFilterRegressionEstimator : IEstimator<FeatureFilterTransform>
+    public class MaxDifferenceFeatureFilterRegressionEstimator : IEstimator<FeatureFilterRegressionTransform>
     {
         private string _inputColumnName;
         private string _outputColumnName;
@@ -29,9 +29,9 @@ namespace GimmeMillions.Domain.ML.Transforms
             _positiveSort = positiveSort;
         }
 
-        public FeatureFilterTransform Fit(IDataView input)
+        public FeatureFilterRegressionTransform Fit(IDataView input)
         {
-            return new FeatureFilterTransform(_mLContext, GetFeatureSelectionIndices(input), _inputColumnName, _outputColumnName);
+            return new FeatureFilterRegressionTransform(_mLContext, GetFeatureSelectionIndices(input), _inputColumnName, _outputColumnName);
         }
 
         public SchemaShape GetOutputSchema(SchemaShape inputSchema)
@@ -70,11 +70,11 @@ namespace GimmeMillions.Domain.ML.Transforms
                 {
                     if (values[j] > 0.0f)
                     {
-                        positiveScore[i] += Math.Abs(features[j][i] * values[i]);
+                        positiveScore[i] += Math.Abs(features[j][i] * values[j]);
                     }
                     else
                     {
-                        negativeScore[i] += Math.Abs(features[j][i] * values[i]);
+                        negativeScore[i] += Math.Abs(features[j][i] * values[j]);
                     }
                 }
             }

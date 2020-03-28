@@ -44,8 +44,8 @@ namespace GimmeMillions.Domain.ML.Regression
     {
         private MLContext _mLContext;
         private int _seed;
-        private FeatureFilterTransform _frequencyUsageTransform;
-        private FeatureFilterTransform _maxDifferenceFilterTransform;
+        private FeatureFilterRegressionTransform _frequencyUsageTransform;
+        private FeatureFilterRegressionTransform _maxDifferenceFilterTransform;
         private ITransformer _kernelTransform;
         private ITransformer _model;
 
@@ -79,13 +79,13 @@ namespace GimmeMillions.Domain.ML.Regression
                 //Metadata = JsonConvert.DeserializeObject<BinaryPredictionModelMetadata<KernelEstimationSvmModelParameters>>(
                 //    File.ReadAllText($"{ directory}/{symbol}-Metadata.json"));
 
-                var maxDiffLoad = FeatureFilterTransform.LoadFromFile($"{ directory}/{StockSymbol}-MaxDiffFilterTransform.json", _mLContext);
+                var maxDiffLoad = FeatureFilterRegressionTransform.LoadFromFile($"{ directory}/{StockSymbol}-MaxDiffFilterTransform.json", _mLContext);
                 if (maxDiffLoad.IsFailure)
                 {
                     return Result.Failure(maxDiffLoad.Error);
                 }
                 _maxDifferenceFilterTransform = maxDiffLoad.Value;
-                var usageLoad = FeatureFilterTransform.LoadFromFile($"{ directory}/{StockSymbol}-FrequencyUsageTransform.json", _mLContext);
+                var usageLoad = FeatureFilterRegressionTransform.LoadFromFile($"{ directory}/{StockSymbol}-FrequencyUsageTransform.json", _mLContext);
                 if (usageLoad.IsFailure)
                 {
                     return Result.Failure(usageLoad.Error);
@@ -108,9 +108,9 @@ namespace GimmeMillions.Domain.ML.Regression
         {
             //Load the data into a view
             var inputDataView = _mLContext.Data.LoadFromEnumerable(
-                new List<StockRiseDataFeature>()
+                new List<StockRegressionDataFeature>()
                 {
-                    new StockRiseDataFeature(input.Data, false, 0.0f,
+                    new StockRegressionDataFeature(input.Data, 0.0f,
                     (int)input.Date.DayOfWeek / 7.0f, input.Date.Month / 366.0f)
                 },
                 GetSchemaDefinition(input));
@@ -126,10 +126,7 @@ namespace GimmeMillions.Domain.ML.Regression
 
             return new StockRegressionPrediction()
             {
-                //Score = score[0],
-                //PredictedLabel = score[0] > 0.0f,
-                ////Probability = probability[0]
-                //Probability = score[0]
+                Score = score[0]
             };
         }
 
@@ -199,17 +196,17 @@ namespace GimmeMillions.Domain.ML.Regression
             }
 
             int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.75);
-            var frequencyUsageEstimator = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength, skip: 0);
+            var frequencyUsageEstimator = new FeatureFrequencyUsageFilterRegressionEstimator(_mLContext, rank: filteredFeatureLength, skip: 0);
             _frequencyUsageTransform = frequencyUsageEstimator.Fit(trainData);
             var mostUsedData = _frequencyUsageTransform.Transform(trainData);
 
-            FeatureFilterTransform posFeatureTransform;
+            FeatureFilterRegressionTransform posFeatureTransform;
             ITransformer posKernelTransform;
             var positiveResults = TryModel(mostUsedData, Parameters.FeatureSelectionRank, true, out posFeatureTransform, out posKernelTransform);
             Console.WriteLine($"Positive MAE: {positiveResults.MeanAbsoluteError}, R2: {positiveResults.RSquared}");
 
             var negativeResults = TryModel(mostUsedData, Parameters.FeatureSelectionRank, false, out _maxDifferenceFilterTransform, out _kernelTransform);
-            Console.WriteLine($"Negative Acc: {negativeResults.MeanAbsoluteError}, AoC: {negativeResults.RSquared}");
+            Console.WriteLine($"Negative Acc: {negativeResults.MeanAbsoluteError}, R2: {negativeResults.RSquared}");
 
             //Metadata.TrainingResults = negativeResults;
             if (positiveResults.MeanAbsoluteError < negativeResults.MeanAbsoluteError)
@@ -226,7 +223,7 @@ namespace GimmeMillions.Domain.ML.Regression
             Encoding = firstFeature.Input.Encoding;
             StockSymbol = firstFeature.Output.Symbol;
 
-            var pipeline = _mLContext.Regression.Trainers.LbfgsPoissonRegression();
+            var pipeline = _mLContext.Regression.Trainers.Sdca();
             _model = pipeline.Fit(kernelTransformedData);
 
             if (testData != null)
@@ -246,7 +243,7 @@ namespace GimmeMillions.Domain.ML.Regression
         private MLRegressionMetrics TryModel(IDataView data,
             int rank,
             bool positiveSort,
-            out FeatureFilterTransform filterTransform,
+            out FeatureFilterRegressionTransform filterTransform,
             out ITransformer kernelTransform)
         {
             filterTransform = new MaxDifferenceFeatureFilterRegressionEstimator(_mLContext, rank: rank, positiveSort: positiveSort).Fit(data);
@@ -265,12 +262,12 @@ namespace GimmeMillions.Domain.ML.Regression
 
                 //var kdTest = kernelData.GetColumn<float[]>("Features").ToArray();
 
-                var pipeline = _mLContext.Regression.Trainers.LbfgsPoissonRegression();
+                var pipeline = _mLContext.Regression.Trainers.Sdca();
                 //var pipeline = _mLContext.BinaryClassification.Trainers.FastTree();
                 var cvResults = CrossValidationResultsToMetrics(
                     _mLContext.Regression.CrossValidate(kernelData, pipeline, Parameters.NumCrossValidations));
 
-                Console.WriteLine($"{positiveSort}({i}): {cvResults.MeanAbsoluteError}");
+                Console.WriteLine($"{positiveSort}({i}): {cvResults.MeanAbsoluteError}, R2: {cvResults.RSquared}");
                 if (cvResults.MeanAbsoluteError < bestError)
                 {
                     kernelTransform = kT;
@@ -306,7 +303,7 @@ namespace GimmeMillions.Domain.ML.Regression
         private SchemaDefinition GetSchemaDefinition(FeatureVector vector)
         {
             int featureDimension = vector.Length;
-            var definedSchema = SchemaDefinition.Create(typeof(StockRiseDataFeature));
+            var definedSchema = SchemaDefinition.Create(typeof(StockRegressionDataFeature));
             var featureColumn = definedSchema["Features"].ColumnType as VectorDataViewType;
             var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
             definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
