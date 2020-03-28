@@ -55,7 +55,6 @@ namespace GimmeMillions.Domain.ML.Transforms
         private (float Usage, int Index)[] GetFeatureUsage(IDataView input)
         {
             var features = input.GetColumn<float[]>(_inputColumnName).ToArray();
-            var labels = input.GetColumn<bool>(_outputColumnName).ToArray();
 
             if (features.Length == 0)
                 throw new Exception($"Input features for the FeatureSelectorEstimator contains no elements");

@@ -11,7 +11,7 @@ namespace GimmeMillions.Domain.ML.Regression
         string Encoding { get; }
         bool IsTrained { get; }
 
-        Result<RegressionMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction);
+        Result<MLRegressionMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction);
         StockRegressionPrediction Predict(FeatureVector Input);
         Result Save(string pathToModel);
         Result Load(string pathToModel, string symbol, string encoding);

@@ -54,7 +54,7 @@ namespace GimmeMillions.DataAccess.Stocks
                     var stock = new StockData(symbol, date, open, high, low, close, adjustedClose);
                     if (previous != null)
                     {
-                        stock.PercentChange = (decimal)100.0 * (stock.Close - previous.Close) / previous.Close;
+                        stock.PreviousClose = previous.Close;
                     }
                     stocks.Add(stock);
                     previous = stock;
