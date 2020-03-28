@@ -163,7 +163,7 @@ namespace ModelTrainer
                     Console.WriteLine($"{testExample.Output.Date.ToString("MM/dd/yyyy")}, Predicted: {prediction.Score}, Actual: {testExample.Output.PercentChangeFromPreviousClose}");
                 }
 
-                //Console.WriteLine($"Test Accuracy {stock}: {accuracy / numTestExamples}");
+                Console.WriteLine($"Test Accuracy {stock}: {accuracy / numTestExamples}");
                 //totalAccuracy += accuracy;
                 //totalCount += numTestExamples;
                 //Console.WriteLine($"Running Accuracy: {totalAccuracy / totalCount}");
