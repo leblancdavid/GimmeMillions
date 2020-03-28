@@ -5,6 +5,7 @@ using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML.Accord;
 using GimmeMillions.Domain.ML.Binary;
+using GimmeMillions.Domain.ML.Regression;
 using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
@@ -29,17 +30,15 @@ namespace ModelTrainer
         static void Main(string[] args)
         {
             string dictionaryToUse = "USA";
-            //var stocks = new string[] { "ET",
+            var stocks = new string[] { "CVS"};
+
+            //var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "VZ", "S", "INVA", "LGND", "LXRX", "XBI",
+            // "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM", "FAST", "DAL", "ZNH", "ARNC",
+            // "AAL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA-PH", "DRE", "NLY", "MPW", "C", "WFC",
+            //"HSBC", "BAC", "RY", "AXP", "FB", "DIS", "BHP", "BBL", "DD", "GOLD", "DUK", "EXC", "FE", "EIX",
+            //"CMS", "MCD", "SBUX", "LOW", "HMC", "HD", "GM", "ROST", "BBY", "MAR", "KO", "PEP", "GIS", "GE", "ET",
             //"T", "PFE", "PBR", "GILD", "CSCO", "NOK", "MGM", "XOM", "HAL", "JPM", "CMCSA", "MS", "CVX", "PCG", "MRK",
             //"V", "EBAY", "WMT", "LUV", "NKE", "JNJ", "SYF", "HLT", "CVS"};
-
-            var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "VZ", "S", "INVA", "LGND", "LXRX", "XBI",
-             "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM", "FAST", "DAL", "ZNH", "ARNC",
-             "AAL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA-PH", "DRE", "NLY", "MPW", "C", "WFC",
-            "HSBC", "BAC", "RY", "AXP", "FB", "DIS", "BHP", "BBL", "DD", "GOLD", "DUK", "EXC", "FE", "EIX",
-            "CMS", "MCD", "SBUX", "LOW", "HMC", "HD", "GM", "ROST", "BBY", "MAR", "KO", "PEP", "GIS", "GE", "ET",
-            "T", "PFE", "PBR", "GILD", "CSCO", "NOK", "MGM", "XOM", "HAL", "JPM", "CMCSA", "MS", "CVX", "PCG", "MRK",
-            "V", "EBAY", "WMT", "LUV", "NKE", "JNJ", "SYF", "HLT", "CVS"};
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
             var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
@@ -75,16 +74,21 @@ namespace ModelTrainer
                 //model.Parameters.KernelRank = 300;
 
                 //var model = new MLStockKernelEstimationFastForestModel();
-                var model = new MLStockPeakKernelEstimationFastForestModel();
-                model.Parameters.PeakSelection = 1.0;
+                //var model = new MLStockPeakKernelEstimationFastForestModel();
+                //model.Parameters.PeakSelection = 1.0;
+                //model.Parameters.FeatureSelectionRank = 800;
+                //model.Parameters.NumCrossValidations = 5;
+                //model.Parameters.NumOfTrees = 2000;
+                //model.Parameters.NumOfLeaves = 20;
+                //model.Parameters.MinNumOfLeaves = 20;
+                //model.Parameters.NumIterations = 20;
+                //model.Parameters.KernelRank = 400;
+
+                var model = new MLRegressionStockKernelEstimationLinearModel();
                 model.Parameters.FeatureSelectionRank = 800;
                 model.Parameters.NumCrossValidations = 5;
-                model.Parameters.NumOfTrees = 2000;
-                model.Parameters.NumOfLeaves = 20;
-                model.Parameters.MinNumOfLeaves = 20;
-                model.Parameters.NumIterations = 20;
-                model.Parameters.KernelRank = 400;
-                
+                model.Parameters.NumIterations = 5;
+                model.Parameters.KernelRank = 100;
 
                 //var model = new MLStockKnnBruteForceModel();
                 //model.Parameters.FeatureSelectionRank = 50000;
@@ -104,7 +108,7 @@ namespace ModelTrainer
                 var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
                 var filteredDataset = dataset.Value;
-                int numTestExamples = 0;
+                int numTestExamples = 60;
 
                 var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
                 var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
@@ -131,32 +135,35 @@ namespace ModelTrainer
                 }
 
                 Console.WriteLine($"-=== Results {stock} ===-");
-                Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
-                Console.WriteLine($"Positive Precision: {trainingResult.Value.PositivePrecision} \t Positive Recall: {trainingResult.Value.PositiveRecall}");
-                Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Negative Recall: {trainingResult.Value.NegativeRecall}");
+                //Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
+                //Console.WriteLine($"Positive Precision: {trainingResult.Value.PositivePrecision} \t Positive Recall: {trainingResult.Value.PositiveRecall}");
+                //Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Negative Recall: {trainingResult.Value.NegativeRecall}");
+                Console.WriteLine($"MAE: {trainingResult.Value.MeanAbsoluteError} \t R2: {trainingResult.Value.RSquared}");
+
 
                 Console.WriteLine($"-=== Saving Model {stock} ===-");
                 model.Save(_pathToModels);
 
-                //Console.WriteLine($"-=== Testing Model  {stock} ===-");
-                //double accuracy = 0.0;
-                //foreach (var testExample in testSet)
-                //{
-                //    var prediction = model.Predict(testExample.Input);
-                //    if ((prediction.PredictedLabel && testExample.Output.PercentDayChange > 0) ||
-                //         (!prediction.PredictedLabel && testExample.Output.PercentDayChange <= 0))
-                //    {
-                //        accuracy++;
-                //        //Console.WriteLine($"Good! Probability: {prediction.Probability}");
+                Console.WriteLine($"-=== Testing Model  {stock} ===-");
+                double accuracy = 0.0;
+                foreach (var testExample in testSet)
+                {
+                    var prediction = model.Predict(testExample.Input);
+                    if ((prediction.Score > 0.0 && testExample.Output.PercentChangeFromPreviousClose > 0) ||
+                         (prediction.Score <= 0.0 && testExample.Output.PercentChangeFromPreviousClose <= 0))
+                    {
+                        accuracy++;
+                        //Console.WriteLine($"Good! Probability: {prediction.Probability}");
 
-                //    }
-                //    else
-                //    {
-                //        //Console.WriteLine($"Bad! Probability: {prediction.Probability}");
-                //    }
-                //}
+                    }
+                    else
+                    {
+                        //Console.WriteLine($"Bad! Probability: {prediction.Probability}");
+                    }
+                    Console.WriteLine($"{testExample.Output.Date.ToString("MM/dd/yyyy")}, Predicted: {prediction.Score}, Actual: {testExample.Output.PercentChangeFromPreviousClose}");
+                }
 
-                //Console.WriteLine($"Test Accuracy {stock}: {accuracy / numTestExamples}");
+                Console.WriteLine($"Test Accuracy {stock}: {accuracy / numTestExamples}");
                 //totalAccuracy += accuracy;
                 //totalCount += numTestExamples;
                 //Console.WriteLine($"Running Accuracy: {totalAccuracy / totalCount}");

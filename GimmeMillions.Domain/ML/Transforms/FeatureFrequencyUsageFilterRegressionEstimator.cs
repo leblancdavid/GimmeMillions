@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Transforms
 {
-    public class FeatureFrequencyUsageFilterEstimator : IEstimator<FeatureFilterTransform>
+    public class FeatureFrequencyUsageFilterRegressionEstimator : IEstimator<FeatureFilterRegressionTransform>
     {
         private string _inputColumnName;
         private string _outputColumnName;
@@ -16,7 +16,7 @@ namespace GimmeMillions.Domain.ML.Transforms
         private int _skip;
         private MLContext _mLContext;
 
-        public FeatureFrequencyUsageFilterEstimator(MLContext mLContext,
+        public FeatureFrequencyUsageFilterRegressionEstimator(MLContext mLContext,
             string inputColumnName = "Features",
             string outputColumnName = "Label",
             int rank = 1000,
@@ -29,9 +29,9 @@ namespace GimmeMillions.Domain.ML.Transforms
             _rank = rank;
         }
 
-        public FeatureFilterTransform Fit(IDataView input)
+        public FeatureFilterRegressionTransform Fit(IDataView input)
         {
-            return new FeatureFilterTransform(_mLContext, GetFeatureSelectionIndices(input), _inputColumnName, _outputColumnName);
+            return new FeatureFilterRegressionTransform(_mLContext, GetFeatureSelectionIndices(input), _inputColumnName, _outputColumnName);
         }
 
         public SchemaShape GetOutputSchema(SchemaShape inputSchema)
