@@ -45,6 +45,14 @@ namespace GimmeMillions.Domain.Stocks
             }
         }
 
+        public decimal PercentChangeOpenToPreviousClose
+        {
+            get
+            {
+                return 100.0m * (Open - PreviousClose) / PreviousClose;
+            }
+        }
+
 
         public decimal PercentChangeFromPreviousClose
         {

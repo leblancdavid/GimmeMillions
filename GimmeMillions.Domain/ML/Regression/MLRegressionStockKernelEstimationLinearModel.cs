@@ -17,14 +17,8 @@ namespace GimmeMillions.Domain.ML.Regression
 {
     public class RegressionKernelEstimationLinearModelParameters
     {
-        public enum StockRegressionPointMethod
-        {
-            PreviousCloseToClose,
-            PreviousCloseToHigh,
-            PreviousCloseToLow
-        }
 
-        public StockRegressionPointMethod RegressionPoint { get; set; }
+        public StockChangePointMethod RegressionPoint { get; set; }
         public int NumCrossValidations { get; set; }
         public int FeatureSelectionRank { get; set; }
         public int KernelRank { get; set; }
@@ -35,7 +29,7 @@ namespace GimmeMillions.Domain.ML.Regression
             NumIterations = 10;
             FeatureSelectionRank = 500;
             KernelRank = 250;
-            RegressionPoint = StockRegressionPointMethod.PreviousCloseToClose;
+            RegressionPoint = StockChangePointMethod.PreviousCloseToClose;
         }
 
     }
@@ -206,10 +200,10 @@ namespace GimmeMillions.Domain.ML.Regression
             Console.WriteLine($"Positive MAE: {positiveResults.MeanAbsoluteError}, R2: {positiveResults.RSquared}");
 
             var negativeResults = TryModel(mostUsedData, Parameters.FeatureSelectionRank, false, out _maxDifferenceFilterTransform, out _kernelTransform);
-            Console.WriteLine($"Negative Acc: {negativeResults.MeanAbsoluteError}, R2: {negativeResults.RSquared}");
+            Console.WriteLine($"Negative MAE: {negativeResults.MeanAbsoluteError}, R2: {negativeResults.RSquared}");
 
             //Metadata.TrainingResults = negativeResults;
-            if (positiveResults.MeanAbsoluteError < negativeResults.MeanAbsoluteError)
+            if (positiveResults.RSquared > negativeResults.RSquared)
             {
                 //Metadata.TrainingResults = positiveResults;
                 _maxDifferenceFilterTransform = posFeatureTransform;
@@ -249,12 +243,13 @@ namespace GimmeMillions.Domain.ML.Regression
             filterTransform = new MaxDifferenceFeatureFilterRegressionEstimator(_mLContext, rank: rank, positiveSort: positiveSort).Fit(data);
             var filteredData = filterTransform.Transform(data);
 
-            double bestError = double.MaxValue;
+            double bestError = -1.0;
             MLRegressionMetrics bestMetrics = null;
             kernelTransform = null;
             //var pcaEstimator = _mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.KernelRank, overSampling: Parameters.KernelRank);
             var pcaEstimator = _mLContext.Transforms.NormalizeMeanVariance("Features")
                 .Append(_mLContext.Transforms.ApproximatedKernelMap("Features", rank: Parameters.KernelRank, useCosAndSinBases: true));
+             //.Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.KernelRank, overSampling: Parameters.KernelRank));
             for (int i = 0; i < Parameters.NumIterations; ++i)
             {
                 var kT = pcaEstimator.Fit(filteredData);
@@ -268,10 +263,10 @@ namespace GimmeMillions.Domain.ML.Regression
                     _mLContext.Regression.CrossValidate(kernelData, pipeline, Parameters.NumCrossValidations));
 
                 Console.WriteLine($"{positiveSort}({i}): {cvResults.MeanAbsoluteError}, R2: {cvResults.RSquared}");
-                if (cvResults.MeanAbsoluteError < bestError)
+                if (cvResults.RSquared > bestError)
                 {
                     kernelTransform = kT;
-                    bestError = cvResults.MeanAbsoluteError;
+                    bestError = cvResults.RSquared;
                     bestMetrics = cvResults;
                 }
             }
@@ -315,11 +310,13 @@ namespace GimmeMillions.Domain.ML.Regression
         {
             switch (Parameters.RegressionPoint)
             {
-                case RegressionKernelEstimationLinearModelParameters.StockRegressionPointMethod.PreviousCloseToHigh:
+                case StockChangePointMethod.PreviousCloseToHigh:
                     return (float)stockData.PercentChangeHighToPreviousClose;
-                case RegressionKernelEstimationLinearModelParameters.StockRegressionPointMethod.PreviousCloseToLow:
+                case StockChangePointMethod.PreviousCloseToLow:
                     return (float)stockData.PercentChangeLowToPreviousClose;
-                case RegressionKernelEstimationLinearModelParameters.StockRegressionPointMethod.PreviousCloseToClose:
+                case StockChangePointMethod.PreviousCloseToOpen:
+                    return (float)stockData.PercentChangeOpenToPreviousClose;
+                case StockChangePointMethod.PreviousCloseToClose:
                 default:
                     return (float)stockData.PercentChangeFromPreviousClose;
 

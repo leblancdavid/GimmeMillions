@@ -53,6 +53,7 @@ namespace GimmeMillions.Domain.ML.Transforms
         {
             var features = input.GetColumn<float[]>(_inputColumnName).ToArray();
             var labels = input.GetColumn<bool>(_outputColumnName).ToArray();
+            var values = input.GetColumn<float>("Value").ToArray();
 
             if (features.Length == 0)
                 throw new Exception($"Input features for the FeatureSelectorEstimator contains no elements");
@@ -71,10 +72,12 @@ namespace GimmeMillions.Domain.ML.Transforms
                     if (labels[j])
                     {
                         positiveScore[i] += features[j][i];
+                        //positiveScore[i] += Math.Abs(features[j][i] * values[j]);
                     }
                     else
                     {
                         negativeScore[i] += features[j][i];
+                        //negativeScore[i] += Math.Abs(features[j][i] * values[j]);
                     }
                 }
             }
@@ -90,7 +93,7 @@ namespace GimmeMillions.Domain.ML.Transforms
                 else
                 {
                     p[i] = ((negativeScore[i]) - (positiveScore[i]), i);
-                   // p[i] = ((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal), i);
+                    // p[i] = ((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal), i);
                 }
                 //p[i] = (Math.Abs((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal)), i);
             }

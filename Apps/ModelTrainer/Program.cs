@@ -3,6 +3,7 @@ using GimmeMillions.DataAccess.Features;
 using GimmeMillions.DataAccess.Keys;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.ML.Accord;
 using GimmeMillions.Domain.ML.Binary;
 using GimmeMillions.Domain.ML.Regression;
@@ -30,11 +31,11 @@ namespace ModelTrainer
         static void Main(string[] args)
         {
             string dictionaryToUse = "USA";
-            var stocks = new string[] { "CVS"};
+            var stocks = new string[] { "F"};
 
-            //var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "VZ", "S", "INVA", "LGND", "LXRX", "XBI",
+            //var stocks = new string[] { "F","INTC", "MSFT", "ATVI", "VZ", "S", "INVA", "XBI",
             // "IWM", "AMZN", "GOOG", "AAPL", "RAD", "WBA", "DRQ", "CNX", "BOOM", "FAST", "DAL", "ZNH", "ARNC",
-            // "AAL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA-PH", "DRE", "NLY", "MPW", "C", "WFC",
+            // "AAL", "ORCL", "AMD", "MU", "INFY", "CAJ", "HPQ", "PSA", "DRE", "NLY", "MPW", "C", "WFC",
             //"HSBC", "BAC", "RY", "AXP", "FB", "DIS", "BHP", "BBL", "DD", "GOLD", "DUK", "EXC", "FE", "EIX",
             //"CMS", "MCD", "SBUX", "LOW", "HMC", "HD", "GM", "ROST", "BBY", "MAR", "KO", "PEP", "GIS", "GE", "ET",
             //"T", "PFE", "PBR", "GILD", "CSCO", "NOK", "MGM", "XOM", "HAL", "JPM", "CMCSA", "MS", "CVX", "PCG", "MRK",
@@ -58,57 +59,26 @@ namespace ModelTrainer
                 //model.Parameters.NumOfLeaves = 20;
                 //model.Parameters.MinNumOfLeaves = 20;
 
-                //var model = new MLStockKernelEstimationSvmModel();
-                //model.Parameters.FeatureSelectionRank = 500;
-                //model.Parameters.NumCrossValidations = 5;
-                //model.Parameters.NumOfTrees = 2000;
-                //model.Parameters.NumOfLeaves = 20;
-                //model.Parameters.MinNumOfLeaves = 20;
-                //model.Parameters.NumIterations = 20;
-                //model.Parameters.KernelRank = 300;
-
-                //var model = new MLStockKernelEstimationSdcaModel();
-                //model.Parameters.FeatureSelectionRank = 500;
-                //model.Parameters.NumCrossValidations = 5;
-                //model.Parameters.NumIterations = 20;
-                //model.Parameters.KernelRank = 300;
-
-                //var model = new MLStockKernelEstimationFastForestModel();
-                //var model = new MLStockPeakKernelEstimationFastForestModel();
-                //model.Parameters.PeakSelection = 1.0;
-                //model.Parameters.FeatureSelectionRank = 800;
-                //model.Parameters.NumCrossValidations = 5;
-                //model.Parameters.NumOfTrees = 2000;
-                //model.Parameters.NumOfLeaves = 20;
-                //model.Parameters.MinNumOfLeaves = 20;
-                //model.Parameters.NumIterations = 20;
-                //model.Parameters.KernelRank = 400;
-
-                var model = new MLRegressionStockKernelEstimationLinearModel();
-                model.Parameters.FeatureSelectionRank = 800;
+                var model = new MLStockKernelEstimationFastForestModel();
+                model.Parameters.FeatureSelectionRank = 2000;
                 model.Parameters.NumCrossValidations = 5;
                 model.Parameters.NumIterations = 5;
-                model.Parameters.KernelRank = 100;
+                model.Parameters.KernelRank = 500;
+                model.Parameters.NumOfTrees = 1000;
+                model.Parameters.NumOfLeaves = 20;
+                model.Parameters.MinNumOfLeaves = 10;
+                model.Parameters.ChangePoint = StockChangePointMethod.PreviousCloseToClose;
 
-                //var model = new MLStockKnnBruteForceModel();
-                //model.Parameters.FeatureSelectionRank = 50000;
-
-                ////var model = new MLStock();
-                //model.Parameters.FeatureSelectionRank = 500;
-                //model.Parameters.NumCrossValidations = 10;
-                //model.Parameters.NumOfTrees = 2000;
-                //model.Parameters.NumOfLeaves = 20;
-                //model.Parameters.MinNumOfLeaves = 20;
-
-                //var model = new MLStockPcaSvmModel();
-                //model.Parameters.FeatureSelectionRank = 500;
-                //model.Parameters.NumCrossValidations = 10;
-                //model.Parameters.PcaRank = 250;
+                //var model = new MLRegressionStockKernelEstimationLinearModel();
+                //model.Parameters.FeatureSelectionRank = 4000;
+                //model.Parameters.NumCrossValidations = 2;
+                //model.Parameters.NumIterations = 5;
+                //model.Parameters.KernelRank = 200;
 
                 var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
                 var filteredDataset = dataset.Value;
-                int numTestExamples = 60;
+                int numTestExamples = 200;
 
                 var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
                 var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
@@ -134,12 +104,10 @@ namespace ModelTrainer
                     return;
                 }
 
-                Console.WriteLine($"-=== Results {stock} ===-");
+                //Console.WriteLine($"-=== Results {stock} ===-");
                 //Console.WriteLine($"Accuracy: {trainingResult.Value.Accuracy} \t Area under PR curve: {trainingResult.Value.AreaUnderPrecisionRecallCurve}");
                 //Console.WriteLine($"Positive Precision: {trainingResult.Value.PositivePrecision} \t Positive Recall: {trainingResult.Value.PositiveRecall}");
                 //Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Negative Recall: {trainingResult.Value.NegativeRecall}");
-                Console.WriteLine($"MAE: {trainingResult.Value.MeanAbsoluteError} \t R2: {trainingResult.Value.RSquared}");
-
 
                 Console.WriteLine($"-=== Saving Model {stock} ===-");
                 model.Save(_pathToModels);
@@ -172,7 +140,7 @@ namespace ModelTrainer
             Console.WriteLine($"-=========================================================================================-");
             //Console.WriteLine($"Total Accuracy: {totalAccuracy / totalCount}");
 
-            Console.ReadKey();
+            Console.ReadLine();
         }
 
         private static IFeatureDatasetService GetBoWFeatureDatasetService(string dictionaryToUse)

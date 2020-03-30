@@ -195,6 +195,7 @@
     <Compile Include="ML\Regression\MLRegressionMetrics.cs" />
     <Compile Include="ML\Regression\MLRegressionStockKernelEstimationLinearModel.cs" />
     <Compile Include="ML\Regression\StockRegressionPrediction.cs" />
+    <Compile Include="ML\StockChangePointMethod.cs" />
     <Compile Include="ML\StockRegressionDataFeature.cs" />
     <Compile Include="ML\Transforms\FeatureFilterRegressionTransform.cs" />
     <Compile Include="ML\Transforms\FeatureFrequencyUsageFilterRegressionEstimator.cs" />

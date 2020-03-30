@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.71025947586055138,
-    "Accuracy": 0.641116451710869,
-    "PositivePrecision": 0.71897712028345628,
-    "PositiveRecall": 0.40108003924112018,
-    "NegativePrecision": 0.61642501334718891,
-    "NegativeRecall": 0.85873875479526018,
-    "F1Score": 0.508397208377853,
-    "AreaUnderPrecisionRecallCurve": 0.68982748493411028
+    "AreaUnderRocCurve": 0.55101569757275293,
+    "Accuracy": 0.530034451638117,
+    "PositivePrecision": 0.30297968016638094,
+    "PositiveRecall": 0.14101279704276132,
+    "NegativePrecision": 0.52862253500754186,
+    "NegativeRecall": 0.884044239293629,
+    "F1Score": "NaN",
+    "AreaUnderPrecisionRecallCurve": 0.5245467646460652
   },
   "StockSymbol": "F",
   "Parameters": null,
@@ -17,5 +17,7 @@
   "AverageUpperScore": 0.0,
   "AverageLowerScore": 0.0,
   "FeatureEncoding": "BoW-v2-USA",
-  "ModelId": "KernelSvmModel-v1"
+  "ModelId": "KernelSvmModel-v1",
+  "PeakAverage": 0.0,
+  "PeakSelection": 0.0
 }

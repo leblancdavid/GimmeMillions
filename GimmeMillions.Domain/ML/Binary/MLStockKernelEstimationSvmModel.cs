@@ -17,21 +17,17 @@ namespace GimmeMillions.Domain.ML.Binary
     public class KernelEstimationSvmModelParameters
     {
         public int NumCrossValidations { get; set; }
-        public int NumOfTrees { get; set; }
-        public int NumOfLeaves { get; set; }
-        public int MinNumOfLeaves { get; set; }
         public int FeatureSelectionRank { get; set; }
         public int KernelRank { get; set; }
         public int NumIterations { get; set; }
+        public StockChangePointMethod ChangePoint { get; set; }
         public KernelEstimationSvmModelParameters()
         {
             NumCrossValidations = 5;
             NumIterations = 10;
-            NumOfTrees = 100;
-            NumOfLeaves = 20;
-            MinNumOfLeaves = 1;
-            FeatureSelectionRank = 500;
-            KernelRank = 250;
+            FeatureSelectionRank = 800;
+            KernelRank = 200;
+            ChangePoint = StockChangePointMethod.PreviousCloseToClose;
         }
 
     }
@@ -175,9 +171,10 @@ namespace GimmeMillions.Domain.ML.Binary
                 dataset.Select(x =>
                 {
                     var normVector = x.Input;
+                    var value = GetLabelFromStockData(x.Output);
                     return new StockRiseDataFeature(
-                    normVector.Data, x.Output.PercentDayChange >= 0,
-                    (float)x.Output.PercentDayChange,
+                    normVector.Data, value > 0.0f,
+                    value,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
                 GetSchemaDefinition(firstFeature.Input));
@@ -195,7 +192,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 trainData = datasetView;
             }
 
-            int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.75);
+            int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.8);
             var frequencyUsageEstimator = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength, skip: 0);
             _frequencyUsageTransform = frequencyUsageEstimator.Fit(trainData);
             var mostUsedData = _frequencyUsageTransform.Transform(trainData);
@@ -223,17 +220,7 @@ namespace GimmeMillions.Domain.ML.Binary
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
             Metadata.StockSymbol = firstFeature.Output.Symbol;
 
-            //var ffEstimator = _mLContext.BinaryClassification.Trainers.FastForest(
-            //           numberOfLeaves: Parameters.NumOfLeaves,
-            //           numberOfTrees: Parameters.NumOfTrees,
-            //           minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
-
-            var pipeline = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 10);
-            //var pipeline = _mLContext.BinaryClassification.Trainers.FastTree();
-            //var pipeline = _mLContext.BinaryClassification.Trainers.FastForest(
-            //           numberOfLeaves: Parameters.NumOfLeaves,
-            //           numberOfTrees: Parameters.NumOfTrees,
-            //           minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
+            var pipeline = _mLContext.BinaryClassification.Trainers.SdcaLogisticRegression();
             _model = pipeline.Fit(kernelTransformedData);
 
             if (testData != null)
@@ -325,6 +312,23 @@ namespace GimmeMillions.Domain.ML.Binary
             definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
 
             return definedSchema;
+        }
+
+        private float GetLabelFromStockData(StockData stockData)
+        {
+            switch (Parameters.ChangePoint)
+            {
+                case StockChangePointMethod.PreviousCloseToHigh:
+                    return (float)stockData.PercentChangeHighToPreviousClose;
+                case StockChangePointMethod.PreviousCloseToLow:
+                    return (float)stockData.PercentChangeLowToPreviousClose;
+                case StockChangePointMethod.PreviousCloseToOpen:
+                    return (float)stockData.PercentChangeOpenToPreviousClose;
+                case StockChangePointMethod.PreviousCloseToClose:
+                default:
+                    return (float)stockData.PercentChangeFromPreviousClose;
+
+            }
         }
 
     }

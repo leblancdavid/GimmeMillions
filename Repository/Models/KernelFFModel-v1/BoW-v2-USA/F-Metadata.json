@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.70585437298626819,
-    "Accuracy": 0.62980931720045252,
-    "PositivePrecision": 0.75275502018516072,
-    "PositiveRecall": 0.34177215696141061,
-    "NegativePrecision": 0.59718957621902691,
-    "NegativeRecall": 0.893971164866152,
-    "F1Score": 0.46504563909548829,
-    "AreaUnderPrecisionRecallCurve": 0.688715187787573
+    "AreaUnderRocCurve": 0.50790130831843494,
+    "Accuracy": 0.5234928220252425,
+    "PositivePrecision": 0.40009113693324216,
+    "PositiveRecall": 0.28740795357765025,
+    "NegativePrecision": 0.53180739214692285,
+    "NegativeRecall": 0.73164204170084735,
+    "F1Score": "NaN",
+    "AreaUnderPrecisionRecallCurve": 0.48893284761341932
   },
   "StockSymbol": "F",
   "Parameters": null,
@@ -17,5 +17,7 @@
   "AverageUpperScore": 0.0,
   "AverageLowerScore": 0.0,
   "FeatureEncoding": "BoW-v2-USA",
-  "ModelId": "KernelFFModel-v1"
+  "ModelId": "KernelFFModel-v1",
+  "PeakAverage": 0.0,
+  "PeakSelection": 0.0
 }

@@ -70,11 +70,13 @@ namespace GimmeMillions.Domain.ML.Transforms
                 {
                     if (values[j] > 0.0f)
                     {
-                        positiveScore[i] += Math.Abs(features[j][i] * values[j]);
+                        //positiveScore[i] += Math.Abs(features[j][i] * values[j]);
+                        positiveScore[i] += features[j][i];
                     }
                     else
                     {
-                        negativeScore[i] += Math.Abs(features[j][i] * values[j]);
+                        //negativeScore[i] += Math.Abs(features[j][i] * values[j]);
+                        negativeScore[i] += features[j][i];
                     }
                 }
             }
