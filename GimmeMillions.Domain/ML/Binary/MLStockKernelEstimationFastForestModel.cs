@@ -116,8 +116,8 @@ namespace GimmeMillions.Domain.ML.Binary
 
             var prediction = _model.Transform(
                 _kernelTransform.Transform(
-                        // _maxDifferenceFilterTransform.Transform(
-                        _frequencyUsageTransform.Transform(inputDataView)));//);
+                       _maxDifferenceFilterTransform.Transform(
+                        _frequencyUsageTransform.Transform(inputDataView))));
 
             var score = prediction.GetColumn<float>("Score").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
@@ -180,13 +180,13 @@ namespace GimmeMillions.Domain.ML.Binary
                 normVector.Data, value > 0.0f,
                 value,
                 (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
-            });
+            }).ToList();
 
             var meanValue = stockTrainingData.Average(x => x.Value);
             var stdDevValue = Math.Sqrt(stockTrainingData.Average(x => Math.Pow(x.Value - meanValue, 2)));
 
             var filteredStockTrainingData = stockTrainingData.Where(
-                x => x.Value > meanValue - stdDevValue && x.Value < meanValue + stdDevValue);
+                x => x.Value > meanValue - 0.5 * stdDevValue && x.Value < meanValue + 0.5 * stdDevValue).ToList();
 
             //Load the data into a view
             var datasetView = _mLContext.Data.LoadFromEnumerable(
@@ -206,7 +206,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 trainData = datasetView;
             }
 
-            int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.5);
+            int filteredFeatureLength = (int)(firstFeature.Input.Length * 0.8);
             var frequencyUsageEstimator = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: filteredFeatureLength, skip: 0);
             _frequencyUsageTransform = frequencyUsageEstimator.Fit(trainData);
             var mostUsedData = _frequencyUsageTransform.Transform(trainData);
@@ -227,8 +227,8 @@ namespace GimmeMillions.Domain.ML.Binary
                 _kernelTransform = posKernelTransform;
             }
 
-           // var maxDifferenceData = _maxDifferenceFilterTransform.Transform(mostUsedData);
-            var kernelTransformedData = _kernelTransform.Transform(mostUsedData);
+            var maxDifferenceData = _maxDifferenceFilterTransform.Transform(mostUsedData);
+            var kernelTransformedData = _kernelTransform.Transform(maxDifferenceData);
 
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
@@ -260,9 +260,9 @@ namespace GimmeMillions.Domain.ML.Binary
             out FeatureFilterTransform filterTransform,
             out ITransformer kernelTransform)
         {
-            filterTransform = null;
-            //filterTransform = new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: rank, positiveSort: positiveSort).Fit(data);
-            //var filteredData =  filterTransform.Transform(data);
+            //filterTransform = null;
+            filterTransform = new MaxDifferenceFeatureFilterEstimator(_mLContext, rank: rank, positiveSort: positiveSort).Fit(data);
+            var filteredData =  filterTransform.Transform(data);
 
             double bestAccuracy = 0.0;
             ModelMetrics bestMetrics = null;
@@ -273,8 +273,8 @@ namespace GimmeMillions.Domain.ML.Binary
                 //.Append(_mLContext.Transforms.NormalizeSupervisedBinning("Features", labelColumnName: "Value"));
             for (int i = 0; i < Parameters.NumIterations; ++i)
             {
-                var kT = pcaEstimator.Fit(data); 
-                var kernelData = kT.Transform(data);
+                var kT = pcaEstimator.Fit(filteredData); 
+                var kernelData = kT.Transform(filteredData);
 
                 //var kdTest = kernelData.GetColumn<float[]>("Features").ToArray();
 

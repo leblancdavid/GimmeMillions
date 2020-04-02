@@ -63,7 +63,7 @@ namespace ModelTrainer
                 model.Parameters.FeatureSelectionRank = 2000;
                 model.Parameters.NumCrossValidations = 5;
                 model.Parameters.NumIterations = 5;
-                model.Parameters.KernelRank = 500;
+                model.Parameters.KernelRank = 200;
                 model.Parameters.NumOfTrees = 1000;
                 model.Parameters.NumOfLeaves = 20;
                 model.Parameters.MinNumOfLeaves = 10;
@@ -74,11 +74,12 @@ namespace ModelTrainer
                 //model.Parameters.NumCrossValidations = 2;
                 //model.Parameters.NumIterations = 5;
                 //model.Parameters.KernelRank = 200;
+                //model.Parameters.RegressionPoint = StockChangePointMethod.PreviousCloseToClose;
 
                 var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
                 var filteredDataset = dataset.Value;
-                int numTestExamples = 200;
+                int numTestExamples = 20;
 
                 var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
                 var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);

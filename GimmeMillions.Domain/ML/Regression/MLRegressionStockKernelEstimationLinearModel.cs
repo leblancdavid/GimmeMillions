@@ -164,16 +164,25 @@ namespace GimmeMillions.Domain.ML.Regression
             // of the features vector known at runtime).
             var firstFeature = dataset.FirstOrDefault();
 
+            var stockTrainingData = dataset.Select(x =>
+            {
+                var normVector = x.Input;
+                var value = GetLabelFromStockData(x.Output);
+                return new StockRegressionDataFeature(
+                normVector.Data,
+                value,
+                (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
+            }).ToList();
+
+            var meanValue = stockTrainingData.Average(x => x.Label);
+            var stdDevValue = Math.Sqrt(stockTrainingData.Average(x => Math.Pow(x.Label - meanValue, 2)));
+
+            var filteredStockTrainingData = stockTrainingData.Where(
+                x => x.Label < meanValue - 0.5 * stdDevValue || x.Label > meanValue + 0.5 * stdDevValue).ToList();
+
             //Load the data into a view
             var datasetView = _mLContext.Data.LoadFromEnumerable(
-                dataset.Select(x =>
-                {
-                    var normVector = x.Input;
-                    return new StockRegressionDataFeature(
-                    normVector.Data,
-                    GetLabelFromStockData(x.Output),
-                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
-                }),
+                filteredStockTrainingData,
                 GetSchemaDefinition(firstFeature.Input));
 
             IDataView trainData = null; //= dataSplit.TrainSet;

@@ -166,17 +166,39 @@ namespace GimmeMillions.Domain.ML.Binary
             // of the features vector known at runtime).
             var firstFeature = dataset.FirstOrDefault();
 
+            var stockTrainingData = dataset.Select(x =>
+            {
+                var normVector = x.Input;
+                var value = GetLabelFromStockData(x.Output);
+                return new StockRiseDataFeature(
+                normVector.Data, value > 0.0f,
+                value,
+                (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
+            }).ToList();
+
+            var meanValue = stockTrainingData.Average(x => x.Value);
+            var stdDevValue = Math.Sqrt(stockTrainingData.Average(x => Math.Pow(x.Value - meanValue, 2)));
+
+            //var filteredStockTrainingData = stockTrainingData.Where(
+            //    x => x.Value < meanValue - 0.5 * stdDevValue || x.Value > meanValue + 0.5 * stdDevValue).ToList();
+            //var filteredStockTrainingData = stockTrainingData.Where(
+            //    x => x.Value > meanValue - 0.5 * stdDevValue && x.Value < meanValue + 0.5 * stdDevValue).ToList();
+            var filteredStockTrainingData = stockTrainingData.ToList();
+            foreach(var fs in filteredStockTrainingData)
+            {
+                if(fs.Value > meanValue - 0.5 * stdDevValue && fs.Value < meanValue + 0.5 * stdDevValue)
+                {
+                    fs.Label = true;
+                }
+                else
+                {
+                    fs.Label = false;
+                }
+            }
+
             //Load the data into a view
             var datasetView = _mLContext.Data.LoadFromEnumerable(
-                dataset.Select(x =>
-                {
-                    var normVector = x.Input;
-                    var value = GetLabelFromStockData(x.Output);
-                    return new StockRiseDataFeature(
-                    normVector.Data, value > 0.0f,
-                    value,
-                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
-                }),
+                filteredStockTrainingData,
                 GetSchemaDefinition(firstFeature.Input));
 
             IDataView trainData = null; //= dataSplit.TrainSet;

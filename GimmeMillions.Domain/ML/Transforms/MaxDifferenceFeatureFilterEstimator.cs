@@ -75,7 +75,7 @@ namespace GimmeMillions.Domain.ML.Transforms
                         //positiveScore[i] += Math.Abs(features[j][i] * values[j]);
                     }
                     else
-                    {
+                    { 
                         negativeScore[i] += features[j][i];
                         //negativeScore[i] += Math.Abs(features[j][i] * values[j]);
                     }
@@ -87,13 +87,13 @@ namespace GimmeMillions.Domain.ML.Transforms
             {
                 if (_positiveSort)
                 {
-                    p[i] = ((positiveScore[i]) - (negativeScore[i]), i);
-                    //p[i] = ((positiveScore[i] / positiveTotal) - (negativeScore[i] / negativeTotal), i);
+                    //p[i] = ((positiveScore[i]) - (negativeScore[i]), i);
+                    p[i] = ((positiveScore[i] / positiveTotal) - (negativeScore[i] / negativeTotal), i);
                 }
                 else
                 {
-                    p[i] = ((negativeScore[i]) - (positiveScore[i]), i);
-                    // p[i] = ((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal), i);
+                    //p[i] = ((negativeScore[i]) - (positiveScore[i]), i);
+                    p[i] = ((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal), i);
                 }
                 //p[i] = (Math.Abs((negativeScore[i] / negativeTotal) - (positiveScore[i] / positiveTotal)), i);
             }
