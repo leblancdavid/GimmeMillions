@@ -39,7 +39,7 @@ namespace GimmeMillions.Domain.Tests.ML
         }
 
  
-        private IFeatureDatasetService GetCandlestickFeatureDatasetService()
+        private IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetService()
         {
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 

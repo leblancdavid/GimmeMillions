@@ -31,7 +31,7 @@ namespace GimmeMillions.Domain.Tests.ML
             var trainingResults = model.Train(new DateTime(2010, 1, 1), new DateTime(2015, 1, 1), 0.1);
         }
 
-        private IFeatureDatasetService GetTestBoWFeatureDatasetService()
+        private IFeatureDatasetService<FeatureVector> GetTestBoWFeatureDatasetService()
         {
             var featureChecker = new UsaLanguageChecker();
             featureChecker.Load(new StreamReader($"{_pathToLanguage}/usa.txt"));

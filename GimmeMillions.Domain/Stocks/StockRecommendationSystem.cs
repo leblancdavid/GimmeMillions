@@ -14,11 +14,11 @@ namespace GimmeMillions.Domain.Stocks
     public class StockRecommendationSystem : IStockRecommendationSystem
     {
         private List<IStockPredictionModel> _models;
-        private IFeatureDatasetService _featureDatasetService;
+        private IFeatureDatasetService<FeatureVector> _featureDatasetService;
         private StockRecommendationSystemConfiguration _systemConfiguration;
         private string _pathToModels;
 
-        public StockRecommendationSystem(IFeatureDatasetService featureDatasetService,
+        public StockRecommendationSystem(IFeatureDatasetService<FeatureVector> featureDatasetService,
             string pathToModels)
         {
             _models = new List<IStockPredictionModel>();

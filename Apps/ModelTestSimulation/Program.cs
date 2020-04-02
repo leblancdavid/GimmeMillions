@@ -120,7 +120,7 @@ namespace ModelTestSimulation
             Console.ReadLine();
         }
 
-        private static IFeatureDatasetService GetBoWFeatureDatasetService(string dictionaryToUse)
+        private static IFeatureDatasetService<FeatureVector> GetBoWFeatureDatasetService(string dictionaryToUse)
         {
             var featureChecker = new UsaLanguageChecker();
             featureChecker.Load(new StreamReader($"{_pathToLanguage}/usa.txt"));

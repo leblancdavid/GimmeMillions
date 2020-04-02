@@ -17,7 +17,7 @@ namespace GimmeMillions.Domain.ML
 {
     public class MLStockRegressionModel : IStockPredictionModel
     {
-        private IFeatureDatasetService _featureDatasetService;
+        private IFeatureDatasetService<FeatureVector> _featureDatasetService;
         private MLContext _mLContext;
         private int _seed;
         public string StockSymbol { get; private set; }
@@ -26,7 +26,7 @@ namespace GimmeMillions.Domain.ML
 
         public string Encoding { get; private set; }
 
-    public MLStockRegressionModel(IFeatureDatasetService featureDatasetService, string symbol)
+    public MLStockRegressionModel(IFeatureDatasetService<FeatureVector> featureDatasetService, string symbol)
         {
             StockSymbol = symbol;
             _featureDatasetService = featureDatasetService;

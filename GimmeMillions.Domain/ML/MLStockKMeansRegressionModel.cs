@@ -16,14 +16,14 @@ namespace GimmeMillions.Domain.ML
 {
     public class MLStockKMeansRegressionModel : IStockPredictionModel
     {
-        private IFeatureDatasetService _featureDatasetService;
+        private IFeatureDatasetService<FeatureVector> _featureDatasetService;
         private MLContext _mLContext;
         private int _seed;
         public string StockSymbol { get; private set; }
         public bool IsTrained { get; private set; }
         public string Encoding { get; private set; }
 
-        public MLStockKMeansRegressionModel(IFeatureDatasetService featureDatasetService, string symbol)
+        public MLStockKMeansRegressionModel(IFeatureDatasetService<FeatureVector> featureDatasetService, string symbol)
         {
             StockSymbol = symbol;
             _featureDatasetService = featureDatasetService;

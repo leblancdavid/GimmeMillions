@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.Features
 {
-    public class CandlestickStockFeatureDatasetService : IFeatureDatasetService
+    public class CandlestickStockFeatureDatasetService : IFeatureDatasetService<FeatureVector>
     {
         public bool RefreshCache { get; set; }
 

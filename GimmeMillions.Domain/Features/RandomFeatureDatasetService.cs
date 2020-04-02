@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.Features
 {
-    public class RandomFeatureDatasetService : IFeatureDatasetService
+    public class RandomFeatureDatasetService : IFeatureDatasetService<FeatureVector>
     {
         private Random _random;
         private int _featureSize;

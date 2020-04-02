@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.Features
 {
-    public interface IFeatureDatasetService
+    public interface IFeatureDatasetService<TFeature> where TFeature : FeatureVector
     {
         bool RefreshCache { get; set; }
 
-        IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(
+        IEnumerable<(TFeature Input, StockData Output)> GetAllTrainingData(
             DateTime startDate = default(DateTime), DateTime endDate = default(DateTime));
-        Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol, 
+        Result<IEnumerable<(TFeature Input, StockData Output)>> GetTrainingData(string symbol, 
             DateTime startDate = default(DateTime), DateTime endDate = default(DateTime));
-        Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date);
-        Result<FeatureVector> GetFeatureVector(string symbol, DateTime date);
+        Result<(TFeature Input, StockData Output)> GetData(string symbol, DateTime date);
+        Result<TFeature> GetFeatureVector(string symbol, DateTime date);
     }
 }

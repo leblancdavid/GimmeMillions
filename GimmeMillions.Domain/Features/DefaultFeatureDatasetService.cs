@@ -10,7 +10,7 @@ using GimmeMillions.Domain.Stocks;
 
 namespace GimmeMillions.Domain.Features
 {
-    public class DefaultFeatureDatasetService : IFeatureDatasetService
+    public class DefaultFeatureDatasetService : IFeatureDatasetService<FeatureVector>
     {
         private IFeatureExtractor<Article> _articleFeatureExtractor;
         private IArticleAccessService _articleRepository;
