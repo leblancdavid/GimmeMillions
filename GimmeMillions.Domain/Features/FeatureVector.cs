@@ -36,6 +36,13 @@ namespace GimmeMillions.Domain.Features
             Encoding = encoding;
         }
 
+        public FeatureVector(float[] data, DateTime date, string encoding)
+        {
+            Data = data;
+            Date = date;
+            Encoding = encoding;
+        }
+
         public FeatureVector()
         {
         }

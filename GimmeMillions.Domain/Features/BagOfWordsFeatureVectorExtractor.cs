@@ -7,7 +7,7 @@ using GimmeMillions.Domain.Articles;
 
 namespace GimmeMillions.Domain.Features
 {
-    public class BagOfWordsFeatureVectorExtractor : IFeatureVectorExtractor
+    public class BagOfWordsFeatureVectorExtractor : IFeatureExtractor<Article>
     {
         private FeaturesDictionary _featuresDictionary;
         private ITextProcessor _textProcessor;
@@ -25,30 +25,30 @@ namespace GimmeMillions.Domain.Features
         }
 
 
-        public FeatureVector Extract(IEnumerable<(Article Article, float Weight)> articles)
+        public float[] Extract(IEnumerable<(Article Data, float Weight)> data)
         {
-            if(!articles.Any())
+            if(!data.Any())
             {
-                return new FeatureVector(0, Encoding);
+                return new float[0];
             }
-            
-            var vector = new FeatureVector(_featuresDictionary.Size, articles.Max(x => x.Article.Date), Encoding);
 
-            Parallel.ForEach(articles, (article) =>
+            var extractedVector = new float[_featuresDictionary.Size];
+
+            Parallel.ForEach(data, (article) =>
             {
-                ProcessAndUpdateVector(article, vector);
+                ProcessAndUpdateVector(article, extractedVector);
             });
 
-            for (int i = 0; i < vector.Length; ++i)
+            for (int i = 0; i < extractedVector.Length; ++i)
             {
-                vector[i] /= articles.Count();
+                extractedVector[i] /= data.Count();
             }
 
-            return vector;
+            return extractedVector;
 
         }
 
-        private void ProcessAndUpdateVector((Article Article, float Weight) article, FeatureVector vector)
+        private void ProcessAndUpdateVector((Article Article, float Weight) article, float[] vector)
         {
             var features = _textProcessor.Process(article.Article.Abstract)
                 .Concat(_textProcessor.Process(article.Article.Snippet))

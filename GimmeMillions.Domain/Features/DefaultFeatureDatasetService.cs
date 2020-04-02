@@ -12,19 +12,19 @@ namespace GimmeMillions.Domain.Features
 {
     public class DefaultFeatureDatasetService : IFeatureDatasetService
     {
-        private IFeatureVectorExtractor _featureVectorExtractor;
+        private IFeatureExtractor<Article> _articleFeatureExtractor;
         private IArticleAccessService _articleRepository;
         private IStockAccessService _stockRepository;
         private IFeatureCache _featureCache;
 
         public bool RefreshCache { get; set; }
-        public DefaultFeatureDatasetService(IFeatureVectorExtractor featureVectorExtractor,
+        public DefaultFeatureDatasetService(IFeatureExtractor<Article> featureVectorExtractor,
             IArticleAccessService articleRepository,
             IStockAccessService stockRepository,
             IFeatureCache featureCache = null,
             bool refreshCache = false)
         {
-            _featureVectorExtractor = featureVectorExtractor;
+            _articleFeatureExtractor = featureVectorExtractor;
             _articleRepository = articleRepository;
             _stockRepository = stockRepository;
             _featureCache = featureCache;
@@ -59,8 +59,8 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<(FeatureVector Input, StockData Output)>(
                     $"No articles found on {articleDate.ToString("yyyy/MM/dd")}"); ;
 
-            var extractedVector = _featureVectorExtractor.Extract(articlesToExtract);
-            extractedVector.Date = stock.Date;
+            var extractedVector = new FeatureVector(_articleFeatureExtractor.Extract(articlesToExtract),
+                articleDate, _articleFeatureExtractor.Encoding);
 
             if (_featureCache != null)
                 _featureCache.UpdateCache(extractedVector);
@@ -88,8 +88,8 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<FeatureVector>(
                     $"No articles found on {articleDate.ToString("yyyy/MM/dd")}"); ;
 
-            var extractedVector = _featureVectorExtractor.Extract(articlesToExtract);
-            extractedVector.Date = date;
+            var extractedVector = new FeatureVector(_articleFeatureExtractor.Extract(articlesToExtract),
+                articleDate, _articleFeatureExtractor.Encoding);
 
             if (_featureCache != null)
                 _featureCache.UpdateCache(extractedVector);
@@ -130,8 +130,8 @@ namespace GimmeMillions.Domain.Features
                         if (!articlesToExtract.Any())
                             return;
 
-                        var extractedVector = _featureVectorExtractor.Extract(articlesToExtract);
-                        extractedVector.Date = stock.Date;
+                        var extractedVector = new FeatureVector(_articleFeatureExtractor.Extract(articlesToExtract),
+                            stock.Date, _articleFeatureExtractor.Encoding);
 
                         if (_featureCache != null)
                             _featureCache.UpdateCache(extractedVector);
@@ -162,7 +162,7 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<FeatureVector>($"RefreshCache is on, therefore features will be re-computed");
             }
 
-            return _featureCache.GetFeature(_featureVectorExtractor.Encoding, date);
+            return _featureCache.GetFeature(_articleFeatureExtractor.Encoding, date);
         }
 
         public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default, DateTime endDate = default)

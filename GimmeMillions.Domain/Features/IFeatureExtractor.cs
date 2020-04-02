@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace GimmeMillions.Domain.Features
 {
-    public interface IFeatureVectorExtractor
+    public interface IFeatureExtractor<TData>
     {
         string Encoding { get; }
-        FeatureVector Extract(IEnumerable<(Article Article, float Weight)> articles);
+        float[] Extract(IEnumerable<(TData Data, float Weight)> data);
     }
 }

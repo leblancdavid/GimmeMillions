@@ -168,7 +168,7 @@
     <Compile Include="Features\IFeatureChecker.cs" />
     <Compile Include="Features\IFeatureDatasetService.cs" />
     <Compile Include="Features\IFeatureDictionaryRepository.cs" />
-    <Compile Include="Features\IFeatureVectorExtractor.cs" />
+    <Compile Include="Features\IFeatureExtractor.cs" />
     <Compile Include="Features\ITextProcessor.cs" />
     <Compile Include="Features\RandomFeatureDatasetService.cs" />
     <Compile Include="Features\UsaLanguageChecker.cs" />

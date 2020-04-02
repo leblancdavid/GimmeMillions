@@ -3,6 +3,7 @@ using GimmeMillions.DataAccess.Articles;
 using GimmeMillions.DataAccess.Features;
 using GimmeMillions.DataAccess.Keys;
 using GimmeMillions.DataAccess.Stocks;
+using GimmeMillions.Domain.Articles;
 using GimmeMillions.Domain.Features;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace GimmeMillions.Domain.Tests.Features
             trainingData.Value.Count().Should().BeGreaterThan(0);
         }
 
-        private IFeatureVectorExtractor GetTestBoWFeatureExtractor()
+        private IFeatureExtractor<Article> GetTestBoWFeatureExtractor()
         {
             var featureChecker = new UsaLanguageChecker();
             featureChecker.Load(new StreamReader($"{_pathToLanguage}/usa.txt"));
