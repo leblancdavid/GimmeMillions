@@ -148,7 +148,6 @@
   <ItemGroup>
     <Compile Include="Features\CandlestickStockFeatureDatasetService.cs" />
     <Compile Include="Features\CandlestickStockFeatureExtractor.cs" />
-    <Compile Include="Features\IStockFeatureExtractor.cs" />
     <Compile Include="ML\Accord\BinaryClassificationStockPredictor.cs" />
     <Compile Include="Articles\Article.cs" />
     <Compile Include="Articles\Byline.cs" />

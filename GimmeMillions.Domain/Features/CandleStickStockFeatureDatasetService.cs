@@ -12,11 +12,11 @@ namespace GimmeMillions.Domain.Features
     {
         public bool RefreshCache { get; set; }
 
-        private IStockFeatureExtractor _featureVectorExtractor;
+        private IFeatureExtractor<StockData> _featureVectorExtractor;
         private IStockAccessService _stockRepository;
         private IFeatureCache _featureCache;
 
-        public CandlestickStockFeatureDatasetService(IStockFeatureExtractor featureVectorExtractor,
+        public CandlestickStockFeatureDatasetService(IFeatureExtractor<StockData> featureVectorExtractor,
             IStockAccessService stockRepository,
             IFeatureCache featureCache = null,
             bool refreshCache = false)
@@ -44,7 +44,7 @@ namespace GimmeMillions.Domain.Features
             }
 
             var currentDate = stock.Date.AddDays(-1.0);
-            var stocksToExtract = new List<StockData>();
+            var stocksToExtract = new List<(StockData Data, float Weight)>();
             int sampleDays = 5;
             for(int i = 0; i < sampleDays; ++i)
             {
@@ -57,7 +57,7 @@ namespace GimmeMillions.Domain.Features
                                 && x.Date.Date.Day == currentDate.Day);
                 if(s != null)
                 {
-                    stocksToExtract.Add(s);
+                    stocksToExtract.Add((s, 1.0f));
                 }
 
                 currentDate = currentDate.AddDays(-1.0);
@@ -67,9 +67,8 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<(FeatureVector Input, StockData Output)>(
                     $"No stocks found on {date.Date.ToString("yyyy/MM/dd")}"); ;
 
-            var extractedVector = _featureVectorExtractor.Extract(stocksToExtract);
-            extractedVector.Date = stock.Date;
-
+            var extractedVector = new FeatureVector(_featureVectorExtractor.Extract(stocksToExtract), stock.Date, _featureVectorExtractor.Encoding);
+            
             if (_featureCache != null)
                 _featureCache.UpdateCache(extractedVector);
 
@@ -89,7 +88,7 @@ namespace GimmeMillions.Domain.Features
             var stock = stocks.FirstOrDefault(x => x.Date.Date == date.Date);
 
             var currentDate = stock.Date.AddDays(-1.0);
-            var stocksToExtract = new List<StockData>();
+            var stocksToExtract = new List<(StockData Data, float Weight)>();
             int sampleDays = 5;
             for (int i = 0; i < sampleDays; ++i)
             {
@@ -102,7 +101,7 @@ namespace GimmeMillions.Domain.Features
                                 && x.Date.Date.Day == currentDate.Day);
                 if (s != null)
                 {
-                    stocksToExtract.Add(s);
+                    stocksToExtract.Add((s, 1.0f));
                 }
 
                 currentDate = currentDate.AddDays(-1.0);
@@ -112,8 +111,7 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<FeatureVector>(
                     $"No stocks found on {date.Date.ToString("yyyy/MM/dd")}"); ;
 
-            var extractedVector = _featureVectorExtractor.Extract(stocksToExtract);
-            extractedVector.Date = stock.Date;
+            var extractedVector = new FeatureVector(_featureVectorExtractor.Extract(stocksToExtract), stock.Date, _featureVectorExtractor.Encoding);
 
             if (_featureCache != null)
                 _featureCache.UpdateCache(extractedVector);
@@ -145,7 +143,7 @@ namespace GimmeMillions.Domain.Features
                     else
                     {
                         var currentDate = stock.Date.AddDays(-1.0);
-                        var stocksToExtract = new List<StockData>();
+                        var stocksToExtract = new List<(StockData Data, float Weight)>();
                         int sampleDays = 5;
                         for (int i = 0; i < sampleDays; ++i)
                         {
@@ -158,7 +156,7 @@ namespace GimmeMillions.Domain.Features
                                 && x.Date.Date.Day == currentDate.Day);
                             if (s != null)
                             {
-                                stocksToExtract.Add(s);
+                                stocksToExtract.Add((s, 1.0f));
                             }
 
                             currentDate = currentDate.AddDays(-1.0);
@@ -167,8 +165,7 @@ namespace GimmeMillions.Domain.Features
                         if (stocksToExtract.Count != sampleDays)
                             return ;
 
-                        var extractedVector = _featureVectorExtractor.Extract(stocksToExtract);
-                        extractedVector.Date = stock.Date;
+                        var extractedVector = new FeatureVector(_featureVectorExtractor.Extract(stocksToExtract), stock.Date, _featureVectorExtractor.Encoding);
 
                         if (_featureCache != null)
                             _featureCache.UpdateCache(extractedVector);
