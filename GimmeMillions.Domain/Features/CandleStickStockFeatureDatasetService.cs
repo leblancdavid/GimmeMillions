@@ -196,7 +196,7 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<FeatureVector>($"RefreshCache is on, therefore features will be re-computed");
             }
 
-            return _featureCache.GetFeature(_featureVectorExtractor.Encoding, date);
+            return _featureCache.GetFeature<FeatureVector>(_featureVectorExtractor.Encoding, date);
         }
 
         public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default, DateTime endDate = default)
