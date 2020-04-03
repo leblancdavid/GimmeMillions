@@ -62,7 +62,7 @@ namespace GimmeMillions.DataAccess.Stocks
                 
             }
 
-            return stocks;
+            return stocks.OrderBy(x => x.Date);
         }
 
         public IEnumerable<StockData> GetStocks(string symbol, DateTime start, DateTime end)
