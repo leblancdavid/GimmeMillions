@@ -18,7 +18,7 @@ namespace GimmeMillions.Domain.ML.Transforms
         public bool IsRowToRowMapper => true;
         public PcaTransform(MLContext mLContext, 
             PrincipalComponentAnalysis pca,
-            string inputColumnName = "Features",
+            string inputColumnName = "News",
             string outputColumnName = "Label")
         {
             _mLContext = mLContext;
@@ -29,7 +29,7 @@ namespace GimmeMillions.Domain.ML.Transforms
 
         public static Result<PcaTransform> LoadFromFile(string fileName,
            MLContext mLContext,
-           string inputColumnName = "Features",
+           string inputColumnName = "News",
            string outputColumnName = "Label")
         {
             var pca = Serializer.Load<PrincipalComponentAnalysis>(fileName);
@@ -82,8 +82,8 @@ namespace GimmeMillions.Domain.ML.Transforms
             var output = new List<StockRiseDataFeature>();
             for (int i = 0; i < pcaTransformed.Length; ++i)
             {
-                output.Add(new StockRiseDataFeature(Array.ConvertAll(pcaTransformed[i], y => (float)y).ToArray(),
-                    labels[i], values[i], dayOfTheWeek[i], month[i]));
+                //output.Add(new StockRiseDataFeature(Array.ConvertAll(pcaTransformed[i], y => (float)y).ToArray(),
+                //    labels[i], values[i], dayOfTheWeek[i], month[i]));
             }
 
             var definedSchema = SchemaDefinition.Create(typeof(StockRiseDataFeature));

@@ -38,7 +38,8 @@ namespace GimmeMillions.Domain.ML.Binary
 
     }
 
-    public class MLStockKernelEstimationFastForestModel : IBinaryStockPredictionModel<KernelEstimationFastForestModelParameters, FeatureVector>
+    public class MLStockKernelEstimationFastForestModel 
+        : IBinaryStockPredictionModel<KernelEstimationFastForestModelParameters, HistoricalFeatureVector>
     {
         private MLContext _mLContext;
         private int _seed;
@@ -103,13 +104,13 @@ namespace GimmeMillions.Domain.ML.Binary
             }
         }
 
-        public StockPrediction Predict(FeatureVector input)
+        public StockPrediction Predict(HistoricalFeatureVector input)
         {
             //Load the data into a view
             var inputDataView = _mLContext.Data.LoadFromEnumerable(
                 new List<StockRiseDataFeature>()
                 {
-                    new StockRiseDataFeature(input.Data, false, 0.0f,
+                    new StockRiseDataFeature(input.Data, new float[0], false, 0.0f,
                     (int)input.Date.DayOfWeek / 7.0f, input.Date.Month / 366.0f)
                 },
                 GetSchemaDefinition(input));
@@ -161,7 +162,7 @@ namespace GimmeMillions.Domain.ML.Binary
             }
         }
 
-        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction)
+        public Result<ModelMetrics> Train(IEnumerable<(HistoricalFeatureVector Input, StockData Output)> dataset, double testFraction)
         {
             if (!dataset.Any())
             {
@@ -177,7 +178,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 var normVector = x.Input;
                 var value = GetLabelFromStockData(x.Output);
                 return new StockRiseDataFeature(
-                normVector.Data, value > 0.0f,
+                normVector.Data, new float[0], value > 0.0f,
                 value,
                 (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
             }).ToList();
@@ -322,7 +323,7 @@ namespace GimmeMillions.Domain.ML.Binary
             return metrics;
         }
 
-        private SchemaDefinition GetSchemaDefinition(FeatureVector vector)
+        private SchemaDefinition GetSchemaDefinition(HistoricalFeatureVector vector)
         {
             int featureDimension = vector.Length;
             var definedSchema = SchemaDefinition.Create(typeof(StockRiseDataFeature));

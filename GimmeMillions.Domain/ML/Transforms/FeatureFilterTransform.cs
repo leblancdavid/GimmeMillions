@@ -22,7 +22,7 @@ namespace GimmeMillions.Domain.ML.Transforms
 
         public FeatureFilterTransform(MLContext mLContext,
             int[] featureIndices,
-            string inputColumnName = "Features",
+            string inputColumnName = "News",
             string outputColumnName = "Label")
         {
             _mLContext = mLContext;
@@ -33,7 +33,7 @@ namespace GimmeMillions.Domain.ML.Transforms
 
         public static Result<FeatureFilterTransform> LoadFromFile(string fileName,
             MLContext mLContext, 
-            string inputColumnName = "Features",
+            string inputColumnName = "News",
             string outputColumnName = "Label")
         {
             if (!File.Exists(fileName))
@@ -82,6 +82,7 @@ namespace GimmeMillions.Domain.ML.Transforms
         public IDataView Transform(IDataView input)
         {
             var features = input.GetColumn<float[]>(_inputColumnName).ToArray();
+            var candlesticks = input.GetColumn<float[]>("Candlestick").ToArray();
             var labels = input.GetColumn<bool>(_outputColumnName).ToArray();
             var values = input.GetColumn<float>("Value").ToArray();
             var dayOfTheWeek = input.GetColumn<float>("DayOfTheWeek").ToArray();
@@ -95,7 +96,7 @@ namespace GimmeMillions.Domain.ML.Transforms
                 {
                     filtered[j] = features[i][_featureIndices[j]];
                 }
-                output.Add(new StockRiseDataFeature(filtered, labels[i], values[i], dayOfTheWeek[i], month[i]));
+                output.Add(new StockRiseDataFeature(filtered, candlesticks[i], labels[i], values[i], dayOfTheWeek[i], month[i]));
             }
 
             int featureDimension = _featureIndices.Length;
