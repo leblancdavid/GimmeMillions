@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Accord
 {
-    public class AccordClassificationStockPredictor : IStockPredictionModel
+    public class AccordClassificationStockPredictor : IStockPredictionModel<FeatureVector>
     {
         private int _rank = 1000;
         private int _pcaRank = 500;

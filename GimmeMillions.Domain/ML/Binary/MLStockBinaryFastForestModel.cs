@@ -39,7 +39,7 @@ namespace GimmeMillions.Domain.ML.Binary
 
     }
 
-    public class MLStockBinaryFastForestModel : IBinaryStockPredictionModel<FastTreeBinaryModelParameters>
+    public class MLStockBinaryFastForestModel : IBinaryStockPredictionModel<FastTreeBinaryModelParameters, FeatureVector>
     {
         private MLContext _mLContext;
         private int _seed;

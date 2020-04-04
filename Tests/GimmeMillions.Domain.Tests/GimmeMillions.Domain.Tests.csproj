@@ -149,8 +149,6 @@
     <Compile Include="Features\FeaturesDictionaryTests.cs" />
     <Compile Include="ML\MLStockBinaryFastForestModelTests.cs" />
     <Compile Include="ML\MLStockFastForestCandlestickModelTests.cs" />
-    <Compile Include="ML\MLStockKMeansRegressionModelTests.cs" />
-    <Compile Include="ML\MLStockRegressionModelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -32,7 +32,7 @@ namespace GimmeMillions.Domain.ML.Binary
 
     }
 
-    public class MLStockKernelEstimationSvmModel : IBinaryStockPredictionModel<KernelEstimationSvmModelParameters>
+    public class MLStockKernelEstimationSvmModel : IBinaryStockPredictionModel<KernelEstimationSvmModelParameters, FeatureVector>
     {
         private MLContext _mLContext;
         private int _seed;

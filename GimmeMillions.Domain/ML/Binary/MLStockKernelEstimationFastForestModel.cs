@@ -38,7 +38,7 @@ namespace GimmeMillions.Domain.ML.Binary
 
     }
 
-    public class MLStockKernelEstimationFastForestModel : IBinaryStockPredictionModel<KernelEstimationFastForestModelParameters>
+    public class MLStockKernelEstimationFastForestModel : IBinaryStockPredictionModel<KernelEstimationFastForestModelParameters, FeatureVector>
     {
         private MLContext _mLContext;
         private int _seed;

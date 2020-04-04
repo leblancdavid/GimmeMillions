@@ -26,7 +26,7 @@ namespace GimmeMillions.Domain.ML.Binary
         }
     }
 
-    public class MLStockKnnBruteForceModel : IBinaryStockPredictionModel<KnnBruteForceModelParameters>
+    public class MLStockKnnBruteForceModel : IBinaryStockPredictionModel<KnnBruteForceModelParameters, FeatureVector>
     {
         private MLContext _mLContext;
         private int _seed;

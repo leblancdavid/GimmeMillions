@@ -191,7 +191,6 @@
     <Compile Include="ML\Candlestick\CandlestickPredictionModelMetadata.cs" />
     <Compile Include="ML\Candlestick\ICandlestickStockPredictionModel.cs" />
     <Compile Include="ML\Candlestick\MLStockFastForestCandlestickModel.cs" />
-    <Compile Include="ML\IStockPredictionModelLoader.cs" />
     <Compile Include="ML\Regression\IRegressionStockPredictionModel.cs" />
     <Compile Include="ML\Regression\MLRegressionMetrics.cs" />
     <Compile Include="ML\Regression\MLRegressionStockKernelEstimationLinearModel.cs" />
@@ -212,10 +211,8 @@
     <Compile Include="ML\Transforms\BinaryClassificationFeatureVector.cs" />
     <Compile Include="ML\Transforms\FeatureSelectorEstimator.cs" />
     <Compile Include="ML\Binary\MLStockBinaryFastForestModel.cs" />
-    <Compile Include="ML\MLStockKMeansRegressionModel.cs" />
     <Compile Include="ML\StockDailyValueDataFeature.cs" />
     <Compile Include="ML\IStockPredictionModel.cs" />
-    <Compile Include="ML\MLStockRegressionModel.cs" />
     <Compile Include="ML\StockPrediction.cs" />
     <Compile Include="ML\StockRiseDataFeature.cs" />
     <Compile Include="ML\TrainingMetrics.cs" />

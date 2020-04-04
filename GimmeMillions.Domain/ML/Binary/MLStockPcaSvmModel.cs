@@ -28,7 +28,7 @@ namespace GimmeMillions.Domain.ML.Binary
         }
 
     }
-    public class MLStockPcaSvmModel : IBinaryStockPredictionModel<PcaSvmModelParameters>
+    public class MLStockPcaSvmModel : IBinaryStockPredictionModel<PcaSvmModelParameters, FeatureVector>
     {
         private MLContext _mLContext;
         private int _seed;

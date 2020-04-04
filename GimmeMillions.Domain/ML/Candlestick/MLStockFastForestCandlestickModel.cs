@@ -30,7 +30,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
     }
 
-    public class MLStockFastForestCandlestickModel : ICandlestickStockPredictionModel<FastForestCandlestickModelParameters>
+    public class MLStockFastForestCandlestickModel : 
+        ICandlestickStockPredictionModel<FastForestCandlestickModelParameters, FeatureVector>
     {
         private MLContext _mLContext;
         private int _seed;

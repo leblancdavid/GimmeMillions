@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace GimmeMillions.Domain.Stocks
     {
         Result LoadConfiguration(string configurationFile);
         Result SaveConfiguration(string configurationFile);
-        void AddModel(IStockPredictionModel stockPredictionModel);
+        void AddModel(IStockPredictionModel<FeatureVector> stockPredictionModel);
         Result RetrainModels(DateTime startTime, DateTime endTime);
         IEnumerable<StockRecommendation> GetRecommendationsForToday(int keepTop = 10);
         IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keepTop = 10);

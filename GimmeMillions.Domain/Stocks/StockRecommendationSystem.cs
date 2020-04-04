@@ -13,7 +13,7 @@ namespace GimmeMillions.Domain.Stocks
 {
     public class StockRecommendationSystem : IStockRecommendationSystem
     {
-        private List<IStockPredictionModel> _models;
+        private List<IStockPredictionModel<FeatureVector>> _models;
         private IFeatureDatasetService<FeatureVector> _featureDatasetService;
         private StockRecommendationSystemConfiguration _systemConfiguration;
         private string _pathToModels;
@@ -21,13 +21,13 @@ namespace GimmeMillions.Domain.Stocks
         public StockRecommendationSystem(IFeatureDatasetService<FeatureVector> featureDatasetService,
             string pathToModels)
         {
-            _models = new List<IStockPredictionModel>();
+            _models = new List<IStockPredictionModel<FeatureVector>>();
             _featureDatasetService = featureDatasetService;
             _systemConfiguration = new StockRecommendationSystemConfiguration();
             _pathToModels = pathToModels;
         }
 
-        public void AddModel(IStockPredictionModel stockPredictionModel)
+        public void AddModel(IStockPredictionModel<FeatureVector> stockPredictionModel)
         {
             _models.Add(stockPredictionModel);
             _systemConfiguration.Models.Add((stockPredictionModel.StockSymbol, 
@@ -86,10 +86,10 @@ namespace GimmeMillions.Domain.Stocks
             var json = File.ReadAllText(configurationFile);
             _systemConfiguration = JsonConvert.DeserializeObject<StockRecommendationSystemConfiguration>(json);
 
-            _models = new List<IStockPredictionModel>();
+            _models = new List<IStockPredictionModel<FeatureVector>>();
             foreach (var models in _systemConfiguration.Models)
             {
-                var model = (IStockPredictionModel)Activator.CreateInstance(models.ModelType);
+                var model = (IStockPredictionModel<FeatureVector>)Activator.CreateInstance(models.ModelType);
                 var loadResult = model.Load(models.PathToModel, models.Symbol, models.Encoding);
                 if (loadResult.IsSuccess)
                 {
