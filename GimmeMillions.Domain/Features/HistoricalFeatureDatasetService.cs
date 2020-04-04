@@ -72,7 +72,7 @@ namespace GimmeMillions.Domain.Features
             var outputStock = stocks.FirstOrDefault(x => x.Date.Date.Year == date.Year
                                 && x.Date.Date.Month == date.Month
                                 && x.Date.Date.Day == date.Day);
-            var cacheResult = TryGetFromCache(date);
+            var cacheResult = TryGetFromCache(date, symbol);
             if (cacheResult.IsSuccess)
             {
                 return Result.Ok((Input: cacheResult.Value, Output: outputStock));
@@ -113,14 +113,14 @@ namespace GimmeMillions.Domain.Features
                 date, _encodingKey);
 
             if (_featureCache != null)
-                _featureCache.UpdateCache(extractedVector);
+                _featureCache.UpdateCache($"{_encodingKey}/{symbol}", extractedVector);
 
             return Result.Ok((Input: extractedVector, Output: outputStock));
         }
 
         public Result<HistoricalFeatureVector> GetFeatureVector(string symbol, DateTime date)
         {
-            var cacheResult = TryGetFromCache(date);
+            var cacheResult = TryGetFromCache(date, symbol);
             if (cacheResult.IsSuccess)
             {
                 return cacheResult;
@@ -171,7 +171,7 @@ namespace GimmeMillions.Domain.Features
                 date, _encodingKey);
 
             if (_featureCache != null)
-                _featureCache.UpdateCache(extractedVector);
+                _featureCache.UpdateCache($"{_encodingKey}/{symbol}", extractedVector);
 
             return Result.Ok(extractedVector);
         }
@@ -192,7 +192,7 @@ namespace GimmeMillions.Domain.Features
                 if ((startDate == default(DateTime) || startDate < stock.Date) &&
                     (endDate == default(DateTime) || endDate > stock.Date))
                 {
-                    var cacheResult = TryGetFromCache(stock.Date);
+                    var cacheResult = TryGetFromCache(stock.Date, symbol);
                     if (cacheResult.IsSuccess)
                     {
                         trainingData.Add((Input: cacheResult.Value, Output: stock));
@@ -232,7 +232,7 @@ namespace GimmeMillions.Domain.Features
                             stock.Date, _encodingKey);
 
                         if (_featureCache != null)
-                            _featureCache.UpdateCache(extractedVector);
+                            _featureCache.UpdateCache($"{_encodingKey}/{symbol}", extractedVector);
 
                         trainingData.Add((Input: extractedVector, Output: stock));
                     }
@@ -249,7 +249,7 @@ namespace GimmeMillions.Domain.Features
             return Result.Ok<IEnumerable<(HistoricalFeatureVector Input, StockData Output)>>(trainingData.OrderBy(x => x.Output.Date));
         }
 
-        Result<HistoricalFeatureVector> TryGetFromCache(DateTime date)
+        Result<HistoricalFeatureVector> TryGetFromCache(DateTime date, string symbol)
         {
             if (_featureCache == null)
             {
@@ -260,7 +260,7 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<HistoricalFeatureVector>($"RefreshCache is on, therefore features will be re-computed");
             }
 
-            return _featureCache.GetFeature(_encodingKey, date);
+            return _featureCache.GetFeature($"{_encodingKey}/{symbol}", date);
         }
     }
 }

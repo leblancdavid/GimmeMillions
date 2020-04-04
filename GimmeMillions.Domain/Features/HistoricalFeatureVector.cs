@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace GimmeMillions.Domain.Features
 {
     public class HistoricalFeatureVector : FeatureVector
     {
+        [JsonIgnore]
         public float[] NewsData
         {
             get

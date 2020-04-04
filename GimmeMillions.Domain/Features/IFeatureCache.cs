@@ -8,7 +8,7 @@ namespace GimmeMillions.Domain.Features
     {
         bool Exists(string encoding, DateTime date);
         Result<TFeature> GetFeature(string encoding, DateTime date);
-        Result UpdateCache(TFeature featureVector);
+        Result UpdateCache(string encoding, TFeature featureVector);
 
     }
 }

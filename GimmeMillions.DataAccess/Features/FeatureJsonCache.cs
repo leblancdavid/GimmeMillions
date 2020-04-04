@@ -39,11 +39,11 @@ namespace GimmeMillions.DataAccess.Features
         }
 
 
-        public Result UpdateCache(TFeature featureVector)
+        public Result UpdateCache(string encoding, TFeature featureVector)
         {
             try
             {
-                string directory = $"{_pathToCache}/{featureVector.Encoding}/";
+                string directory = $"{_pathToCache}/{encoding}/";
                 if (!Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);

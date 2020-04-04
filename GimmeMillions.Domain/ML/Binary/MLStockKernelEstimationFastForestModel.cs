@@ -329,7 +329,6 @@ namespace GimmeMillions.Domain.ML.Binary
         {
             int featureDimension = vector.Length;
             var definedSchema = SchemaDefinition.Create(typeof(StockRiseDataFeature));
-            var featureColumn = definedSchema["Features"].ColumnType as VectorDataViewType;
             var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
             definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
 

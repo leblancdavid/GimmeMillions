@@ -63,7 +63,7 @@ namespace GimmeMillions.Domain.Features
                 articleDate, _articleFeatureExtractor.Encoding);
 
             if (_featureCache != null)
-                _featureCache.UpdateCache(extractedVector);
+                _featureCache.UpdateCache(_articleFeatureExtractor.Encoding, extractedVector);
 
             return Result.Ok((Input: extractedVector, Output: stock));
 
@@ -92,7 +92,7 @@ namespace GimmeMillions.Domain.Features
                 articleDate, _articleFeatureExtractor.Encoding);
 
             if (_featureCache != null)
-                _featureCache.UpdateCache(extractedVector);
+                _featureCache.UpdateCache(_articleFeatureExtractor.Encoding, extractedVector);
 
             return Result.Ok(extractedVector);
         }
@@ -134,7 +134,7 @@ namespace GimmeMillions.Domain.Features
                             stock.Date, _articleFeatureExtractor.Encoding);
 
                         if (_featureCache != null)
-                            _featureCache.UpdateCache(extractedVector);
+                            _featureCache.UpdateCache(_articleFeatureExtractor.Encoding, extractedVector);
 
                         trainingData.Add((Input: extractedVector, Output: stock));
                     }

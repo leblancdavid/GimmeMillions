@@ -61,6 +61,7 @@ namespace GimmeMillions.Domain.ML.Transforms
                 annotationBuilder.ToAnnotations());
             schemaBuilder.AddColumn(_outputColumnName, inputSchema[_outputColumnName].Type);
             schemaBuilder.AddColumn("Value", inputSchema["Value"].Type);
+            schemaBuilder.AddColumn("Candlestick", inputSchema["Candlestick"].Type);
             schemaBuilder.AddColumn("DayOfTheWeek", inputSchema["DayOfTheWeek"].Type);
             schemaBuilder.AddColumn("Month", inputSchema["Month"].Type);
             var schema = schemaBuilder.ToSchema();
