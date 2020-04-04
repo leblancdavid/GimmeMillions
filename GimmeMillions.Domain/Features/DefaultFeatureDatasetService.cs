@@ -15,13 +15,13 @@ namespace GimmeMillions.Domain.Features
         private IFeatureExtractor<Article> _articleFeatureExtractor;
         private IArticleAccessService _articleRepository;
         private IStockAccessService _stockRepository;
-        private IFeatureCache _featureCache;
+        private IFeatureCache<FeatureVector> _featureCache;
 
         public bool RefreshCache { get; set; }
         public DefaultFeatureDatasetService(IFeatureExtractor<Article> featureVectorExtractor,
             IArticleAccessService articleRepository,
             IStockAccessService stockRepository,
-            IFeatureCache featureCache = null,
+            IFeatureCache<FeatureVector> featureCache = null,
             bool refreshCache = false)
         {
             _articleFeatureExtractor = featureVectorExtractor;
@@ -162,7 +162,7 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<FeatureVector>($"RefreshCache is on, therefore features will be re-computed");
             }
 
-            return _featureCache.GetFeature<FeatureVector>(_articleFeatureExtractor.Encoding, date);
+            return _featureCache.GetFeature(_articleFeatureExtractor.Encoding, date);
         }
 
         public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default, DateTime endDate = default)

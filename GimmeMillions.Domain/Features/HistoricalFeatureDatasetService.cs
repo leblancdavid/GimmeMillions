@@ -15,9 +15,10 @@ namespace GimmeMillions.Domain.Features
         private IFeatureExtractor<StockData> _stockFeatureExtractor;
         private IArticleAccessService _articleRepository;
         private IStockAccessService _stockRepository;
-        private IFeatureCache _featureCache;
+        private IFeatureCache<HistoricalFeatureVector> _featureCache;
         private int _numStockDays = 5;
         private int _numArticleDays = 10;
+        private string _encodingKey;
         
         public bool RefreshCache { get; set; }
 
@@ -26,7 +27,7 @@ namespace GimmeMillions.Domain.Features
             IFeatureExtractor<Article> featureVectorExtractor,
             IArticleAccessService articleRepository,
             IStockAccessService stockRepository,
-            IFeatureCache featureCache = null,
+            IFeatureCache<HistoricalFeatureVector> featureCache = null,
             bool refreshCache = false)
         {
             _articleFeatureExtractor = featureVectorExtractor;
@@ -35,6 +36,7 @@ namespace GimmeMillions.Domain.Features
             _stockRepository = stockRepository;
             _featureCache = featureCache;
             RefreshCache = refreshCache;
+            _encodingKey = $"{_articleFeatureExtractor.Encoding}_{_numArticleDays}d-{_stockFeatureExtractor.Encoding}_{_numStockDays}d";
 
         }
 
@@ -67,7 +69,6 @@ namespace GimmeMillions.Domain.Features
                     $"No stock found for symbol '{symbol}' on {date.ToString("yyyy/MM/dd")}");
             }
 
-            string encodingKey = $"{_articleFeatureExtractor.Encoding}_{_numArticleDays}d-{_stockFeatureExtractor.Encoding}_{_numStockDays}d";
             var outputStock = stocks.FirstOrDefault(x => x.Date.Date.Year == date.Year
                                 && x.Date.Date.Month == date.Month
                                 && x.Date.Date.Day == date.Day);
@@ -109,7 +110,7 @@ namespace GimmeMillions.Domain.Features
             var extractedVector = new HistoricalFeatureVector(
                 _articleFeatureExtractor.Extract(articlesToExtract),
                 _stockFeatureExtractor.Extract(stockFeaturesToExtract),
-                date, encodingKey);
+                date, _encodingKey);
 
             if (_featureCache != null)
                 _featureCache.UpdateCache(extractedVector);
@@ -163,12 +164,11 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<HistoricalFeatureVector>(
                     $"No stock data found on {date.ToString("yyyy/MM/dd")}"); ;
 
-            string encodingKey = $"{_articleFeatureExtractor.Encoding}_{_numArticleDays}d-{_stockFeatureExtractor.Encoding}_{_numStockDays}d";
-
+            
             var extractedVector = new HistoricalFeatureVector(
                 _articleFeatureExtractor.Extract(articlesToExtract),
                 _stockFeatureExtractor.Extract(stockFeaturesToExtract),
-                date, encodingKey);
+                date, _encodingKey);
 
             if (_featureCache != null)
                 _featureCache.UpdateCache(extractedVector);
@@ -185,8 +185,7 @@ namespace GimmeMillions.Domain.Features
                     $"No stocks found for symbol '{symbol}'");
             }
 
-            string encodingKey = $"{_articleFeatureExtractor.Encoding}_{_numArticleDays}d-{_stockFeatureExtractor.Encoding}_{_numStockDays}d";
-
+            
             var trainingData = new ConcurrentBag<(HistoricalFeatureVector Input, StockData Output)>();
             Parallel.ForEach(stocks, (stock) =>
             {
@@ -230,7 +229,7 @@ namespace GimmeMillions.Domain.Features
                         var extractedVector = new HistoricalFeatureVector(
                             _articleFeatureExtractor.Extract(articlesToExtract),
                             _stockFeatureExtractor.Extract(stockFeaturesToExtract),
-                            stock.Date, encodingKey);
+                            stock.Date, _encodingKey);
 
                         if (_featureCache != null)
                             _featureCache.UpdateCache(extractedVector);
@@ -261,7 +260,7 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<HistoricalFeatureVector>($"RefreshCache is on, therefore features will be re-computed");
             }
 
-            return _featureCache.GetFeature<HistoricalFeatureVector>(_articleFeatureExtractor.Encoding, date);
+            return _featureCache.GetFeature(_encodingKey, date);
         }
     }
 }

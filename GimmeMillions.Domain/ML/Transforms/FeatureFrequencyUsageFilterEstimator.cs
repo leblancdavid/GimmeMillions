@@ -17,7 +17,7 @@ namespace GimmeMillions.Domain.ML.Transforms
         private MLContext _mLContext;
 
         public FeatureFrequencyUsageFilterEstimator(MLContext mLContext,
-            string inputColumnName = "Features",
+            string inputColumnName = "News",
             string outputColumnName = "Label",
             int rank = 1000,
             int skip = 100)

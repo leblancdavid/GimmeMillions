@@ -6,7 +6,8 @@ using System.IO;
 
 namespace GimmeMillions.DataAccess.Features
 {
-    public class FeatureJsonCache : IFeatureCache
+    public class FeatureJsonCache<TFeature> : IFeatureCache<TFeature>
+        where TFeature : FeatureVector
     {
         public readonly string _pathToCache;
         public FeatureJsonCache(string pathToCache)
@@ -19,7 +20,7 @@ namespace GimmeMillions.DataAccess.Features
             return File.Exists($"{_pathToCache}/{encoding}/{date.ToString("yyyy-MM-dd")}.json");
         }
 
-        public Result<TFeature> GetFeature<TFeature>(string encoding, DateTime date) where TFeature : FeatureVector
+        public Result<TFeature> GetFeature(string encoding, DateTime date)
         {
             try
             {
@@ -38,7 +39,7 @@ namespace GimmeMillions.DataAccess.Features
         }
 
 
-        public Result UpdateCache<TFeature>(TFeature featureVector) where TFeature : FeatureVector
+        public Result UpdateCache(TFeature featureVector)
         {
             try
             {

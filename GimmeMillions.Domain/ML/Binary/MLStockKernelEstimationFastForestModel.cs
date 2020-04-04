@@ -49,7 +49,7 @@ namespace GimmeMillions.Domain.ML.Binary
         private ITransformer _model;
 
         private DataViewSchema _dataSchema;
-        private string _modelId = "KernelFFModel-v1";
+        private string _modelId = "KernelFFHistoricalModel-v1";
         public KernelEstimationFastForestModelParameters Parameters { get; set; }
         public BinaryPredictionModelMetadata<KernelEstimationFastForestModelParameters> Metadata { get; private set; }
 
@@ -110,7 +110,7 @@ namespace GimmeMillions.Domain.ML.Binary
             var inputDataView = _mLContext.Data.LoadFromEnumerable(
                 new List<StockRiseDataFeature>()
                 {
-                    new StockRiseDataFeature(input.Data, new float[0], false, 0.0f,
+                    new StockRiseDataFeature(input.NewsData, input.CandlestickData, false, 0.0f,
                     (int)input.Date.DayOfWeek / 7.0f, input.Date.Month / 366.0f)
                 },
                 GetSchemaDefinition(input));
@@ -178,20 +178,20 @@ namespace GimmeMillions.Domain.ML.Binary
                 var normVector = x.Input;
                 var value = GetLabelFromStockData(x.Output);
                 return new StockRiseDataFeature(
-                normVector.Data, new float[0], value > 0.0f,
+                normVector.Data, normVector.NewsData, value > 0.0f,
                 value,
                 (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
             }).ToList();
 
-            var meanValue = stockTrainingData.Average(x => x.Value);
-            var stdDevValue = Math.Sqrt(stockTrainingData.Average(x => Math.Pow(x.Value - meanValue, 2)));
+            //var meanValue = stockTrainingData.Average(x => x.Value);
+            //var stdDevValue = Math.Sqrt(stockTrainingData.Average(x => Math.Pow(x.Value - meanValue, 2)));
 
-            var filteredStockTrainingData = stockTrainingData.Where(
-                x => x.Value > meanValue - 0.5 * stdDevValue && x.Value < meanValue + 0.5 * stdDevValue).ToList();
+            //var filteredStockTrainingData = stockTrainingData.Where(
+            //    x => x.Value > meanValue - 0.5 * stdDevValue && x.Value < meanValue + 0.5 * stdDevValue).ToList();
 
             //Load the data into a view
             var datasetView = _mLContext.Data.LoadFromEnumerable(
-                filteredStockTrainingData,
+                stockTrainingData,
                 GetSchemaDefinition(firstFeature.Input));
 
             IDataView trainData = null; //= dataSplit.TrainSet;
@@ -269,8 +269,10 @@ namespace GimmeMillions.Domain.ML.Binary
             ModelMetrics bestMetrics = null;
             kernelTransform = null;
             //var pcaEstimator = _mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.KernelRank, overSampling: Parameters.KernelRank);
-            var pcaEstimator = _mLContext.Transforms.NormalizeMeanVariance("Features")
-                .Append(_mLContext.Transforms.ApproximatedKernelMap("Features", rank: Parameters.KernelRank, useCosAndSinBases: false));
+            var pcaEstimator = _mLContext.Transforms.NormalizeMeanVariance("News")
+                .Append(_mLContext.Transforms.NormalizeMeanVariance("Candlestick"))
+                .Append(_mLContext.Transforms.ApproximatedKernelMap("News", rank: Parameters.KernelRank, useCosAndSinBases: false))
+                .Append(_mLContext.Transforms.Concatenate("Features", "News", "Candlestick", "DayOfTheWeek", "Month"));
                 //.Append(_mLContext.Transforms.NormalizeSupervisedBinning("Features", labelColumnName: "Value"));
             for (int i = 0; i < Parameters.NumIterations; ++i)
             {

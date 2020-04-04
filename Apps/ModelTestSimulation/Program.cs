@@ -137,7 +137,7 @@ namespace ModelTestSimulation
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
-            var cache = new FeatureJsonCache(_pathToCache);
+            var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
 
             return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, cache);
         }
@@ -157,7 +157,7 @@ namespace ModelTestSimulation
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
-            var cache = new FeatureJsonCache(_pathToCache);
+            var cache = new FeatureJsonCache<HistoricalFeatureVector>(_pathToCache);
             var candlestickExtractor = new CandlestickStockFeatureExtractor();
 
             return new HistoricalFeatureDatasetService(candlestickExtractor, 

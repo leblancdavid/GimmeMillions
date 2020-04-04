@@ -163,7 +163,7 @@ namespace GimmeMillions.Domain.Tests.ML
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
-            var cache = new FeatureJsonCache(_pathToCache);
+            var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
 
             return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, cache);
         }

@@ -11,6 +11,7 @@ namespace GimmeMillions.Domain.Stocks
         public decimal Low { get; set; }
         public decimal Close { get; set; }
         public decimal AdjustedClose { get; set; }
+        public decimal Volume { get; set; }
         public decimal PercentDayChange
         {
             get
@@ -63,7 +64,7 @@ namespace GimmeMillions.Domain.Stocks
         }
 
         public StockData(string symbol, DateTime date, 
-            decimal open, decimal high, decimal low, decimal close, decimal adjClose)
+            decimal open, decimal high, decimal low, decimal close, decimal adjClose, decimal volume)
         {
             Symbol = symbol;
             Date = date;
@@ -73,6 +74,7 @@ namespace GimmeMillions.Domain.Stocks
             Close = close;
             AdjustedClose = adjClose;
             PreviousClose = open;
+            Volume = volume;
         }
     }
 }

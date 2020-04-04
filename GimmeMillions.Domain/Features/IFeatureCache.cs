@@ -3,13 +3,12 @@ using System;
 
 namespace GimmeMillions.Domain.Features
 {
-    public interface IFeatureCache
+    public interface IFeatureCache<TFeature>
+            where TFeature : FeatureVector
     {
         bool Exists(string encoding, DateTime date);
-        Result<TFeature> GetFeature<TFeature>(string encoding, DateTime date) 
-            where TFeature : FeatureVector;
-        Result UpdateCache<TFeature>(TFeature featureVector)
-            where TFeature : FeatureVector;
+        Result<TFeature> GetFeature(string encoding, DateTime date);
+        Result UpdateCache(TFeature featureVector);
 
     }
 }
