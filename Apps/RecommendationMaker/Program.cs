@@ -24,7 +24,7 @@ namespace RecommendationMaker
         {
             string dictionaryToUse = "USA";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
-            var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
+            var recommendationSystem = new StockRecommendationSystem<FeatureVector>(datasetService, _pathToModels);
 
             Console.WriteLine("Loading peak system...");
             recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/KernelFFPeak-config-v1");

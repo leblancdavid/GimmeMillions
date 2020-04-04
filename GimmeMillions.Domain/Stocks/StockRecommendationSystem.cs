@@ -11,23 +11,24 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.Stocks
 {
-    public class StockRecommendationSystem : IStockRecommendationSystem
+    public class StockRecommendationSystem<TFeature> : IStockRecommendationSystem<TFeature>
+        where TFeature : FeatureVector
     {
-        private List<IStockPredictionModel<FeatureVector>> _models;
-        private IFeatureDatasetService<FeatureVector> _featureDatasetService;
+        private List<IStockPredictionModel<TFeature>> _models;
+        private IFeatureDatasetService<TFeature> _featureDatasetService;
         private StockRecommendationSystemConfiguration _systemConfiguration;
         private string _pathToModels;
 
-        public StockRecommendationSystem(IFeatureDatasetService<FeatureVector> featureDatasetService,
+        public StockRecommendationSystem(IFeatureDatasetService<TFeature> featureDatasetService,
             string pathToModels)
         {
-            _models = new List<IStockPredictionModel<FeatureVector>>();
+            _models = new List<IStockPredictionModel<TFeature>>();
             _featureDatasetService = featureDatasetService;
             _systemConfiguration = new StockRecommendationSystemConfiguration();
             _pathToModels = pathToModels;
         }
 
-        public void AddModel(IStockPredictionModel<FeatureVector> stockPredictionModel)
+        public void AddModel(IStockPredictionModel<TFeature> stockPredictionModel)
         {
             _models.Add(stockPredictionModel);
             _systemConfiguration.Models.Add((stockPredictionModel.StockSymbol, 
@@ -86,10 +87,10 @@ namespace GimmeMillions.Domain.Stocks
             var json = File.ReadAllText(configurationFile);
             _systemConfiguration = JsonConvert.DeserializeObject<StockRecommendationSystemConfiguration>(json);
 
-            _models = new List<IStockPredictionModel<FeatureVector>>();
+            _models = new List<IStockPredictionModel<TFeature>>();
             foreach (var models in _systemConfiguration.Models)
             {
-                var model = (IStockPredictionModel<FeatureVector>)Activator.CreateInstance(models.ModelType);
+                var model = (IStockPredictionModel<TFeature>)Activator.CreateInstance(models.ModelType);
                 var loadResult = model.Load(models.PathToModel, models.Symbol, models.Encoding);
                 if (loadResult.IsSuccess)
                 {

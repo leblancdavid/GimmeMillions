@@ -30,7 +30,7 @@ namespace ModelTestSimulation
         {
             string dictionaryToUse = "USA";
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
-            var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
+            var recommendationSystem = new StockRecommendationSystem<FeatureVector>(datasetService, _pathToModels);
             var stockRepository = new StockDataRepository(_pathToStocks);
 
             //var stocks = new string[] { "F","INTC" };

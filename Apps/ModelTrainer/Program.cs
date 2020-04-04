@@ -42,7 +42,7 @@ namespace ModelTrainer
             //"V", "EBAY", "WMT", "LUV", "NKE", "JNJ", "SYF", "HLT", "CVS"};
             var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
 
-            var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
+            var recommendationSystem = new StockRecommendationSystem<FeatureVector>(datasetService, _pathToModels);
 
             var startDate = new DateTime(2000, 1, 1);
             var endDate = DateTime.Today.AddDays(-1.0);
