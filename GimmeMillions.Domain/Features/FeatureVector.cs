@@ -8,7 +8,7 @@ namespace GimmeMillions.Domain.Features
 {
     public class FeatureVector
     {
-        public float[] Data { get; set; }
+        public double[] Data { get; set; }
         public DateTime Date { get; set; }
         public string Encoding { get; set; }
         public int Length
@@ -16,7 +16,7 @@ namespace GimmeMillions.Domain.Features
             get { return Data.Length; }
         }
 
-        public float this[int i]
+        public double this[int i]
         {
             get { return Data[i]; }
             set { Data[i] = value; }
@@ -24,19 +24,19 @@ namespace GimmeMillions.Domain.Features
 
         public FeatureVector(int length, string encoding)
         {
-            Data = new float[length];
+            Data = new double[length];
             Date = DateTime.Today;
             Encoding = encoding;
         }
 
         public FeatureVector(int length, DateTime date, string encoding)
         {
-            Data = new float[length];
+            Data = new double[length];
             Date = date;
             Encoding = encoding;
         }
 
-        public FeatureVector(float[] data, DateTime date, string encoding)
+        public FeatureVector(double[] data, DateTime date, string encoding)
         {
             Data = data;
             Date = date;
@@ -51,8 +51,8 @@ namespace GimmeMillions.Domain.Features
         {
             var normalizedVector = new FeatureVector(Data.Length, Date, Encoding);
 
-            float min = Data.Min();
-            float max = Data.Max();
+            double min = Data.Min();
+            double max = Data.Max();
             for(int i = 0; i < Data.Length; ++i)
             {
                 normalizedVector.Data[i] = (Data[i] - min) / (max - min);

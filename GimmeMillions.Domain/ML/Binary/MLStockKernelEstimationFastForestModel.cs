@@ -269,9 +269,9 @@ namespace GimmeMillions.Domain.ML.Binary
             ModelMetrics bestMetrics = null;
             kernelTransform = null;
             //var pcaEstimator = _mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: Parameters.KernelRank, overSampling: Parameters.KernelRank);
-            var pcaEstimator = _mLContext.Transforms.NormalizeMeanVariance("News")
-                .Append(_mLContext.Transforms.NormalizeMeanVariance("Candlestick"))
-                .Append(_mLContext.Transforms.ApproximatedKernelMap("News", rank: Parameters.KernelRank, useCosAndSinBases: false))
+            var pcaEstimator = _mLContext.Transforms.NormalizeMeanVariance("News", "News")
+                .Append(_mLContext.Transforms.NormalizeMeanVariance("Candlestick", "Candlestick"))
+                .Append(_mLContext.Transforms.ApproximatedKernelMap("News", "News", rank: Parameters.KernelRank, useCosAndSinBases: false))
                 .Append(_mLContext.Transforms.Concatenate("Features", "News", "Candlestick", "DayOfTheWeek", "Month"));
                 //.Append(_mLContext.Transforms.NormalizeSupervisedBinning("Features", labelColumnName: "Value"));
             for (int i = 0; i < Parameters.NumIterations; ++i)
@@ -327,11 +327,11 @@ namespace GimmeMillions.Domain.ML.Binary
 
         private SchemaDefinition GetSchemaDefinition(HistoricalFeatureVector vector)
         {
-            int featureDimension = vector.Length;
             var definedSchema = SchemaDefinition.Create(typeof(StockRiseDataFeature));
-            var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
-            definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
+            var vectorItemType = ((VectorDataViewType)definedSchema["News"].ColumnType).ItemType;
+            definedSchema["News"].ColumnType = new VectorDataViewType(vectorItemType, vector.Length);
 
+            definedSchema["Candlestick"].ColumnType = new VectorDataViewType(vectorItemType, vector.CandlestickData.Length);
             return definedSchema;
         }
 

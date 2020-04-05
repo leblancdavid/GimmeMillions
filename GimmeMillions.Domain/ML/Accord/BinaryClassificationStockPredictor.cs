@@ -18,12 +18,12 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Accord
 {
-    public class AccordClassificationStockPredictor : IStockPredictionModel<FeatureVector>
+    public class AccordClassificationStockPredictor : IStockPredictionModel<HistoricalFeatureVector>
     {
         private int _rank = 1000;
         private int _pcaRank = 500;
-        private IDataTransformer _filterTransformer;
-        private IDataTransformer _supervisedNormalizer;
+        //private IDataTransformer _filterTransformer;
+        //private IDataTransformer _supervisedNormalizer;
         private PrincipalComponentAnalysis _pca;
         private RandomForest _rt;
 
@@ -38,13 +38,11 @@ namespace GimmeMillions.Domain.ML.Accord
             throw new NotImplementedException();
         }
 
-        public StockPrediction Predict(FeatureVector input)
+        public StockPrediction Predict(HistoricalFeatureVector input)
         {
             var inputData = input.Data.Select(x => (double)x).ToArray();
             var transformed = _pca.Transform(
-                 _supervisedNormalizer.Transform(
-                    _filterTransformer.Transform(
-                        inputData)));
+                        inputData);
 
             //var transformed = _pca.Transform(
             //        _filterTransformer.Transform(
@@ -73,7 +71,7 @@ namespace GimmeMillions.Domain.ML.Accord
             throw new NotImplementedException();
         }
 
-        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction)
+        public Result<ModelMetrics> Train(IEnumerable<(HistoricalFeatureVector Input, StockData Output)> dataset, double testFraction)
         {
             // Create a new Sequential Minimal Optimization (SMO) learning 
             // algorithm and estimate the complexity parameter C from data
@@ -83,27 +81,24 @@ namespace GimmeMillions.Domain.ML.Accord
             //    UseKernelEstimation = true // estimate the kernel from the data
             //};
 
-            var trainer = new RandomForestLearning()
-            {
-                NumberOfTrees = 100
-            };
-
-
-            var outputs = dataset.Select(x => x.Output.PercentDayChange >= 0 ? 1 : 0).ToArray();
-            var inputs = GetSupervisedNormalizedFeatures(
-                GetFilteredFeatures(dataset.Select(x => Array.ConvertAll(x.Input.Data, y => (double)y)).ToArray(), outputs, _rank),
-                outputs);
+            //var outputs = dataset.Select(x => x.Output.PercentDayChange >= 0 ? 1 : 0).ToArray();
+            //var inputs = GetSupervisedNormalizedFeatures(
+            //    GetFilteredFeatures(dataset.Select(x => Array.ConvertAll(x.Input.Data, y => (double)y)).ToArray(), outputs, _rank),
+            //    outputs);
 
             //var inputs = GetFilteredFeatures(dataset.Select(x => Array.ConvertAll(x.Input.Data, y => (double)y)).ToArray(), outputs, _rank);
-            
+
+            var newsInput = dataset.Select(x => Array.ConvertAll(x.Input.NewsData, y => (double)y)).ToArray();
             _pca = new PrincipalComponentAnalysis()
             {
                 Method = PrincipalComponentMethod.Center,
-                Whiten = true
+                Whiten = true,
+                NumberOfOutputs = _pcaRank
             };
-            var transform = _pca.Learn(inputs);
+
             _pca.NumberOfOutputs = _pcaRank;
-            var pcaTransformed = _pca.Transform(inputs);
+            var transform = _pca.Learn(newsInput);
+            var pcaTransformed = _pca.Transform(newsInput);
 
             //_lda = new LinearDiscriminantAnalysis();
             //_lda.Learn(inputs, outputs);
@@ -130,7 +125,20 @@ namespace GimmeMillions.Domain.ML.Accord
             //var results = crossvalidation.Learn(pcaTransformed, outputs);
 
             //_svm = trainer.Learn(pcaTransformed, outputs);
-            _rt = trainer.Learn(pcaTransformed, outputs);
+            var trainingData = new double[newsInput.Length][];
+            var datasetList = dataset.ToList();
+            for (int i = 0; i < newsInput.Length; ++i)
+            {
+                //trainingData[i] = newsInput[i]
+                //    .Concat(Array.ConvertAll(datasetList[i].Input.CandlestickData, y => (double)y)))
+                //    .Concat(new List<double>()).ToArray()
+            }
+
+            var trainer = new RandomForestLearning()
+            {
+                NumberOfTrees = 100
+            };
+            //_rt = trainer.Learn(pcaTransformed, outputs);
 
             // If desired, compute an aggregate confusion matrix for the validation sets:
             //GeneralConfusionMatrix gcm = results.ToConfusionMatrix(pcaTransformed, outputs);
@@ -272,17 +280,17 @@ namespace GimmeMillions.Domain.ML.Accord
             return indicesToKeep.ToArray();
         }
 
-        private double[][] GetFilteredFeatures(double[][] inputs, int[] outputs, int rank)
-        {
-            _filterTransformer = new FilterFeaturesDataTransformer(GetFeatureSelectionIndices(inputs, outputs, rank));
-            return _filterTransformer.Transform(inputs);
-        }
+        //private double[][] GetFilteredFeatures(double[][] inputs, int[] outputs, int rank)
+        //{
+        //    _filterTransformer = new FilterFeaturesDataTransformer(GetFeatureSelectionIndices(inputs, outputs, rank));
+        //    return _filterTransformer.Transform(inputs);
+        //}
 
-        private double[][] GetSupervisedNormalizedFeatures(double[][] inputs, int[] outputs)
-        {
-            _supervisedNormalizer = new SupervisedNormalizationDataTransformer(ComputeDataStatistics(inputs, outputs));
-            return _supervisedNormalizer.Transform(inputs);
-        }
+        //private double[][] GetSupervisedNormalizedFeatures(double[][] inputs, int[] outputs)
+        //{
+        //    _supervisedNormalizer = new SupervisedNormalizationDataTransformer(ComputeDataStatistics(inputs, outputs));
+        //    return _supervisedNormalizer.Transform(inputs);
+        //}
 
         private (double pMean, double pStdev, double nMean, double nStdev)[] ComputeDataStatistics(double[][] inputs, int[] outputs)
         {

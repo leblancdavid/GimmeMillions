@@ -185,8 +185,10 @@ namespace GimmeMillions.Domain.Features
                     $"No stocks found for symbol '{symbol}'");
             }
 
-            
+
             var trainingData = new ConcurrentBag<(HistoricalFeatureVector Input, StockData Output)>();
+            //var trainingData = new List<(HistoricalFeatureVector Input, StockData Output)>();
+            //foreach (var stock in stocks)
             Parallel.ForEach(stocks, (stock) =>
             {
                 if ((startDate == default(DateTime) || startDate < stock.Date) &&
@@ -239,7 +241,7 @@ namespace GimmeMillions.Domain.Features
 
                 }
             });
-
+            //}
             if (!trainingData.Any())
             {
                 return Result.Failure<IEnumerable<(HistoricalFeatureVector Input, StockData Output)>>(

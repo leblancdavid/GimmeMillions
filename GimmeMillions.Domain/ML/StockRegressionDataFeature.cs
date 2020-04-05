@@ -2,15 +2,15 @@
 {
     public class StockRegressionDataFeature
     {
-        public float[] Features { get; set; }
-        public float Label { get; set; }
-        public float DayOfTheWeek { get; set; }
-        public float Month { get; set; }
+        public double[] Features { get; set; }
+        public double Label { get; set; }
+        public double DayOfTheWeek { get; set; }
+        public double Month { get; set; }
 
-        public StockRegressionDataFeature(float[] input,
-            float label, 
-            float dayOfTheWeek,
-            float month)
+        public StockRegressionDataFeature(double[] input,
+            double label,
+            double dayOfTheWeek,
+            double month)
         {
             Features = input;
             Label = label;

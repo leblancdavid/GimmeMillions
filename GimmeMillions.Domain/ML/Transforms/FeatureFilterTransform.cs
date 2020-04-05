@@ -82,28 +82,34 @@ namespace GimmeMillions.Domain.ML.Transforms
 
         public IDataView Transform(IDataView input)
         {
-            var features = input.GetColumn<float[]>(_inputColumnName).ToArray();
-            var candlesticks = input.GetColumn<float[]>("Candlestick").ToArray();
+            var features = input.GetColumn<double[]>(_inputColumnName).ToArray();
+            var candlesticks = input.GetColumn<double[]>("Candlestick").ToArray();
             var labels = input.GetColumn<bool>(_outputColumnName).ToArray();
-            var values = input.GetColumn<float>("Value").ToArray();
-            var dayOfTheWeek = input.GetColumn<float>("DayOfTheWeek").ToArray();
-            var month = input.GetColumn<float>("Month").ToArray();
+            var values = input.GetColumn<double>("Value").ToArray();
+            var dayOfTheWeek = input.GetColumn<double>("DayOfTheWeek").ToArray();
+            var month = input.GetColumn<double>("Month").ToArray();
 
             var output = new List<StockRiseDataFeature>();
+            int candlestickLength = 0;
             for(int i = 0; i < features.Length; ++i)
             {
-                var filtered = new float[_featureIndices.Length];
+                var filtered = new double[_featureIndices.Length];
                 for(int j = 0; j < _featureIndices.Length; ++j)
                 {
                     filtered[j] = features[i][_featureIndices[j]];
                 }
+                candlestickLength = candlesticks[i].Length;
                 output.Add(new StockRiseDataFeature(filtered, candlesticks[i], labels[i], values[i], dayOfTheWeek[i], month[i]));
             }
 
+            
+
             int featureDimension = _featureIndices.Length;
             var definedSchema = SchemaDefinition.Create(typeof(StockRiseDataFeature));
-            var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
-            definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
+            var vectorItemType = ((VectorDataViewType)definedSchema["News"].ColumnType).ItemType;
+            definedSchema["News"].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
+
+            definedSchema["Candlestick"].ColumnType = new VectorDataViewType(vectorItemType, candlestickLength);
             return _mLContext.Data.LoadFromEnumerable(output, definedSchema);
         }
     }

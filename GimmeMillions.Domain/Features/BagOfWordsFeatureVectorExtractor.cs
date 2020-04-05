@@ -25,14 +25,14 @@ namespace GimmeMillions.Domain.Features
         }
 
 
-        public float[] Extract(IEnumerable<(Article Data, float Weight)> data)
+        public double[] Extract(IEnumerable<(Article Data, float Weight)> data)
         {
             if(!data.Any())
             {
-                return new float[0];
+                return new double[0];
             }
 
-            var extractedVector = new float[_featuresDictionary.Size];
+            var extractedVector = new double[_featuresDictionary.Size];
 
             Parallel.ForEach(data, (article) =>
             {
@@ -48,7 +48,7 @@ namespace GimmeMillions.Domain.Features
 
         }
 
-        private void ProcessAndUpdateVector((Article Article, float Weight) article, float[] vector)
+        private void ProcessAndUpdateVector((Article Article, float Weight) article, double[] vector)
         {
             var features = _textProcessor.Process(article.Article.Abstract)
                 .Concat(_textProcessor.Process(article.Article.Snippet))

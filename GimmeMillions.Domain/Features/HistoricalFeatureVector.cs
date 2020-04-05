@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Accord.Statistics.Analysis;
+using Newtonsoft.Json;
 using System;
 
 namespace GimmeMillions.Domain.Features
@@ -6,7 +7,7 @@ namespace GimmeMillions.Domain.Features
     public class HistoricalFeatureVector : FeatureVector
     {
         [JsonIgnore]
-        public float[] NewsData
+        public double[] NewsData
         {
             get
             {
@@ -18,10 +19,10 @@ namespace GimmeMillions.Domain.Features
             }
         }
 
-        public float[] CandlestickData { get; set; }
+        public double[] CandlestickData { get; set; }
 
-        public HistoricalFeatureVector(float[] newsData,
-            float[] candlestickData,
+        public HistoricalFeatureVector(double[] newsData,
+            double[] candlestickData,
             DateTime date,
             string encoding) : base(newsData, date, encoding)
         {
@@ -30,6 +31,17 @@ namespace GimmeMillions.Domain.Features
 
         public HistoricalFeatureVector()
         {
+        }
+
+        public double[] GetConcatenateFeature(PrincipalComponentAnalysis pca = null)
+        {
+            double[] newsData = NewsData;
+            if (pca != null)
+            {
+
+            }
+
+            return newsData;
         }
     }
 }

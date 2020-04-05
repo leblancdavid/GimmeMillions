@@ -44,7 +44,7 @@ namespace ModelTrainer
 
             var recommendationSystem = new StockRecommendationSystem<HistoricalFeatureVector>(datasetService, _pathToModels);
 
-            var startDate = new DateTime(2000, 1, 1);
+            var startDate = new DateTime(2000, 1, 11);
             var endDate = DateTime.Today.AddDays(-1.0);
 
             //double totalCount = 0.0, totalAccuracy = 0.0;
@@ -61,8 +61,8 @@ namespace ModelTrainer
 
                 var model = new MLStockKernelEstimationFastForestModel();
                 model.Parameters.FeatureSelectionRank = 2000;
-                model.Parameters.NumCrossValidations = 5;
-                model.Parameters.NumIterations = 5;
+                model.Parameters.NumCrossValidations = 2;
+                model.Parameters.NumIterations = 2;
                 model.Parameters.KernelRank = 200;
                 model.Parameters.NumOfTrees = 1000;
                 model.Parameters.NumOfLeaves = 20;

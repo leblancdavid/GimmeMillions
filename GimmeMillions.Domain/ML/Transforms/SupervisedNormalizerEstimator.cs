@@ -33,9 +33,9 @@ namespace GimmeMillions.Domain.ML.Transforms
             return inputSchema;
         }
 
-        private (float pMean, float pStdev, float nMean, float nStdev)[] ComputeDataStatistics(IDataView input)
+        private (double pMean, double pStdev, double nMean, double nStdev)[] ComputeDataStatistics(IDataView input)
         {
-            var features = input.GetColumn<float[]>(_inputColumnName).ToArray();
+            var features = input.GetColumn<double[]>(_inputColumnName).ToArray();
             var labels = input.GetColumn<bool>(_outputColumnName).ToArray();
 
             if (features.Length == 0)
@@ -43,7 +43,7 @@ namespace GimmeMillions.Domain.ML.Transforms
 
 
             int featureLength = features[0].Length;
-            var statistics = new (float pMean, float pStdev, float nMean, float nStdev)[featureLength];
+            var statistics = new (double pMean, double pStdev, double nMean, double nStdev)[featureLength];
             float negativeTotal = labels.Sum(x => !x ? 1.0f : 0.0f),
                 positiveTotal = labels.Sum(x => x ? 1.0f : 0.0f);
 
@@ -79,8 +79,8 @@ namespace GimmeMillions.Domain.ML.Transforms
                     }
                 }
 
-                statistics[i].pStdev = (float)Math.Sqrt(statistics[i].pStdev / positiveTotal);
-                statistics[i].nStdev = (float)Math.Sqrt(statistics[i].nStdev / negativeTotal);
+                statistics[i].pStdev = (double)Math.Sqrt(statistics[i].pStdev / positiveTotal);
+                statistics[i].nStdev = (double)Math.Sqrt(statistics[i].nStdev / negativeTotal);
             }
 
             return statistics;
