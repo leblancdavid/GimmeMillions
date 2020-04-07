@@ -120,8 +120,8 @@ namespace ModelTrainer
                 foreach (var testExample in testSet)
                 {
                     var prediction = model.Predict(testExample.Input);
-                    if ((prediction.PredictedLabel && testExample.Output.PercentChangeFromPreviousClose > 0) ||
-                         (!prediction.PredictedLabel && testExample.Output.PercentChangeFromPreviousClose <= 0))
+                    if ((prediction.PredictedLabel && testExample.Output.PercentDayChange > 0) ||
+                         (!prediction.PredictedLabel && testExample.Output.PercentDayChange <= 0))
                     {
                         accuracy++;
                         //Console.WriteLine($"Good! Probability: {prediction.Probability}");
@@ -131,7 +131,7 @@ namespace ModelTrainer
                     {
                         //Console.WriteLine($"Bad! Probability: {prediction.Probability}");
                     }
-                    Console.WriteLine($"{testExample.Output.Date.ToString("MM/dd/yyyy")}, Predicted: {prediction.PredictedLabel}, Actual: {testExample.Output.PercentChangeFromPreviousClose}");
+                    Console.WriteLine($"{testExample.Output.Date.ToString("MM/dd/yyyy")}, Predicted: {prediction.Probability}, Actual: {testExample.Output.PercentChangeFromPreviousClose}");
                 }
 
                 Console.WriteLine($"Test Accuracy {stock}: {accuracy / numTestExamples}");

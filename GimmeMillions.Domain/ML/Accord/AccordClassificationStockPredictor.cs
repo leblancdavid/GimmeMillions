@@ -1,5 +1,6 @@
 ﻿using Accord.MachineLearning;
 using Accord.MachineLearning.DecisionTrees;
+using Accord.MachineLearning.DecisionTrees.Learning;
 using Accord.MachineLearning.Performance;
 using Accord.MachineLearning.VectorMachines;
 using Accord.MachineLearning.VectorMachines.Learning;
@@ -28,8 +29,9 @@ namespace GimmeMillions.Domain.ML.Accord
         //private IDataTransformer _supervisedNormalizer;
         private PrincipalComponentAnalysis _pca;
         //private RandomForest _rt;
-        //private SupportVectorMachine<Gaussian> _svm;
-        private LogisticRegression _regression;
+        private SupportVectorMachine<Gaussian> _svm;
+        // private LogisticRegression _regression;
+        //private DecisionTree _tree;
         public string StockSymbol { get; set; }
 
         public bool IsTrained { get; set; }
@@ -55,9 +57,9 @@ namespace GimmeMillions.Domain.ML.Accord
 
             return new StockPrediction()
             {
-                PredictedLabel = _regression.Decide(transformed),
-                Score = _regression.Score(transformed),
-                Probability = _regression.Probability(transformed)
+                PredictedLabel = _svm.Decide(transformed),
+                Score = _svm.Score(transformed),
+                Probability = _svm.Probability(transformed)
             };
         }
 
@@ -93,30 +95,33 @@ namespace GimmeMillions.Domain.ML.Accord
                 trainingData[i] = datasetList[i].Input.CandlestickData;
             }
 
-            
-
-
-
-            var outputs = datasetList.Select(x => x.Output.PercentChangeFromPreviousClose > 0.0m ? 1 : -1).ToArray();
+            var outputs = datasetList.Select(x => x.Output.PercentDayChange > 0.0m ? 1 : 0).ToArray();
             // Now, we can create the sequential minimal optimization teacher
-            //var learn = new SequentialMinimalOptimization<Gaussian>()
-            //{
-            //    UseComplexityHeuristic = true,
-            //    UseKernelEstimation = true
-            //};
-            // And then we can obtain a trained SVM by calling its Learn method
-            //_svm = learn.Learn(trainingData, outputs);
-
-            var learner = new IterativeReweightedLeastSquares<LogisticRegression>()
+            var learn = new SequentialMinimalOptimization<Gaussian>()
             {
-                Tolerance = 1e-4,  // Let's set some convergence parameters
-                Iterations = 100,  // maximum number of iterations to perform
-                Regularization = 0
+                UseComplexityHeuristic = false,
+                UseKernelEstimation = false
             };
+            //And then we can obtain a trained SVM by calling its Learn method
+            _svm = learn.Learn(trainingData, outputs);
 
-            // Now, we can use the learner to finally estimate our model:
-            _regression = learner.Learn(trainingData, outputs);
-            
+            //var learner = new IterativeReweightedLeastSquares<LogisticRegression>()
+            //{
+            //    Tolerance = 1e-4,  // Let's set some convergence parameters
+            //    Iterations = 100,  // maximum number of iterations to perform
+            //    Regularization = 0
+            //};
+
+            //// Now, we can use the learner to finally estimate our model:
+            //_regression = learner.Learn(trainingData, outputs);
+
+            // And we can use the C4.5 for learning:
+            //C45Learning teacher = new C45Learning();
+
+            // Finally induce the tree from the data:
+            //_tree = teacher.Learn(trainingData, outputs);
+
+
             // If desired, compute an aggregate confusion matrix for the validation sets:
             //GeneralConfusionMatrix gcm = results.ToConfusionMatrix(pcaTransformed, outputs);
 
