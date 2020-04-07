@@ -31,7 +31,7 @@ namespace GimmeMillions.DataAccess.Articles
                 var articlesGetResult = GetArticlesFromNYTApi(dateTime);
                 if(articlesGetResult.Any())
                 {
-                    foreach (var article in articles)
+                    foreach (var article in articlesGetResult)
                     {
                         _articleRepository.AddOrUpdate(article);
                     }
