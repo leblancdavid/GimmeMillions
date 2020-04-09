@@ -1,4 +1,5 @@
 ﻿using GimmeMillions.Domain.Stocks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,12 +8,13 @@ namespace GimmeMillions.Domain.Features
     public class CandlestickStockFeatureExtractor : IFeatureExtractor<StockData>
     {
         private int _version = 2;
+        private bool _normalize = true;
         public string Encoding { get; set; }
 
-        public CandlestickStockFeatureExtractor(int version = 1)
+        public CandlestickStockFeatureExtractor(int version = 2)
         {
             _version = version;
-            Encoding = $"Candlestick-v{_version}";
+            Encoding = $"Candlestick{_normalize}-v{_version}";
 
         }
 
@@ -41,7 +43,27 @@ namespace GimmeMillions.Domain.Features
                 index++;
             }
 
+            if (_normalize)
+                return Normalize(feature);
+
             return feature;
+        }
+
+        private double[] Normalize(double[] feature)
+        {
+            var output = new double[feature.Length];
+            double stdev = Math.Sqrt(feature.Sum(x => Math.Pow(x, 2)));
+            if(stdev < 0.001)
+            {
+                stdev = 1.0;
+            }
+
+            for(int i = 0; i < feature.Length; ++i)
+            {
+                output[i] = (feature[i]) / stdev;
+            }
+
+            return output;
         }
     }
 }

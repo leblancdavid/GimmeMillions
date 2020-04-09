@@ -13,6 +13,14 @@ namespace GimmeMillions.Domain.ML.Accord
         {
             _statistics = statistics;
         }
+
+        public bool IsFitted => throw new NotImplementedException();
+
+        public void Fit(double[][] input)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool Load(string fileName)
         {
             throw new NotImplementedException();

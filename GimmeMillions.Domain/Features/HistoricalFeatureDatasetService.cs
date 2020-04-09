@@ -16,7 +16,7 @@ namespace GimmeMillions.Domain.Features
         private IArticleAccessService _articleRepository;
         private IStockAccessService _stockRepository;
         private IFeatureCache<HistoricalFeatureVector> _featureCache;
-        private int _numStockDays = 5;
+        private int _numStockDays = 10;
         private int _numArticleDays = 10;
         private string _encodingKey;
         
