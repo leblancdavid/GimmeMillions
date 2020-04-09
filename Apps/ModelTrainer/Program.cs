@@ -44,7 +44,7 @@ namespace ModelTrainer
 
             var recommendationSystem = new StockRecommendationSystem<HistoricalFeatureVector>(datasetService, _pathToModels);
 
-            var startDate = new DateTime(2000, 1, 11);
+            var startDate = new DateTime(2005, 1, 11);
             var endDate = DateTime.Today.AddDays(-1.0);
 
             //double totalCount = 0.0, totalAccuracy = 0.0;

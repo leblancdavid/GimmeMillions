@@ -36,7 +36,7 @@ namespace GimmeMillions.Domain.Features
                 feature[index * 5 + 1] = (double)(stock.Data.Close - average);
                 feature[index * 5 + 2] = (double)(stock.Data.High - average);
                 feature[index * 5 + 3] = (double)(stock.Data.Low - average);
-                feature[index * 5 + 4] = (double)(stock.Data.Volume / averageVolume);
+                feature[index * 5 + 4] = (double)(stock.Data.Volume / (averageVolume + 1.0m));
 
                 index++;
             }

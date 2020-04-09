@@ -83,9 +83,9 @@ namespace GimmeMillions.Domain.ML.Candlestick
         {
             //Load the data into a view
             var inputDataView = _mLContext.Data.LoadFromEnumerable(
-                new List<StockRiseDataFeature>()
+                new List<StockCandlestickDataFeature>()
                 {
-                    new StockRiseDataFeature(input.Data, new double[0], false, 0.0f,
+                    new StockCandlestickDataFeature(Array.ConvertAll(input.Data, y => (float)y), false, 0.0f,
                     (int)input.Date.DayOfWeek / 7.0f, input.Date.Month / 366.0f)
                 },
                 GetSchemaDefinition(input));
@@ -145,9 +145,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 dataset.Select(x =>
                 {
                     var normVector = x.Input;
-                    return new StockRiseDataFeature(
-                    normVector.Data,
-                    new double[0],
+                    return new StockCandlestickDataFeature(
+                    Array.ConvertAll(x.Input.Data, y => (float)y),
                     x.Output.PercentDayChange >= 0,
                     (float)x.Output.PercentDayChange,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
@@ -171,13 +170,13 @@ namespace GimmeMillions.Domain.ML.Candlestick
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
 
-            var ffEstimator = _mLContext.BinaryClassification.Trainers.FastTree(
+            var ffEstimator = _mLContext.BinaryClassification.Trainers.FastForest(
                        numberOfLeaves: Parameters.NumOfLeaves,
                        numberOfTrees: Parameters.NumOfTrees,
                        minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
 
             Metadata.TrainingResults = CrossValidationResultsToMetrics(
-                _mLContext.BinaryClassification.CrossValidate(
+                _mLContext.BinaryClassification.CrossValidateNonCalibrated(
                     trainData, ffEstimator, numberOfFolds: Parameters.NumCrossValidations));
 
             _model = ffEstimator.Fit(trainData);
@@ -186,7 +185,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
             {
                 var testPredictions = _model.Transform(testData);
 
-                var testResults = _mLContext.BinaryClassification.Evaluate(testPredictions);
+                var testResults = _mLContext.BinaryClassification.EvaluateNonCalibrated(testPredictions);
 
                 Metadata.TrainingResults = new ModelMetrics(testResults);
             }
@@ -224,7 +223,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
         private SchemaDefinition GetSchemaDefinition(FeatureVector vector)
         {
             int featureDimension = vector.Length;
-            var definedSchema = SchemaDefinition.Create(typeof(StockRiseDataFeature));
+            var definedSchema = SchemaDefinition.Create(typeof(StockCandlestickDataFeature));
             var featureColumn = definedSchema["Features"].ColumnType as VectorDataViewType;
             var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
             definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);

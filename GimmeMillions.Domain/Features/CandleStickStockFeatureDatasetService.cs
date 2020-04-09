@@ -15,21 +15,26 @@ namespace GimmeMillions.Domain.Features
         private IFeatureExtractor<StockData> _featureVectorExtractor;
         private IStockAccessService _stockRepository;
         private IFeatureCache<FeatureVector> _featureCache;
+        private int _sampleDays = 10;
+        private string _encodingKey;
 
         public CandlestickStockFeatureDatasetService(IFeatureExtractor<StockData> featureVectorExtractor,
             IStockAccessService stockRepository,
             IFeatureCache<FeatureVector> featureCache = null,
+            int sampleDays = 10,
             bool refreshCache = false)
         {
             _featureVectorExtractor = featureVectorExtractor;
             _stockRepository = stockRepository;
             _featureCache = featureCache;
+            _sampleDays = sampleDays;
             RefreshCache = refreshCache;
+            _encodingKey = $"{featureVectorExtractor.Encoding}_{_sampleDays}d";
         }
 
         public Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date)
         {
-            var stocks = _stockRepository.GetStocks(symbol);
+            var stocks = _stockRepository.GetStocks(symbol).ToList();
             var stock = stocks.FirstOrDefault(x => x.Date.Date == date.Date);
             if (stock == null)
             {
@@ -45,32 +50,25 @@ namespace GimmeMillions.Domain.Features
 
             var currentDate = stock.Date.AddDays(-1.0);
             var stocksToExtract = new List<(StockData Data, float Weight)>();
-            int sampleDays = 5;
-            for(int i = 0; i < sampleDays; ++i)
+            int stockIndex = stocks.IndexOf(stock);
+            for (int i = 1; i <= _sampleDays; ++i)
             {
-                while(currentDate.DayOfWeek == DayOfWeek.Sunday || currentDate.DayOfWeek == DayOfWeek.Saturday)
+                int j = stockIndex - i;
+                if (j < 0)
                 {
-                    currentDate = currentDate.AddDays(-1.0);
+                    break;
                 }
-                var s = stocks.FirstOrDefault(x => x.Date.Date.Year == currentDate.Year
-                                && x.Date.Date.Month == currentDate.Month
-                                && x.Date.Date.Day == currentDate.Day);
-                if(s != null)
-                {
-                    stocksToExtract.Add((s, 1.0f));
-                }
-
-                currentDate = currentDate.AddDays(-1.0);
+                stocksToExtract.Add((stocks[j], 1.0f));
             }
 
-            if (stocksToExtract.Count != sampleDays)
+            if (stocksToExtract.Count != _sampleDays)
                 return Result.Failure<(FeatureVector Input, StockData Output)>(
                     $"No stocks found on {date.Date.ToString("yyyy/MM/dd")}"); ;
 
             var extractedVector = new FeatureVector(_featureVectorExtractor.Extract(stocksToExtract), stock.Date, _featureVectorExtractor.Encoding);
             
             if (_featureCache != null)
-                _featureCache.UpdateCache($"{_featureVectorExtractor.Encoding}/{symbol}", extractedVector);
+                _featureCache.UpdateCache($"{_encodingKey}/{symbol}", extractedVector);
 
             return Result.Ok((Input: extractedVector, Output: stock));
 
@@ -84,37 +82,30 @@ namespace GimmeMillions.Domain.Features
                 return cacheResult;
             }
 
-            var stocks = _stockRepository.GetStocks(symbol);
+            var stocks = _stockRepository.GetStocks(symbol).ToList();
             var stock = stocks.FirstOrDefault(x => x.Date.Date == date.Date);
 
             var currentDate = stock.Date.AddDays(-1.0);
             var stocksToExtract = new List<(StockData Data, float Weight)>();
-            int sampleDays = 5;
-            for (int i = 0; i < sampleDays; ++i)
+            int stockIndex = stocks.IndexOf(stock);
+            for (int i = 1; i <= _sampleDays; ++i)
             {
-                while (currentDate.DayOfWeek == DayOfWeek.Sunday || currentDate.DayOfWeek == DayOfWeek.Saturday)
+                int j = stockIndex - i;
+                if (j < 0)
                 {
-                    currentDate = currentDate.AddDays(-1.0);
+                    break;
                 }
-                var s = stocks.FirstOrDefault(x => x.Date.Date.Year == currentDate.Year
-                                && x.Date.Date.Month == currentDate.Month
-                                && x.Date.Date.Day == currentDate.Day);
-                if (s != null)
-                {
-                    stocksToExtract.Add((s, 1.0f));
-                }
-
-                currentDate = currentDate.AddDays(-1.0);
+                stocksToExtract.Add((stocks[j], 1.0f));
             }
 
-            if (stocksToExtract.Count != sampleDays)
+            if (stocksToExtract.Count != _sampleDays)
                 return Result.Failure<FeatureVector>(
                     $"No stocks found on {date.Date.ToString("yyyy/MM/dd")}"); ;
 
             var extractedVector = new FeatureVector(_featureVectorExtractor.Extract(stocksToExtract), stock.Date, _featureVectorExtractor.Encoding);
 
             if (_featureCache != null)
-                _featureCache.UpdateCache($"{_featureVectorExtractor.Encoding}/{symbol}", extractedVector);
+                _featureCache.UpdateCache($"{_encodingKey}/{symbol}", extractedVector);
 
             return Result.Ok(extractedVector);
         }
@@ -122,7 +113,7 @@ namespace GimmeMillions.Domain.Features
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol,
             DateTime startDate = default(DateTime), DateTime endDate = default(DateTime))
         {
-            var stocks = _stockRepository.UpdateStocks(symbol);
+            var stocks = _stockRepository.UpdateStocks(symbol).ToList();
             if (!stocks.Any())
             {
                 return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(
@@ -144,31 +135,24 @@ namespace GimmeMillions.Domain.Features
                     {
                         var currentDate = stock.Date.AddDays(-1.0);
                         var stocksToExtract = new List<(StockData Data, float Weight)>();
-                        int sampleDays = 5;
-                        for (int i = 0; i < sampleDays; ++i)
+                        int stockIndex = stocks.IndexOf(stock);
+                        for (int i = 1; i <= _sampleDays; ++i)
                         {
-                            while (currentDate.DayOfWeek == DayOfWeek.Sunday || currentDate.DayOfWeek == DayOfWeek.Saturday)
+                            int j = stockIndex - i;
+                            if (j < 0)
                             {
-                                currentDate = currentDate.AddDays(-1.0);
+                                break;
                             }
-                            var s = stocks.FirstOrDefault(x => x.Date.Date.Year == currentDate.Year 
-                                && x.Date.Date.Month == currentDate.Month
-                                && x.Date.Date.Day == currentDate.Day);
-                            if (s != null)
-                            {
-                                stocksToExtract.Add((s, 1.0f));
-                            }
-
-                            currentDate = currentDate.AddDays(-1.0);
+                            stocksToExtract.Add((stocks[j], 1.0f));
                         }
 
-                        if (stocksToExtract.Count != sampleDays)
+                        if (stocksToExtract.Count != _sampleDays)
                             return ;
 
                         var extractedVector = new FeatureVector(_featureVectorExtractor.Extract(stocksToExtract), stock.Date, _featureVectorExtractor.Encoding);
 
                         if (_featureCache != null)
-                            _featureCache.UpdateCache($"{_featureVectorExtractor.Encoding}/{symbol}", extractedVector);
+                            _featureCache.UpdateCache($"{_encodingKey}/{symbol}", extractedVector);
 
                         trainingData.Add((Input: extractedVector, Output: stock));
                     }
@@ -196,7 +180,7 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<FeatureVector>($"RefreshCache is on, therefore features will be re-computed");
             }
 
-            return _featureCache.GetFeature($"{_featureVectorExtractor.Encoding}/{symbol}", date);
+            return _featureCache.GetFeature($"{_encodingKey}/{symbol}", date);
         }
 
         public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default, DateTime endDate = default)
