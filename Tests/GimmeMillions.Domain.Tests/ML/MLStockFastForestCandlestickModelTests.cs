@@ -44,8 +44,9 @@ namespace GimmeMillions.Domain.Tests.ML
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
-            var featureExtractor = new CandlestickStockFeatureExtractorV2();
-            int numberSamples = 30;
+            //var featureExtractor = new CandlestickStockFeatureExtractorV2();
+            var featureExtractor = new CandlestickSimplifiedStockFeatureExtractor();
+            int numberSamples = 20;
             return new CandlestickStockFeatureDatasetService(featureExtractor, stocksRepo, cache, numberSamples);
         }
     }
