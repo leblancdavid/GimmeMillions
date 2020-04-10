@@ -27,10 +27,10 @@ namespace GimmeMillions.Domain.Tests.ML
         {
             var datasetService = GetCandlestickFeatureDatasetService();
             var model = new MLStockFastForestCandlestickModel();
-            model.Parameters.NumCrossValidations = 10;
-            model.Parameters.NumOfTrees = 1000;
+            model.Parameters.NumCrossValidations = 2;
+            model.Parameters.NumOfTrees = 100;
             model.Parameters.NumOfLeaves = 20;
-            model.Parameters.MinNumOfLeaves = 20;
+            model.Parameters.MinNumOfLeaves = 100;
 
             var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 1), new DateTime(2020, 4, 9));
             dataset.Any().Should().BeTrue();
@@ -45,7 +45,7 @@ namespace GimmeMillions.Domain.Tests.ML
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             var featureExtractor = new CandlestickStockFeatureExtractorV2();
-            int numberSamples = 20;
+            int numberSamples = 30;
             return new CandlestickStockFeatureDatasetService(featureExtractor, stocksRepo, cache, numberSamples);
         }
     }

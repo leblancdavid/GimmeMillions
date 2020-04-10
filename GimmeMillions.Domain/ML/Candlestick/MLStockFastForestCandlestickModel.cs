@@ -140,6 +140,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var firstFeature = dataset.FirstOrDefault();
 
+            var meanPercentDayChange = dataset.Average(x => x.Output.PercentChangeFromPreviousClose);
             //Load the data into a view
             var datasetView = _mLContext.Data.LoadFromEnumerable(
                 dataset.Select(x =>
@@ -147,7 +148,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     var normVector = x.Input;
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    x.Output.PercentDayChange >= 0,
+                    x.Output.PercentChangeFromPreviousClose >= 0.0m,
                     (float)x.Output.PercentDayChange,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
@@ -170,24 +171,46 @@ namespace GimmeMillions.Domain.ML.Candlestick
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
 
-            var ffEstimator = _mLContext.BinaryClassification.Trainers.FastForest(
+            var ffEstimator = _mLContext.BinaryClassification.Trainers.FastTree(
                        numberOfLeaves: Parameters.NumOfLeaves,
                        numberOfTrees: Parameters.NumOfTrees,
                        minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
 
-            Metadata.TrainingResults = CrossValidationResultsToMetrics(
-                _mLContext.BinaryClassification.CrossValidateNonCalibrated(
-                    trainData, ffEstimator, numberOfFolds: Parameters.NumCrossValidations));
+            //Metadata.TrainingResults = CrossValidationResultsToMetrics(
+            //    _mLContext.BinaryClassification.CrossValidateNonCalibrated(
+            //        trainData, ffEstimator, numberOfFolds: Parameters.NumCrossValidations));
 
             _model = ffEstimator.Fit(trainData);
 
             if (testData != null)
             {
                 var testPredictions = _model.Transform(testData);
-
                 var testResults = _mLContext.BinaryClassification.EvaluateNonCalibrated(testPredictions);
-
                 Metadata.TrainingResults = new ModelMetrics(testResults);
+
+                var scores = testPredictions.GetColumn<float>("Score").ToArray();
+                var probabilities = testPredictions.GetColumn<float>("Probability").ToArray();
+                var predictedLabels = testPredictions.GetColumn<bool>("PredictedLabel").ToArray();
+                var labels = testPredictions.GetColumn<bool>("Label").ToArray();
+                var predictionData = new List<(float Score, float Probability, bool PredictedLabel, bool ActualLabel)>();
+                for(int i = 0; i < scores.Length; ++i)
+                {
+                    predictionData.Add((scores[i], probabilities[i], predictedLabels[i], labels[i]));
+                }
+
+                predictionData = predictionData.OrderByDescending(x => x.Probability).ToList();
+                var runningAccuracy = new List<double>();
+                double correct = 0.0;
+                for(int i = 0; i < predictionData.Count; ++i)
+                {
+                    if(predictionData[i].PredictedLabel == predictionData[i].ActualLabel)
+                    {
+                        correct++;
+                    }
+                    runningAccuracy.Add(correct / (double)(i + 1));
+                }
+
+
             }
             return Result.Ok<ModelMetrics>(Metadata.TrainingResults);
         }

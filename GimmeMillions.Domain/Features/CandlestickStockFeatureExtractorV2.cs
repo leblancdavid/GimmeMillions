@@ -8,12 +8,13 @@ namespace GimmeMillions.Domain.Features
     public class CandlestickStockFeatureExtractorV2 : IFeatureExtractor<StockData>
     {
         private int _version = 2;
-        private bool _normalize = true;
+        private bool _normalize = false;
         public string Encoding { get; set; }
 
-        public CandlestickStockFeatureExtractorV2(int version = 2)
+        public CandlestickStockFeatureExtractorV2(int version = 2, bool normalize = false)
         {
             _version = version;
+            _normalize = normalize;
             Encoding = $"Candlestick{_normalize}-v{_version}";
 
         }
