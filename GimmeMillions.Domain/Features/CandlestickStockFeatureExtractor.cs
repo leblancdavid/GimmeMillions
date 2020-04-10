@@ -8,12 +8,13 @@ namespace GimmeMillions.Domain.Features
     public class CandlestickStockFeatureExtractor : IFeatureExtractor<StockData>
     {
         private int _version = 2;
-        private bool _normalize = true;
+        private bool _normalize = false;
         public string Encoding { get; set; }
 
-        public CandlestickStockFeatureExtractor(int version = 2)
+        public CandlestickStockFeatureExtractor(int version = 2, bool normalize = false)
         {
             _version = version;
+            _normalize = normalize;
             Encoding = $"Candlestick{_normalize}-v{_version}";
 
         }
@@ -28,16 +29,17 @@ namespace GimmeMillions.Domain.Features
             var ordered = stocks.OrderBy(x => x.Data.Date).ToList();
             var lastStock = ordered.Last();
 
-            decimal average = (lastStock.Data.Close + lastStock.Data.Open + lastStock.Data.Low + lastStock.Data.High) / 4.0m;
+            //decimal average = (lastStock.Data.Close + lastStock.Data.Open + lastStock.Data.Low + lastStock.Data.High) / 4.0m;
+            var average = stocks.Average(x => x.Data.Close);
             decimal averageVolume = ordered.Average(x => x.Data.Volume);
             var feature = new double[stocks.Count() * 5];
             int index = 0;
             foreach(var stock in ordered)
             {
-                feature[index * 5] = (double)(stock.Data.Open - average);
-                feature[index * 5 + 1] = (double)(stock.Data.Close - average);
-                feature[index * 5 + 2] = (double)(stock.Data.High - average);
-                feature[index * 5 + 3] = (double)(stock.Data.Low - average);
+                feature[index * 5] = (double)((stock.Data.Open - average) / average);
+                feature[index * 5 + 1] = (double)((stock.Data.Close - average) / average);
+                feature[index * 5 + 2] = (double)((stock.Data.High - average) / average);
+                feature[index * 5 + 3] = (double)((stock.Data.Low - average) / average);
                 feature[index * 5 + 4] = (double)(stock.Data.Volume / (averageVolume + 1.0m));
 
                 index++;

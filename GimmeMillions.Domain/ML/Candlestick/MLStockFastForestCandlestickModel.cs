@@ -140,7 +140,9 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var firstFeature = dataset.FirstOrDefault();
 
-            var meanPercentDayChange = dataset.Average(x => x.Output.PercentChangeFromPreviousClose);
+
+            var filteredDataset = dataset.Where(x => x.Output.PercentDayChange > 0);
+            var meanPercentDayChange = filteredDataset.Average(x => x.Output.PercentDayChange);
             //Load the data into a view
             var datasetView = _mLContext.Data.LoadFromEnumerable(
                 dataset.Select(x =>
@@ -148,7 +150,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     var normVector = x.Input;
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    x.Output.PercentChangeFromPreviousClose >= 0.0m,
+                    x.Output.PercentDayChange >= meanPercentDayChange,
                     (float)x.Output.PercentDayChange,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
@@ -211,7 +213,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 }
 
 
-            }
+             }
             return Result.Ok<ModelMetrics>(Metadata.TrainingResults);
         }
 
