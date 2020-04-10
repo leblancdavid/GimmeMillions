@@ -188,6 +188,7 @@
     <Compile Include="ML\Binary\MLStockFastForestModel.cs" />
     <Compile Include="ML\Binary\MLStockKnnBruteForceModel.cs" />
     <Compile Include="ML\Binary\MLStockPcaSvmModel.cs" />
+    <Compile Include="ML\Candlestick\StockCandlestickRegressionFeature.cs" />
     <Compile Include="ML\Candlestick\StockCandlestickDataFeature.cs" />
     <Compile Include="ML\ModelMetrics.cs" />
     <Compile Include="ML\Binary\IBinaryStockPredictionModel.cs" />
