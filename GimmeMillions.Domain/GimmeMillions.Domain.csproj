@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Features\CandlestickStockFeatureDatasetService.cs" />
+    <Compile Include="Features\CandlestickStockFeatureExtractorV2.cs" />
     <Compile Include="Features\CandlestickStockFeatureExtractor.cs" />
     <Compile Include="Features\HistoricalFeatureDatasetService.cs" />
     <Compile Include="Features\HistoricalFeatureVector.cs" />

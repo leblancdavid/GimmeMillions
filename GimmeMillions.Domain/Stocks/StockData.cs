@@ -63,6 +63,36 @@ namespace GimmeMillions.Domain.Stocks
             }
         }
 
+        public decimal TopWickPercent
+        {
+            get
+            {
+                if(PercentDayChange > 0.0m)
+                {
+                    return 100.0m * (High - Close) / Open;
+                }
+                else
+                {
+                    return 100.0m * (High - Open) / Open;
+                }
+            }
+        }
+
+        public decimal BottomWickPercent
+        {
+            get
+            {
+                if (PercentDayChange > 0.0m)
+                {
+                    return 100.0m * (Open - Low) / Open;
+                }
+                else
+                {
+                    return 100.0m * (Close - Low) / Open;
+                }
+            }
+        }
+
         public StockData(string symbol, DateTime date, 
             decimal open, decimal high, decimal low, decimal close, decimal adjClose, decimal volume)
         {
