@@ -13,9 +13,9 @@ namespace GimmeMillions.Domain.Features
         bool RefreshCache { get; set; }
 
         IEnumerable<(TFeature Input, StockData Output)> GetAllTrainingData(
-            DateTime startDate = default(DateTime), DateTime endDate = default(DateTime));
+            DateTime startDate = default(DateTime), DateTime endDate = default(DateTime), bool updateStocks = false);
         Result<IEnumerable<(TFeature Input, StockData Output)>> GetTrainingData(string symbol, 
-            DateTime startDate = default(DateTime), DateTime endDate = default(DateTime));
+            DateTime startDate = default(DateTime), DateTime endDate = default(DateTime), bool updateStocks = false);
         Result<(TFeature Input, StockData Output)> GetData(string symbol, DateTime date);
         Result<TFeature> GetFeatureVector(string symbol, DateTime date);
     }

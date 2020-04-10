@@ -111,9 +111,11 @@ namespace GimmeMillions.Domain.Features
         }
 
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol,
-            DateTime startDate = default(DateTime), DateTime endDate = default(DateTime))
+            DateTime startDate = default(DateTime), DateTime endDate = default(DateTime), bool updateStocks = false)
         {
-            var stocks = _stockRepository.UpdateStocks(symbol).ToList();
+            var stocks = updateStocks ? 
+                _stockRepository.UpdateStocks(symbol).ToList() : 
+                _stockRepository.GetStocks(symbol).ToList();
             if (!stocks.Any())
             {
                 return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(
@@ -183,13 +185,14 @@ namespace GimmeMillions.Domain.Features
             return _featureCache.GetFeature($"{_encodingKey}/{symbol}", date);
         }
 
-        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default, DateTime endDate = default)
+        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(
+            DateTime startDate = default, DateTime endDate = default, bool updateStocks = false)
         {
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             var stocks = _stockRepository.GetSymbols();
             foreach (var stock in stocks)
             {
-                var td = GetTrainingData(stock, startDate, endDate);
+                var td = GetTrainingData(stock, startDate, endDate, updateStocks);
                 if (td.IsSuccess)
                 {
                     trainingData.AddRange(td.Value);
