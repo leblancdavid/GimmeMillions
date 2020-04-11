@@ -83,9 +83,9 @@ namespace GimmeMillions.Domain.ML.Candlestick
         {
             //Load the data into a view
             var inputDataView = _mLContext.Data.LoadFromEnumerable(
-                new List<StockCandlestickDataFeature>()
+                new List<StockCandlestickRegressionFeature>()
                 {
-                    new StockCandlestickDataFeature(Array.ConvertAll(input.Data, y => (float)y), false, 0.0f,
+                    new StockCandlestickRegressionFeature(Array.ConvertAll(input.Data, y => (float)y), 0.0f,
                     (int)input.Date.DayOfWeek / 7.0f, input.Date.Month / 366.0f)
                 },
                 GetSchemaDefinition(input));
@@ -148,9 +148,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 dataset.Select(x =>
                 {
                     var normVector = x.Input;
-                    return new StockCandlestickDataFeature(
+                    return new StockCandlestickRegressionFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    x.Output.PercentDayChange >= 0.0m,
                     (float)x.Output.PercentDayChange,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
@@ -200,11 +199,11 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 var scores = testPredictions.GetColumn<float>("Score").ToArray();
                 //var probabilities = testPredictions.GetColumn<float>("Probability").ToArray();
                 //var predictedLabels = testPredictions.GetColumn<bool>("PredictedLabel").ToArray();
-                var labels = testPredictions.GetColumn<bool>("Label").ToArray();
+                var labels = testPredictions.GetColumn<float>("Label").ToArray();
                 var predictionData = new List<(float Score, float Probability, bool PredictedLabel, bool ActualLabel)>();
                 for(int i = 0; i < scores.Length; ++i)
                 {
-                    predictionData.Add((scores[i], 0.5f, scores[i] > 0.0f, labels[i]));
+                    predictionData.Add((scores[i], 0.5f, scores[i] > 0.0f, labels[i] > 0.0f));
                 }
 
                 predictionData = predictionData.OrderByDescending(x => x.Score).ToList();
@@ -255,7 +254,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
         private SchemaDefinition GetSchemaDefinition(FeatureVector vector)
         {
             int featureDimension = vector.Length;
-            var definedSchema = SchemaDefinition.Create(typeof(StockCandlestickDataFeature));
+            var definedSchema = SchemaDefinition.Create(typeof(StockCandlestickRegressionFeature));
             var featureColumn = definedSchema["Features"].ColumnType as VectorDataViewType;
             var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
             definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);

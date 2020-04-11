@@ -164,8 +164,8 @@ namespace GimmeMillions.Domain.Tests.ML
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
-
-            return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, cache);
+            int numArticlesDays = 10;
+            return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, numArticlesDays, cache);
         }
 
         private IFeatureDatasetService<FeatureVector> GetTestRandomDatasetService(int seed, int featureSize)

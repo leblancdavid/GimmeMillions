@@ -150,6 +150,7 @@
     <Compile Include="Features\CandlestickSimplifiedStockFeatureExtractor.cs" />
     <Compile Include="Features\CandlestickStockFeatureExtractorV2.cs" />
     <Compile Include="Features\CandlestickStockFeatureExtractor.cs" />
+    <Compile Include="Features\AKMBoWFeatureVectorExtractor.cs" />
     <Compile Include="Features\HistoricalFeatureDatasetService.cs" />
     <Compile Include="Features\HistoricalFeatureVector.cs" />
     <Compile Include="ML\Accord\AccordClassificationStockPredictor.cs" />

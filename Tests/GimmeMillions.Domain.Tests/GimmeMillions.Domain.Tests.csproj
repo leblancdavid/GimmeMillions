@@ -144,6 +144,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\AKMBoWFeatureVectorExtractorTests.cs" />
     <Compile Include="Features\BagOfWordsFeatureVectorExtractorTests.cs" />
     <Compile Include="Features\DefaultFeatureDatasetServiceTests.cs" />
     <Compile Include="Features\FeaturesDictionaryTests.cs" />

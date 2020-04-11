@@ -138,8 +138,9 @@ namespace ModelTestSimulation
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
+            int numArticlesDays = 10;
 
-            return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, cache);
+            return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, numArticlesDays, cache);
         }
 
         private static IFeatureDatasetService<HistoricalFeatureVector> GetHistoricalFeatureDatasetService(string dictionaryToUse)
