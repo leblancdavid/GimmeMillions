@@ -31,7 +31,7 @@ namespace ModelTestSimulation
             string dictionaryToUse = "USA";
             var datasetService = GetHistoricalFeatureDatasetService(dictionaryToUse);
             //var recommendationSystem = new StockRecommendationSystem<HistoricalFeatureVector>(datasetService, _pathToModels);
-            var recommendationSystem = new StockRecommendationSystem<HistoricalFeatureVector>(datasetService, _pathToModels);
+            var recommendationSystem = new StockRecommendationSystem<FeatureVector>(datasetService, _pathToModels);
 
             var stockRepository = new StockDataRepository(_pathToStocks);
 
@@ -143,7 +143,7 @@ namespace ModelTestSimulation
             return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, numArticlesDays, cache);
         }
 
-        private static IFeatureDatasetService<HistoricalFeatureVector> GetHistoricalFeatureDatasetService(string dictionaryToUse)
+        private static IFeatureDatasetService<FeatureVector> GetHistoricalFeatureDatasetService(string dictionaryToUse)
         {
             var featureChecker = new UsaLanguageChecker();
             featureChecker.Load(new StreamReader($"{_pathToLanguage}/usa.txt"));
@@ -158,7 +158,7 @@ namespace ModelTestSimulation
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
-            var cache = new FeatureJsonCache<HistoricalFeatureVector>(_pathToCache);
+            var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             var candlestickExtractor = new CandlestickStockFeatureExtractor();
 
             return new HistoricalFeatureDatasetService(candlestickExtractor, 

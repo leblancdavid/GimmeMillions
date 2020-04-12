@@ -39,7 +39,7 @@ namespace GimmeMillions.Domain.ML.Binary
     }
 
     public class MLStockKernelEstimationFastForestModel 
-        : IBinaryStockPredictionModel<KernelEstimationFastForestModelParameters, HistoricalFeatureVector>
+        : IBinaryStockPredictionModel<KernelEstimationFastForestModelParameters, FeatureVector>
     {
         private MLContext _mLContext;
         private int _seed;
@@ -104,7 +104,7 @@ namespace GimmeMillions.Domain.ML.Binary
             }
         }
 
-        public StockPrediction Predict(HistoricalFeatureVector input)
+        public StockPrediction Predict(FeatureVector input)
         {
             //Load the data into a view
             var inputDataView = _mLContext.Data.LoadFromEnumerable(
@@ -162,7 +162,7 @@ namespace GimmeMillions.Domain.ML.Binary
             }
         }
 
-        public Result<ModelMetrics> Train(IEnumerable<(HistoricalFeatureVector Input, StockData Output)> dataset, double testFraction)
+        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction)
         {
             if (!dataset.Any())
             {
@@ -325,13 +325,12 @@ namespace GimmeMillions.Domain.ML.Binary
             return metrics;
         }
 
-        private SchemaDefinition GetSchemaDefinition(HistoricalFeatureVector vector)
+        private SchemaDefinition GetSchemaDefinition(FeatureVector vector)
         {
             var definedSchema = SchemaDefinition.Create(typeof(StockRiseDataFeature));
-            var vectorItemType = ((VectorDataViewType)definedSchema["News"].ColumnType).ItemType;
-            definedSchema["News"].ColumnType = new VectorDataViewType(vectorItemType, vector.Length);
+            var vectorItemType = ((VectorDataViewType)definedSchema["Features"].ColumnType).ItemType;
+            definedSchema["Features"].ColumnType = new VectorDataViewType(vectorItemType, vector.Length);
 
-            definedSchema["Candlestick"].ColumnType = new VectorDataViewType(vectorItemType, vector.CandlestickData.Length);
             return definedSchema;
         }
 

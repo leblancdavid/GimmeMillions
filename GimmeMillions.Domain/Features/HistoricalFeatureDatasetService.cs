@@ -9,17 +9,19 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.Features
 {
-    public class HistoricalFeatureDatasetService : IFeatureDatasetService<HistoricalFeatureVector>
+    public class HistoricalFeatureDatasetService : IFeatureDatasetService<FeatureVector>
     {
         private IFeatureExtractor<Article> _articleFeatureExtractor;
         private IFeatureExtractor<StockData> _stockFeatureExtractor;
         private IArticleAccessService _articleRepository;
         private IStockAccessService _stockRepository;
-        private IFeatureCache<HistoricalFeatureVector> _featureCache;
+        private IFeatureCache<FeatureVector> _featureCache;
         private int _numStockDays = 10;
         private int _numArticleDays = 10;
+        private string _articlesEncodingKey;
+        private string _stocksEncodingKey;
         private string _encodingKey;
-        
+
         public bool RefreshCache { get; set; }
 
 
@@ -27,7 +29,7 @@ namespace GimmeMillions.Domain.Features
             IFeatureExtractor<Article> featureVectorExtractor,
             IArticleAccessService articleRepository,
             IStockAccessService stockRepository,
-            IFeatureCache<HistoricalFeatureVector> featureCache = null,
+            IFeatureCache<FeatureVector> featureCache = null,
             bool refreshCache = false)
         {
             _articleFeatureExtractor = featureVectorExtractor;
@@ -36,14 +38,16 @@ namespace GimmeMillions.Domain.Features
             _stockRepository = stockRepository;
             _featureCache = featureCache;
             RefreshCache = refreshCache;
-            _encodingKey = $"{_articleFeatureExtractor.Encoding}_{_numArticleDays}d-{_stockFeatureExtractor.Encoding}_{_numStockDays}d";
+            _articlesEncodingKey = $"{_articleFeatureExtractor.Encoding}_{_numArticleDays}d";
+            _stocksEncodingKey = $"{_stockFeatureExtractor.Encoding}_{_numStockDays}d";
+            _encodingKey = $"{_articlesEncodingKey}-{_stocksEncodingKey}";
 
         }
 
-        public IEnumerable<(HistoricalFeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default, 
+        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default, 
             DateTime endDate = default, bool updateStocks = false)
         {
-            var trainingData = new List<(HistoricalFeatureVector Input, StockData Output)>();
+            var trainingData = new List<(FeatureVector Input, StockData Output)>();
             var stocks = _stockRepository.GetSymbols();
             foreach (var stock in stocks)
             {
@@ -55,62 +59,92 @@ namespace GimmeMillions.Domain.Features
             }
 
             return trainingData;
-
-
-            
         }
 
-        public Result<(HistoricalFeatureVector Input, StockData Output)> GetData(string symbol, DateTime date)
+        public Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date)
         {
+
             var stocks = _stockRepository.GetStocks(symbol).ToList();
             if (!stocks.Any())
             {
-                return Result.Failure<(HistoricalFeatureVector Input, StockData Output)>(
+                return Result.Failure<(FeatureVector Input, StockData Output)>(
                     $"No stock found for symbol '{symbol}' on {date.ToString("yyyy/MM/dd")}");
             }
 
+            return GetData(symbol, date, stocks);
+        }
+
+        private Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date, List<StockData> stocks)
+        {
             var outputStock = stocks.FirstOrDefault(x => x.Date.Date.Year == date.Year
                                 && x.Date.Date.Month == date.Month
                                 && x.Date.Date.Day == date.Day);
+
+
             var cacheResult = TryGetFromCache(date, symbol);
             if (cacheResult.IsSuccess)
             {
-                return Result.Ok((Input: cacheResult.Value, Output: outputStock));
+                return Result.Ok((cacheResult.Value, outputStock));
             }
 
-            var articlesToExtract = new List<(Article Article, float Weight)>();
-            for(int i = 1; i <= _numArticleDays; ++i)
+            var articleResult = TryGetArticleFromCache(date);
+            double[] articlesVector;
+            if (articleResult.IsFailure)
             {
-                articlesToExtract.AddRange(_articleRepository.GetArticles(date.AddDays(-1.0 * i))
-                    .Select(x => (x, (float)(_numArticleDays - i + 1) / (float)_numArticleDays)));
-
-            }
-            
-            if (!articlesToExtract.Any())
-                return Result.Failure<(HistoricalFeatureVector Input, StockData Output)>(
-                    $"No articles found on {date.ToString("yyyy/MM/dd")}"); ;
-
-
-            var stockFeaturesToExtract = new List<(StockData Article, float Weight)>();
-            int stockIndex = stocks.IndexOf(outputStock);
-            for (int i = 1; i <= _numStockDays; ++i)
-            {
-                int j = stockIndex - i;
-                if(j < 0)
+                var articlesToExtract = new List<(Article Article, float Weight)>();
+                for (int i = 1; i <= _numArticleDays; ++i)
                 {
-                    break;
+                    articlesToExtract.AddRange(_articleRepository.GetArticles(date.AddDays(-1.0 * i))
+                        .Select(x => (x, (float)(_numArticleDays - i + 1) / (float)_numArticleDays)));
+
                 }
-                stockFeaturesToExtract.Add((stocks[j], 1.0f));
+
+                if (!articlesToExtract.Any())
+                    return Result.Failure<(FeatureVector Input, StockData Output)>(
+                        $"No articles found on {date.ToString("yyyy/MM/dd")}");
+
+                articlesVector = _articleFeatureExtractor.Extract(articlesToExtract);
+
+                if (_featureCache != null)
+                    _featureCache.UpdateCache($"{_articlesEncodingKey}", new FeatureVector(articlesVector, date, _articlesEncodingKey));
+            }
+            else
+            {
+                articlesVector = articleResult.Value.Data;
             }
 
-            if (stockFeaturesToExtract.Count() != _numStockDays)
-                return Result.Failure<(HistoricalFeatureVector Input, StockData Output)>(
-                    $"No stock data found on {date.ToString("yyyy/MM/dd")}"); ;
+            var symbolsResult = TryGetStockFeatureFromCache(date, symbol);
+            double[] stocksVector;
+            if (symbolsResult.IsFailure)
+            {
+                var stockFeaturesToExtract = new List<(StockData Article, float Weight)>();
+                int stockIndex = stocks.IndexOf(outputStock);
+                for (int i = 1; i <= _numStockDays; ++i)
+                {
+                    int j = stockIndex - i;
+                    if (j < 0)
+                    {
+                        break;
+                    }
+                    stockFeaturesToExtract.Add((stocks[j], 1.0f));
+                }
 
-            var extractedVector = new HistoricalFeatureVector(
-                _articleFeatureExtractor.Extract(articlesToExtract),
-                _stockFeatureExtractor.Extract(stockFeaturesToExtract),
-                date, _encodingKey);
+                if (stockFeaturesToExtract.Count() != _numStockDays)
+                    return Result.Failure<(FeatureVector Input, StockData Output)>(
+                        $"No stock data found on {date.ToString("yyyy/MM/dd")}"); ;
+
+                stocksVector = _stockFeatureExtractor.Extract(stockFeaturesToExtract);
+
+                if (_featureCache != null)
+                    _featureCache.UpdateCache($"{_stocksEncodingKey}/{symbol}", new FeatureVector(stocksVector, date, _stocksEncodingKey));
+
+            }
+            else
+            {
+                stocksVector = symbolsResult.Value.Data;
+            }
+
+            var extractedVector = new FeatureVector(articlesVector.Concat(stocksVector).ToArray(), date, _encodingKey);
 
             if (_featureCache != null)
                 _featureCache.UpdateCache($"{_encodingKey}/{symbol}", extractedVector);
@@ -118,77 +152,29 @@ namespace GimmeMillions.Domain.Features
             return Result.Ok((Input: extractedVector, Output: outputStock));
         }
 
-        public Result<HistoricalFeatureVector> GetFeatureVector(string symbol, DateTime date)
+        public Result<FeatureVector> GetFeatureVector(string symbol, DateTime date)
         {
-            var cacheResult = TryGetFromCache(date, symbol);
-            if (cacheResult.IsSuccess)
+            var output = GetData(symbol, date);
+            if(output.IsFailure)
             {
-                return cacheResult;
+                return Result.Failure<FeatureVector>(output.Error);
             }
-
-            var articlesToExtract = new List<(Article Article, float Weight)>();
-            for (int i = 1; i <= _numArticleDays; ++i)
-            {
-                articlesToExtract.AddRange(_articleRepository.GetArticles(date.AddDays(-1.0 * i))
-                    .Select(x => (x, (float)(_numArticleDays - i + 1) / (float)_numArticleDays)));
-
-            }
-
-            if (!articlesToExtract.Any())
-                return Result.Failure<HistoricalFeatureVector>(
-                    $"No articles found on {date.ToString("yyyy/MM/dd")}"); ;
-
-            var stocks = _stockRepository.GetStocks(symbol).ToList();
-            if (!stocks.Any())
-            {
-                return Result.Failure<HistoricalFeatureVector>(
-                    $"No stock found for symbol '{symbol}' on {date.ToString("yyyy/MM/dd")}");
-            }
-            var outputStock = stocks.FirstOrDefault(x => x.Date.Date.Year == date.Year
-                                && x.Date.Date.Month == date.Month
-                                && x.Date.Date.Day == date.Day);
-
-            var stockFeaturesToExtract = new List<(StockData Article, float Weight)>();
-            int stockIndex = stocks.IndexOf(outputStock);
-            for (int i = 1; i <= _numStockDays; ++i)
-            {
-                int j = stockIndex - i;
-                if (j < 0)
-                {
-                    break;
-                }
-                stockFeaturesToExtract.Add((stocks[j], 1.0f));
-            }
-
-            if (stockFeaturesToExtract.Count() != _numStockDays)
-                return Result.Failure<HistoricalFeatureVector>(
-                    $"No stock data found on {date.ToString("yyyy/MM/dd")}"); ;
-
-            
-            var extractedVector = new HistoricalFeatureVector(
-                _articleFeatureExtractor.Extract(articlesToExtract),
-                _stockFeatureExtractor.Extract(stockFeaturesToExtract),
-                date, _encodingKey);
-
-            if (_featureCache != null)
-                _featureCache.UpdateCache($"{_encodingKey}/{symbol}", extractedVector);
-
-            return Result.Ok(extractedVector);
+            return Result.Ok(output.Value.Input);
         }
 
-        public Result<IEnumerable<(HistoricalFeatureVector Input, StockData Output)>> GetTrainingData(string symbol, DateTime startDate = default, DateTime endDate = default, bool updateStocks = false)
+        public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol, DateTime startDate = default, DateTime endDate = default, bool updateStocks = false)
         {
             var stocks = updateStocks ?
                    _stockRepository.UpdateStocks(symbol).ToList() :
                    _stockRepository.GetStocks(symbol).ToList();
             if (!stocks.Any())
             {
-                return Result.Failure<IEnumerable<(HistoricalFeatureVector Input, StockData Output)>>(
+                return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(
                     $"No stocks found for symbol '{symbol}'");
             }
 
 
-            var trainingData = new ConcurrentBag<(HistoricalFeatureVector Input, StockData Output)>();
+            var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             //var trainingData = new List<(HistoricalFeatureVector Input, StockData Output)>();
             //foreach (var stock in stocks)
             Parallel.ForEach(stocks, (stock) =>
@@ -196,75 +182,65 @@ namespace GimmeMillions.Domain.Features
                 if ((startDate == default(DateTime) || startDate < stock.Date) &&
                     (endDate == default(DateTime) || endDate > stock.Date))
                 {
-                    var cacheResult = TryGetFromCache(stock.Date, symbol);
-                    if (cacheResult.IsSuccess)
+                    var data = GetData(symbol, stock.Date, stocks);
+                    if(data.IsFailure)
                     {
-                        trainingData.Add((Input: cacheResult.Value, Output: stock));
-                    }
-                    else
-                    {
-                        var articlesToExtract = new List<(Article Article, float Weight)>();
-                        for (int i = 1; i <= _numArticleDays; ++i)
-                        {
-                            articlesToExtract.AddRange(_articleRepository.GetArticles(stock.Date.AddDays(-1.0 * i))
-                                .Select(x => (x, (float)(_numArticleDays - i + 1) / (float)_numArticleDays)));
-
-                        }
-
-                        if (!articlesToExtract.Any())
-                            return;
-
-
-                        var stockFeaturesToExtract = new List<(StockData Article, float Weight)>();
-                        int stockIndex = stocks.IndexOf(stock);
-                        for (int i = 1; i <= _numStockDays; ++i)
-                        {
-                            int j = stockIndex - i;
-                            if (j < 0)
-                            {
-                                break;
-                            }
-                            stockFeaturesToExtract.Add((stocks[j], 1.0f));
-                        }
-
-                        if (stockFeaturesToExtract.Count() != _numStockDays)
-                            return;
-
-                        var extractedVector = new HistoricalFeatureVector(
-                            _articleFeatureExtractor.Extract(articlesToExtract),
-                            _stockFeatureExtractor.Extract(stockFeaturesToExtract),
-                            stock.Date, _encodingKey);
-
-                        if (_featureCache != null)
-                            _featureCache.UpdateCache($"{_encodingKey}/{symbol}", extractedVector);
-
-                        trainingData.Add((Input: extractedVector, Output: stock));
+                        return;
                     }
 
+                    trainingData.Add(data.Value);
                 }
             });
             //}
             if (!trainingData.Any())
             {
-                return Result.Failure<IEnumerable<(HistoricalFeatureVector Input, StockData Output)>>(
+                return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(
                     $"No training data found for symbol '{symbol}' between specified dates");
             }
 
-            return Result.Ok<IEnumerable<(HistoricalFeatureVector Input, StockData Output)>>(trainingData.OrderBy(x => x.Output.Date));
+            return Result.Ok<IEnumerable<(FeatureVector Input, StockData Output)>>(trainingData.OrderBy(x => x.Output.Date));
         }
 
-        Result<HistoricalFeatureVector> TryGetFromCache(DateTime date, string symbol)
+        Result<FeatureVector> TryGetFromCache(DateTime date, string symbol)
         {
             if (_featureCache == null)
             {
-                return Result.Failure<HistoricalFeatureVector>($"No feature cache provided for date {date.ToString("mm/dd/yyyy")}");
+                return Result.Failure<FeatureVector>($"No feature cache provided for date {date.ToString("mm/dd/yyyy")}");
             }
             if (RefreshCache)
             {
-                return Result.Failure<HistoricalFeatureVector>($"RefreshCache is on, therefore features will be re-computed");
+                return Result.Failure<FeatureVector>($"RefreshCache is on, therefore features will be re-computed");
             }
 
             return _featureCache.GetFeature($"{_encodingKey}/{symbol}", date);
+        }
+
+        Result<FeatureVector> TryGetStockFeatureFromCache(DateTime date, string symbol)
+        {
+            if (_featureCache == null)
+            {
+                return Result.Failure<FeatureVector>($"No feature cache provided for date {date.ToString("mm/dd/yyyy")}");
+            }
+            if (RefreshCache)
+            {
+                return Result.Failure<FeatureVector>($"RefreshCache is on, therefore features will be re-computed");
+            }
+
+            return _featureCache.GetFeature($"{_stocksEncodingKey}/{symbol}", date);
+        }
+
+        Result<FeatureVector> TryGetArticleFromCache(DateTime date)
+        {
+            if (_featureCache == null)
+            {
+                return Result.Failure<FeatureVector>($"No feature cache provided for date {date.ToString("mm/dd/yyyy")}");
+            }
+            if (RefreshCache)
+            {
+                return Result.Failure<FeatureVector>($"RefreshCache is on, therefore features will be re-computed");
+            }
+
+            return _featureCache.GetFeature($"{_articlesEncodingKey}", date);
         }
     }
 }

@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Accord
 {
-    public class AccordClassificationStockPredictor : IStockPredictionModel<HistoricalFeatureVector>
+    public class AccordClassificationStockPredictor : IStockPredictionModel<FeatureVector>
     {
         private int _rank = 1000;
         private int _pcaRank = 200;
@@ -43,7 +43,7 @@ namespace GimmeMillions.Domain.ML.Accord
             throw new NotImplementedException();
         }
 
-        public StockPrediction Predict(HistoricalFeatureVector input)
+        public StockPrediction Predict(FeatureVector input)
         {
             var inputData = input.Data.Select(x => (double)x).ToArray();
             //var transformed = _pca.Transform(
@@ -52,7 +52,7 @@ namespace GimmeMillions.Domain.ML.Accord
             //var transformed = _pca.Transform(
             //        _filterTransformer.Transform(
             //            inputData)).Concat(input.CandlestickData).ToArray();
-            var transformed = input.CandlestickData;
+            var transformed = input.Data;
 
 
             return new StockPrediction()
@@ -68,10 +68,10 @@ namespace GimmeMillions.Domain.ML.Accord
             throw new NotImplementedException();
         }
 
-        public Result<ModelMetrics> Train(IEnumerable<(HistoricalFeatureVector Input, StockData Output)> dataset, double testFraction)
+        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction)
         {
             var datasetList = dataset.ToList();
-            var newsInput = datasetList.Select(x => x.Input.NewsData).ToArray();
+            var newsInput = datasetList.Select(x => x.Input.Data).ToArray();
             _pca = new PrincipalComponentAnalysis()
             {
                 Method = PrincipalComponentMethod.Center,
@@ -92,7 +92,7 @@ namespace GimmeMillions.Domain.ML.Accord
             for (int i = 0; i < newsInput.Length; ++i)
             {
                 //trainingData[i] = pcaTransformed[i].Concat(datasetList[i].Input.CandlestickData).ToArray();
-                trainingData[i] = datasetList[i].Input.CandlestickData;
+                trainingData[i] = datasetList[i].Input.Data;
             }
 
             var outputs = datasetList.Select(x => x.Output.PercentDayChange > 0.0m ? 1 : 0).ToArray();
