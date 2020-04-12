@@ -22,7 +22,7 @@ namespace GimmeMillions.Domain.Tests.Features
         private readonly string _pathToStocks = "../../../../../Repository/Stocks";
         private readonly string _pathToCache = "../../../../../Repository/Cache";
         private readonly string _pathToModels = "../../../../../Repository/Models";
-        private readonly string _pathToKeys = "../../../../Repository/Keys";
+        private readonly string _pathToKeys = "../../../../../Repository/Keys";
 
         [Fact]
         public void ShouldBeAbleToTrainAndSave()
@@ -30,7 +30,12 @@ namespace GimmeMillions.Domain.Tests.Features
             var featureExtractor = GetFeatureExtractor();
             var datasetService = GetBoWFeatureDatasetService();
 
-            var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 10), DateTime.Today);
+            var dataset = datasetService.GetTrainingData("F", new DateTime(2000, 1, 10), DateTime.Today);
+
+            var akmFeatureExtractor = new AKMBoWFeatureVectorExtractor(featureExtractor, 1000);
+            akmFeatureExtractor.Train(dataset.Value.Select(x => x.Input));
+
+            akmFeatureExtractor.Save(_pathToModels);
             //var akmFeature
         }
 

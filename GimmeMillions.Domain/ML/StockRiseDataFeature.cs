@@ -8,22 +8,19 @@ namespace GimmeMillions.Domain.ML
 {
     public class StockRiseDataFeature
     {
-        public double[] News { get; set; }
-        public double[] Candlestick { get; set; }
+        public float[] Features { get; set; }
         public bool Label { get; set; }
-        public double Value { get; set; }
-        public double DayOfTheWeek { get; set; }
-        public double Month { get; set; }
+        public float Value { get; set; }
+        public float DayOfTheWeek { get; set; }
+        public float Month { get; set; }
 
-        public StockRiseDataFeature(double[] news,
-            double[] candlestick,
+        public StockRiseDataFeature(float[] features,
             bool label,
-            double value,
-            double dayOfTheWeek,
-            double month)
+            float value,
+            float dayOfTheWeek,
+            float month)
         {
-            News = news;
-            Candlestick = candlestick;
+            Features = features;
             Label = label;
             Value = value;
             DayOfTheWeek = dayOfTheWeek;

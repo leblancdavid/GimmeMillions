@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using GimmeMillions.Domain.Articles;
+using GimmeMillions.Domain.ML.Transforms;
 using Microsoft.ML;
 using Microsoft.ML.Data;
 using System;
@@ -15,6 +16,7 @@ namespace GimmeMillions.Domain.Features
         private int _rank;
         private MLContext _mLContext;
         private DataViewSchema _dataSchema;
+        private FeatureFilterTransform _frequencyUsageTransform;
         private ITransformer _transformer;
         private IFeatureExtractor<Article> _featureExtractor;
         private int Version = 1;
@@ -39,7 +41,7 @@ namespace GimmeMillions.Domain.Features
                 },
                 GetSchemaDefinition(articlesFeature.Length));
 
-            var transformedData = _transformer.Transform(inputDataView);
+            var transformedData = _transformer.Transform(_frequencyUsageTransform.Transform(inputDataView));
 
             return Array.ConvertAll(transformedData.GetColumn<float[]>("Features").First().ToArray(), x => (double)x);
         }
@@ -51,7 +53,14 @@ namespace GimmeMillions.Domain.Features
                 string directory = $"{pathToModel}/{Encoding}";
 
                 DataViewSchema schema = null;
-                _transformer = _mLContext.Model.Load($"{directory}/{Encoding}_Model.zip", out schema);
+                var maxDiffLoad = FeatureFilterTransform.LoadFromFile($"{ directory}/{Encoding}_Filter.json", _mLContext);
+                if (maxDiffLoad.IsFailure)
+                {
+                    return Result.Failure(maxDiffLoad.Error);
+                }
+                _frequencyUsageTransform = maxDiffLoad.Value;
+
+                _transformer = _mLContext.Model.Load($"{directory}/{Encoding}_AKM.zip", out schema);
 
                 return Result.Ok();
             }
@@ -71,7 +80,9 @@ namespace GimmeMillions.Domain.Features
                     Directory.CreateDirectory(directory);
                 }
 
-                _mLContext.Model.Save(_transformer, _dataSchema, $"{directory}/{Encoding}_Model.zip");
+                _frequencyUsageTransform.SaveToFile($"{ directory}/{directory}/{Encoding}_Filter.json");
+
+                _mLContext.Model.Save(_transformer, _dataSchema, $"{directory}/{Encoding}_AKM.zip");
 
                 return Result.Ok();
             }
@@ -92,7 +103,11 @@ namespace GimmeMillions.Domain.Features
                 GetSchemaDefinition(articleFeatures.FirstOrDefault().Length));
 
             _dataSchema = datasetView.Schema;
-            _transformer = _mLContext.Transforms.ApproximatedKernelMap("Features", rank: _rank).Fit(datasetView);
+
+            _frequencyUsageTransform = new FeatureFrequencyUsageFilterEstimator(_mLContext, rank: _rank * 10, skip: 0).Fit(datasetView);
+
+            var filteredData = _frequencyUsageTransform.Transform(datasetView);
+            _transformer = _mLContext.Transforms.ApproximatedKernelMap("Features", rank: _rank).Fit(filteredData);
         }
 
         private SchemaDefinition GetSchemaDefinition(int length)

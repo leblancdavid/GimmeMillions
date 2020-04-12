@@ -81,17 +81,17 @@ namespace GimmeMillions.Domain.ML.Transforms
 
         public IDataView Transform(IDataView input)
         {
-            var features = input.GetColumn<double[]>(_inputColumnName).ToArray();
-            var candlesticks = input.GetColumn<double[]>("Candlestick").ToArray();
+            var features = input.GetColumn<float[]>(_inputColumnName).ToArray();
+            var candlesticks = input.GetColumn<float[]>("Candlestick").ToArray();
             var labels = input.GetColumn<bool>(_outputColumnName).ToArray();
-            var values = input.GetColumn<double>("Value").ToArray();
-            var dayOfTheWeek = input.GetColumn<double>("DayOfTheWeek").ToArray();
-            var month = input.GetColumn<double>("Month").ToArray();
+            var values = input.GetColumn<float>("Value").ToArray();
+            var dayOfTheWeek = input.GetColumn<float>("DayOfTheWeek").ToArray();
+            var month = input.GetColumn<float>("Month").ToArray();
 
             var output = new List<StockRiseDataFeature>();
             for (int i = 0; i < features.Length; ++i)
             {
-                var normalized = new double[_statistics.Length];
+                var normalized = new float[_statistics.Length];
                 for (int j = 0; j < _statistics.Length; ++j)
                 {
                     double pos = (features[i][j] - _statistics[j].pMean) / _statistics[j].pStdev;
@@ -115,9 +115,9 @@ namespace GimmeMillions.Domain.ML.Transforms
                     //    normalized[j] = neg;
                     //}
 
-                    normalized[j] = Math.Abs(neg) - Math.Abs(pos);
+                    normalized[j] = (float)(Math.Abs(neg) - Math.Abs(pos));
                 }
-                output.Add(new StockRiseDataFeature(normalized, candlesticks[i], labels[i], values[i], dayOfTheWeek[i], month[i]));
+                output.Add(new StockRiseDataFeature(normalized, labels[i], values[i], dayOfTheWeek[i], month[i]));
             }
 
             int featureDimension = _statistics.Length;

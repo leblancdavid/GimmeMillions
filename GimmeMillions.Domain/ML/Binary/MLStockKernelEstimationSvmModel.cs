@@ -103,7 +103,7 @@ namespace GimmeMillions.Domain.ML.Binary
             var inputDataView = _mLContext.Data.LoadFromEnumerable(
                 new List<StockRiseDataFeature>()
                 {
-                    new StockRiseDataFeature(input.Data, new double[0], false, 0.0f, 
+                    new StockRiseDataFeature(Array.ConvertAll(input.Data, x => (float)x), false, 0.0f, 
                     (int)input.Date.DayOfWeek / 7.0f, input.Date.Month / 366.0f)
                 },
                 GetSchemaDefinition(input));
@@ -171,7 +171,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 var normVector = x.Input;
                 var value = GetLabelFromStockData(x.Output);
                 return new StockRiseDataFeature(
-                normVector.Data, new double[0], value > 0.0f,
+                Array.ConvertAll(x.Input.Data, y => (float)y), value > 0.0f,
                 value,
                 (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
             }).ToList();
