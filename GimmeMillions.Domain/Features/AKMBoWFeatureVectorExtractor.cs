@@ -80,7 +80,7 @@ namespace GimmeMillions.Domain.Features
                     Directory.CreateDirectory(directory);
                 }
 
-                _frequencyUsageTransform.SaveToFile($"{ directory}/{directory}/{Encoding}_Filter.json");
+                _frequencyUsageTransform.SaveToFile($"{ directory}/{Encoding}_Filter.json");
 
                 _mLContext.Model.Save(_transformer, _dataSchema, $"{directory}/{Encoding}_AKM.zip");
 
