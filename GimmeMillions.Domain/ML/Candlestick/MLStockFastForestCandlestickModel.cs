@@ -83,9 +83,9 @@ namespace GimmeMillions.Domain.ML.Candlestick
         {
             //Load the data into a view
             var inputDataView = _mLContext.Data.LoadFromEnumerable(
-                new List<StockCandlestickRegressionFeature>()
+                new List<StockCandlestickDataFeature>()
                 {
-                    new StockCandlestickRegressionFeature(Array.ConvertAll(input.Data, y => (float)y), 0.0f,
+                    new StockCandlestickDataFeature(Array.ConvertAll(input.Data, y => (float)y), false, 0.0f,
                     (int)input.Date.DayOfWeek / 7.0f, input.Date.Month / 366.0f)
                 },
                 GetSchemaDefinition(input));
@@ -148,8 +148,9 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 dataset.Select(x =>
                 {
                     var normVector = x.Input;
-                    return new StockCandlestickRegressionFeature(
+                    return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
+                    x.Output.PercentDayChange > 0,
                     (float)x.Output.PercentDayChange,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
@@ -177,33 +178,33 @@ namespace GimmeMillions.Domain.ML.Candlestick
             //           numberOfTrees: Parameters.NumOfTrees,
             //           minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
 
-            var estimator = _mLContext.Regression.Trainers.FastForest(
+            var estimator = _mLContext.BinaryClassification.Trainers.FastTree(
                       numberOfLeaves: Parameters.NumOfLeaves,
                       numberOfTrees: Parameters.NumOfTrees,
                       minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
 
             //var estimator = _mLContext.BinaryClassification.Trainers.FastForest();
 
-            //Metadata.TrainingResults = CrossValidationResultsToMetrics(
-            //    _mLContext.BinaryClassification.CrossValidateNonCalibrated(
-            //        trainData, ffEstimator, numberOfFolds: Parameters.NumCrossValidations));
+            Metadata.TrainingResults = CrossValidationResultsToMetrics(
+                _mLContext.BinaryClassification.CrossValidateNonCalibrated(
+                    trainData, estimator, numberOfFolds: Parameters.NumCrossValidations));
 
             _model = estimator.Fit(trainData);
 
             if (testData != null)
             {
                 var testPredictions = _model.Transform(testData);
-                //var testResults = _mLContext.BinaryClassification.EvaluateNonCalibrated(testPredictions);
-                //Metadata.TrainingResults = new ModelMetrics(testResults);
+                var testResults = _mLContext.BinaryClassification.EvaluateNonCalibrated(testPredictions);
+                Metadata.TrainingResults = new ModelMetrics(testResults);
 
                 var scores = testPredictions.GetColumn<float>("Score").ToArray();
-                //var probabilities = testPredictions.GetColumn<float>("Probability").ToArray();
-                //var predictedLabels = testPredictions.GetColumn<bool>("PredictedLabel").ToArray();
-                var labels = testPredictions.GetColumn<float>("Label").ToArray();
+                var probabilities = testPredictions.GetColumn<float>("Probability").ToArray();
+                var predictedLabels = testPredictions.GetColumn<bool>("PredictedLabel").ToArray();
+                var labels = testPredictions.GetColumn<bool>("Label").ToArray();
                 var predictionData = new List<(float Score, float Probability, bool PredictedLabel, bool ActualLabel)>();
                 for(int i = 0; i < scores.Length; ++i)
                 {
-                    predictionData.Add((scores[i], 0.5f, scores[i] > 0.0f, labels[i] > 0.0f));
+                    predictionData.Add((scores[i], probabilities[i], scores[i] > 0.0f, labels[i]));
                 }
 
                 predictionData = predictionData.OrderByDescending(x => x.Score).ToList();
@@ -254,7 +255,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
         private SchemaDefinition GetSchemaDefinition(FeatureVector vector)
         {
             int featureDimension = vector.Length;
-            var definedSchema = SchemaDefinition.Create(typeof(StockCandlestickRegressionFeature));
+            var definedSchema = SchemaDefinition.Create(typeof(StockCandlestickDataFeature));
             var featureColumn = definedSchema["Features"].ColumnType as VectorDataViewType;
             var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
             definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
