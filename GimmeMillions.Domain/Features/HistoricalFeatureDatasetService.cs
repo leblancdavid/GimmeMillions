@@ -23,6 +23,13 @@ namespace GimmeMillions.Domain.Features
         private string _encodingKey;
 
         public bool RefreshCache { get; set; }
+        public IStockAccessService StockAccess
+        {
+            get
+            {
+                return _stockRepository;
+            }
+        }
 
 
         public HistoricalFeatureDatasetService(IFeatureExtractor<StockData> stockFeatureExtractor,
@@ -63,7 +70,6 @@ namespace GimmeMillions.Domain.Features
 
         public Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date)
         {
-            
 
             var stocks = _stockRepository.GetStocks(symbol).ToList();
             if (!stocks.Any())
@@ -98,8 +104,13 @@ namespace GimmeMillions.Domain.Features
             if (symbolsResult.IsFailure)
             {
                 var stockFeaturesToExtract = new List<(StockData Article, float Weight)>();
-                int stockIndex = stocks.IndexOf(outputStock);
-                for (int i = 1; i <= _numStockDays; ++i)
+                int stockIndex;
+                if (date > stocks.Last().Date)
+                    stockIndex = stocks.Count - 1;
+                else
+                    stockIndex = stocks.IndexOf(outputStock);
+                
+                for (int i = 0; i < _numStockDays; ++i)
                 {
                     int j = stockIndex - i;
                     if (j < 0)

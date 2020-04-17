@@ -94,14 +94,14 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var score = prediction.GetColumn<float>("Score").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
-           // var probability = prediction.GetColumn<float>("Probability").ToArray();
+            var probability = prediction.GetColumn<float>("Probability").ToArray();
 
             return new StockPrediction()
             {
                 Score = score[0],
                 PredictedLabel = score[0] > 0.0f,
                 //Probability = probability[0]
-                Probability = score[0]
+                Probability = probability[0]
             };
         }
 
