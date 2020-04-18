@@ -81,7 +81,7 @@ namespace GimmeMillions.Domain.Features
         public Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date)
         {
 
-            var stocks = _stockRepository.GetStocks(symbol).ToList();
+            var stocks = _stockRepository.GetStocks(symbol, _stockSamplingFrequency).ToList();
             if (!stocks.Any())
             {
                 return Result.Failure<(FeatureVector Input, StockData Output)>(
@@ -193,7 +193,7 @@ namespace GimmeMillions.Domain.Features
         {
             var stocks = updateStocks ?
                    _stockRepository.UpdateStocks(symbol).ToList() :
-                   _stockRepository.GetStocks(symbol).ToList();
+                   _stockRepository.GetStocks(symbol, _stockSamplingFrequency).ToList();
             if (!stocks.Any())
             {
                 return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(
