@@ -16,8 +16,9 @@ namespace GimmeMillions.Domain.Features
         private IArticleAccessService _articleRepository;
         private IStockAccessService _stockRepository;
         private IFeatureCache<FeatureVector> _featureCache;
-        private int _numStockDays = 10;
+        private int _numStockSamples = 10;
         private int _numArticleDays = 10;
+        private FrequencyTimeframe _stockSamplingFrequency = FrequencyTimeframe.Daily;
         private string _articlesEncodingKey;
         private string _stocksEncodingKey;
         private string _encodingKey;
@@ -36,6 +37,9 @@ namespace GimmeMillions.Domain.Features
             IFeatureExtractor<Article> featureVectorExtractor,
             IArticleAccessService articleRepository,
             IStockAccessService stockRepository,
+            int numArticleDays = 10,
+            int numStockSamples = 10,
+            FrequencyTimeframe stockSamplingFrequency = FrequencyTimeframe.Daily,
             IFeatureCache<FeatureVector> featureCache = null,
             bool refreshCache = false)
         {
@@ -43,10 +47,16 @@ namespace GimmeMillions.Domain.Features
             _stockFeatureExtractor = stockFeatureExtractor;
             _articleRepository = articleRepository;
             _stockRepository = stockRepository;
+
+            _numArticleDays = numArticleDays;
+            _numStockSamples = numStockSamples;
+            _stockSamplingFrequency = stockSamplingFrequency;
+
             _featureCache = featureCache;
             RefreshCache = refreshCache;
             _articlesEncodingKey = $"{_articleFeatureExtractor.Encoding}_{_numArticleDays}d";
-            _stocksEncodingKey = $"{_stockFeatureExtractor.Encoding}_{_numStockDays}d";
+            string timeIndicator = _stockSamplingFrequency == FrequencyTimeframe.Daily ? "d" : "w";
+            _stocksEncodingKey = $"{_stockFeatureExtractor.Encoding}_{_numStockSamples}{timeIndicator}";
             _encodingKey = $"{_articlesEncodingKey}-{_stocksEncodingKey}";
 
         }
@@ -110,7 +120,7 @@ namespace GimmeMillions.Domain.Features
                 else
                     stockIndex = stocks.IndexOf(outputStock);
                 
-                for (int i = 0; i < _numStockDays; ++i)
+                for (int i = 0; i < _numStockSamples; ++i)
                 {
                     int j = stockIndex - i;
                     if (j < 0)
@@ -120,7 +130,7 @@ namespace GimmeMillions.Domain.Features
                     stockFeaturesToExtract.Add((stocks[j], 1.0f));
                 }
 
-                if (stockFeaturesToExtract.Count() != _numStockDays)
+                if (stockFeaturesToExtract.Count() != _numStockSamples)
                     return Result.Failure<(FeatureVector Input, StockData Output)>(
                         $"No stock data found on {date.ToString("yyyy/MM/dd")}"); ;
 

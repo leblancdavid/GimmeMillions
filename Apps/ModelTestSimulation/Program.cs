@@ -161,8 +161,11 @@ namespace ModelTestSimulation
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             var candlestickExtractor = new CandlestickStockFeatureExtractor();
 
-            return new HistoricalFeatureDatasetService(candlestickExtractor, 
-                bow, articlesAccess, stocksRepo, cache);
+            int numArticleDays = 10;
+            int numStockSamples = 10;
+            FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily;
+            return new HistoricalFeatureDatasetService(candlestickExtractor, bow, articlesAccess, stocksRepo,
+                numArticleDays, numStockSamples, frequencyTimeframe, cache);
         }
     }
 }

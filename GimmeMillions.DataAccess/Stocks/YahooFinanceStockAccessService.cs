@@ -17,18 +17,18 @@ namespace GimmeMillions.DataAccess.Stocks
             _pathToStocks = pathToStocks;
         }
 
-        public IEnumerable<StockData> GetStocks(string symbol)
+        public IEnumerable<StockData> GetStocks(string symbol, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily)
         {
-            return _stockRepository.GetStocks(symbol);
+            return _stockRepository.GetStocks(symbol, frequencyTimeframe);
         }
 
-        public IEnumerable<StockData> GetStocks()
+        public IEnumerable<StockData> GetStocks(FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily)
         {
             var symbols = GetSymbols();
             var stocks = new List<StockData>();
             foreach(var symbol in symbols)
             {
-                stocks.AddRange(GetStocks(symbol));
+                stocks.AddRange(GetStocks(symbol, frequencyTimeframe));
             }
             return stocks;
         }

@@ -5,6 +5,7 @@ using GimmeMillions.DataAccess.Keys;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML.Candlestick;
+using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -77,7 +78,11 @@ namespace GimmeMillions.Domain.Tests.ML
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
-            return new HistoricalFeatureDatasetService(stockExtractor, akmExtractor, articlesAccess, stocksRepo, cache);
+            int numArticleDays = 10;
+            int numStockSamples = 10;
+            FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily;
+            return new HistoricalFeatureDatasetService(stockExtractor, akmExtractor, articlesAccess, stocksRepo,
+                numArticleDays, numStockSamples, frequencyTimeframe, cache);
         }
     }
 }
