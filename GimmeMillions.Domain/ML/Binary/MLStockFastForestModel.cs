@@ -32,7 +32,7 @@ namespace GimmeMillions.Domain.ML.Binary
 
     }
 
-    public class MLStockFastForestModel : IBinaryStockPredictionModel<FastForestBinaryModelParameters>
+    public class MLStockFastForestModel : IBinaryStockPredictionModel<FastForestBinaryModelParameters, FeatureVector>
     {
         private MLContext _mLContext;
         private int _seed;
@@ -101,7 +101,7 @@ namespace GimmeMillions.Domain.ML.Binary
             var inputDataView = _mLContext.Data.LoadFromEnumerable(
                 new List<StockRiseDataFeature>()
                 {
-                    new StockRiseDataFeature(input.Data, false, 0.0f,
+                    new StockRiseDataFeature(Array.ConvertAll(input.Data, x => (float)x), false, 0.0f,
                     (int)input.Date.DayOfWeek / 7.0f, input.Date.Month / 366.0f)
                 },
                 GetSchemaDefinition(input));
@@ -168,7 +168,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 {
                     var normVector = x.Input;
                     return new StockRiseDataFeature(
-                    normVector.Data, x.Output.PercentDayChange >= 0,
+                    Array.ConvertAll(x.Input.Data, y => (float)y), x.Output.PercentDayChange >= 0,
                     (float)x.Output.PercentDayChange,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),

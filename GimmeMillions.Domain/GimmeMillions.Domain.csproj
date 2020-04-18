@@ -147,9 +147,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Features\CandlestickStockFeatureDatasetService.cs" />
+    <Compile Include="Features\CandlestickSimplifiedStockFeatureExtractor.cs" />
+    <Compile Include="Features\CandlestickStockFeatureExtractorV2.cs" />
     <Compile Include="Features\CandlestickStockFeatureExtractor.cs" />
-    <Compile Include="Features\IStockFeatureExtractor.cs" />
-    <Compile Include="ML\Accord\BinaryClassificationStockPredictor.cs" />
+    <Compile Include="Features\AKMBoWFeatureVectorExtractor.cs" />
+    <Compile Include="Features\HistoricalFeatureDatasetService.cs" />
+    <Compile Include="Features\HistoricalFeatureVector.cs" />
+    <Compile Include="ML\Accord\AccordClassificationStockPredictor.cs" />
     <Compile Include="Articles\Article.cs" />
     <Compile Include="Articles\Byline.cs" />
     <Compile Include="Articles\FilterQuery.cs" />
@@ -168,7 +172,7 @@
     <Compile Include="Features\IFeatureChecker.cs" />
     <Compile Include="Features\IFeatureDatasetService.cs" />
     <Compile Include="Features\IFeatureDictionaryRepository.cs" />
-    <Compile Include="Features\IFeatureVectorExtractor.cs" />
+    <Compile Include="Features\IFeatureExtractor.cs" />
     <Compile Include="Features\ITextProcessor.cs" />
     <Compile Include="Features\RandomFeatureDatasetService.cs" />
     <Compile Include="Features\UsaLanguageChecker.cs" />
@@ -185,12 +189,13 @@
     <Compile Include="ML\Binary\MLStockFastForestModel.cs" />
     <Compile Include="ML\Binary\MLStockKnnBruteForceModel.cs" />
     <Compile Include="ML\Binary\MLStockPcaSvmModel.cs" />
+    <Compile Include="ML\Candlestick\StockCandlestickRegressionFeature.cs" />
+    <Compile Include="ML\Candlestick\StockCandlestickDataFeature.cs" />
     <Compile Include="ML\ModelMetrics.cs" />
     <Compile Include="ML\Binary\IBinaryStockPredictionModel.cs" />
     <Compile Include="ML\Candlestick\CandlestickPredictionModelMetadata.cs" />
     <Compile Include="ML\Candlestick\ICandlestickStockPredictionModel.cs" />
     <Compile Include="ML\Candlestick\MLStockFastForestCandlestickModel.cs" />
-    <Compile Include="ML\IStockPredictionModelLoader.cs" />
     <Compile Include="ML\Regression\IRegressionStockPredictionModel.cs" />
     <Compile Include="ML\Regression\MLRegressionMetrics.cs" />
     <Compile Include="ML\Regression\MLRegressionStockKernelEstimationLinearModel.cs" />
@@ -211,10 +216,8 @@
     <Compile Include="ML\Transforms\BinaryClassificationFeatureVector.cs" />
     <Compile Include="ML\Transforms\FeatureSelectorEstimator.cs" />
     <Compile Include="ML\Binary\MLStockBinaryFastForestModel.cs" />
-    <Compile Include="ML\MLStockKMeansRegressionModel.cs" />
     <Compile Include="ML\StockDailyValueDataFeature.cs" />
     <Compile Include="ML\IStockPredictionModel.cs" />
-    <Compile Include="ML\MLStockRegressionModel.cs" />
     <Compile Include="ML\StockPrediction.cs" />
     <Compile Include="ML\StockRiseDataFeature.cs" />
     <Compile Include="ML\TrainingMetrics.cs" />
@@ -227,6 +230,7 @@
     <Compile Include="ML\Transforms\SupervisedNormalizerEstimator.cs" />
     <Compile Include="ML\Transforms\SupervisedNormalizerTransform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stocks\CandlestickStockRecommendationSystem.cs" />
     <Compile Include="Stocks\IStockAccessService.cs" />
     <Compile Include="Stocks\IStockRecommendationSystem.cs" />
     <Compile Include="Stocks\IStockRepository.cs" />

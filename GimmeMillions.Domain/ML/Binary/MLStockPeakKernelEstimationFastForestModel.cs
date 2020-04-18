@@ -38,7 +38,7 @@ namespace GimmeMillions.Domain.ML.Binary
 
     }
 
-    public class MLStockPeakKernelEstimationFastForestModel : IBinaryStockPredictionModel<KernelEstimationFastForestPeakModelParameters>
+    public class MLStockPeakKernelEstimationFastForestModel : IBinaryStockPredictionModel<KernelEstimationFastForestPeakModelParameters, FeatureVector>
     {
         private MLContext _mLContext;
         private int _seed;
@@ -109,7 +109,7 @@ namespace GimmeMillions.Domain.ML.Binary
             var inputDataView = _mLContext.Data.LoadFromEnumerable(
                 new List<StockRiseDataFeature>()
                 {
-                    new StockRiseDataFeature(input.Data, false, 0.0f,
+                    new StockRiseDataFeature(Array.ConvertAll(input.Data, x => (float)x), false, 0.0f,
                     (int)input.Date.DayOfWeek / 7.0f, input.Date.Month / 366.0f)
                 },
                 GetSchemaDefinition(input));
@@ -184,7 +184,7 @@ namespace GimmeMillions.Domain.ML.Binary
                 {
                     var normVector = x.Input;
                     return new StockRiseDataFeature(
-                    normVector.Data, (double)(x.Output.PercentChangeHighToOpen) > Metadata.PeakSelection,
+                    Array.ConvertAll(x.Input.Data, y => (float)y), (double)(x.Output.PercentChangeHighToOpen) > Metadata.PeakSelection,
                     (float)(x.Output.High - x.Output.Open),
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),

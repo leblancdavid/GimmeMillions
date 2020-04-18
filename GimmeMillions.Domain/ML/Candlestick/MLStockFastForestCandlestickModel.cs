@@ -30,7 +30,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
     }
 
-    public class MLStockFastForestCandlestickModel : ICandlestickStockPredictionModel<FastForestCandlestickModelParameters>
+    public class MLStockFastForestCandlestickModel : 
+        ICandlestickStockPredictionModel<FastForestCandlestickModelParameters, FeatureVector>
     {
         private MLContext _mLContext;
         private int _seed;
@@ -82,9 +83,9 @@ namespace GimmeMillions.Domain.ML.Candlestick
         {
             //Load the data into a view
             var inputDataView = _mLContext.Data.LoadFromEnumerable(
-                new List<StockRiseDataFeature>()
+                new List<StockCandlestickDataFeature>()
                 {
-                    new StockRiseDataFeature(input.Data, false, 0.0f,
+                    new StockCandlestickDataFeature(Array.ConvertAll(input.Data, y => (float)y), false, 0.0f,
                     (int)input.Date.DayOfWeek / 7.0f, input.Date.Month / 366.0f)
                 },
                 GetSchemaDefinition(input));
@@ -93,14 +94,14 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var score = prediction.GetColumn<float>("Score").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
-           // var probability = prediction.GetColumn<float>("Probability").ToArray();
+            var probability = prediction.GetColumn<float>("Probability").ToArray();
 
             return new StockPrediction()
             {
                 Score = score[0],
                 PredictedLabel = score[0] > 0.0f,
                 //Probability = probability[0]
-                Probability = score[0]
+                Probability = probability[0]
             };
         }
 
@@ -139,13 +140,17 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var firstFeature = dataset.FirstOrDefault();
 
+
+            //var filteredDatasetPositives = dataset.Where(x => Math.Abs(x.Output.PercentDayChange) < 1.0m);
+            //var medianPercent = GetMedian(filteredDatasetPositives.Select(x => x.Output.PercentDayChange).ToArray());
             //Load the data into a view
-            var datasetView = _mLContext.Data.LoadFromEnumerable(
+            var datasetViewPos = _mLContext.Data.LoadFromEnumerable(
                 dataset.Select(x =>
                 {
                     var normVector = x.Input;
-                    return new StockRiseDataFeature(
-                    normVector.Data, x.Output.PercentDayChange >= 0,
+                    return new StockCandlestickDataFeature(
+                    Array.ConvertAll(x.Input.Data, y => (float)y),
+                    x.Output.PercentDayChange > 0,
                     (float)x.Output.PercentDayChange,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
@@ -155,37 +160,66 @@ namespace GimmeMillions.Domain.ML.Candlestick
             IDataView testData = null; // dataSplit.TestSet;
             if (testFraction > 0.0)
             {
-                var dataSplit = _mLContext.Data.TrainTestSplit(datasetView, testFraction: testFraction);
+                var dataSplit = _mLContext.Data.TrainTestSplit(datasetViewPos, testFraction: testFraction);
                 trainData = dataSplit.TrainSet;
                 testData = dataSplit.TestSet;
             }
             else
             {
-                trainData = datasetView;
+                trainData = datasetViewPos;
             }
 
             
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
 
-            var ffEstimator = _mLContext.BinaryClassification.Trainers.FastTree(
-                       numberOfLeaves: Parameters.NumOfLeaves,
-                       numberOfTrees: Parameters.NumOfTrees,
-                       minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
+            //var estimator = _mLContext.BinaryClassification.Trainers.FastForest(
+            //           numberOfLeaves: Parameters.NumOfLeaves,
+            //           numberOfTrees: Parameters.NumOfTrees,
+            //           minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
+
+            var estimator = _mLContext.BinaryClassification.Trainers.FastTree(
+                      numberOfLeaves: Parameters.NumOfLeaves,
+                      numberOfTrees: Parameters.NumOfTrees,
+                      minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
+
+            //var estimator = _mLContext.BinaryClassification.Trainers.FastForest();
 
             Metadata.TrainingResults = CrossValidationResultsToMetrics(
-                _mLContext.BinaryClassification.CrossValidate(
-                    trainData, ffEstimator, numberOfFolds: Parameters.NumCrossValidations));
+                _mLContext.BinaryClassification.CrossValidateNonCalibrated(
+                    trainData, estimator, numberOfFolds: Parameters.NumCrossValidations));
 
-            _model = ffEstimator.Fit(trainData);
+            _model = estimator.Fit(trainData);
 
             if (testData != null)
             {
                 var testPredictions = _model.Transform(testData);
-
-                var testResults = _mLContext.BinaryClassification.Evaluate(testPredictions);
-
+                var testResults = _mLContext.BinaryClassification.EvaluateNonCalibrated(testPredictions);
                 Metadata.TrainingResults = new ModelMetrics(testResults);
+
+                var scores = testPredictions.GetColumn<float>("Score").ToArray();
+                var probabilities = testPredictions.GetColumn<float>("Probability").ToArray();
+                var predictedLabels = testPredictions.GetColumn<bool>("PredictedLabel").ToArray();
+                var labels = testPredictions.GetColumn<bool>("Label").ToArray();
+                var predictionData = new List<(float Score, float Probability, bool PredictedLabel, bool ActualLabel)>();
+                for(int i = 0; i < scores.Length; ++i)
+                {
+                    predictionData.Add((scores[i], probabilities[i], scores[i] > 0.0f, labels[i]));
+                }
+
+                predictionData = predictionData.OrderByDescending(x => x.Score).ToList();
+                var runningAccuracy = new List<double>();
+                double correct = 0.0;
+                for(int i = 0; i < predictionData.Count; ++i)
+                {
+                    if(predictionData[i].PredictedLabel == predictionData[i].ActualLabel)
+                    {
+                        correct++;
+                    }
+                    runningAccuracy.Add(correct / (double)(i + 1));
+                }
+
+
             }
             return Result.Ok<ModelMetrics>(Metadata.TrainingResults);
         }
@@ -221,12 +255,29 @@ namespace GimmeMillions.Domain.ML.Candlestick
         private SchemaDefinition GetSchemaDefinition(FeatureVector vector)
         {
             int featureDimension = vector.Length;
-            var definedSchema = SchemaDefinition.Create(typeof(StockRiseDataFeature));
+            var definedSchema = SchemaDefinition.Create(typeof(StockCandlestickDataFeature));
             var featureColumn = definedSchema["Features"].ColumnType as VectorDataViewType;
             var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
             definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
 
             return definedSchema;
+        }
+
+        public decimal GetMedian(decimal[] sourceNumbers)
+        {
+            //Framework 2.0 version of this method. there is an easier way in F4        
+            if (sourceNumbers == null || sourceNumbers.Length == 0)
+                throw new System.Exception("Median of empty array not defined.");
+
+            //make sure the list is sorted, but use a new array
+            decimal[] sortedPNumbers = (decimal[])sourceNumbers.Clone();
+            Array.Sort(sortedPNumbers);
+
+            //get the median
+            int size = sortedPNumbers.Length;
+            int mid = size / 2;
+            decimal median = (size % 2 != 0) ? (decimal)sortedPNumbers[mid] : ((decimal)sortedPNumbers[mid] + (decimal)sortedPNumbers[mid - 1]) / 2;
+            return median;
         }
 
     }

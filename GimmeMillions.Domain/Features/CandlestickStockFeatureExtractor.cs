@@ -1,49 +1,71 @@
 ﻿using GimmeMillions.Domain.Stocks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace GimmeMillions.Domain.Features
 {
-    public class CandlestickStockFeatureExtractor : IStockFeatureExtractor
+    public class CandlestickStockFeatureExtractor : IFeatureExtractor<StockData>
     {
         private int _version = 2;
+        private bool _normalize = false;
         public string Encoding { get; set; }
 
-        public CandlestickStockFeatureExtractor(int version = 1)
+        public CandlestickStockFeatureExtractor(int version = 2, bool normalize = false)
         {
             _version = version;
-            Encoding = $"Candlestick-v{_version}";
+            _normalize = normalize;
+            Encoding = $"Candlestick{_normalize}-v{_version}";
 
         }
 
-        public FeatureVector Extract(IEnumerable<StockData> stocks)
+        public double[] Extract(IEnumerable<(StockData Data, float Weight)> stocks)
         {
-            var feature = new FeatureVector();
-            feature.Encoding = Encoding;
             if(!stocks.Any())
             {
-                return feature;
+                return new double[0];
             }
 
-            var ordered = stocks.OrderBy(x => x.Date).ToList();
+            var ordered = stocks.OrderBy(x => x.Data.Date).ToList();
             var lastStock = ordered.Last();
-            feature.Date = lastStock.Date;
 
-            decimal average = (lastStock.Close + lastStock.Open + lastStock.Low + lastStock.High) / 4.0m;
-
-            feature.Data = new float[stocks.Count() * 4];
+            //decimal average = (lastStock.Data.Close + lastStock.Data.Open + lastStock.Data.Low + lastStock.Data.High) / 4.0m;
+            var average = stocks.Average(x => x.Data.Close);
+            decimal averageVolume = ordered.Average(x => x.Data.Volume);
+            var feature = new double[stocks.Count() * 5];
             int index = 0;
             foreach(var stock in ordered)
             {
-                feature.Data[index * 4] = (float)(stock.Open - average);
-                feature.Data[index * 4 + 1] = (float)(stock.Close - average);
-                feature.Data[index * 4 + 2] = (float)(stock.High - average);
-                feature.Data[index * 4 + 3] = (float)(stock.Low - average);
+                feature[index * 5] = (double)((stock.Data.Open - average) / average);
+                feature[index * 5 + 1] = (double)((stock.Data.Close - average) / average);
+                feature[index * 5 + 2] = (double)((stock.Data.High - average) / average);
+                feature[index * 5 + 3] = (double)((stock.Data.Low - average) / average);
+                feature[index * 5 + 4] = (double)(stock.Data.Volume / (averageVolume + 1.0m));
 
                 index++;
             }
 
+            if (_normalize)
+                return Normalize(feature);
+
             return feature;
+        }
+
+        private double[] Normalize(double[] feature)
+        {
+            var output = new double[feature.Length];
+            double stdev = Math.Sqrt(feature.Sum(x => Math.Pow(x, 2)));
+            if(stdev < 0.001)
+            {
+                stdev = 1.0;
+            }
+
+            for(int i = 0; i < feature.Length; ++i)
+            {
+                output[i] = (feature[i]) / stdev;
+            }
+
+            return output;
         }
     }
 }

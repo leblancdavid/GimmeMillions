@@ -40,11 +40,11 @@ namespace ModelTrainer
             //"CMS", "MCD", "SBUX", "LOW", "HMC", "HD", "GM", "ROST", "BBY", "MAR", "KO", "PEP", "GIS", "GE", "ET",
             //"T", "PFE", "PBR", "GILD", "CSCO", "NOK", "MGM", "XOM", "HAL", "JPM", "CMCSA", "MS", "CVX", "PCG", "MRK",
             //"V", "EBAY", "WMT", "LUV", "NKE", "JNJ", "SYF", "HLT", "CVS"};
-            var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
+            var datasetService = GetHistoricalFeatureDatasetService(dictionaryToUse);
 
-            var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
+            var recommendationSystem = new StockRecommendationSystem<FeatureVector>(datasetService, _pathToModels);
 
-            var startDate = new DateTime(2000, 1, 1);
+            var startDate = new DateTime(2005, 1, 11);
             var endDate = DateTime.Today.AddDays(-1.0);
 
             //double totalCount = 0.0, totalAccuracy = 0.0;
@@ -59,15 +59,17 @@ namespace ModelTrainer
                 //model.Parameters.NumOfLeaves = 20;
                 //model.Parameters.MinNumOfLeaves = 20;
 
-                var model = new MLStockKernelEstimationFastForestModel();
-                model.Parameters.FeatureSelectionRank = 2000;
-                model.Parameters.NumCrossValidations = 5;
-                model.Parameters.NumIterations = 5;
-                model.Parameters.KernelRank = 200;
-                model.Parameters.NumOfTrees = 1000;
-                model.Parameters.NumOfLeaves = 20;
-                model.Parameters.MinNumOfLeaves = 10;
-                model.Parameters.ChangePoint = StockChangePointMethod.PreviousCloseToClose;
+                var model = new AccordClassificationStockPredictor();
+
+                //var model = new MLStockKernelEstimationFastForestModel();
+                //model.Parameters.FeatureSelectionRank = 2000;
+                //model.Parameters.NumCrossValidations = 2;
+                //model.Parameters.NumIterations = 2;
+                //model.Parameters.KernelRank = 200;
+                //model.Parameters.NumOfTrees = 1000;
+                //model.Parameters.NumOfLeaves = 20;
+                //model.Parameters.MinNumOfLeaves = 10;
+                //model.Parameters.ChangePoint = StockChangePointMethod.PreviousCloseToClose;
 
                 //var model = new MLRegressionStockKernelEstimationLinearModel();
                 //model.Parameters.FeatureSelectionRank = 4000;
@@ -79,7 +81,7 @@ namespace ModelTrainer
                 var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
 
                 var filteredDataset = dataset.Value;
-                int numTestExamples = 20;
+                int numTestExamples = 100;
 
                 var testSet = filteredDataset.Skip(filteredDataset.Count() - numTestExamples);
                 var trainingSet = filteredDataset.Take(filteredDataset.Count() - numTestExamples);
@@ -89,7 +91,7 @@ namespace ModelTrainer
                 //Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank}");
                 //Console.WriteLine($"Pca Rank: { model.Parameters.PcaRank}");
 
-                Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank}");
+                //Console.WriteLine($"Num Features: { model.Parameters.FeatureSelectionRank}");
                // Console.WriteLine($"Number of Trees: { model.Parameters.NumOfTrees} \t Number of Leaves: { model.Parameters.NumOfLeaves}");
 
                 Stopwatch stopwatch = Stopwatch.StartNew();
@@ -111,15 +113,15 @@ namespace ModelTrainer
                 //Console.WriteLine($"Negative Precision: {trainingResult.Value.NegativePrecision} \t Negative Recall: {trainingResult.Value.NegativeRecall}");
 
                 Console.WriteLine($"-=== Saving Model {stock} ===-");
-                model.Save(_pathToModels);
+                //model.Save(_pathToModels);
 
                 Console.WriteLine($"-=== Testing Model  {stock} ===-");
                 double accuracy = 0.0;
                 foreach (var testExample in testSet)
                 {
                     var prediction = model.Predict(testExample.Input);
-                    if ((prediction.Score > 0.0 && testExample.Output.PercentChangeFromPreviousClose > 0) ||
-                         (prediction.Score <= 0.0 && testExample.Output.PercentChangeFromPreviousClose <= 0))
+                    if ((prediction.PredictedLabel && testExample.Output.PercentDayChange > 0) ||
+                         (!prediction.PredictedLabel && testExample.Output.PercentDayChange <= 0))
                     {
                         accuracy++;
                         //Console.WriteLine($"Good! Probability: {prediction.Probability}");
@@ -129,7 +131,7 @@ namespace ModelTrainer
                     {
                         //Console.WriteLine($"Bad! Probability: {prediction.Probability}");
                     }
-                    Console.WriteLine($"{testExample.Output.Date.ToString("MM/dd/yyyy")}, Predicted: {prediction.Score}, Actual: {testExample.Output.PercentChangeFromPreviousClose}");
+                    Console.WriteLine($"{testExample.Output.Date.ToString("MM/dd/yyyy")}, Predicted: {prediction.Probability}, Actual: {testExample.Output.PercentChangeFromPreviousClose}");
                 }
 
                 Console.WriteLine($"Test Accuracy {stock}: {accuracy / numTestExamples}");
@@ -144,7 +146,7 @@ namespace ModelTrainer
             Console.ReadLine();
         }
 
-        private static IFeatureDatasetService GetBoWFeatureDatasetService(string dictionaryToUse)
+        private static IFeatureDatasetService<FeatureVector> GetBoWFeatureDatasetService(string dictionaryToUse)
         {
             var featureChecker = new UsaLanguageChecker();
             featureChecker.Load(new StreamReader($"{_pathToLanguage}/usa.txt"));
@@ -159,9 +161,31 @@ namespace ModelTrainer
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
-            var cache = new FeatureJsonCache(_pathToCache);
+            var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
+            int numArticlesDays = 10;
+            return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, numArticlesDays, cache);
+        }
 
-            return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, cache);
+        private static IFeatureDatasetService<FeatureVector> GetHistoricalFeatureDatasetService(string dictionaryToUse)
+        {
+            var featureChecker = new UsaLanguageChecker();
+            featureChecker.Load(new StreamReader($"{_pathToLanguage}/usa.txt"));
+            var textProcessor = new DefaultTextProcessor(featureChecker);
+
+            var dictionaryRepo = new FeatureDictionaryJsonRepository(_pathToDictionary);
+            var dictionary = dictionaryRepo.GetFeatureDictionary(dictionaryToUse);
+
+            var accessKeys = new NYTApiAccessKeyRepository(_pathToKeys);
+            var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
+            var articlesRepo = new NYTArticleRepository(_pathToArticles);
+            var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
+
+            var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
+            var candlestickExtractor = new CandlestickStockFeatureExtractor();
+
+            return new HistoricalFeatureDatasetService(candlestickExtractor,
+                bow, articlesAccess, stocksRepo, cache);
         }
     }
 }

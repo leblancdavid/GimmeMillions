@@ -6,7 +6,8 @@ using System.IO;
 
 namespace GimmeMillions.DataAccess.Features
 {
-    public class FeatureJsonCache : IFeatureCache
+    public class FeatureJsonCache<TFeature> : IFeatureCache<TFeature>
+        where TFeature : FeatureVector
     {
         public readonly string _pathToCache;
         public FeatureJsonCache(string pathToCache)
@@ -19,29 +20,30 @@ namespace GimmeMillions.DataAccess.Features
             return File.Exists($"{_pathToCache}/{encoding}/{date.ToString("yyyy-MM-dd")}.json");
         }
 
-        public Result<FeatureVector> GetFeature(string encoding, DateTime date)
+        public Result<TFeature> GetFeature(string encoding, DateTime date)
         {
             try
             {
                 string fileName = $"{_pathToCache}/{encoding}/{date.ToString("yyyy-MM-dd")}.json";
                 if(!File.Exists(fileName))
                 {
-                    return Result.Failure<FeatureVector>($"No cache feature found with encoding {encoding} for {date.ToString("yyyy-MM-dd")}");
+                    return Result.Failure<TFeature>($"No cache feature found with encoding {encoding} for {date.ToString("yyyy-MM-dd")}");
                 }
                 var json = File.ReadAllText(fileName);
-                return Result.Ok(JsonConvert.DeserializeObject<FeatureVector>(json));
+                return Result.Ok(JsonConvert.DeserializeObject<TFeature>(json));
             }
             catch (Exception ex)
             {
-                return Result.Failure<FeatureVector>($"Error occurred while retrieving a feature from the cache: {ex.Message}");
+                return Result.Failure<TFeature>($"Error occurred while retrieving a feature from the cache: {ex.Message}");
             }
         }
 
-        public Result UpdateCache(FeatureVector featureVector)
+
+        public Result UpdateCache(string encoding, TFeature featureVector)
         {
             try
             {
-                string directory = $"{_pathToCache}/{featureVector.Encoding}/";
+                string directory = $"{_pathToCache}/{encoding}/";
                 if (!Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);

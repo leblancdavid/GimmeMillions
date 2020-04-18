@@ -82,12 +82,8 @@ namespace GimmeMillions.Domain.ML.Transforms
         public IDataView Transform(IDataView input)
         {
             var features = input.GetColumn<float[]>(_inputColumnName).ToArray();
-            var labels = input.GetColumn<bool>(_outputColumnName).ToArray();
-            var values = input.GetColumn<float>("Value").ToArray();
-            var dayOfTheWeek = input.GetColumn<float>("DayOfTheWeek").ToArray();
-            var month = input.GetColumn<float>("Month").ToArray();
-
             var output = new List<StockRiseDataFeature>();
+            int candlestickLength = 0;
             for(int i = 0; i < features.Length; ++i)
             {
                 var filtered = new float[_featureIndices.Length];
@@ -95,13 +91,15 @@ namespace GimmeMillions.Domain.ML.Transforms
                 {
                     filtered[j] = features[i][_featureIndices[j]];
                 }
-                output.Add(new StockRiseDataFeature(filtered, labels[i], values[i], dayOfTheWeek[i], month[i]));
+
+                output.Add(new StockRiseDataFeature(filtered, false, 0.0f, 0.0f, 0.0f));
             }
 
             int featureDimension = _featureIndices.Length;
             var definedSchema = SchemaDefinition.Create(typeof(StockRiseDataFeature));
-            var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
-            definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
+            var vectorItemType = ((VectorDataViewType)definedSchema["Features"].ColumnType).ItemType;
+            definedSchema["Features"].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
+
             return _mLContext.Data.LoadFromEnumerable(output, definedSchema);
         }
     }

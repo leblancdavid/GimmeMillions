@@ -43,15 +43,16 @@ namespace GimmeMillions.DataAccess.Stocks
             {
                 var fields = line.Split(',');
                 DateTime date;
-                decimal open, high, low, close, adjustedClose;
+                decimal open, high, low, close, adjustedClose, volume;
                 if(DateTime.TryParse(fields[0], out date) &&
                     decimal.TryParse(fields[1], out open) &&
                     decimal.TryParse(fields[2], out high) &&
                     decimal.TryParse(fields[3], out low) &&
                     decimal.TryParse(fields[4], out close) &&
-                    decimal.TryParse(fields[5], out adjustedClose))
+                    decimal.TryParse(fields[5], out adjustedClose) &&
+                    decimal.TryParse(fields[6], out volume))
                 {
-                    var stock = new StockData(symbol, date, open, high, low, close, adjustedClose);
+                    var stock = new StockData(symbol, date, open, high, low, close, adjustedClose, volume);
                     if (previous != null)
                     {
                         stock.PreviousClose = previous.Close;
@@ -62,7 +63,7 @@ namespace GimmeMillions.DataAccess.Stocks
                 
             }
 
-            return stocks;
+            return stocks.OrderBy(x => x.Date);
         }
 
         public IEnumerable<StockData> GetStocks(string symbol, DateTime start, DateTime end)

@@ -89,7 +89,7 @@ namespace GimmeMillions.Domain.ML.Transforms
             var output = new List<StockRegressionDataFeature>();
             for(int i = 0; i < features.Length; ++i)
             {
-                var filtered = new float[_featureIndices.Length];
+                var filtered = new double[_featureIndices.Length];
                 for(int j = 0; j < _featureIndices.Length; ++j)
                 {
                     filtered[j] = features[i][_featureIndices[j]];

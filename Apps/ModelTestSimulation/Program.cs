@@ -29,8 +29,10 @@ namespace ModelTestSimulation
         static void Main(string[] args)
         {
             string dictionaryToUse = "USA";
-            var datasetService = GetBoWFeatureDatasetService(dictionaryToUse);
-            var recommendationSystem = new StockRecommendationSystem(datasetService, _pathToModels);
+            var datasetService = GetHistoricalFeatureDatasetService(dictionaryToUse);
+            //var recommendationSystem = new StockRecommendationSystem<HistoricalFeatureVector>(datasetService, _pathToModels);
+            var recommendationSystem = new StockRecommendationSystem<FeatureVector>(datasetService, _pathToModels);
+
             var stockRepository = new StockDataRepository(_pathToStocks);
 
             //var stocks = new string[] { "F","INTC" };
@@ -120,7 +122,7 @@ namespace ModelTestSimulation
             Console.ReadLine();
         }
 
-        private static IFeatureDatasetService GetBoWFeatureDatasetService(string dictionaryToUse)
+        private static IFeatureDatasetService<FeatureVector> GetBoWFeatureDatasetService(string dictionaryToUse)
         {
             var featureChecker = new UsaLanguageChecker();
             featureChecker.Load(new StreamReader($"{_pathToLanguage}/usa.txt"));
@@ -135,9 +137,32 @@ namespace ModelTestSimulation
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
-            var cache = new FeatureJsonCache(_pathToCache);
+            var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
+            int numArticlesDays = 10;
 
-            return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, cache);
+            return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, numArticlesDays, cache);
+        }
+
+        private static IFeatureDatasetService<FeatureVector> GetHistoricalFeatureDatasetService(string dictionaryToUse)
+        {
+            var featureChecker = new UsaLanguageChecker();
+            featureChecker.Load(new StreamReader($"{_pathToLanguage}/usa.txt"));
+            var textProcessor = new DefaultTextProcessor(featureChecker);
+
+            var dictionaryRepo = new FeatureDictionaryJsonRepository(_pathToDictionary);
+            var dictionary = dictionaryRepo.GetFeatureDictionary(dictionaryToUse);
+
+            var accessKeys = new NYTApiAccessKeyRepository(_pathToKeys);
+            var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
+            var articlesRepo = new NYTArticleRepository(_pathToArticles);
+            var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
+
+            var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
+            var candlestickExtractor = new CandlestickStockFeatureExtractor();
+
+            return new HistoricalFeatureDatasetService(candlestickExtractor, 
+                bow, articlesAccess, stocksRepo, cache);
         }
     }
 }

@@ -1,10 +1,13 @@
 ﻿using FluentAssertions;
+using GimmeMillions.DataAccess.Articles;
 using GimmeMillions.DataAccess.Features;
+using GimmeMillions.DataAccess.Keys;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML.Candlestick;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,32 +23,61 @@ namespace GimmeMillions.Domain.Tests.ML
         private readonly string _pathToStocks = "../../../../../Repository/Stocks";
         private readonly string _pathToCache = "../../../../../Repository/Cache";
         private readonly string _pathToModels = "../../../../../Repository/Models";
-        private readonly string _pathToKeys = "../../../../Repository/Keys";
+        private readonly string _pathToKeys = "../../../../../Repository/Keys";
 
         [Fact]
         public void ShouldTrainUsingCandlestickFeatures()
         {
-            var datasetService = GetCandlestickFeatureDatasetService();
+            var datasetService = GetHistoricalFeatureDatasetService();
             var model = new MLStockFastForestCandlestickModel();
-            model.Parameters.NumCrossValidations = 10;
-            model.Parameters.NumOfTrees = 100;
-            model.Parameters.NumOfLeaves = 20;
-            model.Parameters.MinNumOfLeaves = 5;
+            model.Parameters.NumCrossValidations = 2;
+            model.Parameters.NumOfTrees = 500;
+            model.Parameters.NumOfLeaves = 50;
+            model.Parameters.MinNumOfLeaves = 100;
 
-            var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 1), new DateTime(2020, 3, 1));
+            var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 30), new DateTime(2020, 4, 9));
             dataset.Any().Should().BeTrue();
 
-            var trainingResults = model.Train(dataset, 0.1);
+            var trainingResults = model.Train(dataset, 0.0);
+
+            model.Save(_pathToModels);
         }
 
  
-        private IFeatureDatasetService GetCandlestickFeatureDatasetService()
+        private IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetService()
         {
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
-            var cache = new FeatureJsonCache(_pathToCache);
+            var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             var featureExtractor = new CandlestickStockFeatureExtractor();
-            return new CandlestickStockFeatureDatasetService(featureExtractor, stocksRepo, null, false);
+            //var featureExtractor = new CandlestickStockFeatureExtractorV2();
+            //var featureExtractor = new CandlestickSimplifiedStockFeatureExtractor();
+            int numberSamples = 40;
+            return new CandlestickStockFeatureDatasetService(featureExtractor, stocksRepo, cache, numberSamples);
+        }
+
+        private IFeatureDatasetService<FeatureVector> GetHistoricalFeatureDatasetService()
+        {
+            var featureChecker = new UsaLanguageChecker();
+            featureChecker.Load(new StreamReader($"{_pathToLanguage}/usa.txt"));
+            var textProcessor = new DefaultTextProcessor(featureChecker);
+
+            var dictionaryRepo = new FeatureDictionaryJsonRepository(_pathToDictionary);
+            var dictionary = dictionaryRepo.GetFeatureDictionary("USA");
+
+            var accessKeys = new NYTApiAccessKeyRepository(_pathToKeys);
+            var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
+            var akmExtractor = new AKMBoWFeatureVectorExtractor(bow, 1000);
+            akmExtractor.Load(_pathToModels);
+
+            var stockExtractor = new CandlestickStockFeatureExtractor();
+
+            var articlesRepo = new NYTArticleRepository(_pathToArticles);
+            var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
+
+            var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
+            return new HistoricalFeatureDatasetService(stockExtractor, akmExtractor, articlesAccess, stocksRepo, cache);
         }
     }
 }

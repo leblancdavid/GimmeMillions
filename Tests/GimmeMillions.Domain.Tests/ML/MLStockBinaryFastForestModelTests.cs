@@ -148,7 +148,7 @@ namespace GimmeMillions.Domain.Tests.ML
             preLoadPrediction.Score.Should().Be(postLoadPrediction.Score);
         }
 
-        private IFeatureDatasetService GetTestBoWFeatureDatasetService()
+        private IFeatureDatasetService<FeatureVector> GetTestBoWFeatureDatasetService()
         {
             var featureChecker = new UsaLanguageChecker();
             featureChecker.Load(new StreamReader($"{_pathToLanguage}/usa.txt"));
@@ -163,12 +163,12 @@ namespace GimmeMillions.Domain.Tests.ML
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
-            var cache = new FeatureJsonCache(_pathToCache);
-
-            return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, cache);
+            var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
+            int numArticlesDays = 10;
+            return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, numArticlesDays, cache);
         }
 
-        private IFeatureDatasetService GetTestRandomDatasetService(int seed, int featureSize)
+        private IFeatureDatasetService<FeatureVector> GetTestRandomDatasetService(int seed, int featureSize)
         {
             return new RandomFeatureDatasetService(seed, featureSize);
         }

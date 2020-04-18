@@ -13,7 +13,7 @@ namespace GimmeMillions.Domain.ML.Transforms
 {
     public class SupervisedNormalizerTransform : ITransformer
     {
-        private (float pMean, float pStdev, float nMean, float nStdev)[] _statistics;
+        private (double pMean, double pStdev, double nMean, double nStdev)[] _statistics;
         private string _inputColumnName;
         private string _outputColumnName;
         private MLContext _mLContext;
@@ -21,8 +21,8 @@ namespace GimmeMillions.Domain.ML.Transforms
         public bool IsRowToRowMapper => true;
 
         public SupervisedNormalizerTransform(MLContext mLContext,
-            (float pMean, float pStdev, float nMean, float nStdev)[] statistics,
-            string inputColumnName = "Features",
+            (double pMean, double pStdev, double nMean, double nStdev)[] statistics,
+            string inputColumnName = "News",
             string outputColumnName = "Label")
         {
             _mLContext = mLContext;
@@ -33,7 +33,7 @@ namespace GimmeMillions.Domain.ML.Transforms
 
         public static Result<SupervisedNormalizerTransform> LoadFromFile(string fileName,
             MLContext mLContext,
-            string inputColumnName = "Features",
+            string inputColumnName = "News",
             string outputColumnName = "Label")
         {
             if (!File.Exists(fileName))
@@ -42,7 +42,7 @@ namespace GimmeMillions.Domain.ML.Transforms
             }
             var json = File.ReadAllText(fileName);
             return Result.Ok(new SupervisedNormalizerTransform(mLContext,
-                JsonConvert.DeserializeObject<(float pMean, float pStdev, float nMean, float nStdev)[]>(json),
+                JsonConvert.DeserializeObject<(double pMean, double pStdev, double nMean, double nStdev)[]>(json),
                 inputColumnName, outputColumnName));
         }
 
@@ -82,6 +82,7 @@ namespace GimmeMillions.Domain.ML.Transforms
         public IDataView Transform(IDataView input)
         {
             var features = input.GetColumn<float[]>(_inputColumnName).ToArray();
+            var candlesticks = input.GetColumn<float[]>("Candlestick").ToArray();
             var labels = input.GetColumn<bool>(_outputColumnName).ToArray();
             var values = input.GetColumn<float>("Value").ToArray();
             var dayOfTheWeek = input.GetColumn<float>("DayOfTheWeek").ToArray();
@@ -93,13 +94,13 @@ namespace GimmeMillions.Domain.ML.Transforms
                 var normalized = new float[_statistics.Length];
                 for (int j = 0; j < _statistics.Length; ++j)
                 {
-                    float pos = (features[i][j] - _statistics[j].pMean) / _statistics[j].pStdev;
-                    float neg = (features[i][j] - _statistics[j].nMean) / _statistics[j].nStdev;
-                    if(float.IsNaN(pos))
+                    double pos = (features[i][j] - _statistics[j].pMean) / _statistics[j].pStdev;
+                    double neg = (features[i][j] - _statistics[j].nMean) / _statistics[j].nStdev;
+                    if(double.IsNaN(pos))
                     {
                         pos = 0.0f;
                     }
-                    if(float.IsNaN(neg))
+                    if(double.IsNaN(neg))
                     {
                         neg = 0.0f;
                     }
@@ -114,7 +115,7 @@ namespace GimmeMillions.Domain.ML.Transforms
                     //    normalized[j] = neg;
                     //}
 
-                    normalized[j] = Math.Abs(neg) - Math.Abs(pos);
+                    normalized[j] = (float)(Math.Abs(neg) - Math.Abs(pos));
                 }
                 output.Add(new StockRiseDataFeature(normalized, labels[i], values[i], dayOfTheWeek[i], month[i]));
             }

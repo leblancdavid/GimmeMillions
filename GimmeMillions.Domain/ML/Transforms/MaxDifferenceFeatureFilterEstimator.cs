@@ -17,7 +17,7 @@ namespace GimmeMillions.Domain.ML.Transforms
         private MLContext _mLContext;
 
         public MaxDifferenceFeatureFilterEstimator(MLContext mLContext,
-            string inputColumnName = "Features",
+            string inputColumnName = "News",
             string outputColumnName = "Label",
             int rank = 1000,
             bool positiveSort = true)

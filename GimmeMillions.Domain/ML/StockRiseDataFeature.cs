@@ -14,13 +14,13 @@ namespace GimmeMillions.Domain.ML
         public float DayOfTheWeek { get; set; }
         public float Month { get; set; }
 
-        public StockRiseDataFeature(float[] input, 
-            bool label, 
-            float value, 
+        public StockRiseDataFeature(float[] features,
+            bool label,
+            float value,
             float dayOfTheWeek,
             float month)
         {
-            Features = input;
+            Features = features;
             Label = label;
             Value = value;
             DayOfTheWeek = dayOfTheWeek;

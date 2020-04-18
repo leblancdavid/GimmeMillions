@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.Features
 {
-    public class RandomFeatureDatasetService : IFeatureDatasetService
+    public class RandomFeatureDatasetService : IFeatureDatasetService<FeatureVector>
     {
         private Random _random;
         private int _featureSize;
@@ -31,7 +31,7 @@ namespace GimmeMillions.Domain.Features
             return Result.Ok(GetNextRandomFeatureVector());
         }
 
-        public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol, DateTime startDate = default, DateTime endDate = default)
+        public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol, DateTime startDate = default, DateTime endDate = default, bool updateStocks = false)
         {
             var dataset = new List<(FeatureVector Input, StockData Output)>();
             var currentDate = startDate;
@@ -65,10 +65,11 @@ namespace GimmeMillions.Domain.Features
                 (decimal)42.0,
                 (decimal)0.0,
                 closingPrice,
-                (decimal)(_random.NextDouble() * 5.0));
+                (decimal)(_random.NextDouble() * 5.0),
+                (decimal)(_random.NextDouble() * 5000.0));
         }
 
-        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default, DateTime endDate = default)
+        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default, DateTime endDate = default, bool updateStocks = false)
         {
             throw new NotImplementedException();
         }
