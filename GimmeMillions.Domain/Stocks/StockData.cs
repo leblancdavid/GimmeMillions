@@ -106,5 +106,20 @@ namespace GimmeMillions.Domain.Stocks
             PreviousClose = open;
             Volume = volume;
         }
+
+        public StockData(string symbol, DateTime date,
+           decimal open, decimal high, decimal low, decimal close, decimal adjClose, decimal volume,
+           decimal previousClose)
+        {
+            Symbol = symbol;
+            Date = date;
+            Open = open;
+            High = high;
+            Low = low;
+            Close = close;
+            AdjustedClose = adjClose;
+            PreviousClose = previousClose;
+            Volume = volume;
+        }
     }
 }
