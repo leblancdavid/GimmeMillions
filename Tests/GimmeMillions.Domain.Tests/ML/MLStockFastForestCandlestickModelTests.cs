@@ -49,12 +49,12 @@ namespace GimmeMillions.Domain.Tests.ML
         {
             var datasetService = GetHistoricalFeatureDatasetService(10, 5, FrequencyTimeframe.Weekly);
             var model = new MLStockFastForestCandlestickModel();
-            model.Parameters.NumCrossValidations = 2;
+            model.Parameters.NumCrossValidations = 3;
             model.Parameters.NumOfTrees = 500;
             model.Parameters.NumOfLeaves = 50;
             model.Parameters.MinNumOfLeaves = 100;
 
-            var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 30), DateTime.Today);
+            var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 1), DateTime.Today);
             dataset.Any().Should().BeTrue();
 
             var trainingResults = model.Train(dataset, 0.0);
