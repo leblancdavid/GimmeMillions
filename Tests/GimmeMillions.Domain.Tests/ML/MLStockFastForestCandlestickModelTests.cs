@@ -29,11 +29,11 @@ namespace GimmeMillions.Domain.Tests.ML
         [Fact]
         public void ShouldTrainUsingDailyCandlestickFeatures()
         {
-            var datasetService = GetHistoricalFeatureDatasetService();
+            var datasetService = GetHistoricalFeatureDatasetService(10, 20, FrequencyTimeframe.Daily);
             var model = new MLStockFastForestCandlestickModel();
             model.Parameters.NumCrossValidations = 2;
-            model.Parameters.NumOfTrees = 500;
-            model.Parameters.NumOfLeaves = 50;
+            model.Parameters.NumOfTrees = 200;
+            model.Parameters.NumOfLeaves = 20;
             model.Parameters.MinNumOfLeaves = 100;
 
             var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 30), DateTime.Today);
@@ -47,14 +47,14 @@ namespace GimmeMillions.Domain.Tests.ML
         [Fact]
         public void ShouldTrainUsingWeeklyCandlestickFeatures()
         {
-            var datasetService = GetHistoricalFeatureDatasetService(10, 5, FrequencyTimeframe.Weekly);
+            var datasetService = GetHistoricalFeatureDatasetService(10, 10, FrequencyTimeframe.Weekly);
             var model = new MLStockFastForestCandlestickModel();
             model.Parameters.NumCrossValidations = 3;
-            model.Parameters.NumOfTrees = 500;
-            model.Parameters.NumOfLeaves = 50;
+            model.Parameters.NumOfTrees = 200;
+            model.Parameters.NumOfLeaves = 20;
             model.Parameters.MinNumOfLeaves = 100;
 
-            var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 1), DateTime.Today);
+            var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 1), DateTime.Today, false);
             dataset.Any().Should().BeTrue();
 
             var trainingResults = model.Train(dataset, 0.0);

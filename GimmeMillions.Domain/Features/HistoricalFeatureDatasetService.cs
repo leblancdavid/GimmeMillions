@@ -118,7 +118,7 @@ namespace GimmeMillions.Domain.Features
                 if (date > stocks.Last().Date)
                     stockIndex = stocks.Count - 1;
                 else
-                    stockIndex = stocks.IndexOf(outputStock);
+                    stockIndex = stocks.IndexOf(outputStock) - 1;
                 
                 for (int i = 0; i < _numStockSamples; ++i)
                 {
@@ -192,7 +192,7 @@ namespace GimmeMillions.Domain.Features
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol, DateTime startDate = default, DateTime endDate = default, bool updateStocks = false)
         {
             var stocks = updateStocks ?
-                   _stockRepository.UpdateStocks(symbol).ToList() :
+                   _stockRepository.UpdateStocks(symbol, _stockSamplingFrequency).ToList() :
                    _stockRepository.GetStocks(symbol, _stockSamplingFrequency).ToList();
             if (!stocks.Any())
             {

@@ -38,7 +38,7 @@ namespace GimmeMillions.DataAccess.Stocks
             return _stockRepository.GetSymbols();
         }
 
-        public IEnumerable<StockData> UpdateStocks(string symbol)
+        public IEnumerable<StockData> UpdateStocks(string symbol, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily)
         {
             try
             {
@@ -53,10 +53,10 @@ namespace GimmeMillions.DataAccess.Stocks
             catch (Exception ex)
             {
                 Console.WriteLine($"Error retrieving stock {symbol}: {ex.Message}");
-                return _stockRepository.GetStocks(symbol);
+                return _stockRepository.GetStocks(symbol, frequencyTimeframe);
             }
 
-            return _stockRepository.GetStocks(symbol);
+            return _stockRepository.GetStocks(symbol, frequencyTimeframe);
         }
     }
 }

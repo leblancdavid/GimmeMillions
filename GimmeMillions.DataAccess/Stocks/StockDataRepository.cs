@@ -89,12 +89,14 @@ namespace GimmeMillions.DataAccess.Stocks
             while (i < dailyStocks.Count - 1 &&
                 dailyStocks[i].Date.DayOfWeek >= startingDay.Date.DayOfWeek)
             {
-                ++i;
                 startingDay = dailyStocks[i];
+                ++i;
             }
 
-            while(i < dailyStocks.Count - 1)
+
+            while (i < dailyStocks.Count - 1)
             {
+                startingDay = dailyStocks[i];
                 var endingDay = startingDay;
                 decimal high = 0.0m;
                 decimal low = decimal.MaxValue;
