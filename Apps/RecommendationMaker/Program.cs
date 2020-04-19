@@ -23,22 +23,23 @@ namespace RecommendationMaker
 
         static void Main(string[] args)
         {
-            var datasetService = GetHistoricalFeatureDatasetService();
+            var datasetService = GetHistoricalFeatureDatasetService(10, 20, FrequencyTimeframe.Daily);
             var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, _pathToModels);
 
             var model = new MLStockFastForestCandlestickModel();
-            model.Load(_pathToModels, "ANY_SYMBOL", "AKMBoW1000v1_10d-CandlestickFalse-v2_10d");
+            model.Load(_pathToModels, "ANY_SYMBOL", "AKMBoW1000v1_10d-CandlestickFalse-v2_20d");
+            //model.Load(_pathToModels, "ANY_SYMBOL", "AKMBoW1000v1_10d-CandlestickFalse-v2_20d");
 
             recommendationSystem.AddModel(model);
-            recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/AKMFF-config-v1");
+            recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/AKMFF-daily-config-v1");
             //recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/AKMFF-config-v1");
 
-            //var date = new DateTime(2019, 6, 14);
-            var date = DateTime.Today;
+            var date = new DateTime(2019, 6, 17);
+            //var date = DateTime.Today;
 
             var recommendations = recommendationSystem.GetAllRecommendations(date);
 
-            Console.WriteLine("Today's recommended peak stocks:");
+            Console.WriteLine($"Stock recommendation for {date.ToString("MM/dd/yyyy")}:");
             foreach(var r in recommendations)
             {
                 Console.WriteLine($"{r.Symbol}: {r.Prediction.Score} ({r.Prediction.Probability})");
@@ -77,7 +78,8 @@ namespace RecommendationMaker
             return new DefaultFeatureDatasetService(bow, articlesAccess, stocksRepo, numArticlesDays, cache);
         }
 
-        private static HistoricalFeatureDatasetService GetHistoricalFeatureDatasetService()
+        private static HistoricalFeatureDatasetService GetHistoricalFeatureDatasetService(int numArticleDays = 10,
+            int numStockSamples = 10, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily)
         {
             var featureChecker = new UsaLanguageChecker();
             featureChecker.Load(new StreamReader($"{_pathToLanguage}/usa.txt"));
@@ -98,9 +100,6 @@ namespace RecommendationMaker
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
-            int numArticleDays = 10;
-            int numStockSamples = 10;
-            FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily;
             return new HistoricalFeatureDatasetService(stockExtractor, akmExtractor, articlesAccess, stocksRepo,
                 numArticleDays, numStockSamples, frequencyTimeframe, cache);
         }

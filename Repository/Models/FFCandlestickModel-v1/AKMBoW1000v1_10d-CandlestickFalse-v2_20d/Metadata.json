@@ -1,13 +1,13 @@
 {
   "TrainingResults": {
-    "AreaUnderRocCurve": 0.72889015093212617,
-    "Accuracy": 0.664123533952282,
-    "PositivePrecision": 0.65573870254226752,
-    "PositiveRecall": 0.67903363518039328,
-    "NegativePrecision": 0.67298020128172942,
-    "NegativeRecall": 0.649457959359975,
-    "F1Score": 0.66717723830179043,
-    "AreaUnderPrecisionRecallCurve": 0.71222536647128387
+    "AreaUnderRocCurve": 0.72453797680955567,
+    "Accuracy": 0.66164223624983864,
+    "PositivePrecision": 0.65728044601791735,
+    "PositiveRecall": 0.6634716179326563,
+    "NegativePrecision": 0.66601152349656256,
+    "NegativeRecall": 0.65984237508913268,
+    "F1Score": 0.660361389926896,
+    "AreaUnderPrecisionRecallCurve": 0.707743291546425
   },
   "Parameters": null,
   "IsTrained": true,

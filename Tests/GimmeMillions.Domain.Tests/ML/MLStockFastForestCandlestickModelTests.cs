@@ -32,8 +32,8 @@ namespace GimmeMillions.Domain.Tests.ML
             var datasetService = GetHistoricalFeatureDatasetService(10, 20, FrequencyTimeframe.Daily);
             var model = new MLStockFastForestCandlestickModel();
             model.Parameters.NumCrossValidations = 2;
-            model.Parameters.NumOfTrees = 200;
-            model.Parameters.NumOfLeaves = 20;
+            model.Parameters.NumOfTrees = 500;
+            model.Parameters.NumOfLeaves = 100;
             model.Parameters.MinNumOfLeaves = 100;
 
             var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 30), DateTime.Today);
@@ -41,7 +41,7 @@ namespace GimmeMillions.Domain.Tests.ML
 
             var trainingResults = model.Train(dataset, 0.0);
 
-            model.Save(_pathToModels);
+            //model.Save(_pathToModels);
         }
 
         [Fact]
@@ -50,8 +50,8 @@ namespace GimmeMillions.Domain.Tests.ML
             var datasetService = GetHistoricalFeatureDatasetService(10, 10, FrequencyTimeframe.Weekly);
             var model = new MLStockFastForestCandlestickModel();
             model.Parameters.NumCrossValidations = 3;
-            model.Parameters.NumOfTrees = 200;
-            model.Parameters.NumOfLeaves = 20;
+            model.Parameters.NumOfTrees = 1000;
+            model.Parameters.NumOfLeaves = 200;
             model.Parameters.MinNumOfLeaves = 100;
 
             var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 1), DateTime.Today, false);
