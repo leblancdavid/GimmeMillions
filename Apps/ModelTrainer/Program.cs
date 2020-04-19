@@ -187,8 +187,9 @@ namespace ModelTrainer
             int numArticleDays = 10;
             int numStockSamples = 10;
             FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily;
+            bool includeComposites = false;
             return new HistoricalFeatureDatasetService(candlestickExtractor, bow, articlesAccess, stocksRepo,
-                numArticleDays, numStockSamples, frequencyTimeframe, cache);
+                numArticleDays, numStockSamples, frequencyTimeframe, includeComposites, cache);
         }
     }
 }

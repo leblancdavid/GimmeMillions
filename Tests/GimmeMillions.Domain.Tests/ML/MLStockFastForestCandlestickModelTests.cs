@@ -76,7 +76,8 @@ namespace GimmeMillions.Domain.Tests.ML
         }
 
         private IFeatureDatasetService<FeatureVector> GetHistoricalFeatureDatasetService(int numArticleDays = 10,
-            int numStockSamples = 10, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily)
+            int numStockSamples = 10, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily,
+            bool includeComposites = false)
         {
             var featureChecker = new UsaLanguageChecker();
             featureChecker.Load(new StreamReader($"{_pathToLanguage}/usa.txt"));
@@ -99,7 +100,7 @@ namespace GimmeMillions.Domain.Tests.ML
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
 
             return new HistoricalFeatureDatasetService(stockExtractor, akmExtractor, articlesAccess, stocksRepo,
-                numArticleDays, numStockSamples, frequencyTimeframe, cache);
+                numArticleDays, numStockSamples, frequencyTimeframe, includeComposites, cache);
         }
     }
 }

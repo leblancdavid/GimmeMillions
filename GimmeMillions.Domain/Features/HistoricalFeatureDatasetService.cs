@@ -19,6 +19,7 @@ namespace GimmeMillions.Domain.Features
         private int _numStockSamples = 10;
         private int _numArticleDays = 10;
         private FrequencyTimeframe _stockSamplingFrequency = FrequencyTimeframe.Daily;
+        private bool _includeCompositeIndicators = false;
         private string _articlesEncodingKey;
         private string _stocksEncodingKey;
         private string _encodingKey;
@@ -40,6 +41,7 @@ namespace GimmeMillions.Domain.Features
             int numArticleDays = 10,
             int numStockSamples = 10,
             FrequencyTimeframe stockSamplingFrequency = FrequencyTimeframe.Daily,
+            bool includeComposite = false,
             IFeatureCache<FeatureVector> featureCache = null,
             bool refreshCache = false)
         {
@@ -51,12 +53,14 @@ namespace GimmeMillions.Domain.Features
             _numArticleDays = numArticleDays;
             _numStockSamples = numStockSamples;
             _stockSamplingFrequency = stockSamplingFrequency;
+            _includeCompositeIndicators = includeComposite;
 
             _featureCache = featureCache;
             RefreshCache = refreshCache;
             _articlesEncodingKey = $"{_articleFeatureExtractor.Encoding}_{_numArticleDays}d";
             string timeIndicator = _stockSamplingFrequency == FrequencyTimeframe.Daily ? "d" : "w";
-            _stocksEncodingKey = $"{_stockFeatureExtractor.Encoding}_{_numStockSamples}{timeIndicator}";
+            string composite = _includeCompositeIndicators ? "_withComposite" : "";
+            _stocksEncodingKey = $"{_stockFeatureExtractor.Encoding}_{_numStockSamples}{timeIndicator}{composite}";
             _encodingKey = $"{_articlesEncodingKey}-{_stocksEncodingKey}";
 
         }
@@ -88,10 +92,24 @@ namespace GimmeMillions.Domain.Features
                     $"No stock found for symbol '{symbol}' on {date.ToString("yyyy/MM/dd")}");
             }
 
-            return GetData(symbol, date, stocks);
+            List<StockData> dowStocks = null;
+            List<StockData> snpStocks = null;
+            List<StockData> nasStocks = null;
+            if (_includeCompositeIndicators)
+            {
+                dowStocks = _stockRepository.GetStocks("^DJI", _stockSamplingFrequency).ToList();
+                snpStocks = _stockRepository.GetStocks("^GSPC", _stockSamplingFrequency).ToList();
+                nasStocks = _stockRepository.GetStocks("^IXIC", _stockSamplingFrequency).ToList();
+            }
+
+            return GetData(symbol, date, stocks, dowStocks, snpStocks, nasStocks);
         }
 
-        private Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date, List<StockData> stocks)
+        private Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date, 
+            List<StockData> stocks,
+            List<StockData> dowStocks = null,
+            List<StockData> snpStocks = null,
+            List<StockData> nasStocks = null)
         {
             if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
             {
@@ -212,6 +230,22 @@ namespace GimmeMillions.Domain.Features
             {
                 return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(
                     $"No stocks found for symbol '{symbol}'");
+            }
+
+            List<StockData> dowStocks = null;
+            List<StockData> snpStocks = null;
+            List<StockData> nasStocks = null;
+            if (_includeCompositeIndicators)
+            {
+                dowStocks = updateStocks ?
+                   _stockRepository.UpdateStocks("^DJI", _stockSamplingFrequency).ToList() :
+                   _stockRepository.GetStocks("^DJI", _stockSamplingFrequency).ToList();
+                snpStocks = updateStocks ?
+                   _stockRepository.UpdateStocks("^GSPC", _stockSamplingFrequency).ToList() :
+                   _stockRepository.GetStocks("^GSPC", _stockSamplingFrequency).ToList();
+                nasStocks = updateStocks ?
+                   _stockRepository.UpdateStocks("^IXIC", _stockSamplingFrequency).ToList() :
+                   _stockRepository.GetStocks("^IXIC", _stockSamplingFrequency).ToList();
             }
 
 
