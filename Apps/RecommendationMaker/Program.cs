@@ -23,19 +23,22 @@ namespace RecommendationMaker
 
         static void Main(string[] args)
         {
-            var datasetService = GetHistoricalFeatureDatasetService(10, 20, FrequencyTimeframe.Daily);
+            var datasetService = GetHistoricalFeatureDatasetService(10, 20, FrequencyTimeframe.Daily, true);
+            //var datasetService = GetHistoricalFeatureDatasetService(10, 10, FrequencyTimeframe.Weekly, false);
             var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, _pathToModels);
 
             var model = new MLStockFastForestCandlestickModel();
-            model.Load(_pathToModels, "ANY_SYMBOL", "AKMBoW1000v1_10d-CandlestickFalse-v2_20d");
+            model.Load(_pathToModels, "ANY_SYMBOL", "AKMBoW1000v1_10d-CandlestickFalse-v2_20d_withComposite");
+            //model.Load(_pathToModels, "ANY_SYMBOL", "AKMBoW1000v1_10d-CandlestickFalse-v2_10w");
             //model.Load(_pathToModels, "ANY_SYMBOL", "AKMBoW1000v1_10d-CandlestickFalse-v2_20d");
 
             recommendationSystem.AddModel(model);
             recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/AKMFF-daily-config-v1");
+            //recommendationSystem.SaveConfiguration($"{_pathToRecommendationConfigs}/AKMFF-weekly-config-v1");
             //recommendationSystem.LoadConfiguration($"{_pathToRecommendationConfigs}/AKMFF-config-v1");
 
-            var date = new DateTime(2019, 6, 17);
-            //var date = DateTime.Today;
+            //var date = new DateTime(2019, 6, 19);
+            var date = DateTime.Today;
 
             var recommendations = recommendationSystem.GetAllRecommendations(date);
 

@@ -159,6 +159,37 @@ namespace GimmeMillions.Domain.Features
                 articlesVector = articleResult.Value.Data;
             }
 
+            if(_includeCompositeIndicators)
+            {
+                var dowVector = GetStockFeatureVector("^DJI", date, dowStocks);
+                if (dowVector.IsFailure)
+                {
+                    return Result.Failure<(FeatureVector Input, StockData Output)>(dowVector.Error);
+                }
+                var snpVector = GetStockFeatureVector("^GSPC", date, snpStocks);
+                if (snpVector.IsFailure)
+                {
+                    return Result.Failure<(FeatureVector Input, StockData Output)>(snpVector.Error);
+                }
+                var nasVector = GetStockFeatureVector("^IXIC", date, nasStocks);
+                if (nasVector.IsFailure)
+                {
+                    return Result.Failure<(FeatureVector Input, StockData Output)>(nasVector.Error);
+                }
+
+                var compositeVector = new FeatureVector(
+                    articlesVector
+                    .Concat(dowVector.Value)
+                    .Concat(snpVector.Value)
+                    .Concat(nasVector.Value)
+                    .Concat(stocksVector.Value).ToArray(), date, _encodingKey);
+
+                if (_featureCache != null)
+                    _featureCache.UpdateCache($"{_encodingKey}/{symbol}", compositeVector);
+
+                return Result.Ok((Input: compositeVector, Output: outputStock));
+            }
+
             var extractedVector = new FeatureVector(articlesVector.Concat(stocksVector.Value).ToArray(), date, _encodingKey);
 
             if (_featureCache != null)
@@ -257,7 +288,7 @@ namespace GimmeMillions.Domain.Features
                 if ((startDate == default(DateTime) || startDate < stock.Date) &&
                     (endDate == default(DateTime) || endDate > stock.Date))
                 {
-                    var data = GetData(symbol, stock.Date, stocks);
+                    var data = GetData(symbol, stock.Date, stocks, dowStocks, snpStocks, nasStocks);
                     if(data.IsFailure)
                     {
                         return;

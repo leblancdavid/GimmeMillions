@@ -29,7 +29,7 @@ namespace GimmeMillions.Domain.Tests.ML
         [Fact]
         public void ShouldTrainUsingDailyCandlestickFeatures()
         {
-            var datasetService = GetHistoricalFeatureDatasetService(10, 20, FrequencyTimeframe.Daily);
+            var datasetService = GetHistoricalFeatureDatasetService(10, 20, FrequencyTimeframe.Daily, true);
             var model = new MLStockFastForestCandlestickModel();
             model.Parameters.NumCrossValidations = 2;
             model.Parameters.NumOfTrees = 500;
@@ -41,7 +41,7 @@ namespace GimmeMillions.Domain.Tests.ML
 
             var trainingResults = model.Train(dataset, 0.0);
 
-            //model.Save(_pathToModels);
+            model.Save(_pathToModels);
         }
 
         [Fact]
