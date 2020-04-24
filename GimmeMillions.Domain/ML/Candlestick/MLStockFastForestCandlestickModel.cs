@@ -95,14 +95,14 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var score = prediction.GetColumn<float>("Score").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
-            var probability = prediction.GetColumn<float>("Probability").ToArray();
+            //var probability = prediction.GetColumn<float>("Probability").ToArray();
 
             return new StockPrediction()
             {
                 Score = score[0],
                 PredictedLabel = score[0] > 0.0f,
                 //Probability = probability[0]
-                Probability = probability[0]
+                Probability = score[0]
             };
         }
 
@@ -183,7 +183,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
                     x.Output.PercentDayChange > 0.0m,
-                    (float)Math.Abs(x.Output.PercentDayChange),
+                    (float)x.Output.PercentDayChange,
                     x.Output.PercentDayChange > 0.0m ? 1 : 0,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
@@ -211,13 +211,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
             //           numberOfTrees: Parameters.NumOfTrees,
             //           minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
 
-            var estimator = _mLContext.Transforms.Conversion.MapValueToKey(new[] 
-            { 
-                new InputOutputColumnPair("GroupId", "Label"),
-                new InputOutputColumnPair("Rank", "Rank")
-            })
-                .Append(_mLContext.Ranking.Trainers.FastTree(
-                       "Rank", "Features", "GroupId", exampleWeightColumnName: "Value"));
+            var estimator = _mLContext.Regression.Trainers.FastTree(
+                       "Value", "Features");
                 //.Append(_mLContext.BinaryClassification.Calibrators.Platt());
 
             //var estimator = _mLContext.BinaryClassification.Trainers.FastForest();
@@ -244,12 +239,10 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 var predictionData = new List<(float Score, float Probability, bool PredictedLabel, bool ActualLabel)>();
                 for(int i = 0; i < features.Length; ++i)
                 {
-                    var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), true);
-                    var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
+                    var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
+                    //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
-                    var score = posS.Score > negS.Score ? posS.Score : negS.Score;
-                    var predictedLabel = posS.Score > negS.Score;
-                    predictionData.Add(((float)score, values[i], predictedLabel, labels[i]));
+                    predictionData.Add(((float)posS.Score, values[i], posS.Score > 0.0, labels[i]));
                 }
 
                 predictionData = predictionData.OrderByDescending(x => x.Score).ToList();
