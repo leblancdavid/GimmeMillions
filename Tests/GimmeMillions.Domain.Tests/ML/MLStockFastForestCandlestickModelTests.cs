@@ -32,14 +32,14 @@ namespace GimmeMillions.Domain.Tests.ML
             var datasetService = GetHistoricalFeatureDatasetService(10, 20, FrequencyTimeframe.Daily, true);
             var model = new MLStockFastForestCandlestickModel();
             model.Parameters.NumCrossValidations = 2;
-            model.Parameters.NumOfTrees = 500;
-            model.Parameters.NumOfLeaves = 100;
+            model.Parameters.NumOfTrees = 100;
+            model.Parameters.NumOfLeaves = 20;
             model.Parameters.MinNumOfLeaves = 100;
 
-            var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 30), DateTime.Today);
+            var dataset = datasetService.GetAllTrainingData(new DateTime(2019, 1, 30), DateTime.Today);
             dataset.Any().Should().BeTrue();
 
-            var trainingResults = model.Train(dataset, 0.0);
+            var trainingResults = model.Train(dataset, 0.1);
 
             model.Save(_pathToModels);
         }
