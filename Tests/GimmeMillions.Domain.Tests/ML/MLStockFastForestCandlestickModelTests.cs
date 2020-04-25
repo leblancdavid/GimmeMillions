@@ -40,7 +40,7 @@ namespace GimmeMillions.Domain.Tests.ML
             var dataset = datasetService.GetAllTrainingData(new DateTime(2015, 1, 30), endTrainingData);
             dataset.Any().Should().BeTrue();
 
-            var trainingResults = model.Train(dataset, 0.0);
+            var trainingResults = model.Train(dataset, 0.1);
 
             model.Save(_pathToModels);
             var testDataset = datasetService.GetAllTrainingData(endTrainingData, DateTime.Today);
