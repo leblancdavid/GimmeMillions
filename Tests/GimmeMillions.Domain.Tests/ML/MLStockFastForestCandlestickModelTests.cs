@@ -32,16 +32,30 @@ namespace GimmeMillions.Domain.Tests.ML
             var datasetService = GetHistoricalFeatureDatasetService(10, 20, FrequencyTimeframe.Daily, true);
             var model = new MLStockFastForestCandlestickModel();
             model.Parameters.NumCrossValidations = 2;
-            model.Parameters.NumOfTrees = 500;
-            model.Parameters.NumOfLeaves = 100;
+            model.Parameters.NumOfTrees = 200;
+            model.Parameters.NumOfLeaves = 20;
             model.Parameters.MinNumOfLeaves = 100;
 
-            var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 30), DateTime.Today);
+            var endTrainingData = new DateTime(2019, 1, 1);
+            var dataset = datasetService.GetAllTrainingData(new DateTime(2015, 1, 30), endTrainingData);
             dataset.Any().Should().BeTrue();
 
             var trainingResults = model.Train(dataset, 0.0);
 
             model.Save(_pathToModels);
+            var testDataset = datasetService.GetAllTrainingData(endTrainingData, DateTime.Today);
+            var accuracy = 0.0;
+            foreach(var test in testDataset)
+            {
+                var prediction = model.Predict(test.Input);
+                if(prediction.PredictedLabel == test.Output.PercentChangeFromPreviousClose > 0.5m ||
+                    !prediction.PredictedLabel == test.Output.PercentChangeFromPreviousClose <= 0.5m)
+                {
+                    accuracy++;
+                }
+            }
+
+            accuracy = accuracy / (double)testDataset.Count();
         }
 
         [Fact]

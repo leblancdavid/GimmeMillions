@@ -39,6 +39,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
         private DataViewSchema _dataSchema;
         private string _modelId = "FFCandlestickModel-v1";
+        //private string _modelId = "SVMCandlestickModel-v1";
         public FastForestCandlestickModelParameters Parameters { get; set; }
         public CandlestickPredictionModelMetadata<FastForestCandlestickModelParameters> Metadata { get; private set; }
 
@@ -150,7 +151,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     var normVector = x.Input;
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    x.Output.PercentDayChange > 0,
+                    x.Output.PercentChangeFromPreviousClose > 0.5m,
                     (float)x.Output.PercentDayChange,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
@@ -173,15 +174,16 @@ namespace GimmeMillions.Domain.ML.Candlestick
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
 
-            //var estimator = _mLContext.BinaryClassification.Trainers.FastForest(
-            //           numberOfLeaves: Parameters.NumOfLeaves,
-            //           numberOfTrees: Parameters.NumOfTrees,
-            //           minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
+            var estimator = _mLContext.BinaryClassification.Trainers.FastForest(
+                       numberOfLeaves: Parameters.NumOfLeaves,
+                       numberOfTrees: Parameters.NumOfTrees,
+                       minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves)
+                .Append(_mLContext.BinaryClassification.Calibrators.Naive());
 
-            var estimator = _mLContext.BinaryClassification.Trainers.FastTree(
-                      numberOfLeaves: Parameters.NumOfLeaves,
-                      numberOfTrees: Parameters.NumOfTrees,
-                      minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
+            //var estimator = _mLContext.BinaryClassification.Trainers.FastTree(
+            //          numberOfLeaves: Parameters.NumOfLeaves,
+            //          numberOfTrees: Parameters.NumOfTrees,
+            //          minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
 
             //var estimator = _mLContext.BinaryClassification.Trainers.FastForest();
 
