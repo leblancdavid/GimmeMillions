@@ -79,7 +79,7 @@ namespace GimmeMillions.Domain.Features
                 }
             }
 
-            return trainingData;
+            return trainingData.OrderBy(x => x.Output.Date);
         }
 
         public Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date)

@@ -5,7 +5,8 @@
         public float[] Features { get; set; }
         public bool Label { get; set; }
         public float Value { get; set; }
-        public int Rank { get; set; }
+        public uint Rank { get; set; }
+        public string Symbol { get; set; }
         public float DayOfTheWeek { get; set; }
         public float Month { get; set; }
 
@@ -25,14 +26,14 @@
         public StockCandlestickDataFeature(float[] features,
             bool label,
             float value,
-            int rank,
+            string symbol,
             float dayOfTheWeek,
             float month)
         {
             Features = features;
             Label = label;
             Value = value;
-            Rank = rank;
+            Symbol = symbol;
             DayOfTheWeek = dayOfTheWeek;
             Month = month;
         }

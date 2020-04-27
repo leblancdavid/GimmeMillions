@@ -171,51 +171,87 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var maxValue = dataset.Max(x => x.Output.PercentDayChange);
             var minValue = dataset.Min(x => x.Output.PercentDayChange);
+
             //var filteredDatasetPositives = dataset.Where(x => Math.Abs(x.Output.PercentDayChange) < 1.0m);
             //var medianPercent = GetMedian(filteredDatasetPositives.Select(x => x.Output.PercentDayChange).ToArray());
             //Load the data into a view
-            var datasetViewPos = _mLContext.Data.LoadFromEnumerable(
-                dataset.Select(x =>
+            //var datasetViewPos = _mLContext.Data.LoadFromEnumerable(
+            //    dataset.Select(x =>
+            //    {
+            //        var normVector = x.Input;
+            //        return new StockCandlestickDataFeature(
+            //        Array.ConvertAll(x.Input.Data, y => (float)y),
+            //        x.Output.PercentDayChange > 0.0m,
+            //        (float)x.Output.PercentDayChange,
+            //        x.Output.PercentDayChange > 0.0m ? 1 : 0,
+            //        (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
+            //    }),
+            //    GetSchemaDefinition(firstFeature.Input));
+
+            //IDataView trainData = null; //= dataSplit.TrainSet;
+            //IDataView testData = null; // dataSplit.TestSet;
+            //if (testFraction > 0.0)
+            //{
+            //    var dataSplit = _mLContext.Data.TrainTestSplit(datasetViewPos, testFraction: testFraction);
+            //    trainData = dataSplit.TrainSet;
+            //    testData = dataSplit.TestSet;
+            //}
+            //else
+            //{
+            //    trainData = datasetViewPos;
+            //}
+
+            var rnd = new Random();
+            int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
+            var trainData = _mLContext.Data.LoadFromEnumerable(
+                dataset.Take(trainingCount).Select(x =>
                 {
                     var normVector = x.Input;
-                    //var v = ((x.Output.PercentDayChange - minValue) / (maxValue - minValue));
-                    var v = GetRankValue(x.Output.PercentDayChange, -5.0m, 5.0m);
-                    int rank = GetRank(x.Output.PercentDayChange, -10.0m, 10.0m);
+                    //var v = GetValue(x.Output.PercentDayChange, -10, 10);
+                    var v = (float)x.Output.PercentChangeFromPreviousClose;
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    x.Output.PercentDayChange > 0.0m,
-                    (float)x.Output.PercentDayChange,
-                    x.Output.PercentDayChange > 0.0m ? 1 : 0,
+                    v > 0.0f,
+                    v,
+                    x.Output.Symbol,
+                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
+                }),
+                GetSchemaDefinition(firstFeature.Input));
+            var testData = _mLContext.Data.LoadFromEnumerable(
+                dataset.Skip(trainingCount).Select(x =>
+                {
+                    var normVector = x.Input;
+                    //var v = GetValue(x.Output.PercentDayChange, -10, 10);
+                    var v = (float)x.Output.PercentChangeFromPreviousClose;
+                    return new StockCandlestickDataFeature(
+                    Array.ConvertAll(x.Input.Data, y => (float)y),
+                    v > 0.0f,
+                    v,
+                    x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
                 GetSchemaDefinition(firstFeature.Input));
 
-            IDataView trainData = null; //= dataSplit.TrainSet;
-            IDataView testData = null; // dataSplit.TestSet;
-            if (testFraction > 0.0)
-            {
-                var dataSplit = _mLContext.Data.TrainTestSplit(datasetViewPos, testFraction: testFraction);
-                trainData = dataSplit.TrainSet;
-                testData = dataSplit.TestSet;
-            }
-            else
-            {
-                trainData = datasetViewPos;
-            }
-
-            
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
 
-            var estimator = _mLContext.BinaryClassification.Trainers.FastForest(
-                       numberOfLeaves: Parameters.NumOfLeaves,
-                       numberOfTrees: Parameters.NumOfTrees,
-                       minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves)
-                .Append(_mLContext.BinaryClassification.Calibrators.Naive());
+            var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm();
 
-            var estimator = _mLContext.Regression.Trainers.FastTree(
-                       "Value", "Features");
-                //.Append(_mLContext.BinaryClassification.Calibrators.Platt());
+            //var estimator = _mLContext.Transforms.Conversion.MapValueToKey(new[] {
+            //    new  InputOutputColumnPair("GroupId", "Symbol"),
+            //    new  InputOutputColumnPair("Label", "Label")
+            //    }).Append(
+            //     _mLContext.Ranking.Trainers.LightGbm("Label", "Features", "GroupId", "Value"));
+            //    .Append(_mLContext.BinaryClassification.Calibrators.Naive());
+
+            //var estimator = _mLContext.Regression.Trainers.FastTree(
+            //           "Value", "Features",
+            //           numberOfLeaves: Parameters.NumOfLeaves,
+            //           numberOfTrees: Parameters.NumOfTrees,
+            //           minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
+            //.Append(_mLContext.BinaryClassification.Calibrators.Platt());
+
+            //var estimator = _mLContext.Regression.Trainers.Sdca("Value", "Features");
 
             //var estimator = _mLContext.BinaryClassification.Trainers.FastForest();
 
@@ -227,8 +263,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             if (testData != null)
             {
-                //var testPredictions = _model.Transform(testData);
-                //var testResults = _mLContext.Ranking.Evaluate(testPredictions);
+                var testPredictions = _model.Transform(testData);
+                //var testResults = _mLContext.MulticlassClassification.Evaluate(testPredictions);
                 //Metadata.TrainingResults = new ModelMetrics(testResults);
 
                // var scores = testPredictions.GetColumn<float>("Score").ToArray();
@@ -320,22 +356,19 @@ namespace GimmeMillions.Domain.ML.Candlestick
             return median;
         }
 
-        public int GetRank(decimal number, decimal min, decimal max)
+        public uint GetRank(decimal number, decimal min, decimal max)
         {
-            var n = Math.Abs(number);
-            if(n < min)
-            {
-                n = min;
-            }
-            if(n > max)
-            {
-                n = max;
-            }
-
-            return (int)Math.Ceiling((n - min) - 0.5m);
+            if(number < min)
+                return 1;
+            if(number > max)
+                return 4;
+            if (number > 0.0m)
+                return 3;
+            else
+                return 2;
         }
 
-        public float GetRankValue(decimal number, decimal min, decimal max)
+        public float GetValue(decimal number, decimal min, decimal max)
         {
             var n = number;
             if (n < min)

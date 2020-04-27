@@ -199,7 +199,7 @@ namespace GimmeMillions.Domain.Features
                 }
             }
 
-            return trainingData;
+            return trainingData.OrderBy(x => x.Output.Date);
         }
     }
 }
