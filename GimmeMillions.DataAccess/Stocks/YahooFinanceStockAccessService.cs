@@ -17,18 +17,18 @@ namespace GimmeMillions.DataAccess.Stocks
             _pathToStocks = pathToStocks;
         }
 
-        public IEnumerable<StockData> GetStocks(string symbol)
+        public IEnumerable<StockData> GetStocks(string symbol, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily)
         {
-            return _stockRepository.GetStocks(symbol);
+            return _stockRepository.GetStocks(symbol, frequencyTimeframe);
         }
 
-        public IEnumerable<StockData> GetStocks()
+        public IEnumerable<StockData> GetStocks(FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily)
         {
             var symbols = GetSymbols();
             var stocks = new List<StockData>();
             foreach(var symbol in symbols)
             {
-                stocks.AddRange(GetStocks(symbol));
+                stocks.AddRange(GetStocks(symbol, frequencyTimeframe));
             }
             return stocks;
         }
@@ -38,7 +38,7 @@ namespace GimmeMillions.DataAccess.Stocks
             return _stockRepository.GetSymbols();
         }
 
-        public IEnumerable<StockData> UpdateStocks(string symbol)
+        public IEnumerable<StockData> UpdateStocks(string symbol, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily)
         {
             try
             {
@@ -53,10 +53,10 @@ namespace GimmeMillions.DataAccess.Stocks
             catch (Exception ex)
             {
                 Console.WriteLine($"Error retrieving stock {symbol}: {ex.Message}");
-                return _stockRepository.GetStocks(symbol);
+                return _stockRepository.GetStocks(symbol, frequencyTimeframe);
             }
 
-            return _stockRepository.GetStocks(symbol);
+            return _stockRepository.GetStocks(symbol, frequencyTimeframe);
         }
     }
 }

@@ -6,9 +6,9 @@ namespace GimmeMillions.Domain.Stocks
 {
     public interface IStockAccessService
     {
-        IEnumerable<StockData> UpdateStocks(string symbol);
-        IEnumerable<StockData> GetStocks(string symbol);
-        IEnumerable<StockData> GetStocks();
+        IEnumerable<StockData> UpdateStocks(string symbol, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily);
+        IEnumerable<StockData> GetStocks(string symbol, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily);
+        IEnumerable<StockData> GetStocks(FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily);
         IEnumerable<string> GetSymbols();
     }
 }

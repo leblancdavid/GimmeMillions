@@ -1,0 +1,20 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.69985497135040142,
+    "Accuracy": 0.69216795158661215,
+    "PositivePrecision": 0.74959620879474143,
+    "PositiveRecall": 0.17547222234612975,
+    "NegativePrecision": 0.68706117543860912,
+    "NegativeRecall": 0.96864606129242792,
+    "F1Score": 0.28436739656781551,
+    "AreaUnderPrecisionRecallCurve": 0.57536478022453208
+  },
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "AKMBoW1000v1_10d-CandlestickFalse-v2_20d_withComposite",
+  "ModelId": "FFCandlestickModel-v1"
+}

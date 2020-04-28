@@ -5,6 +5,7 @@ using GimmeMillions.DataAccess.Keys;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML.Candlestick;
+using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,16 +27,50 @@ namespace GimmeMillions.Domain.Tests.ML
         private readonly string _pathToKeys = "../../../../../Repository/Keys";
 
         [Fact]
-        public void ShouldTrainUsingCandlestickFeatures()
+        public void ShouldTrainUsingDailyCandlestickFeatures()
         {
-            var datasetService = GetHistoricalFeatureDatasetService();
+            var datasetService = GetHistoricalFeatureDatasetService(10, 20, FrequencyTimeframe.Daily, true);
             var model = new MLStockFastForestCandlestickModel();
             model.Parameters.NumCrossValidations = 2;
-            model.Parameters.NumOfTrees = 500;
-            model.Parameters.NumOfLeaves = 50;
+            model.Parameters.NumOfTrees = 100;
+            model.Parameters.NumOfLeaves = 20;
+            model.Parameters.MinNumOfLeaves = 5;
+
+            var endTrainingData =  DateTime.Today;
+            var dataset = datasetService.GetAllTrainingData(new DateTime(2018, 1, 30), endTrainingData);
+            //var dataset = datasetService.GetTrainingData("AMZN", new DateTime(2018, 1, 30), endTrainingData).Value;
+            dataset.Any().Should().BeTrue();
+
+            var trainingResults = model.Train(dataset, 0.1);
+
+            int trainingCount = (int)(dataset.Count() * 0.9);
+            //model.Save(_pathToModels);
+            var testDataset = dataset.Skip(trainingCount);
+            var accuracy = 0.0;
+            foreach(var test in testDataset)
+            {
+                var prediction = model.Predict(test.Input);
+                if((prediction.PredictedLabel && test.Output.PercentDayChange > 0m) ||
+                    (!prediction.PredictedLabel && test.Output.PercentChangeFromPreviousClose <= 0m))
+                {
+                    accuracy++;
+                }
+            }
+
+            accuracy = accuracy / (double)testDataset.Count();
+        }
+
+        [Fact]
+        public void ShouldTrainUsingWeeklyCandlestickFeatures()
+        {
+            var datasetService = GetHistoricalFeatureDatasetService(10, 10, FrequencyTimeframe.Weekly);
+            var model = new MLStockFastForestCandlestickModel();
+            model.Parameters.NumCrossValidations = 3;
+            model.Parameters.NumOfTrees = 1000;
+            model.Parameters.NumOfLeaves = 200;
             model.Parameters.MinNumOfLeaves = 100;
 
-            var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 30), new DateTime(2020, 4, 9));
+            var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 1), DateTime.Today, false);
             dataset.Any().Should().BeTrue();
 
             var trainingResults = model.Train(dataset, 0.0);
@@ -43,7 +78,7 @@ namespace GimmeMillions.Domain.Tests.ML
             model.Save(_pathToModels);
         }
 
- 
+
         private IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetService()
         {
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
@@ -56,7 +91,9 @@ namespace GimmeMillions.Domain.Tests.ML
             return new CandlestickStockFeatureDatasetService(featureExtractor, stocksRepo, cache, numberSamples);
         }
 
-        private IFeatureDatasetService<FeatureVector> GetHistoricalFeatureDatasetService()
+        private IFeatureDatasetService<FeatureVector> GetHistoricalFeatureDatasetService(int numArticleDays = 10,
+            int numStockSamples = 10, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily,
+            bool includeComposites = false)
         {
             var featureChecker = new UsaLanguageChecker();
             featureChecker.Load(new StreamReader($"{_pathToLanguage}/usa.txt"));
@@ -77,7 +114,9 @@ namespace GimmeMillions.Domain.Tests.ML
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
-            return new HistoricalFeatureDatasetService(stockExtractor, akmExtractor, articlesAccess, stocksRepo, cache);
+
+            return new HistoricalFeatureDatasetService(stockExtractor, akmExtractor, articlesAccess, stocksRepo,
+                numArticleDays, numStockSamples, frequencyTimeframe, includeComposites, cache);
         }
     }
 }

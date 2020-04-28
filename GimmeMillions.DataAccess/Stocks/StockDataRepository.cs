@@ -15,9 +15,9 @@ namespace GimmeMillions.DataAccess.Stocks
             _pathToStocks = pathToStocks;
         }
 
-        public Result<StockData> GetStock(string symbol, DateTime date)
+        public Result<StockData> GetStock(string symbol, DateTime date, FrequencyTimeframe timeframe = FrequencyTimeframe.Daily)
         {
-            var stockFound = GetStocks(symbol, date, date);
+            var stockFound = GetStocks(symbol, date, date, timeframe);
             if(!stockFound.Any())
             {
                 return Result.Failure<StockData>($"Unable to retrieve stock {symbol} for date {date.ToString("MM/dd/yyyy")}");
@@ -25,7 +25,19 @@ namespace GimmeMillions.DataAccess.Stocks
             return Result.Ok(stockFound.First());
         }
 
-        public IEnumerable<StockData> GetStocks(string symbol)
+        public IEnumerable<StockData> GetStocks(string symbol, FrequencyTimeframe timeframe = FrequencyTimeframe.Daily)
+        {
+            if(timeframe == FrequencyTimeframe.Daily)
+            {
+                return GetDailyStocks(symbol);
+            }
+            else
+            {
+                return GetWeeklyStocks(symbol);
+            }
+        }
+
+        private IEnumerable<StockData> GetDailyStocks(string symbol)
         {
             var stocks = new List<StockData>();
             string fileName = $"{_pathToStocks}/{symbol}";
@@ -44,7 +56,7 @@ namespace GimmeMillions.DataAccess.Stocks
                 var fields = line.Split(',');
                 DateTime date;
                 decimal open, high, low, close, adjustedClose, volume;
-                if(DateTime.TryParse(fields[0], out date) &&
+                if (DateTime.TryParse(fields[0], out date) &&
                     decimal.TryParse(fields[1], out open) &&
                     decimal.TryParse(fields[2], out high) &&
                     decimal.TryParse(fields[3], out low) &&
@@ -60,15 +72,63 @@ namespace GimmeMillions.DataAccess.Stocks
                     stocks.Add(stock);
                     previous = stock;
                 }
-                
+
             }
 
             return stocks.OrderBy(x => x.Date);
         }
 
-        public IEnumerable<StockData> GetStocks(string symbol, DateTime start, DateTime end)
+        private IEnumerable<StockData> GetWeeklyStocks(string symbol)
         {
-            return GetStocks(symbol).Where(x => x.Date >= start && x.Date <= end);
+            var dailyStocks = GetDailyStocks(symbol).ToList();
+            var weeklyStocks = new List<StockData>();
+            if (!dailyStocks.Any())
+                return weeklyStocks;
+            int i = 0;
+            StockData startingDay = dailyStocks.First();
+            while (i < dailyStocks.Count - 1 &&
+                dailyStocks[i].Date.DayOfWeek >= startingDay.Date.DayOfWeek)
+            {
+                startingDay = dailyStocks[i];
+                ++i;
+            }
+
+
+            while (i < dailyStocks.Count - 1)
+            {
+                startingDay = dailyStocks[i];
+                var endingDay = startingDay;
+                decimal high = 0.0m;
+                decimal low = decimal.MaxValue;
+                decimal volume = 0.0m;
+                while(i < dailyStocks.Count &&
+                dailyStocks[i].Date.DayOfWeek >= endingDay.Date.DayOfWeek)
+                {
+                    endingDay = dailyStocks[i];
+                    if(endingDay.Low < low)
+                    {
+                        low = endingDay.Low;
+                    }
+                    if(endingDay.High > high)
+                    {
+                        high = endingDay.High;
+                    }
+                    volume += endingDay.Volume;
+                    ++i;
+                }
+
+                weeklyStocks.Add(new StockData(symbol, startingDay.Date,
+                    startingDay.Open, high, low, 
+                    endingDay.Close, endingDay.AdjustedClose, volume, 
+                    startingDay.PreviousClose));
+            }
+
+            return weeklyStocks;
+        }
+
+        public IEnumerable<StockData> GetStocks(string symbol, DateTime start, DateTime end, FrequencyTimeframe timeframe = FrequencyTimeframe.Daily)
+        {
+            return GetStocks(symbol, timeframe).Where(x => x.Date >= start && x.Date <= end);
         }
 
         public IEnumerable<string> GetSymbols()
