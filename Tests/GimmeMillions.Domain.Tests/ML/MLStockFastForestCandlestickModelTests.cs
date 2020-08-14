@@ -29,17 +29,18 @@ namespace GimmeMillions.Domain.Tests.ML
         [Fact]
         public void ShouldTrainUsingDailyCandlestickFeatures()
         {
-            var datasetService = GetHistoricalFeatureDatasetService(10, 20, FrequencyTimeframe.Daily, true);
+            //var datasetService = GetHistoricalFeatureDatasetService(10, 20, FrequencyTimeframe.Daily, true);
+            var datasetService = GetCandlestickFeatureDatasetService(60, 3, true);
             var model = new MLStockFastForestCandlestickModel();
             model.Parameters.NumCrossValidations = 2;
-            model.Parameters.NumOfTrees = 100;
+            model.Parameters.NumOfTrees = 1000;
             model.Parameters.NumOfLeaves = 20;
             model.Parameters.MinNumOfLeaves = 5;
 
             var endTrainingData =  DateTime.Today;
-            var dataset = datasetService.GetAllTrainingData(new DateTime(2018, 1, 30), endTrainingData);
-            //var dataset = datasetService.GetTrainingData("AMZN", new DateTime(2018, 1, 30), endTrainingData).Value;
-            dataset.Any().Should().BeTrue();
+            var dataset = datasetService.GetAllTrainingData(new DateTime(2010, 1, 30), endTrainingData);
+            //var dataset = datasetService.GetTrainingData("AMZN", new DateTime(2001, 1, 30), endTrainingData).Value;
+            //dataset.Any().Should().BeTrue();
 
             var trainingResults = model.Train(dataset, 0.1);
 
@@ -50,7 +51,7 @@ namespace GimmeMillions.Domain.Tests.ML
             foreach(var test in testDataset)
             {
                 var prediction = model.Predict(test.Input);
-                if((prediction.PredictedLabel && test.Output.PercentDayChange > 0m) ||
+                if((prediction.PredictedLabel && test.Output.PercentChangeFromPreviousClose > 0m) ||
                     (!prediction.PredictedLabel && test.Output.PercentChangeFromPreviousClose <= 0m))
                 {
                     accuracy++;
@@ -79,16 +80,20 @@ namespace GimmeMillions.Domain.Tests.ML
         }
 
 
-        private IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetService()
+        private IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetService(
+            int numStockSamples = 40,
+            int stockOutputPeriod = 3,
+            bool includeComposites = false)
         {
             var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
-            var featureExtractor = new CandlestickStockFeatureExtractor();
-            //var featureExtractor = new CandlestickStockFeatureExtractorV2();
-            //var featureExtractor = new CandlestickSimplifiedStockFeatureExtractor();
-            int numberSamples = 40;
-            return new CandlestickStockFeatureDatasetService(featureExtractor, stocksRepo, cache, numberSamples);
+            //var candlestickExtractor = new CandlestickStockFeatureExtractor();
+            //use default values for meow!
+            var indictatorsExtractor = new StockIndicatorsFeatureExtraction(normalize: false);
+
+            return new CandlestickStockFeatureDatasetService(indictatorsExtractor, stocksRepo,
+                numStockSamples, stockOutputPeriod, includeComposites, cache, true);
         }
 
         private IFeatureDatasetService<FeatureVector> GetHistoricalFeatureDatasetService(int numArticleDays = 10,

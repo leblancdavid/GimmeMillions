@@ -61,5 +61,16 @@ namespace GimmeMillions.Domain.Features
             return normalizedVector;
         }
 
+        public FeatureVector Binarize(double threshold)
+        {
+            var normalizedVector = new FeatureVector(Data.Length, Date, Encoding);
+
+            for (int i = 0; i < Data.Length; ++i)
+            {
+                normalizedVector.Data[i] = Data[i] > threshold ? 1.0 : 0;
+            }
+
+            return normalizedVector;
+        }
     }
 }

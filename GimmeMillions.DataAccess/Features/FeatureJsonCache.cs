@@ -30,7 +30,12 @@ namespace GimmeMillions.DataAccess.Features
                     return Result.Failure<TFeature>($"No cache feature found with encoding {encoding} for {date.ToString("yyyy-MM-dd")}");
                 }
                 var json = File.ReadAllText(fileName);
-                return Result.Ok(JsonConvert.DeserializeObject<TFeature>(json));
+                var feature = JsonConvert.DeserializeObject<TFeature>(json);
+                if(feature == null)
+                {
+                    return Result.Failure<TFeature>($"No cache feature found with encoding {encoding} for {date.ToString("yyyy-MM-dd")}");
+                }
+                return Result.Ok(feature);
             }
             catch (Exception ex)
             {

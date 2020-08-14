@@ -137,5 +137,51 @@ namespace GimmeMillions.DataAccess.Stocks
             var files = d.GetFiles();
             return files.Select(x => x.Name);
         }
+
+        public IEnumerable<StockData> GetStocks(string symbol, int timeLength)
+        {
+            var dailyStocks = GetDailyStocks(symbol).ToList();
+            if(timeLength <= 1)
+            {
+                return dailyStocks;
+            }
+
+            var periodStocks = new List<StockData>();
+            if (!dailyStocks.Any())
+                return periodStocks;
+
+            decimal previousClose = dailyStocks.First().Close;
+            for(int i = 0; i < dailyStocks.Count() - timeLength; ++i)
+            {
+                var currentDay = dailyStocks[i];
+                decimal high = 0.0m;
+                decimal low = decimal.MaxValue;
+                decimal volume = 0.0m;
+                decimal close = 0.0m, adjustedClose = 0.0m;
+                for (int j = i; j < i + timeLength; ++j)
+                {
+                    var stockDay = dailyStocks[j];
+                    if (stockDay.Low < low)
+                    {
+                        low = stockDay.Low;
+                    }
+                    if (stockDay.High > high)
+                    {
+                        high = stockDay.High;
+                    }
+                    volume += stockDay.Volume;
+                    close = stockDay.Close;
+                    adjustedClose = stockDay.AdjustedClose;
+                }
+
+                periodStocks.Add(new StockData(symbol, currentDay.Date,
+                    currentDay.Open, high, low,
+                    close, adjustedClose, volume,
+                    previousClose));
+                previousClose = currentDay.Close;
+            }
+
+            return periodStocks;
+        }
     }
 }

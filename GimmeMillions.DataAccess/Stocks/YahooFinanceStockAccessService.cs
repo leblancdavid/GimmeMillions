@@ -33,6 +33,11 @@ namespace GimmeMillions.DataAccess.Stocks
             return stocks;
         }
 
+        public IEnumerable<StockData> GetStocks(string symbol, int timePeriod)
+        {
+            return _stockRepository.GetStocks(symbol, timePeriod);
+        }
+
         public IEnumerable<string> GetSymbols()
         {
             return _stockRepository.GetSymbols();

@@ -1,4 +1,5 @@
-﻿using Microsoft.ML.Data;
+﻿using GimmeMillions.Domain.Logging;
+using Microsoft.ML.Data;
 
 namespace GimmeMillions.Domain.ML
 {
@@ -12,6 +13,7 @@ namespace GimmeMillions.Domain.ML
         public double NegativeRecall { get; set; }
         public double F1Score { get; set; }
         public double AreaUnderPrecisionRecallCurve { get; set; }
+        public double Error { get; set; }
 
         public ModelMetrics()
         {
@@ -28,6 +30,11 @@ namespace GimmeMillions.Domain.ML
             NegativePrecision = metrics.NegativePrecision;
             F1Score = metrics.F1Score;
             AreaUnderPrecisionRecallCurve = metrics.AreaUnderPrecisionRecallCurve;
+        }
+
+        public string ToString()
+        {
+            return $"AUC: {AreaUnderPrecisionRecallCurve}, Acc: {Accuracy}, PP: {PositivePrecision}, PR: {PositiveRecall}, NP: {NegativePrecision}, NR: {NegativeRecall}, F1: {F1Score}, Error: {Error}";
         }
     }
 }

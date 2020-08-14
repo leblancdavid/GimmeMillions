@@ -96,14 +96,14 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var score = prediction.GetColumn<float>("Score").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
-            //var probability = prediction.GetColumn<float>("Probability").ToArray();
+            var probability = prediction.GetColumn<float>("Probability").ToArray();
 
             return new StockPrediction()
             {
                 Score = score[0],
                 PredictedLabel = score[0] > 0.0f,
-                //Probability = probability[0]
-                Probability = score[0]
+                Probability = probability[0]
+                //Probability = score[0]
             };
         }
 
@@ -123,14 +123,14 @@ namespace GimmeMillions.Domain.ML.Candlestick
             var score = prediction.GetColumn<float>("Score").ToArray();
             var groupId = prediction.GetColumn<uint>("GroupId").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
-            //var probability = prediction.GetColumn<float>("Probability").ToArray();
+            var probability = prediction.GetColumn<float>("Probability").ToArray();
 
             return new StockPrediction()
             {
                 Score = score[0],
                 PredictedLabel = score[0] > 0.0f,
-                //Probability = probability[0]
-                Probability = score[0]
+                Probability = probability[0]
+                //Probability = score[0]
             };
         }
 
@@ -169,9 +169,6 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var firstFeature = dataset.FirstOrDefault();
 
-            var maxValue = dataset.Max(x => x.Output.PercentDayChange);
-            var minValue = dataset.Min(x => x.Output.PercentDayChange);
-
             //var filteredDatasetPositives = dataset.Where(x => Math.Abs(x.Output.PercentDayChange) < 1.0m);
             //var medianPercent = GetMedian(filteredDatasetPositives.Select(x => x.Output.PercentDayChange).ToArray());
             //Load the data into a view
@@ -203,15 +200,18 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var rnd = new Random();
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
+            //var meanHigh = dataset.Average(x => x.Output.PercentChangeHighToPreviousClose) / 2.0;
+            var meanHigh = 3.0;
             var trainData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Take(trainingCount).Select(x =>
                 {
                     var normVector = x.Input;
                     //var v = GetValue(x.Output.PercentDayChange, -10, 10);
-                    var v = (float)x.Output.PercentChangeFromPreviousClose;
+                    //var v = (float)x.Output.PercentChangeHighToPreviousClose;
+                    var v =(float)(x.Output.PercentChangeHighToPreviousClose);
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    v > 0.0f,
+                    v > (float)meanHigh,
                     v,
                     x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
@@ -222,10 +222,11 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 {
                     var normVector = x.Input;
                     //var v = GetValue(x.Output.PercentDayChange, -10, 10);
-                    var v = (float)x.Output.PercentChangeFromPreviousClose;
+                    //var v = (float)x.Output.PercentChangeHighToPreviousClose;
+                    var v = (float)(x.Output.PercentChangeHighToPreviousClose);
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    v > 0.0f,
+                    v > (float)meanHigh,
                     v,
                     x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
@@ -235,7 +236,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
 
-            var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm();
+            // var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm();
 
             //var estimator = _mLContext.Transforms.Conversion.MapValueToKey(new[] {
             //    new  InputOutputColumnPair("GroupId", "Symbol"),
@@ -244,16 +245,17 @@ namespace GimmeMillions.Domain.ML.Candlestick
             //     _mLContext.Ranking.Trainers.LightGbm("Label", "Features", "GroupId", "Value"));
             //    .Append(_mLContext.BinaryClassification.Calibrators.Naive());
 
-            //var estimator = _mLContext.Regression.Trainers.FastTree(
+            //var estimator = _mLContext.Regression.Trainers.FastForest(
             //           "Value", "Features",
             //           numberOfLeaves: Parameters.NumOfLeaves,
             //           numberOfTrees: Parameters.NumOfTrees,
             //           minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
-            //.Append(_mLContext.BinaryClassification.Calibrators.Platt());
 
             //var estimator = _mLContext.Regression.Trainers.Sdca("Value", "Features");
 
-            //var estimator = _mLContext.BinaryClassification.Trainers.FastForest();
+            var estimator = _mLContext.BinaryClassification.Trainers.FastForest(numberOfTrees: Parameters.NumOfTrees,
+                numberOfLeaves: Parameters.NumOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves)
+                .Append(_mLContext.BinaryClassification.Calibrators.Platt());
 
             //Metadata.TrainingResults = CrossValidationResultsToMetrics(
             //    _mLContext.Ranking.Cross(
@@ -261,6 +263,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             _model = estimator.Fit(trainData);
 
+            Metadata.TrainingResults = new ModelMetrics();
             if (testData != null)
             {
                 var testPredictions = _model.Transform(testData);

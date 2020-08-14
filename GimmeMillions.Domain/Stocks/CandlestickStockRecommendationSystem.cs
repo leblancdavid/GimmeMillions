@@ -4,6 +4,7 @@ using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.ML.Candlestick;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,11 +16,11 @@ namespace GimmeMillions.Domain.Stocks
     public class CandlestickStockRecommendationSystem : IStockRecommendationSystem<FeatureVector>
     {
         private MLStockFastForestCandlestickModel model;
-        private HistoricalFeatureDatasetService _featureDatasetService;
+        private CandlestickStockFeatureDatasetService _featureDatasetService;
         private StockRecommendationSystemConfiguration _systemConfiguration;
         private string _pathToModels;
 
-        public CandlestickStockRecommendationSystem(HistoricalFeatureDatasetService featureDatasetService,
+        public CandlestickStockRecommendationSystem(CandlestickStockFeatureDatasetService featureDatasetService,
             string pathToModels)
         {
             _featureDatasetService = featureDatasetService;
@@ -42,24 +43,27 @@ namespace GimmeMillions.Domain.Stocks
 
         public IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date)
         {
-            var recommendations = new List<StockRecommendation>();
-            var stockSymbols = _featureDatasetService.StockAccess.GetSymbols();
+            var recommendations = new ConcurrentBag<StockRecommendation>();
+            var stockSymbols = _featureDatasetService.StockAccess.GetSymbols()
+                .Where(x => x != "^DJI" && x != "^GSPC" && x != "^IXIC");
 
-            foreach(var symbol in stockSymbols)
+            Parallel.ForEach(stockSymbols, symbol =>
+            //foreach(var symbol in stockSymbols)
             {
-                if (date == DateTime.Today)
+                if (date >= DateTime.Today)
                     _featureDatasetService.StockAccess.UpdateStocks(symbol);
 
                 var feature = _featureDatasetService.GetFeatureVector(symbol, date);
                 if (feature.IsFailure)
                 {
-                    continue;
+                    return;
                 }
                 var result = model.Predict(feature.Value); 
                 recommendations.Add(new StockRecommendation(symbol, result));
-            }
+            //}
+            });
 
-            return recommendations.OrderByDescending(x => x.Prediction.Probability);
+            return recommendations.ToList().OrderByDescending(x => x.Prediction.Probability);
         }
 
         public IEnumerable<StockRecommendation> GetAllRecommendationsForToday()
@@ -77,6 +81,28 @@ namespace GimmeMillions.Domain.Stocks
             }
 
             return recommendations;
+        }
+
+        public IEnumerable<StockRecommendation> GetRecommendationsFor(IEnumerable<string> symbols, DateTime date)
+        {
+            var recommendations = new ConcurrentBag<StockRecommendation>();
+
+            Parallel.ForEach(symbols, symbol =>
+            //foreach(var symbol in stockSymbols)
+            {
+                _featureDatasetService.StockAccess.UpdateStocks(symbol);
+
+                var feature = _featureDatasetService.GetFeatureVector(symbol, date);
+                if (feature.IsFailure)
+                {
+                    return;
+                }
+                var result = model.Predict(feature.Value);
+                recommendations.Add(new StockRecommendation(symbol, result));
+                //}
+            });
+
+            return recommendations.ToList().OrderByDescending(x => x.Prediction.Probability);
         }
 
         public IEnumerable<StockRecommendation> GetRecommendationsForToday(int keepTop = 10)
