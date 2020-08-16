@@ -1,24 +1,17 @@
 ﻿using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GimmeMillions.SQLDataAccess
 {
     public class GimmeMillionsContext : DbContext
     {
-        private readonly string _connectionString;
-        public GimmeMillionsContext(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
-
         public DbSet<FeatureVector> FeatureVectors { get; set; }
         public DbSet<StockData> StockDatas { get; set; }
+
+        public GimmeMillionsContext(DbContextOptions<GimmeMillionsContext> options)
+            : base(options)
+        { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,7 +32,5 @@ namespace GimmeMillions.SQLDataAccess
                 .Ignore(x => x.TopWickPercent);
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite(_connectionString);
     }
 }
