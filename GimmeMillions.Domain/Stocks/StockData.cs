@@ -4,6 +4,7 @@ namespace GimmeMillions.Domain.Stocks
 {
     public class StockData
     {
+        public int Id { get; set; }
         public string Symbol { get; set; }
         public DateTime Date { get; set; }
         public decimal Open { get; set; }
@@ -130,6 +131,22 @@ namespace GimmeMillions.Domain.Stocks
            decimal open, decimal high, decimal low, decimal close, decimal adjClose, decimal volume,
            decimal previousClose)
         {
+            Symbol = symbol;
+            Date = date;
+            Open = open;
+            High = high;
+            Low = low;
+            Close = close;
+            AdjustedClose = adjClose;
+            PreviousClose = previousClose;
+            Volume = volume;
+        }
+
+        public StockData(int id, string symbol, DateTime date,
+           decimal open, decimal high, decimal low, decimal close, decimal adjClose, decimal volume,
+           decimal previousClose)
+        {
+            Id = id;
             Symbol = symbol;
             Date = date;
             Open = open;

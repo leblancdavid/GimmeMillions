@@ -183,5 +183,15 @@ namespace GimmeMillions.DataAccess.Stocks
 
             return periodStocks;
         }
+
+        public Result AddOrUpdateStock(StockData stockData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(string symbol)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

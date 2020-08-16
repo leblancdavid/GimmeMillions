@@ -8,6 +8,7 @@ namespace GimmeMillions.Domain.Features
 {
     public class FeatureVector
     {
+        public int Id { get; set; }
         public double[] Data { get; set; }
         public DateTime Date { get; set; }
         public string Encoding { get; set; }
