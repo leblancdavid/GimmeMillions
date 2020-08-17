@@ -12,6 +12,7 @@ namespace GimmeMillions.Domain.Stocks
         Result<StockData> GetStock(string symbol, DateTime date, FrequencyTimeframe timeframe = FrequencyTimeframe.Daily);
 
         Result AddOrUpdateStock(StockData stockData);
+        Result AddOrUpdateStocks(IEnumerable<StockData> stockData, bool overwriteExisting = false);
         void Delete(string symbol);
         IEnumerable<string> GetSymbols();
     }

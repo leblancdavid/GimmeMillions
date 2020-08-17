@@ -13,6 +13,12 @@ namespace GimmeMillions.SQLDataAccess
             : base(options)
         { }
 
+        public GimmeMillionsContext()
+        { }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+        { }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<FeatureVector>()
@@ -31,6 +37,8 @@ namespace GimmeMillions.SQLDataAccess
                 .Ignore(x => x.PercentHighToLow)
                 .Ignore(x => x.TopWickPercent);
         }
+
+
 
     }
 }

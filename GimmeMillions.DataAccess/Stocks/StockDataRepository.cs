@@ -193,5 +193,10 @@ namespace GimmeMillions.DataAccess.Stocks
         {
             throw new NotImplementedException();
         }
+
+        public Result AddOrUpdateStocks(IEnumerable<StockData> stockData, bool overwriteExisting = false)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

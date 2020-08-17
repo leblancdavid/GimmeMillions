@@ -250,6 +250,7 @@
     <Compile Include="Stocks\IStockRecommendationSystem.cs" />
     <Compile Include="Stocks\IStockRepository.cs" />
     <Compile Include="Stocks\StockData.cs" />
+    <Compile Include="Stocks\StockHistory.cs" />
     <Compile Include="Stocks\StockRecommendation.cs" />
     <Compile Include="Stocks\StockRecommendationSystem.cs" />
     <Compile Include="Stocks\StockRecommendationSystemConfiguration.cs" />

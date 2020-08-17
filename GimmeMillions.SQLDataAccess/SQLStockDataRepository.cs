@@ -51,7 +51,8 @@ namespace GimmeMillions.SQLDataAccess
             try
             {
                 var context = new GimmeMillionsContext(_dbContextOptions);
-                var existingStockData = context.StockDatas.FirstOrDefault(x => x.Symbol == stockData.Symbol && x.Date == stockData.Date);
+                var existingStockData = context.StockDatas
+                    .FirstOrDefault(x => x.Symbol == stockData.Symbol && x.Date == stockData.Date);
                 if (existingStockData == null)
                 {
                     context.StockDatas.Add(stockData);
@@ -69,6 +70,38 @@ namespace GimmeMillions.SQLDataAccess
                 return Result.Ok();
             }
             catch(Exception ex)
+            {
+                return Result.Failure(ex.Message);
+            }
+        }
+
+        public Result AddOrUpdateStocks(IEnumerable<StockData> stockData, bool overwriteExisting = false)
+        {
+            try
+            {
+                var context = new GimmeMillionsContext(_dbContextOptions);
+                foreach(var data in stockData)
+                {
+                    var existingStockData = context.StockDatas.FirstOrDefault(x => x.Symbol == data.Symbol && x.Date == data.Date);
+                    if (existingStockData == null)
+                    {
+                        context.StockDatas.Add(data);
+                    }
+                    else if(overwriteExisting)
+                    {
+                        existingStockData.AdjustedClose = data.AdjustedClose;
+                        existingStockData.Close = data.Close;
+                        existingStockData.High = data.High;
+                        existingStockData.Low = data.Low;
+                        existingStockData.Open = data.Open;
+                        existingStockData.PreviousClose = data.PreviousClose;
+                    }
+                }
+                
+                context.SaveChanges();
+                return Result.Ok();
+            }
+            catch (Exception ex)
             {
                 return Result.Failure(ex.Message);
             }
@@ -187,6 +220,5 @@ namespace GimmeMillions.SQLDataAccess
             return periodStocks;
         }
 
-       
     }
 }

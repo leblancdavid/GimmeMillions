@@ -157,5 +157,7 @@ namespace GimmeMillions.Domain.Stocks
             PreviousClose = previousClose;
             Volume = volume;
         }
+
+        private StockData() { } //default constructor
     }
 }
