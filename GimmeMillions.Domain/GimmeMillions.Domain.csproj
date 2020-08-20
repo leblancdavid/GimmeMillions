@@ -245,8 +245,10 @@
     <Compile Include="ML\Transforms\SupervisedNormalizerTransform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stocks\CandlestickStockRecommendationSystem.cs" />
+    <Compile Include="Stocks\DefaultStockRepository.cs" />
     <Compile Include="Stocks\FrequencyTimeframe.cs" />
     <Compile Include="Stocks\IStockAccessService.cs" />
+    <Compile Include="Stocks\IStockHistoryRepository.cs" />
     <Compile Include="Stocks\IStockRecommendationSystem.cs" />
     <Compile Include="Stocks\IStockRepository.cs" />
     <Compile Include="Stocks\StockData.cs" />

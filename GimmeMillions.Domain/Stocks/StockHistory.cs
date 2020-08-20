@@ -8,12 +8,25 @@ namespace GimmeMillions.Domain.Stocks
 {
     public class StockHistory
     {
-        private string _historicalDataStr;
 
         public int Id { get; set; }
         public string Symbol { get; set; }
         private List<StockData> _historicalData = new List<StockData>();
         public IEnumerable<StockData> HistoricalData => _historicalData;
+
+        private string _historicalDataStr;
+        public string HistoricalDataStr 
+        {
+            get
+            {
+                return _historicalDataStr;
+            }
+            set
+            {
+                _historicalData = Parse(Symbol, value).ToList();
+                _historicalDataStr = Stringify(_historicalData);
+            }
+        }
 
         public StockHistory() { }
         public StockHistory(string symbol, IEnumerable<StockData> historicalData)
@@ -28,6 +41,11 @@ namespace GimmeMillions.Domain.Stocks
             Symbol = symbol;
             _historicalDataStr = dataStr;
             _historicalData = Parse(symbol, dataStr).ToList();
+        }
+
+        public void LoadData()
+        {
+            _historicalData = Parse(Symbol, _historicalDataStr).ToList();
         }
 
         public static string Stringify(IEnumerable<StockData> historicalData)

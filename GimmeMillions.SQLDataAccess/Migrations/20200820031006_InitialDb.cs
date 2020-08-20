@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GimmeMillions.SQLDataAccess.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class InitialDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -23,24 +23,17 @@ namespace GimmeMillions.SQLDataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StockDatas",
+                name: "StockHistories",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Symbol = table.Column<string>(nullable: true),
-                    Date = table.Column<DateTime>(nullable: false),
-                    Open = table.Column<decimal>(nullable: false),
-                    High = table.Column<decimal>(nullable: false),
-                    Low = table.Column<decimal>(nullable: false),
-                    Close = table.Column<decimal>(nullable: false),
-                    AdjustedClose = table.Column<decimal>(nullable: false),
-                    Volume = table.Column<decimal>(nullable: false),
-                    PreviousClose = table.Column<decimal>(nullable: false)
+                    HistoricalDataStr = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StockDatas", x => x.Id);
+                    table.PrimaryKey("PK_StockHistories", x => x.Id);
                 });
         }
 
@@ -50,7 +43,7 @@ namespace GimmeMillions.SQLDataAccess.Migrations
                 name: "FeatureVectors");
 
             migrationBuilder.DropTable(
-                name: "StockDatas");
+                name: "StockHistories");
         }
     }
 }

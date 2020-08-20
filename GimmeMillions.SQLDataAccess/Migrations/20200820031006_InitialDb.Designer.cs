@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GimmeMillions.SQLDataAccess.Migrations
 {
     [DbContext(typeof(GimmeMillionsContext))]
-    [Migration("20200817030942_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20200820031006_InitialDb")]
+    partial class InitialDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,42 +38,21 @@ namespace GimmeMillions.SQLDataAccess.Migrations
                     b.ToTable("FeatureVectors");
                 });
 
-            modelBuilder.Entity("GimmeMillions.Domain.Stocks.StockData", b =>
+            modelBuilder.Entity("GimmeMillions.Domain.Stocks.StockHistory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("AdjustedClose")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Close")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("High")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Low")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Open")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("PreviousClose")
+                    b.Property<string>("HistoricalDataStr")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Symbol")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Volume")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
-                    b.ToTable("StockDatas");
+                    b.ToTable("StockHistories");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,4 +1,5 @@
 ﻿using GimmeMillions.DataAccess.Stocks;
+using GimmeMillions.Domain.Stocks;
 using GimmeMillions.SQLDataAccess;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,13 +20,16 @@ namespace DbMigrator
             //context.Database.EnsureCreated();
             context.Database.Migrate();
 
-            var stockSqlDb = new SQLStockDataRepository(optionsBuilder.Options);
+            var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
             var symbols = stockFileRepository.GetSymbols();
-            foreach(var symbol in symbols)
+            foreach (var symbol in symbols)
             {
                 var stockData = stockFileRepository.GetStocks(symbol);
-                stockSqlDb.AddOrUpdateStocks(stockData);
+                var stockHistory = new StockHistory(symbol, stockData);
+                stockSqlDb.AddOrUpdateStock(stockHistory);
+
+                var getTest = stockSqlDb.GetStock(symbol);
             }
         }
     }

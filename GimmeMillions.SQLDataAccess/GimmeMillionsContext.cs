@@ -7,7 +7,7 @@ namespace GimmeMillions.SQLDataAccess
     public class GimmeMillionsContext : DbContext
     {
         public DbSet<FeatureVector> FeatureVectors { get; set; }
-        public DbSet<StockData> StockDatas { get; set; }
+        public DbSet<StockHistory> StockHistories { get; set; }
 
         public GimmeMillionsContext(DbContextOptions<GimmeMillionsContext> options)
             : base(options)
@@ -15,9 +15,10 @@ namespace GimmeMillions.SQLDataAccess
 
         public GimmeMillionsContext()
         { }
+        //protected override void OnConfiguring(DbContextOptionsBuilder options)
+        //    => options.UseSqlite("DataSource=default.db");
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        { }
+        protected override void OnConfiguring(DbContextOptionsBuilder options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,17 +26,7 @@ namespace GimmeMillions.SQLDataAccess
                 .Ignore(x => x.Data)
                 .Property<string>("DataStr");
 
-            modelBuilder.Entity<StockData>()
-                .Ignore(x => x.BottomWickPercent)
-                .Ignore(x => x.CMF)
-                .Ignore(x => x.PercentChangeFromPreviousClose)
-                .Ignore(x => x.PercentChangeHighToOpen)
-                .Ignore(x => x.PercentChangeHighToPreviousClose)
-                .Ignore(x => x.PercentChangeLowToPreviousClose)
-                .Ignore(x => x.PercentChangeOpenToPreviousClose)
-                .Ignore(x => x.PercentDayChange)
-                .Ignore(x => x.PercentHighToLow)
-                .Ignore(x => x.TopWickPercent);
+            modelBuilder.Entity<StockHistory>().Ignore(x => x.HistoricalData);
         }
 
 
