@@ -9,11 +9,15 @@ namespace GimmeMillions.DataAccess.Stocks
     public class YahooFinanceStockAccessService : IStockAccessService
     {
         private IStockRepository _stockRepository;
+        private IStockHistoryRepository _stockHistoryRepository;
         private string _yahooHistoryBaseURL = "https://query1.finance.yahoo.com/v7/finance/download/";
         private string _pathToStocks;
-        public YahooFinanceStockAccessService(IStockRepository stockRepository, string pathToStocks)
+        public YahooFinanceStockAccessService(IStockRepository stockRepository, 
+            IStockHistoryRepository stockHistoryRepository, 
+            string pathToStocks)
         {
             _stockRepository = stockRepository;
+            _stockHistoryRepository = stockHistoryRepository;
             _pathToStocks = pathToStocks;
         }
 

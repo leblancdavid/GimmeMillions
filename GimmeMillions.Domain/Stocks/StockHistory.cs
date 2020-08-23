@@ -28,12 +28,15 @@ namespace GimmeMillions.Domain.Stocks
             }
         }
 
+        public DateTime LastUpdated { get; set; }
+
         public StockHistory() { }
         public StockHistory(string symbol, IEnumerable<StockData> historicalData)
         {
             Symbol = symbol;
             _historicalData = historicalData.ToList();
             _historicalDataStr = Stringify(historicalData);
+            LastUpdated = DateTime.Now;
         }
 
         public StockHistory(string symbol, string dataStr)
@@ -41,6 +44,7 @@ namespace GimmeMillions.Domain.Stocks
             Symbol = symbol;
             _historicalDataStr = dataStr;
             _historicalData = Parse(symbol, dataStr).ToList();
+            LastUpdated = DateTime.Now;
         }
 
         public void LoadData()

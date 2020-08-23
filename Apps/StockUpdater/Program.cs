@@ -1,4 +1,5 @@
 ﻿using GimmeMillions.DataAccess.Stocks;
+using GimmeMillions.Domain.Stocks;
 using System;
 
 namespace StockUpdater
@@ -9,7 +10,7 @@ namespace StockUpdater
         static void Main(string[] args)
         {
             string watchlistFile = "../../../../Repository/volume-watchlist2.csv";
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
             var file = new System.IO.StreamReader(watchlistFile);
             string line;
             while ((line = file.ReadLine()) != null)

@@ -24,6 +24,7 @@ namespace GimmeMillions.SQLDataAccess
                 var context = new GimmeMillionsContext(_dbContextOptions);
 
                 var stock = context.StockHistories.FirstOrDefault(x => x.Symbol == stockData.Symbol);
+                stockData.LastUpdated = DateTime.Now;
                 if (stock == null)
                 {
                     context.StockHistories.Add(stockData);
@@ -31,6 +32,7 @@ namespace GimmeMillions.SQLDataAccess
                 else
                 {
                     stock.HistoricalDataStr = stockData.HistoricalDataStr;
+                    stock.LastUpdated = stockData.LastUpdated;
                 }
                 context.SaveChanges();
                 return Result.Ok();
@@ -46,6 +48,18 @@ namespace GimmeMillions.SQLDataAccess
             var context = new GimmeMillionsContext(_dbContextOptions);
             context.StockHistories.RemoveRange(context.StockHistories.Where(x => x.Symbol == symbol));
             context.SaveChanges();
+        }
+
+        public DateTime GetLastUpdated(string symbol)
+        {
+            var context = new GimmeMillionsContext(_dbContextOptions);
+            var stock = context.StockHistories.FirstOrDefault(x => x.Symbol == symbol);
+            if (stock == null)
+            {
+                return new DateTime();
+            }
+
+            return stock.LastUpdated;
         }
 
         public Result<StockHistory> GetStock(string symbol)

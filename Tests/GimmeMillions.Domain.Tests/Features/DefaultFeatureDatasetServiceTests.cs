@@ -5,6 +5,7 @@ using GimmeMillions.DataAccess.Keys;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Articles;
 using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,7 +31,7 @@ namespace GimmeMillions.Domain.Tests.Features
             var accessKeys = new NYTApiAccessKeyRepository(_pathToKeys);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var articlesService = new NYTArticleAccessService(accessKeys, articlesRepo);
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
 
             var featureDatasetService = new DefaultFeatureDatasetService(bow, articlesService, stocksRepo);
             var trainingData = featureDatasetService.GetTrainingData("IWM");
