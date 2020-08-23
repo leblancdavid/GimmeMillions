@@ -51,13 +51,22 @@ namespace GimmeMillions.DataAccess.Stocks
         {
             try
             {
+                var lastUpdated = _stockHistoryRepository.GetLastUpdated(symbol);
+                if(lastUpdated.Date == DateTime.Today)
+                {
+                    return _stockRepository.GetStocks(symbol, frequencyTimeframe);
+                }
                 //F?period1=76204800&period2=1584316800&interval=1d&events=history
                 WebClient webClient = new WebClient();
                 DateTime startDate = new DateTime(2000, 1, 1);
                 int period1 = (Int32)(startDate.ToUniversalTime().Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
                 int period2 = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
                 string url = $"{_yahooHistoryBaseURL}{symbol}?period1={period1}&period2={period2}&interval=1d&events=history";
-                webClient.DownloadFile(url, $"{_pathToStocks}/{symbol}");
+
+                string data = webClient.DownloadString(url);
+                _stockHistoryRepository.AddOrUpdateStock(new StockHistory(symbol, data));
+
+                //webClient.DownloadFile(url, $"{_pathToStocks}/{symbol}");
             }
             catch (Exception ex)
             {
