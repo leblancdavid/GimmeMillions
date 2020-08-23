@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NytArticleCollector")]
+[assembly: AssemblyTitle("GimmeMillions.SQLDataAccess")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("NytArticleCollector")]
+[assembly: AssemblyProduct("GimmeMillions.SQLDataAccess")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("32bf6ef5-1541-4359-b783-ab79a423e3f4")]
+[assembly: Guid("2e4bcdbb-f262-4e74-86d9-c59c2991b4f7")]
 
 // Version information for an assembly consists of the following four values:
 //
