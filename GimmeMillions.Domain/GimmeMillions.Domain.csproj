@@ -155,6 +155,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\Extractors\StockIndicatorsFeatureExtractionV2.cs" />
     <Compile Include="Features\Services\CandlestickStockWithFuturesFeatureDatasetService.cs" />
     <Compile Include="Features\Services\CandlestickStockFeatureDatasetService.cs" />
     <Compile Include="Features\Extractors\CandlestickSimplifiedStockFeatureExtractor.cs" />
