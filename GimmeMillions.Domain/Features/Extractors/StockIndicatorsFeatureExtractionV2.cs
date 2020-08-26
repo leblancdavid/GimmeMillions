@@ -123,7 +123,7 @@ namespace GimmeMillions.Domain.Features
             int length)
         {
             var ordered = data.OrderByDescending(x => x.Data.Date).Take(length).ToList();
-            var mean = ordered.Sum(x => x.Data.Close);
+            var mean = ordered.Sum(x => x.Data.Close)/(decimal)length;
             var stdev = Math.Sqrt(ordered.Sum(x => Math.Pow((double)(x.Data.Close - mean), 2.0)) / (double)length);
 
             return (double)(ordered.First().Data.Close - mean) / stdev;

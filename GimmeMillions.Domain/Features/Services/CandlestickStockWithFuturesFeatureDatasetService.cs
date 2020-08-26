@@ -51,7 +51,10 @@ namespace GimmeMillions.Domain.Features
         }
 
         public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default,
-            DateTime endDate = default, bool updateStocks = false)
+            DateTime endDate = default,
+            decimal minDayRange = 0.0m,
+            decimal minVolume = 0.0m, 
+            bool updateStocks = false)
         {
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             var stockSymbols = _stockRepository.GetSymbols().Where(x => x != DOW_FUTURE_SYMBOL 
@@ -90,7 +93,8 @@ namespace GimmeMillions.Domain.Features
 
                 var td = GetTrainingData(symbol, stocks, stockOutputs,
                     dowStocks, snpStocks, nasStocks, rutStocks,
-                    startDate, endDate);
+                    startDate, endDate,
+                    minDayRange, minVolume);
                 if (td.IsSuccess)
                 {
                     foreach(var sample in td.Value)
@@ -235,7 +239,12 @@ namespace GimmeMillions.Domain.Features
             return GetData(symbol, date, stocks, dowStocks, snpStocks, nasStocks, rutStocks);
         }
 
-        public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol, DateTime startDate = default, DateTime endDate = default, bool updateStocks = false)
+        public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(
+            string symbol, 
+            DateTime startDate = default, DateTime endDate = default,
+            decimal minDayRange = 0.0m,
+            decimal minVolume = 0.0m, 
+            bool updateStocks = false)
         {
             var stocks = updateStocks ?
                    _stockRepository.UpdateStocks(symbol, FrequencyTimeframe.Daily).ToList() :
@@ -268,7 +277,7 @@ namespace GimmeMillions.Domain.Features
 
             return GetTrainingData(symbol, stocks, stockOutputs, 
                 dowStocks, snpStocks, nasStocks, rutStocks,
-                startDate, endDate);
+                startDate, endDate, minDayRange, minVolume);
 
         }
 
@@ -279,27 +288,31 @@ namespace GimmeMillions.Domain.Features
             List<StockData> snpStocks, 
             List<StockData> nasStocks,
             List<StockData> rutStocks,
-            DateTime startDate = default, DateTime endDate = default)
+            DateTime startDate = default, DateTime endDate = default,
+            decimal minDayRange = 0.0m,
+            decimal minVolume = 0.0m)
         {
-            var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
-            //var trainingData = new List<(HistoricalFeatureVector Input, StockData Output)>();
-            //foreach (var stock in stocks)
-            Parallel.ForEach(stockOutputs, (stock) =>
+            //var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
+            var trainingData = new List<(FeatureVector Input, StockData Output)>();
+            foreach (var stock in stocks)
+            //Parallel.ForEach(stockOutputs, (stock) =>
             {
                 if ((startDate == default(DateTime) || startDate < stock.Date) &&
-                    (endDate == default(DateTime) || endDate > stock.Date))
+                    (endDate == default(DateTime) || endDate > stock.Date) && 
+                    (stock.PercentDayRange >= minDayRange) &&
+                    (stock.Volume >= minVolume))
                 {
-                    var data = GetData(symbol, stock.Date, stocks, dowStocks, snpStocks, nasStocks);
+                    var data = GetData(symbol, stock.Date, stocks, dowStocks, snpStocks, nasStocks, rutStocks);
                     if (data.IsFailure)
                     {
-                        //continue;
-                        return;
+                        continue;
+                        //return;
                     }
 
                     trainingData.Add((data.Value, stock));
                 }
-            });
-            //}
+            //});
+            }
             if (!trainingData.Any())
             {
                 return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(
