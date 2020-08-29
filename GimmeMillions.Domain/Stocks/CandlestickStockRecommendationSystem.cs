@@ -15,7 +15,7 @@ namespace GimmeMillions.Domain.Stocks
 {
     public class CandlestickStockRecommendationSystem : IStockRecommendationSystem<FeatureVector>
     {
-        private MLStockFastForestCandlestickModel model;
+        private IStockPredictionModel<FeatureVector> model;
         private IFeatureDatasetService<FeatureVector> _featureDatasetService;
         private StockRecommendationSystemConfiguration _systemConfiguration;
         private string _pathToModels;
@@ -30,10 +30,11 @@ namespace GimmeMillions.Domain.Stocks
 
         public void AddModel(IStockPredictionModel<FeatureVector> stockPredictionModel)
         {
-            _systemConfiguration.Models.Add(("ANY_STOCK",
-                    _pathToModels,
-                    stockPredictionModel.Encoding,
-                    stockPredictionModel.GetType()));
+            //_systemConfiguration.Models.Add(("ANY_STOCK",
+            //        _pathToModels,
+            //        stockPredictionModel.Encoding,
+            //        stockPredictionModel.GetType()));
+            model = stockPredictionModel;
         }
 
         public IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date, bool updateStockHistory = false)
