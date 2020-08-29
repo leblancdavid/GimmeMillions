@@ -315,4 +315,9 @@ OpenCover/
 ASALocalRun/
 
 # Ignore the Repository Articles, it's too much for git!
-Repository/
+Repository/Cache/
+Repository/Dictionaries/
+Repository/Keys/
+Repository/Languages/
+Repository/Recommendations/
+Repository/Stocks/
