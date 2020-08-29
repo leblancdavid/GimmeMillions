@@ -16,11 +16,11 @@ namespace GimmeMillions.Domain.Stocks
     public class CandlestickStockRecommendationSystem : IStockRecommendationSystem<FeatureVector>
     {
         private MLStockFastForestCandlestickModel model;
-        private CandlestickStockFeatureDatasetService _featureDatasetService;
+        private IFeatureDatasetService<FeatureVector> _featureDatasetService;
         private StockRecommendationSystemConfiguration _systemConfiguration;
         private string _pathToModels;
 
-        public CandlestickStockRecommendationSystem(CandlestickStockFeatureDatasetService featureDatasetService,
+        public CandlestickStockRecommendationSystem(IFeatureDatasetService<FeatureVector> featureDatasetService,
             string pathToModels)
         {
             _featureDatasetService = featureDatasetService;
