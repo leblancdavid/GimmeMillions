@@ -2,6 +2,7 @@
 using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 
 namespace GimmeMillions.DataAccess.Stocks
@@ -67,6 +68,7 @@ namespace GimmeMillions.DataAccess.Stocks
                 _stockHistoryRepository.AddOrUpdateStock(new StockHistory(symbol, data));
 
                 //webClient.DownloadFile(url, $"{_pathToStocks}/{symbol}");
+                //File.WriteAllText($"{_pathToStocks}/{symbol}", data);
             }
             catch (Exception ex)
             {
