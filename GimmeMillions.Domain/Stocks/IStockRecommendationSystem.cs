@@ -13,9 +13,9 @@ namespace GimmeMillions.Domain.Stocks
         Result SaveConfiguration(string configurationFile);
         void AddModel(IStockPredictionModel<TFeature> stockPredictionModel);
         Result RetrainModels(DateTime startTime, DateTime endTime);
-        IEnumerable<StockRecommendation> GetRecommendationsForToday(int keepTop = 10);
-        IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keepTop = 10);
-        IEnumerable<StockRecommendation> GetAllRecommendationsForToday();
-        IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date);
+        IEnumerable<StockRecommendation> GetRecommendationsForToday(int keepTop = 10, bool updateStockHistory = false);
+        IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keepTop = 10, bool updateStockHistory = false);
+        IEnumerable<StockRecommendation> GetAllRecommendationsForToday(bool updateStockHistory = false);
+        IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date, bool updateStockHistory = false);
     }
 }

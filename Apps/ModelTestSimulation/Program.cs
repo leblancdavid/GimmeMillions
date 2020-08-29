@@ -45,7 +45,7 @@ namespace ModelTestSimulation
             "T", "PFE", "PBR", "GILD", "CSCO", "NOK", "MGM", "XOM", "HAL", "JPM", "CMCSA", "MS", "CVX", "PCG", "MRK",
             "V", "EBAY", "WMT", "LUV", "NKE", "JNJ", "SYF", "HLT", "CVS" };
 
-            var stockAccess = new YahooFinanceStockAccessService(stockRepository, new PlaceholderStockHistoryRepository(), _pathToStocks);
+            var stockAccess = new YahooFinanceStockAccessService(stockRepository, new PlaceholderStockHistoryRepository());
 
             foreach (var stock in stocks)
             {
@@ -135,7 +135,7 @@ namespace ModelTestSimulation
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository());
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             int numArticlesDays = 10;
@@ -156,7 +156,7 @@ namespace ModelTestSimulation
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository());
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             var candlestickExtractor = new CandlestickStockFeatureExtractor();

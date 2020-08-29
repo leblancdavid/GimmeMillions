@@ -38,7 +38,7 @@ namespace GimmeMillions.Domain.Stocks
             //stockPredictionModel.Save(_pathToModels);
         }
 
-        public IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date)
+        public IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date, bool updateStockHistory = false)
         {
             var recommendations = new List<StockRecommendation>();
             var feature = _featureDatasetService.GetFeatureVector("", date);
@@ -56,12 +56,12 @@ namespace GimmeMillions.Domain.Stocks
             return recommendations.OrderByDescending(x => x.Prediction.Probability);
         }
 
-        public IEnumerable<StockRecommendation> GetAllRecommendationsForToday()
+        public IEnumerable<StockRecommendation> GetAllRecommendationsForToday(bool updateStockHistory = false)
         {
-            return GetAllRecommendations(DateTime.Today);
+            return GetAllRecommendations(DateTime.Today, updateStockHistory);
         }
 
-        public IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keepTop = 10)
+        public IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keepTop = 10, bool updateStockHistory = false)
         {
             var recommendations = GetAllRecommendations(date).Take(keepTop);
             var scoreSum = recommendations.Sum(x => x.Prediction.Score);
@@ -73,9 +73,9 @@ namespace GimmeMillions.Domain.Stocks
             return recommendations;
         }
 
-        public IEnumerable<StockRecommendation> GetRecommendationsForToday(int keepTop = 10)
+        public IEnumerable<StockRecommendation> GetRecommendationsForToday(int keepTop = 10, bool updateStockHistory = false)
         {
-            return GetRecommendations(DateTime.Today, keepTop);
+            return GetRecommendations(DateTime.Today, keepTop, updateStockHistory);
         }
 
         public Result LoadConfiguration(string configurationFile)

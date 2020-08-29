@@ -30,27 +30,27 @@ namespace GimmeMillions.Domain.Stocks
 
         public void AddModel(IStockPredictionModel<FeatureVector> stockPredictionModel)
         {
-            model = stockPredictionModel as MLStockFastForestCandlestickModel;
-            if(model != null)
-            {
-                _systemConfiguration.Models.Add(("ANY_STOCK",
+            _systemConfiguration.Models.Add(("ANY_STOCK",
                     _pathToModels,
-                    model.Encoding,
-                    model.GetType()));
-            }
-            //stockPredictionModel.Save(_pathToModels);
+                    stockPredictionModel.Encoding,
+                    stockPredictionModel.GetType()));
         }
 
-        public IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date)
+        public IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date, bool updateStockHistory = false)
         {
             var recommendations = new ConcurrentBag<StockRecommendation>();
-            var stockSymbols = _featureDatasetService.StockAccess.GetSymbols()
-                .Where(x => x != "^DJI" && x != "^GSPC" && x != "^IXIC");
+
+            if(updateStockHistory)
+            {
+                _featureDatasetService.StockAccess.UpdateFutures();
+            }
+
+            var stockSymbols = _featureDatasetService.StockAccess.GetSymbols();
 
             Parallel.ForEach(stockSymbols, symbol =>
             //foreach(var symbol in stockSymbols)
             {
-                if (date >= DateTime.Today)
+                if (updateStockHistory)
                     _featureDatasetService.StockAccess.UpdateStocks(symbol);
 
                 var feature = _featureDatasetService.GetFeatureVector(symbol, date);
@@ -66,12 +66,12 @@ namespace GimmeMillions.Domain.Stocks
             return recommendations.ToList().OrderByDescending(x => x.Prediction.Probability);
         }
 
-        public IEnumerable<StockRecommendation> GetAllRecommendationsForToday()
+        public IEnumerable<StockRecommendation> GetAllRecommendationsForToday(bool updateStockHistory = false)
         {
             return GetAllRecommendations(DateTime.Today);
         }
 
-        public IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keepTop = 10)
+        public IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keepTop = 10, bool updateStockHistory = false)
         {
             var recommendations = GetAllRecommendations(date).Take(keepTop);
             var scoreSum = recommendations.Sum(x => x.Prediction.Score);
@@ -83,7 +83,7 @@ namespace GimmeMillions.Domain.Stocks
             return recommendations;
         }
 
-        public IEnumerable<StockRecommendation> GetRecommendationsFor(IEnumerable<string> symbols, DateTime date)
+        public IEnumerable<StockRecommendation> GetRecommendationsFor(IEnumerable<string> symbols, DateTime date, bool updateStockHistory = false)
         {
             var recommendations = new ConcurrentBag<StockRecommendation>();
 
@@ -105,7 +105,7 @@ namespace GimmeMillions.Domain.Stocks
             return recommendations.ToList().OrderByDescending(x => x.Prediction.Probability);
         }
 
-        public IEnumerable<StockRecommendation> GetRecommendationsForToday(int keepTop = 10)
+        public IEnumerable<StockRecommendation> GetRecommendationsForToday(int keepTop = 10, bool updateStockHistory = false)
         {
             return GetRecommendations(DateTime.Today, keepTop);
         }

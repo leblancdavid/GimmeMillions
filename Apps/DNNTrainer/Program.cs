@@ -78,7 +78,7 @@ namespace DNNTrainer
 
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository());
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             var candlestickExtractor = new CandlestickStockFeatureExtractor();
@@ -92,7 +92,7 @@ namespace DNNTrainer
            int stockOutputPeriod = 3,
            bool includeComposites = false)
         {
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository());
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             //var candlestickExtractor = new CandlestickStockFeatureExtractor();
@@ -116,7 +116,7 @@ namespace DNNTrainer
             var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
             var stocksRepo = new YahooFinanceStockAccessService(new DefaultStockRepository(stockSqlDb),
-                stockSqlDb, _pathToStocks);
+                stockSqlDb);
 
             //var candlestickExtractor = new CandlestickStockFeatureExtractor();
             //use default values for meow!

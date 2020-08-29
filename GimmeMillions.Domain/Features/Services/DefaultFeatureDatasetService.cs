@@ -20,6 +20,9 @@ namespace GimmeMillions.Domain.Features
         private string _encodingKey;
 
         public bool RefreshCache { get; set; }
+
+        public IStockAccessService StockAccess => _stockRepository;
+
         public DefaultFeatureDatasetService(IFeatureExtractor<Article> featureVectorExtractor,
             IArticleAccessService articleRepository,
             IStockAccessService stockRepository,

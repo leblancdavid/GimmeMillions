@@ -45,6 +45,25 @@ namespace GimmeMillions.DataAccess.Stocks
             return _stockRepository.GetSymbols();
         }
 
+        private readonly string DOW_INDEX_SYMBOL = "^DJI";
+        private readonly string SNP_INDEX_SYMBOL = "^GSPC";
+        private readonly string NASDAQ_INDEX_SYMBOL = "^IXIC";
+        private readonly string DOW_FUTURE_SYMBOL = "DIA";
+        private readonly string SNP_FUTURE_SYMBOL = "SPY";
+        private readonly string NASDAQ_FUTURE_SYMBOL = "QQQ";
+        private readonly string RUSSEL_FUTURE_SYMBOL = "^RUT";
+
+        public void UpdateFutures()
+        {
+            UpdateStocks(DOW_INDEX_SYMBOL);
+            UpdateStocks(SNP_INDEX_SYMBOL);
+            UpdateStocks(NASDAQ_INDEX_SYMBOL);
+            UpdateStocks(DOW_FUTURE_SYMBOL);
+            UpdateStocks(SNP_FUTURE_SYMBOL);
+            UpdateStocks(NASDAQ_FUTURE_SYMBOL);
+            UpdateStocks(RUSSEL_FUTURE_SYMBOL);
+        }
+
         public IEnumerable<StockData> UpdateStocks(string symbol, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily)
         {
             try

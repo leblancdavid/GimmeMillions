@@ -14,6 +14,8 @@ namespace GimmeMillions.Domain.Features
         private int _featureSize;
         public bool RefreshCache { get; set; }
 
+        public IStockAccessService StockAccess => null;
+
         public RandomFeatureDatasetService(int seed, int featureSize)
         {
             _random = new Random(seed);

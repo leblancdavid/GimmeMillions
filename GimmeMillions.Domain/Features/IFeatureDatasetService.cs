@@ -11,6 +11,7 @@ namespace GimmeMillions.Domain.Features
     public interface IFeatureDatasetService<TFeature> where TFeature : FeatureVector
     {
         bool RefreshCache { get; set; }
+        IStockAccessService StockAccess { get; }
 
         IEnumerable<(TFeature Input, StockData Output)> GetAllTrainingData(
             DateTime startDate = default(DateTime), DateTime endDate = default(DateTime),
