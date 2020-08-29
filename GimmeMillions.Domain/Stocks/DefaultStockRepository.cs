@@ -9,10 +9,11 @@ namespace GimmeMillions.Domain.Stocks
 {
     public class DefaultStockRepository : IStockRepository
     {
-        private readonly IStockHistoryRepository _stockHistoryRepository;
+        public IStockHistoryRepository StockHistoryRepository { get; }
+
         public DefaultStockRepository(IStockHistoryRepository stockHistoryRepository)
         {
-            _stockHistoryRepository = stockHistoryRepository;
+            StockHistoryRepository = stockHistoryRepository;
         }
 
         public Result<StockData> GetStock(string symbol, DateTime date, FrequencyTimeframe timeframe = FrequencyTimeframe.Daily)
@@ -40,7 +41,7 @@ namespace GimmeMillions.Domain.Stocks
         private IEnumerable<StockData> GetDailyStocks(string symbol)
         {
             var stocks = new List<StockData>();
-            var stockHistory = _stockHistoryRepository.GetStock(symbol);
+            var stockHistory = StockHistoryRepository.GetStock(symbol);
             if(stockHistory.IsFailure)
             {
                 return stocks;
@@ -104,7 +105,7 @@ namespace GimmeMillions.Domain.Stocks
 
         public IEnumerable<string> GetSymbols()
         {
-            return _stockHistoryRepository.GetSymbols();
+            return StockHistoryRepository.GetSymbols();
         }
 
         public IEnumerable<StockData> GetStocks(string symbol, int timeLength)

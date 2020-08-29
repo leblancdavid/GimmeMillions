@@ -12,11 +12,10 @@ namespace GimmeMillions.DataAccess.Stocks
         private IStockRepository _stockRepository;
         private IStockHistoryRepository _stockHistoryRepository;
         private string _yahooHistoryBaseURL = "https://query1.finance.yahoo.com/v7/finance/download/";
-        public YahooFinanceStockAccessService(IStockRepository stockRepository, 
-            IStockHistoryRepository stockHistoryRepository)
+        public YahooFinanceStockAccessService(IStockRepository stockRepository)
         {
             _stockRepository = stockRepository;
-            _stockHistoryRepository = stockHistoryRepository;
+            _stockHistoryRepository = stockRepository.StockHistoryRepository;
         }
 
         public IEnumerable<StockData> GetStocks(string symbol, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily)

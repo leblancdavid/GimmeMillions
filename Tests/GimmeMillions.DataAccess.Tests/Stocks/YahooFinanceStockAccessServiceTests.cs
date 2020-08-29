@@ -18,7 +18,7 @@ namespace GimmeMillions.DataAccess.Tests.Stocks
         {
             var repo = new StockDataRepository(_pathToStocks);
             string symbol = "F";
-            var stockService = new YahooFinanceStockAccessService(repo, new PlaceholderStockHistoryRepository());
+            var stockService = new YahooFinanceStockAccessService(repo);
 
             var stocks = stockService.UpdateStocks(symbol);
 

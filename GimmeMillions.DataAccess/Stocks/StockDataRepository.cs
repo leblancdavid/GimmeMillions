@@ -7,12 +7,17 @@ using System.Linq;
 
 namespace GimmeMillions.DataAccess.Stocks
 {
+    [Obsolete]
     public class StockDataRepository : IStockRepository
     {
         private readonly string _pathToStocks;
+
+        public IStockHistoryRepository StockHistoryRepository { get; }
+
         public StockDataRepository(string pathToStocks)
         {
             _pathToStocks = pathToStocks;
+            StockHistoryRepository = new PlaceholderStockHistoryRepository();
         }
 
         public Result<StockData> GetStock(string symbol, DateTime date, FrequencyTimeframe timeframe = FrequencyTimeframe.Daily)

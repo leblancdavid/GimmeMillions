@@ -159,7 +159,7 @@ namespace ModelTrainer
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository());
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks));
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             int numArticlesDays = 10;
@@ -179,7 +179,7 @@ namespace ModelTrainer
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository());
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks));
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             var candlestickExtractor = new CandlestickStockFeatureExtractor();

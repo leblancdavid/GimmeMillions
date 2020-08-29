@@ -10,7 +10,7 @@ namespace StockUpdater
         static void Main(string[] args)
         {
             string watchlistFile = "../../../../Repository/volume-watchlist2.csv";
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository());
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks));
             var file = new System.IO.StreamReader(watchlistFile);
             string line;
             while ((line = file.ReadLine()) != null)
