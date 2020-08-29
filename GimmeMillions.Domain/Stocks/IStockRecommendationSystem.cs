@@ -17,5 +17,6 @@ namespace GimmeMillions.Domain.Stocks
         IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keepTop = 10, bool updateStockHistory = false);
         IEnumerable<StockRecommendation> GetAllRecommendationsForToday(bool updateStockHistory = false);
         IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date, bool updateStockHistory = false);
+        IEnumerable<StockRecommendation> GetRecommendationsFor(IEnumerable<string> symbols, DateTime date, bool updateStockHistory = false);
     }
 }

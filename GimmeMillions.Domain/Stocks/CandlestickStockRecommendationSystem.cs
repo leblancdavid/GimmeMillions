@@ -86,11 +86,14 @@ namespace GimmeMillions.Domain.Stocks
         public IEnumerable<StockRecommendation> GetRecommendationsFor(IEnumerable<string> symbols, DateTime date, bool updateStockHistory = false)
         {
             var recommendations = new ConcurrentBag<StockRecommendation>();
+            if (updateStockHistory)
+                _featureDatasetService.StockAccess.UpdateFutures();
 
             Parallel.ForEach(symbols, symbol =>
             //foreach(var symbol in stockSymbols)
             {
-                _featureDatasetService.StockAccess.UpdateStocks(symbol);
+                if(updateStockHistory)
+                    _featureDatasetService.StockAccess.UpdateStocks(symbol);
 
                 var feature = _featureDatasetService.GetFeatureVector(symbol, date);
                 if (feature.IsFailure)
