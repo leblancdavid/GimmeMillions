@@ -21,6 +21,17 @@ namespace GimmeMillions.Domain.Stocks
             }
         }
 
+        public decimal PercentDayRange
+        {
+            get
+            {
+                if (Low == 0.0m)
+                    return 0.0m;
+
+                return (decimal)100.0 * (High - Low) / Low;
+            }
+        }
+
         public decimal PercentChangeHighToOpen
         {
             get

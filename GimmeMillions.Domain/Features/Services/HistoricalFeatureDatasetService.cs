@@ -65,14 +65,18 @@ namespace GimmeMillions.Domain.Features
 
         }
 
-        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default, 
-            DateTime endDate = default, bool updateStocks = false)
+        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(
+            DateTime startDate = default, 
+            DateTime endDate = default,
+            decimal minDayRange = 0.0m,
+            decimal minVolume = 0.0m,
+            bool updateStocks = false)
         {
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             var stocks = _stockRepository.GetSymbols();
             foreach (var stock in stocks)
             {
-                var td = GetTrainingData(stock, startDate, endDate, updateStocks);
+                var td = GetTrainingData(stock, startDate, endDate, 0.0m, 0.0m, updateStocks);
                 if (td.IsSuccess)
                 {
                     trainingData.AddRange(td.Value);
@@ -252,7 +256,11 @@ namespace GimmeMillions.Domain.Features
             return Result.Ok(output.Value.Input);
         }
 
-        public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol, DateTime startDate = default, DateTime endDate = default, bool updateStocks = false)
+        public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(
+            string symbol, DateTime startDate = default, DateTime endDate = default,
+            decimal minDayRange = 0.0m,
+            decimal minVolume = 0.0m,
+             bool updateStocks = false)
         {
             var stocks = updateStocks ?
                    _stockRepository.UpdateStocks(symbol, _stockSamplingFrequency).ToList() :

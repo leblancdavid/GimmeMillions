@@ -15,5 +15,6 @@ namespace GimmeMillions.Domain.Stocks
         Result AddOrUpdateStock(StockHistory stockData);
         void Delete(string symbol);
         IEnumerable<string> GetSymbols();
+        DateTime GetLastUpdated(string symbol);
     }
 }

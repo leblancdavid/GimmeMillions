@@ -155,14 +155,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Features\CandlestickStockFeatureDatasetService.cs" />
-    <Compile Include="Features\CandlestickSimplifiedStockFeatureExtractor.cs" />
-    <Compile Include="Features\CandlestickStockFeatureExtractorV2.cs" />
-    <Compile Include="Features\CandlestickStockFeatureExtractor.cs" />
-    <Compile Include="Features\AKMBoWFeatureVectorExtractor.cs" />
-    <Compile Include="Features\HistoricalFeatureDatasetService.cs" />
+    <Compile Include="Features\Extractors\StockIndicatorsFeatureExtractionV2.cs" />
+    <Compile Include="Features\Services\CandlestickStockWithFuturesFeatureDatasetService.cs" />
+    <Compile Include="Features\Services\CandlestickStockFeatureDatasetService.cs" />
+    <Compile Include="Features\Extractors\CandlestickSimplifiedStockFeatureExtractor.cs" />
+    <Compile Include="Features\Extractors\CandlestickStockFeatureExtractorV2.cs" />
+    <Compile Include="Features\Extractors\CandlestickStockFeatureExtractor.cs" />
+    <Compile Include="Features\Extractors\AKMBoWFeatureVectorExtractor.cs" />
+    <Compile Include="Features\Services\HistoricalFeatureDatasetService.cs" />
     <Compile Include="Features\HistoricalFeatureVector.cs" />
-    <Compile Include="Features\StockIndicatorsFeatureExtraction.cs" />
+    <Compile Include="Features\Extractors\StockIndicatorsFeatureExtraction.cs" />
     <Compile Include="Logging\ConsoleLogger.cs" />
     <Compile Include="Logging\FileLogger.cs" />
     <Compile Include="Logging\ILogger.cs" />
@@ -176,9 +178,9 @@
     <Compile Include="Articles\Keyword.cs" />
     <Compile Include="Articles\Multimedia.cs" />
     <Compile Include="Articles\Person.cs" />
-    <Compile Include="Features\BagOfWordsFeatureVectorExtractor.cs" />
-    <Compile Include="Features\DefaultFeatureDatasetService.cs" />
-    <Compile Include="Features\DefaultTextProcessor.cs" />
+    <Compile Include="Features\Extractors\BagOfWordsFeatureVectorExtractor.cs" />
+    <Compile Include="Features\Services\DefaultFeatureDatasetService.cs" />
+    <Compile Include="Features\Processing\DefaultTextProcessor.cs" />
     <Compile Include="Features\FeaturesDictionary.cs" />
     <Compile Include="Features\FeatureVector.cs" />
     <Compile Include="Features\IFeatureCache.cs" />
@@ -187,8 +189,8 @@
     <Compile Include="Features\IFeatureDictionaryRepository.cs" />
     <Compile Include="Features\IFeatureExtractor.cs" />
     <Compile Include="Features\ITextProcessor.cs" />
-    <Compile Include="Features\RandomFeatureDatasetService.cs" />
-    <Compile Include="Features\UsaLanguageChecker.cs" />
+    <Compile Include="Features\Services\RandomFeatureDatasetService.cs" />
+    <Compile Include="Features\Processing\UsaLanguageChecker.cs" />
     <Compile Include="Keys\AccessKey.cs" />
     <Compile Include="Keys\IAccessKeyRepository.cs" />
     <Compile Include="ML\Accord\FilterFeaturesDataTransformer.cs" />
@@ -203,6 +205,7 @@
     <Compile Include="ML\Binary\MLStockFastForestModel.cs" />
     <Compile Include="ML\Binary\MLStockKnnBruteForceModel.cs" />
     <Compile Include="ML\Binary\MLStockPcaSvmModel.cs" />
+    <Compile Include="ML\Candlestick\MLStockFastForestCandlestickModelV2.cs" />
     <Compile Include="ML\Candlestick\StockCandlestickRegressionFeature.cs" />
     <Compile Include="ML\Candlestick\StockCandlestickDataFeature.cs" />
     <Compile Include="ML\ModelMetrics.cs" />
@@ -251,6 +254,7 @@
     <Compile Include="Stocks\IStockHistoryRepository.cs" />
     <Compile Include="Stocks\IStockRecommendationSystem.cs" />
     <Compile Include="Stocks\IStockRepository.cs" />
+    <Compile Include="Stocks\PlaceholderStockHistoryRepository.cs" />
     <Compile Include="Stocks\StockData.cs" />
     <Compile Include="Stocks\StockHistory.cs" />
     <Compile Include="Stocks\StockRecommendation.cs" />

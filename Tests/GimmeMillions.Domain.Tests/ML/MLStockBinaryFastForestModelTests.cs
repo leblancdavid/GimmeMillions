@@ -6,6 +6,7 @@ using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.ML.Binary;
+using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -161,7 +162,7 @@ namespace GimmeMillions.Domain.Tests.ML
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             int numArticlesDays = 10;

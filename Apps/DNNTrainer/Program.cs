@@ -7,6 +7,8 @@ using GimmeMillions.Domain.Logging;
 using GimmeMillions.Domain.ML.Accord;
 using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.SQLDataAccess;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,7 +32,8 @@ namespace DNNTrainer
 
         static void Main(string[] args)
         {
-            var datasetService = GetCandlestickFeatureDatasetService(60, 5, true);
+            //var datasetService = GetCandlestickFeatureDatasetService(60, 5, true);
+            var datasetService = GetCandlestickFeatureDatasetServiceV2(60, 5, true);
             var logFile = "logs/log";
             Directory.CreateDirectory("logs");
             var loggers = new List<ILogger>()
@@ -39,7 +42,8 @@ namespace DNNTrainer
                 new ConsoleLogger()
             };
             //var model = new DNNRegressionStockPredictor(loggers);
-            var model = new MLStockFastForestCandlestickModel();
+            //var model = new MLStockFastForestCandlestickModel();
+            var model = new MLStockFastForestCandlestickModelV2();
             model.Parameters.NumCrossValidations = 2;
             model.Parameters.NumOfTrees = 2000;
             model.Parameters.NumOfLeaves = 50;
@@ -47,7 +51,7 @@ namespace DNNTrainer
 
             //var endTrainingData = new DateTime(2019, 1, 1);
             var endTrainingData = DateTime.Today;
-            var dataset = datasetService.GetAllTrainingData(new DateTime(2001, 1, 30), endTrainingData, false);
+            var dataset = datasetService.GetAllTrainingData(new DateTime(2018, 1, 1), endTrainingData, 0.5m, 5000.0m, true);
             //var dataset = datasetService.GetTrainingData("AMZN", new DateTime(2001, 1, 30), endTrainingData).Value;
 
             var trainingResults = model.Train(dataset, 0.0);
@@ -74,7 +78,7 @@ namespace DNNTrainer
 
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             var candlestickExtractor = new CandlestickStockFeatureExtractor();
@@ -88,7 +92,7 @@ namespace DNNTrainer
            int stockOutputPeriod = 3,
            bool includeComposites = false)
         {
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             //var candlestickExtractor = new CandlestickStockFeatureExtractor();
@@ -97,6 +101,30 @@ namespace DNNTrainer
 
             return new CandlestickStockFeatureDatasetService(indictatorsExtractor, stocksRepo,
                 numStockSamples, stockOutputPeriod, includeComposites, cache, false);
+        }
+
+        private static IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetServiceV2(
+           int numStockSamples = 40,
+           int stockOutputPeriod = 3,
+           bool includeFutures = false)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<GimmeMillionsContext>();
+            optionsBuilder.UseSqlite($"Data Source=C:/Databases/gm.db");
+            var context = new GimmeMillionsContext(optionsBuilder.Options);
+            context.Database.Migrate();
+
+            var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
+
+            var stocksRepo = new YahooFinanceStockAccessService(new DefaultStockRepository(stockSqlDb),
+                stockSqlDb, _pathToStocks);
+
+            //var candlestickExtractor = new CandlestickStockFeatureExtractor();
+            //use default values for meow!
+            //var indictatorsExtractor = new StockIndicatorsFeatureExtraction(normalize: false);
+            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV2(normalize: false);
+
+            return new CandlestickStockWithFuturesFeatureDatasetService(indictatorsExtractor, stocksRepo,
+                numStockSamples, stockOutputPeriod);
         }
     }
 }

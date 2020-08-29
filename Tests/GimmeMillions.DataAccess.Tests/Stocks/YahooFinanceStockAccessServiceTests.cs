@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using GimmeMillions.DataAccess.Stocks;
+using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace GimmeMillions.DataAccess.Tests.Stocks
         {
             var repo = new StockDataRepository(_pathToStocks);
             string symbol = "F";
-            var stockService = new YahooFinanceStockAccessService(repo, _pathToStocks);
+            var stockService = new YahooFinanceStockAccessService(repo, new PlaceholderStockHistoryRepository(), _pathToStocks);
 
             var stocks = stockService.UpdateStocks(symbol);
 

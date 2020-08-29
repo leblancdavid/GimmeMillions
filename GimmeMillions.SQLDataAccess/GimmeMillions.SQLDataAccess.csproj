@@ -161,6 +161,10 @@
     <Compile Include="Migrations\20200820031006_InitialDb.designer.cs">
       <DependentUpon>20200820031006_InitialDb.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20200823194854_LastUpdatedDateTimeStockHistory.cs" />
+    <Compile Include="Migrations\20200823194854_LastUpdatedDateTimeStockHistory.designer.cs">
+      <DependentUpon>20200823194854_LastUpdatedDateTimeStockHistory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\GimmeMillionsContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLStockHistoryRepository.cs" />

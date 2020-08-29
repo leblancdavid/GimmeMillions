@@ -15,6 +15,7 @@ namespace GimmeMillions.SQLDataAccess
 
         public GimmeMillionsContext()
         { }
+        //Uncomment this when you want to add a migration? Not sure why but it's apparently necessary
         //protected override void OnConfiguring(DbContextOptionsBuilder options)
         //    => options.UseSqlite("DataSource=default.db");
 

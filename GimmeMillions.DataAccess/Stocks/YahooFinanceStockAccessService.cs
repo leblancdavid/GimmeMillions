@@ -2,6 +2,7 @@
 using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 
 namespace GimmeMillions.DataAccess.Stocks
@@ -9,11 +10,15 @@ namespace GimmeMillions.DataAccess.Stocks
     public class YahooFinanceStockAccessService : IStockAccessService
     {
         private IStockRepository _stockRepository;
+        private IStockHistoryRepository _stockHistoryRepository;
         private string _yahooHistoryBaseURL = "https://query1.finance.yahoo.com/v7/finance/download/";
         private string _pathToStocks;
-        public YahooFinanceStockAccessService(IStockRepository stockRepository, string pathToStocks)
+        public YahooFinanceStockAccessService(IStockRepository stockRepository, 
+            IStockHistoryRepository stockHistoryRepository, 
+            string pathToStocks)
         {
             _stockRepository = stockRepository;
+            _stockHistoryRepository = stockHistoryRepository;
             _pathToStocks = pathToStocks;
         }
 
@@ -47,13 +52,23 @@ namespace GimmeMillions.DataAccess.Stocks
         {
             try
             {
+                var lastUpdated = _stockHistoryRepository.GetLastUpdated(symbol);
+                if(lastUpdated.Date == DateTime.Today)
+                {
+                    return _stockRepository.GetStocks(symbol, frequencyTimeframe);
+                }
                 //F?period1=76204800&period2=1584316800&interval=1d&events=history
                 WebClient webClient = new WebClient();
                 DateTime startDate = new DateTime(2000, 1, 1);
                 int period1 = (Int32)(startDate.ToUniversalTime().Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
                 int period2 = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
                 string url = $"{_yahooHistoryBaseURL}{symbol}?period1={period1}&period2={period2}&interval=1d&events=history";
-                webClient.DownloadFile(url, $"{_pathToStocks}/{symbol}");
+
+                string data = webClient.DownloadString(url);
+                _stockHistoryRepository.AddOrUpdateStock(new StockHistory(symbol, data));
+
+                //webClient.DownloadFile(url, $"{_pathToStocks}/{symbol}");
+                //File.WriteAllText($"{_pathToStocks}/{symbol}", data);
             }
             catch (Exception ex)
             {

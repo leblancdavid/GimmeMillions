@@ -4,6 +4,7 @@ using GimmeMillions.DataAccess.Keys;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Articles;
 using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -45,7 +46,8 @@ namespace GimmeMillions.Domain.Tests.Features
             var accessKeys = new NYTApiAccessKeyRepository(_pathToKeys);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks),
+                new PlaceholderStockHistoryRepository(), _pathToStocks); ;
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             int numArticlesDays = 10;

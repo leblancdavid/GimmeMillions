@@ -71,7 +71,7 @@ namespace GimmeMillions.Domain.Tests.ML
             model.Parameters.NumOfLeaves = 200;
             model.Parameters.MinNumOfLeaves = 100;
 
-            var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 1), DateTime.Today, false);
+            var dataset = datasetService.GetAllTrainingData(new DateTime(2000, 1, 1), DateTime.Today, 0.0m, 0.0m, false);
             dataset.Any().Should().BeTrue();
 
             var trainingResults = model.Train(dataset, 0.0);
@@ -85,7 +85,7 @@ namespace GimmeMillions.Domain.Tests.ML
             int stockOutputPeriod = 3,
             bool includeComposites = false)
         {
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             //var candlestickExtractor = new CandlestickStockFeatureExtractor();
@@ -116,7 +116,7 @@ namespace GimmeMillions.Domain.Tests.ML
 
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
 
