@@ -160,33 +160,34 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<FeatureVector>(stocksVector.Error);
             }
 
-            var dowVector = GetStockFeatureVector(DOW_FUTURE_SYMBOL, date, dowStocks, _numStockDailySamples);
-            if (dowVector.IsFailure)
-            {
-                return Result.Failure<FeatureVector>(dowVector.Error);
-            }
-            var snpVector = GetStockFeatureVector(SNP_FUTURE_SYMBOL, date, snpStocks, _numStockDailySamples);
-            if (snpVector.IsFailure)
-            {
-                return Result.Failure<FeatureVector>(snpVector.Error);
-            }
-            var nasVector = GetStockFeatureVector(NASDAQ_FUTURE_SYMBOL, date, nasStocks, _numStockDailySamples);
-            if (nasVector.IsFailure)
-            {
-                return Result.Failure<FeatureVector>(nasVector.Error);
-            }
-            var rutVector = GetStockFeatureVector(RUSSEL_FUTURE_SYMBOL, date, rutStocks, _numStockDailySamples);
-            if (rutVector.IsFailure)
-            {
-                return Result.Failure<FeatureVector>(rutVector.Error);
-            }
+            //var dowVector = GetStockFeatureVector(DOW_FUTURE_SYMBOL, date, dowStocks, _numStockDailySamples);
+            //if (dowVector.IsFailure)
+            //{
+            //    return Result.Failure<FeatureVector>(dowVector.Error);
+            //}
+            //var snpVector = GetStockFeatureVector(SNP_FUTURE_SYMBOL, date, snpStocks, _numStockDailySamples);
+            //if (snpVector.IsFailure)
+            //{
+            //    return Result.Failure<FeatureVector>(snpVector.Error);
+            //}
+            //var nasVector = GetStockFeatureVector(NASDAQ_FUTURE_SYMBOL, date, nasStocks, _numStockDailySamples);
+            //if (nasVector.IsFailure)
+            //{
+            //    return Result.Failure<FeatureVector>(nasVector.Error);
+            //}
+            //var rutVector = GetStockFeatureVector(RUSSEL_FUTURE_SYMBOL, date, rutStocks, _numStockDailySamples);
+            //if (rutVector.IsFailure)
+            //{
+            //    return Result.Failure<FeatureVector>(rutVector.Error);
+            //}
 
-            var compositeVector = new FeatureVector(dowVector.Value
-                .Concat(snpVector.Value)
-                .Concat(nasVector.Value)
-                .Concat(rutVector.Value)
-                .Concat(stocksVector.Value).ToArray(), date, _encodingKey);
+            //var compositeVector = new FeatureVector(dowVector.Value
+            //    .Concat(snpVector.Value)
+            //    .Concat(nasVector.Value)
+            //    .Concat(rutVector.Value)
+            //    .Concat(stocksVector.Value).ToArray(), date, _encodingKey);
 
+            var compositeVector = new FeatureVector(stocksVector.Value, date, _encodingKey);
             return Result.Ok(compositeVector);
         }
 

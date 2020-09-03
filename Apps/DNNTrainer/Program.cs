@@ -33,7 +33,7 @@ namespace DNNTrainer
         static void Main(string[] args)
         {
             //var datasetService = GetCandlestickFeatureDatasetService(60, 5, true);
-            var datasetService = GetCandlestickFeatureDatasetServiceV2(60, 5, true);
+            var datasetService = GetCandlestickFeatureDatasetServiceV2(200, 5, false);
             var logFile = "logs/log";
             Directory.CreateDirectory("logs");
             var loggers = new List<ILogger>()
@@ -46,15 +46,15 @@ namespace DNNTrainer
             var model = new MLStockFastForestCandlestickModelV2();
             model.Parameters.NumCrossValidations = 2;
             model.Parameters.NumOfTrees = 2000;
-            model.Parameters.NumOfLeaves = 50;
-            model.Parameters.MinNumOfLeaves = 100;
+            model.Parameters.NumOfLeaves = 200;
+            model.Parameters.MinNumOfLeaves = 10;
 
             //var endTrainingData = new DateTime(2019, 1, 1);
             var endTrainingData = DateTime.Today;
-            var dataset = datasetService.GetAllTrainingData(new DateTime(2018, 1, 1), endTrainingData, 0.5m, 5000.0m, true);
+            var dataset = datasetService.GetAllTrainingData(new DateTime(2015, 1, 1), endTrainingData, 0.5m, 100000.0m, false);
             //var dataset = datasetService.GetTrainingData("AMZN", new DateTime(2001, 1, 30), endTrainingData).Value;
 
-            var trainingResults = model.Train(dataset, 0.0);
+            var trainingResults = model.Train(dataset, 0.1);
             model.Save(_pathToModels);
         }
 
@@ -120,7 +120,13 @@ namespace DNNTrainer
             //var candlestickExtractor = new CandlestickStockFeatureExtractor();
             //use default values for meow!
             //var indictatorsExtractor = new StockIndicatorsFeatureExtraction(normalize: false);
-            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV2(normalize: false);
+            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV2(10, 
+                numStockSamples,
+                (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
+                (int)(numStockSamples * 0.8), 5,
+                (int)(numStockSamples * 0.8), 5,
+                (int)(numStockSamples * 0.8), 5, 
+                false);
 
             return new CandlestickStockWithFuturesFeatureDatasetService(indictatorsExtractor, stocksRepo,
                 numStockSamples, stockOutputPeriod);

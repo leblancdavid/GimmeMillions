@@ -80,14 +80,14 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var score = prediction.GetColumn<float>("Score").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
-            var probability = prediction.GetColumn<float>("Probability").ToArray();
+            //var probability = prediction.GetColumn<float>("Probability").ToArray();
 
             return new StockPrediction()
             {
                 Score = score[0],
                 PredictedLabel = score[0] > 0.0f,
-                Probability = probability[0]
-                //Probability = score[0]
+                //Probability = probability[0]
+                Probability = score[0]
             };
         }
 
@@ -107,14 +107,14 @@ namespace GimmeMillions.Domain.ML.Candlestick
             var score = prediction.GetColumn<float>("Score").ToArray();
             var groupId = prediction.GetColumn<uint>("GroupId").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
-            var probability = prediction.GetColumn<float>("Probability").ToArray();
+           // var probability = prediction.GetColumn<float>("Probability").ToArray();
 
             return new StockPrediction()
             {
                 Score = score[0],
                 PredictedLabel = score[0] > 0.0f,
-                Probability = probability[0]
-                //Probability = score[0]
+                //Probability = probability[0]
+                Probability = score[0]
             };
         }
 
@@ -154,7 +154,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
             var firstFeature = dataset.FirstOrDefault();
 
             var medianValue = dataset
-                .Select(x => x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose)
+                .Select(x => x.Output.PercentChangeFromPreviousClose)
                 .OrderBy(x => x)
                 .ElementAt(dataset.Count() / 2);
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
@@ -162,7 +162,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 dataset.Take(trainingCount).Select(x =>
                 {
                     var normVector = x.Input;
-                    var v =(float)(x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose);
+                    var v =(float)(x.Output.PercentChangeFromPreviousClose);
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
                     v > (float)medianValue,
@@ -175,7 +175,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 dataset.Skip(trainingCount).Select(x =>
                 {
                     var normVector = x.Input;
-                    var v = (float)(x.Output.PercentChangeHighToPreviousClose);
+                    var v = (float)(x.Output.PercentChangeFromPreviousClose);
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
                     v > (float)medianValue,
@@ -188,9 +188,10 @@ namespace GimmeMillions.Domain.ML.Candlestick
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
 
-            var estimator = _mLContext.BinaryClassification.Trainers.FastForest(numberOfTrees: Parameters.NumOfTrees,
-                numberOfLeaves: Parameters.NumOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves)
-                .Append(_mLContext.BinaryClassification.Calibrators.Platt());
+            var estimator = _mLContext.Regression.Trainers.FastForest(labelColumnName: "Value", numberOfTrees: Parameters.NumOfTrees,
+                  numberOfLeaves: Parameters.NumOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
+            //var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations:10)
+            //   .Append(_mLContext.BinaryClassification.Calibrators.Platt());
 
             _model = estimator.Fit(trainData);
 

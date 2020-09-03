@@ -44,6 +44,23 @@ namespace RecommendationMaker
 
             return recommendationSystem;
         }
+
+        public static IStockRecommendationSystem<FeatureVector> GetBadgerRecommendationSystem(
+            IStockRepository stockRepository,
+            string pathToModels)
+        {
+            int numStockSamples = 60, outputPeriod = 5;
+            var datasetService = GetCandlestickFeatureDatasetServiceV2(stockRepository, numStockSamples, outputPeriod);
+            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, pathToModels);
+
+            string modelEncoding = "Indicators-Boll(40)MACD(32,16,12,7)VWAP(12,7)RSI(12,7)CMF(24,7),nFalse-v2_60d-5p_withFutures";
+            var model = new MLStockFastForestCandlestickModelV2();
+            model.Load(pathToModels, "ANY_SYMBOL", modelEncoding);
+            recommendationSystem.AddModel(model);
+
+            return recommendationSystem;
+        }
+
         private static IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetService(
             IStockRepository stockRepository,
            int numStockSamples = 40,
@@ -56,6 +73,19 @@ namespace RecommendationMaker
 
             return new CandlestickStockFeatureDatasetService(indictatorsExtractor, stocksRepo,
                 numStockSamples, stockOutputPeriod, includeComposites, null, false);
+        }
+
+        private static IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetServiceV2(
+            IStockRepository stockRepository,
+          int numStockSamples = 40,
+          int stockOutputPeriod = 3)
+        {
+            var stocksRepo = new YahooFinanceStockAccessService(stockRepository);
+
+            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV2(normalize: false);
+
+            return new CandlestickStockWithFuturesFeatureDatasetService(indictatorsExtractor, stocksRepo,
+                numStockSamples, stockOutputPeriod);
         }
     }
 }
