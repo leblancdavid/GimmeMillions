@@ -3,6 +3,7 @@ using GimmeMillions.DataAccess.Features;
 using GimmeMillions.DataAccess.Keys;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.Features.Extractors;
 using GimmeMillions.Domain.Logging;
 using GimmeMillions.Domain.ML.Accord;
 using GimmeMillions.Domain.ML.Candlestick;
@@ -33,7 +34,7 @@ namespace DNNTrainer
         static void Main(string[] args)
         {
             //var datasetService = GetCandlestickFeatureDatasetService(60, 5, true);
-            var datasetService = GetCandlestickFeatureDatasetServiceV2(200, 5, false);
+            var datasetService = GetCandlestickFeatureDatasetServiceV2(50, 5, false);
             var logFile = "logs/log";
             Directory.CreateDirectory("logs");
             var loggers = new List<ILogger>()
@@ -51,7 +52,7 @@ namespace DNNTrainer
 
             //var endTrainingData = new DateTime(2019, 1, 1);
             var endTrainingData = DateTime.Today;
-            var dataset = datasetService.GetAllTrainingData(new DateTime(2015, 1, 1), endTrainingData, 0.5m, 100000.0m, false);
+            var dataset = datasetService.GetAllTrainingData(new DateTime(2018, 1, 1), endTrainingData, 0.5m, 100000.0m, false);
             //var dataset = datasetService.GetTrainingData("AMZN", new DateTime(2001, 1, 30), endTrainingData).Value;
 
             var trainingResults = model.Train(dataset, 0.1);
@@ -120,13 +121,15 @@ namespace DNNTrainer
             //var candlestickExtractor = new CandlestickStockFeatureExtractor();
             //use default values for meow!
             //var indictatorsExtractor = new StockIndicatorsFeatureExtraction(normalize: false);
-            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV2(10, 
-                numStockSamples,
-                (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
-                (int)(numStockSamples * 0.8), 5,
-                (int)(numStockSamples * 0.8), 5,
-                (int)(numStockSamples * 0.8), 5, 
-                false);
+            //var indictatorsExtractor = new StockIndicatorsFeatureExtractionV2(10, 
+            //    numStockSamples,
+            //    (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
+            //    (int)(numStockSamples * 0.8), 5,
+            //    (int)(numStockSamples * 0.8), 5,
+            //    (int)(numStockSamples * 0.8), 5, 
+            //    false);
+
+            var indictatorsExtractor = new NormalizedVolumePriceActionFeatureExtractor(numStockSamples);
 
             return new CandlestickStockWithFuturesFeatureDatasetService(indictatorsExtractor, stocksRepo,
                 numStockSamples, stockOutputPeriod);
