@@ -52,7 +52,13 @@ namespace DNNTrainer
 
             //var endTrainingData = new DateTime(2019, 1, 1);
             var endTrainingData = DateTime.Today;
-            var dataset = datasetService.GetAllTrainingData(new DefaultDatasetFilter(new DateTime(2010, 1, 30), endTrainingData), false);
+
+            var dataset = datasetService.GetTrainingData("F").Value.ToList();
+            dataset.AddRange(datasetService.GetTrainingData("HMC").Value);
+            dataset.AddRange(datasetService.GetTrainingData("GM").Value);
+            dataset.AddRange(datasetService.GetTrainingData("IBIO").Value);
+
+            //var dataset = datasetService.GetAllTrainingData(new DefaultDatasetFilter(new DateTime(2001, 1, 30), endTrainingData), false);
             var trainingResults = model.Train(dataset, 0.1);
             model.Save(_pathToModels);
         }

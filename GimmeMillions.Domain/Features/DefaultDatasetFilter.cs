@@ -34,7 +34,7 @@ namespace GimmeMillions.Domain.Features
         public bool Pass(StockData stockData)
         {
             if (stockData.Date >= _startTime && stockData.Date <= _endTime &&
-                stockData.Volume >= _minVolume && stockData.Volume >= _maxVolume &&
+                stockData.Volume >= _minVolume && stockData.Volume <= _maxVolume &&
                 stockData.Open >= _minPrice && stockData.Open <= _maxPrice)
                 return true;
             return false;
