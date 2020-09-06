@@ -295,7 +295,7 @@ namespace GimmeMillions.Domain.Features
         {
             //var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            foreach (var stock in stocks)
+            foreach (var stock in stockOutputs)
             //Parallel.ForEach(stockOutputs, (stock) =>
             {
                 if ((startDate == default(DateTime) || startDate < stock.Date) &&

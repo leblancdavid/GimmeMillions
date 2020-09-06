@@ -154,7 +154,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
             var firstFeature = dataset.FirstOrDefault();
 
             var medianValue = dataset
-                .Select(x => x.Output.PercentChangeHighToOpen)
+                .Select(x => x.Output.PercentChangeHighToPreviousClose)
                 .OrderBy(x => x)
                 .ElementAt(dataset.Count() / 2);
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
@@ -162,7 +162,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 dataset.Take(trainingCount).Select(x =>
                 {
                     var normVector = x.Input;
-                    var v =(float)(x.Output.PercentChangeHighToOpen);
+                    var v =(float)(x.Output.PercentChangeHighToPreviousClose);
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
                     v > (float)medianValue,
@@ -175,7 +175,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 dataset.Skip(trainingCount).Select(x =>
                 {
                     var normVector = x.Input;
-                    var v = (float)(x.Output.PercentChangeHighToOpen);
+                    var v = (float)(x.Output.PercentChangeHighToPreviousClose);
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
                     v > (float)medianValue,
@@ -188,10 +188,17 @@ namespace GimmeMillions.Domain.ML.Candlestick
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
 
-            var estimator = _mLContext.Regression.Trainers.FastForest(labelColumnName: "Value", numberOfTrees: Parameters.NumOfTrees,
-                  numberOfLeaves: Parameters.NumOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
+            //var estimator = _mLContext.Regression.Trainers.FastForest(labelColumnName: "Value", numberOfTrees: Parameters.NumOfTrees,
+            //      numberOfLeaves: Parameters.NumOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
+            //var estimator = _mLContext.Regression.Trainers.Sdca(labelColumnName: "Value");
+            //var estimator = _mLContext.Transforms.NormalizeGlobalContrast("Features")
+                //.Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: 20, overSampling: 20))
+            //    .Append(_mLContext.Regression.Trainers.Gam(labelColumnName: "Value"));
+            //var estimator = _mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: 20, overSampling: 20)
+            //    .Append(_mLContext.Regression.Trainers.Sdca(labelColumnName: "Value"));
             //var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations:10)
             //   .Append(_mLContext.BinaryClassification.Calibrators.Platt());
+            var estimator = _mLContext.Regression.Trainers.Gam(labelColumnName: "Value");
 
             _model = estimator.Fit(trainData);
 
