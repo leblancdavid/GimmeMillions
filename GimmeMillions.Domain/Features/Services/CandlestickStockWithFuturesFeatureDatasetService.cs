@@ -50,10 +50,8 @@ namespace GimmeMillions.Domain.Features
 
         }
 
-        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default,
-            DateTime endDate = default,
-            decimal minDayRange = 0.0m,
-            decimal minVolume = 0.0m, 
+        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(
+            IDatasetFilter filter = null, 
             bool updateStocks = false)
         {
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
@@ -93,8 +91,7 @@ namespace GimmeMillions.Domain.Features
 
                 var td = GetTrainingData(symbol, stocks, stockOutputs,
                     dowStocks, snpStocks, nasStocks, rutStocks,
-                    startDate, endDate,
-                    minDayRange, minVolume);
+                    filter);
                 if (td.IsSuccess)
                 {
                     foreach(var sample in td.Value)
@@ -241,10 +238,8 @@ namespace GimmeMillions.Domain.Features
         }
 
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(
-            string symbol, 
-            DateTime startDate = default, DateTime endDate = default,
-            decimal minDayRange = 0.0m,
-            decimal minVolume = 0.0m, 
+            string symbol,
+            IDatasetFilter filter = null, 
             bool updateStocks = false)
         {
             var stocks = updateStocks ?
@@ -278,7 +273,7 @@ namespace GimmeMillions.Domain.Features
 
             return GetTrainingData(symbol, stocks, stockOutputs, 
                 dowStocks, snpStocks, nasStocks, rutStocks,
-                startDate, endDate, minDayRange, minVolume);
+                filter);
 
         }
 
@@ -289,19 +284,18 @@ namespace GimmeMillions.Domain.Features
             List<StockData> snpStocks, 
             List<StockData> nasStocks,
             List<StockData> rutStocks,
-            DateTime startDate = default, DateTime endDate = default,
-            decimal minDayRange = 0.0m,
-            decimal minVolume = 0.0m)
+            IDatasetFilter filter = null)
         {
+            if (filter == null)
+            {
+                filter = new DefaultDatasetFilter();
+            }
             //var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             foreach (var stock in stockOutputs)
             //Parallel.ForEach(stockOutputs, (stock) =>
             {
-                if ((startDate == default(DateTime) || startDate < stock.Date) &&
-                    (endDate == default(DateTime) || endDate > stock.Date) && 
-                    (stock.PercentDayRange >= minDayRange) &&
-                    (stock.Volume >= minVolume))
+                if (filter.Pass(stock))
                 {
                     var data = GetData(symbol, stock.Date, stocks, dowStocks, snpStocks, nasStocks, rutStocks);
                     if (data.IsFailure)

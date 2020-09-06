@@ -54,10 +54,7 @@ namespace GimmeMillions.Domain.Features
 
         }
 
-        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default,
-            DateTime endDate = default,
-            decimal minDayRange = 0.0m,
-            decimal minVolume = 0.0m, 
+        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(IDatasetFilter filter = null,
             bool updateStocks = false)
         {
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
@@ -65,7 +62,7 @@ namespace GimmeMillions.Domain.Features
             Parallel.ForEach(stocks, stock =>
             //foreach (var stock in stocks)
             {
-                var td = GetTrainingData(stock, startDate, endDate, 0.0m, 0.0m, updateStocks);
+                var td = GetTrainingData(stock, filter, updateStocks);
                 if (td.IsSuccess)
                 {
                     foreach(var sample in td.Value)
@@ -245,9 +242,7 @@ namespace GimmeMillions.Domain.Features
         }
 
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(
-            string symbol, DateTime startDate = default, DateTime endDate = default,
-            decimal minDayRange = 0.0m,
-            decimal minVolume = 0.0m,
+            string symbol, IDatasetFilter filter = null,
             bool updateStocks = false)
         {
             var stocks = updateStocks ?
@@ -282,14 +277,16 @@ namespace GimmeMillions.Domain.Features
                    _stockRepository.GetStocks("^IXIC", FrequencyTimeframe.Daily).ToList();
             }
 
-
+            if (filter == null)
+            {
+                filter = new DefaultDatasetFilter();
+            }
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             //var trainingData = new List<(HistoricalFeatureVector Input, StockData Output)>();
             //foreach (var stock in stocks)
             Parallel.ForEach(stockOutputs, (stock) =>
             {
-                if ((startDate == default(DateTime) || startDate < stock.Date) &&
-                    (endDate == default(DateTime) || endDate > stock.Date))
+                if (filter.Pass(stock))
                 {
                     var data = GetData(symbol, stock.Date, stocks, dowStocks, snpStocks, nasStocks);
                     if (data.IsFailure)

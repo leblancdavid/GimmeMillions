@@ -104,9 +104,7 @@ namespace GimmeMillions.Domain.Features
         }
 
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol,
-            DateTime startDate = default(DateTime), DateTime endDate = default(DateTime),
-            decimal minDayRange = 0.0m,
-            decimal minVolume = 0.0m,
+            IDatasetFilter filter = null,
             bool updateStocks = false)
         {
             var stocks = updateStocks ?
@@ -118,11 +116,14 @@ namespace GimmeMillions.Domain.Features
                     $"No stocks found for symbol '{symbol}'");
             }
 
+            if(filter == null)
+            {
+                filter = new DefaultDatasetFilter();
+            }
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             Parallel.ForEach(stocks, (stock) =>
             {
-                if ((startDate == default(DateTime) || startDate < stock.Date) &&
-                    (endDate == default(DateTime) || endDate > stock.Date))
+                if (filter.Pass(stock))
                 {
                     var cacheResult = TryGetFromCache(stock.Date);
                     if (cacheResult.IsSuccess)
@@ -177,16 +178,14 @@ namespace GimmeMillions.Domain.Features
         }
 
         public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(
-            DateTime startDate = default, DateTime endDate = default,
-            decimal minDayRange = 0.0m,
-            decimal minVolume = 0.0m,
+            IDatasetFilter filter = null,
              bool updateStocks = false)
         {
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             var stocks = _stockRepository.GetSymbols();
             foreach(var stock in stocks)
             {
-                var td = GetTrainingData(stock, startDate, endDate, 0.0m, 0.0m, updateStocks);
+                var td = GetTrainingData(stock, filter, updateStocks);
                 if(td.IsSuccess)
                 {
                     trainingData.AddRange(td.Value);

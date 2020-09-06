@@ -78,7 +78,7 @@ namespace ModelTrainer
                 //model.Parameters.KernelRank = 200;
                 //model.Parameters.RegressionPoint = StockChangePointMethod.PreviousCloseToClose;
 
-                var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
+                var dataset = datasetService.GetTrainingData(stock, new DefaultDatasetFilter(startDate, endDate));
 
                 var filteredDataset = dataset.Value;
                 int numTestExamples = 100;

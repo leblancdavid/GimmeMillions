@@ -33,7 +33,7 @@ namespace GimmeMillions.Domain.Tests.ML
             var model = new DNNRegressionStockPredictor();
 
             var endTrainingData = DateTime.Today;
-            var dataset = datasetService.GetAllTrainingData(new DateTime(2018, 1, 30), endTrainingData);
+            var dataset = datasetService.GetAllTrainingData(new DefaultDatasetFilter(new DateTime(2010, 1, 30), endTrainingData));
 
             var trainingResults = model.Train(dataset, 0.1);
         }

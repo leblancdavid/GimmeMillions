@@ -52,7 +52,7 @@ namespace DNNTrainer
 
             //var endTrainingData = new DateTime(2019, 1, 1);
             var endTrainingData = DateTime.Today;
-            var dataset = datasetService.GetAllTrainingData(new DateTime(2018, 1, 1), endTrainingData, 0.5m, 100000.0m, false);
+            var dataset = datasetService.GetAllTrainingData(new DefaultDatasetFilter(new DateTime(2010, 1, 30), endTrainingData), false);
             var trainingResults = model.Train(dataset, 0.1);
             model.Save(_pathToModels);
         }
