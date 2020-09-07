@@ -96,7 +96,7 @@ namespace RecommendationMaker
                 int i = 0;
                 foreach (var r in recommendations)
                 {
-                    text = $"{r.Symbol}, {Math.Round(r.Prediction.Probability * 100.0, 2, MidpointRounding.AwayFromZero)}%";
+                    text = $"{r.Symbol}, {Math.Round(r.Prediction.Probability, 2, MidpointRounding.AwayFromZero)}%";
                     Console.WriteLine(text);
                     //if(i < keepTop)
                     //{

@@ -62,10 +62,18 @@ namespace DNNTrainer
             decimal maxPrice = 20.0m;
             decimal minVol = 500000m;
             decimal maxHighPercent = 40.0m; //max high will filter out huge gains due to news
-            var dataset = datasetService.GetAllTrainingData(new DefaultDatasetFilter(new DateTime(2010, 1, 30), endTrainingData, 
+            var dataset = datasetService.GetAllTrainingData(new DefaultDatasetFilter(new DateTime(2010, 1, 30), endTrainingData,
                 minPrice, maxPrice, minVol, maxPercentHigh: maxHighPercent), false);
             var trainingResults = model.Train(dataset, 0.1);
             model.Save(_pathToModels);
+
+            //var dataset = datasetService.GetTrainingData("F").Value.ToList();
+            //model.Load(_pathToModels, "ANY_SYMBOL", "Indicators-Boll(200)MACD(160,80,60,5)VWAP(160,5)RSI(160,5)CMF(160,5),nFalse-v2_200d-5p_withFutures");
+
+            //foreach(var data in dataset)
+            //{
+            //    var prediction = model.Predict(data.Input);
+            //}
         }
 
         private static IFeatureDatasetService<FeatureVector> GetHistoricalFeatureDatasetService(string dictionaryToUse,
