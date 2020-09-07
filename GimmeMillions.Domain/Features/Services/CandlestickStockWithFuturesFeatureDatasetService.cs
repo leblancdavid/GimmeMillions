@@ -292,22 +292,25 @@ namespace GimmeMillions.Domain.Features
             }
             //var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            //foreach (var stock in stockOutputs)
-            Parallel.ForEach(stockOutputs, (stock) =>
+
+            decimal averageDayRange = stockOutputs.Average(x => x.PercentDayRange);
+            foreach (var stock in stockOutputs)
+            //Parallel.ForEach(stockOutputs, (stock) =>
             {
                 if (filter.Pass(stock))
                 {
                     var data = GetData(symbol, stock.Date, stocks, dowStocks, snpStocks, nasStocks, rutStocks);
                     if (data.IsFailure)
                     {
-                        //continue;
-                        return;
+                        continue;
+                        //return;
                     }
 
+                    stock.AveragePercentDayRange = averageDayRange;
                     trainingData.Add((data.Value, stock));
                 }
-            });
-            //}
+            //});
+            }
             if (!trainingData.Any())
             {
                 return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(

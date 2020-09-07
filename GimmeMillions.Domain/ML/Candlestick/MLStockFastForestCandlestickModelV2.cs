@@ -192,10 +192,14 @@ namespace GimmeMillions.Domain.ML.Candlestick
             //      numberOfLeaves: Parameters.NumOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
             //var estimator = _mLContext.Regression.Trainers.Sdca(labelColumnName: "Value");
             //var estimator = _mLContext.Transforms.NormalizeGlobalContrast("Features")
-                //.Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: 20, overSampling: 20))
+            //.Append(_mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: 20, overSampling: 20))
             //    .Append(_mLContext.Regression.Trainers.Gam(labelColumnName: "Value"));
             //var estimator = _mLContext.Transforms.ProjectToPrincipalComponents("Features", rank: 20, overSampling: 20)
             //    .Append(_mLContext.Regression.Trainers.Sdca(labelColumnName: "Value"));
+            //var estimator = _mLContext.Regression.Trainers.Gam(labelColumnName: "Value");
+
+            //var estimator = _mLContext.BinaryClassification.Trainers.FastForest(numberOfTrees: Parameters.NumOfTrees,
+            //      numberOfLeaves: Parameters.NumOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
             //var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations:10)
             //   .Append(_mLContext.BinaryClassification.Calibrators.Platt());
             var estimator = _mLContext.Regression.Trainers.Gam(labelColumnName: "Value");

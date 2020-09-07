@@ -46,19 +46,24 @@ namespace DNNTrainer
             //var model = new MLStockFastForestCandlestickModel();
             var model = new MLStockFastForestCandlestickModelV2();
             model.Parameters.NumCrossValidations = 2;
-            model.Parameters.NumOfTrees = 200;
-            model.Parameters.NumOfLeaves = 50;
-            model.Parameters.MinNumOfLeaves = 1;
+            model.Parameters.NumOfTrees = 2000;
+            model.Parameters.NumOfLeaves = 200;
+            model.Parameters.MinNumOfLeaves = 100;
 
             //var endTrainingData = new DateTime(2019, 1, 1);
             var endTrainingData = DateTime.Today;
 
-            var dataset = datasetService.GetTrainingData("F").Value.ToList();
-            dataset.AddRange(datasetService.GetTrainingData("HMC").Value);
-            dataset.AddRange(datasetService.GetTrainingData("GM").Value);
-            dataset.AddRange(datasetService.GetTrainingData("IBIO").Value);
+            //var dataset = datasetService.GetTrainingData("F").Value.ToList();
+            //dataset.AddRange(datasetService.GetTrainingData("HMC").Value);
+            //dataset.AddRange(datasetService.GetTrainingData("GM").Value);
+            //dataset.AddRange(datasetService.GetTrainingData("IBIO").Value);
 
-            //var dataset = datasetService.GetAllTrainingData(new DefaultDatasetFilter(new DateTime(2001, 1, 30), endTrainingData), false);
+            decimal minPrice = 1.0m;
+            decimal maxPrice = 20.0m;
+            decimal minVol = 500000m;
+            decimal maxHighPercent = 40.0m; //max high will filter out huge gains due to news
+            var dataset = datasetService.GetAllTrainingData(new DefaultDatasetFilter(new DateTime(2010, 1, 30), endTrainingData, 
+                minPrice, maxPrice, minVol, maxPercentHigh: maxHighPercent), false);
             var trainingResults = model.Train(dataset, 0.1);
             model.Save(_pathToModels);
         }

@@ -32,6 +32,8 @@ namespace GimmeMillions.Domain.Stocks
             }
         }
 
+        public decimal AveragePercentDayRange { get; set; }
+
         public decimal PercentChangeHighToOpen
         {
             get
@@ -136,6 +138,7 @@ namespace GimmeMillions.Domain.Stocks
             AdjustedClose = adjClose;
             PreviousClose = open;
             Volume = volume;
+            AveragePercentDayRange = PercentDayRange;
         }
 
         public StockData(string symbol, DateTime date,
@@ -151,6 +154,7 @@ namespace GimmeMillions.Domain.Stocks
             AdjustedClose = adjClose;
             PreviousClose = previousClose;
             Volume = volume;
+            AveragePercentDayRange = PercentDayRange;
         }
 
         public StockData(int id, string symbol, DateTime date,
@@ -167,6 +171,7 @@ namespace GimmeMillions.Domain.Stocks
             AdjustedClose = adjClose;
             PreviousClose = previousClose;
             Volume = volume;
+            AveragePercentDayRange = PercentDayRange;
         }
 
         private StockData() { } //default constructor

@@ -49,11 +49,11 @@ namespace RecommendationMaker
             IStockRepository stockRepository,
             string pathToModels)
         {
-            int numStockSamples = 60, outputPeriod = 5;
+            int numStockSamples = 200, outputPeriod = 5;
             var datasetService = GetCandlestickFeatureDatasetServiceV2(stockRepository, numStockSamples, outputPeriod);
             var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, pathToModels);
 
-            string modelEncoding = "Indicators-Boll(40)MACD(32,16,12,7)VWAP(12,7)RSI(12,7)CMF(24,7),nFalse-v2_60d-5p_withFutures";
+            string modelEncoding = "Indicators-Boll(200)MACD(160,80,60,5)VWAP(160,5)RSI(160,5)CMF(160,5),nFalse-v2_200d-5p_withFutures";
             var model = new MLStockFastForestCandlestickModelV2();
             model.Load(pathToModels, "ANY_SYMBOL", modelEncoding);
             recommendationSystem.AddModel(model);
@@ -81,8 +81,13 @@ namespace RecommendationMaker
           int stockOutputPeriod = 3)
         {
             var stocksRepo = new YahooFinanceStockAccessService(stockRepository);
-
-            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV2(normalize: false);
+            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV2(10,
+                numStockSamples,
+                (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
+                (int)(numStockSamples * 0.8), 5,
+                (int)(numStockSamples * 0.8), 5,
+                (int)(numStockSamples * 0.8), 5,
+                false);
 
             return new CandlestickStockWithFuturesFeatureDatasetService(indictatorsExtractor, stocksRepo,
                 numStockSamples, stockOutputPeriod);
