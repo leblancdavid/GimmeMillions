@@ -51,17 +51,22 @@ namespace GimmeMillions.Domain.Stocks
             Parallel.ForEach(stockSymbols, symbol =>
             //foreach(var symbol in stockSymbols)
             {
+                List<StockData> stockData;
                 if (updateStockHistory)
-                    _featureDatasetService.StockAccess.UpdateStocks(symbol);
+                    stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol).ToList();
+                else
+                    stockData = _featureDatasetService.StockAccess.GetStocks(symbol).ToList();
+
+                var lastStock = stockData.Where(x => x.Date < date).Last();
 
                 var feature = _featureDatasetService.GetFeatureVector(symbol, date);
                 if (feature.IsFailure)
                 {
                     return;
                 }
-                var result = model.Predict(feature.Value); 
-                recommendations.Add(new StockRecommendation(symbol, result));
-            //}
+                var result = model.Predict(feature.Value);
+                recommendations.Add(new StockRecommendation(symbol, result, lastStock.Close * (1.0m + (decimal)result.Score / 100.0m)));
+                //}
             });
 
             return recommendations.ToList().OrderByDescending(x => x.Prediction.Probability);
@@ -93,16 +98,20 @@ namespace GimmeMillions.Domain.Stocks
             Parallel.ForEach(symbols, symbol =>
             //foreach(var symbol in stockSymbols)
             {
-                if(updateStockHistory)
-                    _featureDatasetService.StockAccess.UpdateStocks(symbol);
+                List<StockData> stockData;
+                if (updateStockHistory)
+                    stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol).ToList();
+                else
+                    stockData = _featureDatasetService.StockAccess.GetStocks(symbol).ToList();
 
+                var lastStock = stockData.Where(x => x.Date < date).Last();
                 var feature = _featureDatasetService.GetFeatureVector(symbol, date);
                 if (feature.IsFailure)
                 {
                     return;
                 }
                 var result = model.Predict(feature.Value);
-                recommendations.Add(new StockRecommendation(symbol, result));
+                recommendations.Add(new StockRecommendation(symbol, result, lastStock.Close * (1.0m + (decimal)result.Score / 100.0m)));
                 //}
             });
 
