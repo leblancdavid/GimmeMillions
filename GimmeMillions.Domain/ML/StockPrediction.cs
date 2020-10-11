@@ -6,6 +6,5 @@
         public double AdjustedScore { get; set; }
         public bool PredictedLabel { get; set; }
         public double Probability { get; set; }
-
     }
 }
