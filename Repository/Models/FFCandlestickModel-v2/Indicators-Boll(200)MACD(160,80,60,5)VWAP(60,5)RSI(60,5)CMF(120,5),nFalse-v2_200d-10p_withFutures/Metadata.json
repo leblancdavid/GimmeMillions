@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.0,
+    "Accuracy": 0.0,
+    "PositivePrecision": 0.0,
+    "PositiveRecall": 0.0,
+    "NegativePrecision": 0.0,
+    "NegativeRecall": 0.0,
+    "F1Score": 0.0,
+    "AreaUnderPrecisionRecallCurve": 0.0,
+    "Error": 0.0
+  },
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "Indicators-Boll(200)MACD(160,80,60,5)VWAP(60,5)RSI(60,5)CMF(120,5),nFalse-v2_200d-10p_withFutures",
+  "ModelId": "FFCandlestickModel-v2"
+}

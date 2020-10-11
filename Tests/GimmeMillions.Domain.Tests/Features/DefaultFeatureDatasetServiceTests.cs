@@ -31,7 +31,7 @@ namespace GimmeMillions.Domain.Tests.Features
             var accessKeys = new NYTApiAccessKeyRepository(_pathToKeys);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var articlesService = new NYTArticleAccessService(accessKeys, articlesRepo);
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks));
 
             var featureDatasetService = new DefaultFeatureDatasetService(bow, articlesService, stocksRepo);
             var trainingData = featureDatasetService.GetTrainingData("IWM");

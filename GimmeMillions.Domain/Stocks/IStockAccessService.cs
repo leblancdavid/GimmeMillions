@@ -6,6 +6,7 @@ namespace GimmeMillions.Domain.Stocks
 {
     public interface IStockAccessService
     {
+        void UpdateFutures();
         IEnumerable<StockData> UpdateStocks(string symbol, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily);
         IEnumerable<StockData> GetStocks(string symbol, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily);
         IEnumerable<StockData> GetStocks(string symbol, int timePeriod);

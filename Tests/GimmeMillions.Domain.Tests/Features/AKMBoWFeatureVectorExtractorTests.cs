@@ -31,7 +31,7 @@ namespace GimmeMillions.Domain.Tests.Features
             var featureExtractor = GetFeatureExtractor();
             var datasetService = GetBoWFeatureDatasetService();
 
-            var dataset = datasetService.GetTrainingData("F", new DateTime(2000, 1, 10), DateTime.Today);
+            var dataset = datasetService.GetTrainingData("F", new DefaultDatasetFilter(new DateTime(2010, 1, 30)));
 
             var akmFeatureExtractor = new AKMBoWFeatureVectorExtractor(featureExtractor, 1000);
             akmFeatureExtractor.Train(dataset.Value.Select(x => x.Input));
@@ -46,8 +46,7 @@ namespace GimmeMillions.Domain.Tests.Features
             var accessKeys = new NYTApiAccessKeyRepository(_pathToKeys);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks),
-                new PlaceholderStockHistoryRepository(), _pathToStocks); ;
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks)); ;
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             int numArticlesDays = 10;

@@ -102,7 +102,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
             {
                 Score = score[0],
                 PredictedLabel = score[0] > 0.0f,
-                Probability = probability[0]
+                Probability = probability[0] * 100.0f
                 //Probability = score[0]
             };
         }

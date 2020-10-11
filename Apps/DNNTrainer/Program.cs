@@ -3,6 +3,7 @@ using GimmeMillions.DataAccess.Features;
 using GimmeMillions.DataAccess.Keys;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.Features.Extractors;
 using GimmeMillions.Domain.Logging;
 using GimmeMillions.Domain.ML.Accord;
 using GimmeMillions.Domain.ML.Candlestick;
@@ -33,7 +34,7 @@ namespace DNNTrainer
         static void Main(string[] args)
         {
             //var datasetService = GetCandlestickFeatureDatasetService(60, 5, true);
-            var datasetService = GetCandlestickFeatureDatasetServiceV2(60, 5, true);
+            var datasetService = GetCandlestickFeatureDatasetServiceV2(200, 5, false);
             var logFile = "logs/log";
             Directory.CreateDirectory("logs");
             var loggers = new List<ILogger>()
@@ -46,16 +47,33 @@ namespace DNNTrainer
             var model = new MLStockFastForestCandlestickModelV2();
             model.Parameters.NumCrossValidations = 2;
             model.Parameters.NumOfTrees = 2000;
-            model.Parameters.NumOfLeaves = 50;
+            model.Parameters.NumOfLeaves = 200;
             model.Parameters.MinNumOfLeaves = 100;
 
             //var endTrainingData = new DateTime(2019, 1, 1);
             var endTrainingData = DateTime.Today;
-            var dataset = datasetService.GetAllTrainingData(new DateTime(2018, 1, 1), endTrainingData, 0.5m, 5000.0m, true);
-            //var dataset = datasetService.GetTrainingData("AMZN", new DateTime(2001, 1, 30), endTrainingData).Value;
 
+            //var dataset = datasetService.GetTrainingData("F").Value.ToList();
+            //dataset.AddRange(datasetService.GetTrainingData("HMC").Value);
+            //dataset.AddRange(datasetService.GetTrainingData("GM").Value);
+            //dataset.AddRange(datasetService.GetTrainingData("IBIO").Value);
+
+            decimal minPrice = 1.0m;
+            decimal maxPrice = 20.0m;
+            decimal minVol = 500000m;
+            decimal maxHighPercent = 40.0m; //max high will filter out huge gains due to news
+            var dataset = datasetService.GetAllTrainingData(new DefaultDatasetFilter(new DateTime(2000, 1, 30), endTrainingData,
+                minPrice, maxPrice, minVol, maxPercentHigh: maxHighPercent), false);
             var trainingResults = model.Train(dataset, 0.0);
             model.Save(_pathToModels);
+
+            //var dataset = datasetService.GetTrainingData("F").Value.ToList();
+            //model.Load(_pathToModels, "ANY_SYMBOL", "Indicators-Boll(200)MACD(160,80,60,5)VWAP(160,5)RSI(160,5)CMF(160,5),nFalse-v2_200d-5p_withFutures");
+
+            //foreach(var data in dataset)
+            //{
+            //    var prediction = model.Predict(data.Input);
+            //}
         }
 
         private static IFeatureDatasetService<FeatureVector> GetHistoricalFeatureDatasetService(string dictionaryToUse,
@@ -78,7 +96,7 @@ namespace DNNTrainer
 
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks));
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             var candlestickExtractor = new CandlestickStockFeatureExtractor();
@@ -92,7 +110,7 @@ namespace DNNTrainer
            int stockOutputPeriod = 3,
            bool includeComposites = false)
         {
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks));
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             //var candlestickExtractor = new CandlestickStockFeatureExtractor();
@@ -115,13 +133,20 @@ namespace DNNTrainer
 
             var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
-            var stocksRepo = new YahooFinanceStockAccessService(new DefaultStockRepository(stockSqlDb),
-                stockSqlDb, _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new DefaultStockRepository(stockSqlDb));
 
             //var candlestickExtractor = new CandlestickStockFeatureExtractor();
             //use default values for meow!
             //var indictatorsExtractor = new StockIndicatorsFeatureExtraction(normalize: false);
-            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV2(normalize: false);
+            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV2(10,
+                numStockSamples,
+                (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
+                (int)(numStockSamples * 0.8), 5,
+                (int)(numStockSamples * 0.8), 5,
+                (int)(numStockSamples * 0.8), 5,
+                false);
+
+            //var indictatorsExtractor = new NormalizedVolumePriceActionFeatureExtractor(numStockSamples);
 
             return new CandlestickStockWithFuturesFeatureDatasetService(indictatorsExtractor, stocksRepo,
                 numStockSamples, stockOutputPeriod);

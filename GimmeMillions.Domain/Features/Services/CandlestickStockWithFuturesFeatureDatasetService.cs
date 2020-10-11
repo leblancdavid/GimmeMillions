@@ -50,10 +50,8 @@ namespace GimmeMillions.Domain.Features
 
         }
 
-        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(DateTime startDate = default,
-            DateTime endDate = default,
-            decimal minDayRange = 0.0m,
-            decimal minVolume = 0.0m, 
+        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(
+            IDatasetFilter filter = null, 
             bool updateStocks = false)
         {
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
@@ -93,8 +91,7 @@ namespace GimmeMillions.Domain.Features
 
                 var td = GetTrainingData(symbol, stocks, stockOutputs,
                     dowStocks, snpStocks, nasStocks, rutStocks,
-                    startDate, endDate,
-                    minDayRange, minVolume);
+                    filter);
                 if (td.IsSuccess)
                 {
                     foreach(var sample in td.Value)
@@ -160,33 +157,34 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<FeatureVector>(stocksVector.Error);
             }
 
-            var dowVector = GetStockFeatureVector(DOW_FUTURE_SYMBOL, date, dowStocks, _numStockDailySamples);
-            if (dowVector.IsFailure)
-            {
-                return Result.Failure<FeatureVector>(dowVector.Error);
-            }
-            var snpVector = GetStockFeatureVector(SNP_FUTURE_SYMBOL, date, snpStocks, _numStockDailySamples);
-            if (snpVector.IsFailure)
-            {
-                return Result.Failure<FeatureVector>(snpVector.Error);
-            }
-            var nasVector = GetStockFeatureVector(NASDAQ_FUTURE_SYMBOL, date, nasStocks, _numStockDailySamples);
-            if (nasVector.IsFailure)
-            {
-                return Result.Failure<FeatureVector>(nasVector.Error);
-            }
-            var rutVector = GetStockFeatureVector(RUSSEL_FUTURE_SYMBOL, date, rutStocks, _numStockDailySamples);
-            if (rutVector.IsFailure)
-            {
-                return Result.Failure<FeatureVector>(rutVector.Error);
-            }
+            //var dowVector = GetStockFeatureVector(DOW_FUTURE_SYMBOL, date, dowStocks, _numStockDailySamples);
+            //if (dowVector.IsFailure)
+            //{
+            //    return Result.Failure<FeatureVector>(dowVector.Error);
+            //}
+            //var snpVector = GetStockFeatureVector(SNP_FUTURE_SYMBOL, date, snpStocks, _numStockDailySamples);
+            //if (snpVector.IsFailure)
+            //{
+            //    return Result.Failure<FeatureVector>(snpVector.Error);
+            //}
+            //var nasVector = GetStockFeatureVector(NASDAQ_FUTURE_SYMBOL, date, nasStocks, _numStockDailySamples);
+            //if (nasVector.IsFailure)
+            //{
+            //    return Result.Failure<FeatureVector>(nasVector.Error);
+            //}
+            //var rutVector = GetStockFeatureVector(RUSSEL_FUTURE_SYMBOL, date, rutStocks, _numStockDailySamples);
+            //if (rutVector.IsFailure)
+            //{
+            //    return Result.Failure<FeatureVector>(rutVector.Error);
+            //}
 
-            var compositeVector = new FeatureVector(dowVector.Value
-                .Concat(snpVector.Value)
-                .Concat(nasVector.Value)
-                .Concat(rutVector.Value)
-                .Concat(stocksVector.Value).ToArray(), date, _encodingKey);
+            //var compositeVector = new FeatureVector(dowVector.Value
+            //    .Concat(snpVector.Value)
+            //    .Concat(nasVector.Value)
+            //    .Concat(rutVector.Value)
+            //    .Concat(stocksVector.Value).ToArray(), date, _encodingKey);
 
+            var compositeVector = new FeatureVector(stocksVector.Value, date, _encodingKey);
             return Result.Ok(compositeVector);
         }
 
@@ -240,10 +238,8 @@ namespace GimmeMillions.Domain.Features
         }
 
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(
-            string symbol, 
-            DateTime startDate = default, DateTime endDate = default,
-            decimal minDayRange = 0.0m,
-            decimal minVolume = 0.0m, 
+            string symbol,
+            IDatasetFilter filter = null, 
             bool updateStocks = false)
         {
             var stocks = updateStocks ?
@@ -277,7 +273,7 @@ namespace GimmeMillions.Domain.Features
 
             return GetTrainingData(symbol, stocks, stockOutputs, 
                 dowStocks, snpStocks, nasStocks, rutStocks,
-                startDate, endDate, minDayRange, minVolume);
+                filter);
 
         }
 
@@ -288,19 +284,20 @@ namespace GimmeMillions.Domain.Features
             List<StockData> snpStocks, 
             List<StockData> nasStocks,
             List<StockData> rutStocks,
-            DateTime startDate = default, DateTime endDate = default,
-            decimal minDayRange = 0.0m,
-            decimal minVolume = 0.0m)
+            IDatasetFilter filter = null)
         {
+            if (filter == null)
+            {
+                filter = new DefaultDatasetFilter();
+            }
             //var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            foreach (var stock in stocks)
+
+            decimal averageDayRange = stockOutputs.Average(x => x.PercentDayRange);
+            foreach (var stock in stockOutputs)
             //Parallel.ForEach(stockOutputs, (stock) =>
             {
-                if ((startDate == default(DateTime) || startDate < stock.Date) &&
-                    (endDate == default(DateTime) || endDate > stock.Date) && 
-                    (stock.PercentDayRange >= minDayRange) &&
-                    (stock.Volume >= minVolume))
+                if (filter.Pass(stock))
                 {
                     var data = GetData(symbol, stock.Date, stocks, dowStocks, snpStocks, nasStocks, rutStocks);
                     if (data.IsFailure)
@@ -309,6 +306,7 @@ namespace GimmeMillions.Domain.Features
                         //return;
                     }
 
+                    stock.AveragePercentDayRange = averageDayRange;
                     trainingData.Add((data.Value, stock));
                 }
             //});

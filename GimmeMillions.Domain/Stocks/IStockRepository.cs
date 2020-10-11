@@ -6,6 +6,7 @@ namespace GimmeMillions.Domain.Stocks
 {
     public interface IStockRepository
     {
+        IStockHistoryRepository StockHistoryRepository { get; }
         IEnumerable<StockData> GetStocks(string symbol, int timeLength);
         IEnumerable<StockData> GetStocks(string symbol, FrequencyTimeframe timeframe = FrequencyTimeframe.Daily);
         IEnumerable<StockData> GetStocks(string symbol, DateTime start, DateTime end, FrequencyTimeframe timeframe = FrequencyTimeframe.Daily);

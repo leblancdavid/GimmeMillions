@@ -42,7 +42,7 @@ namespace ModelTrainer
             //"V", "EBAY", "WMT", "LUV", "NKE", "JNJ", "SYF", "HLT", "CVS"};
             var datasetService = GetHistoricalFeatureDatasetService(dictionaryToUse);
 
-            var recommendationSystem = new StockRecommendationSystem<FeatureVector>(datasetService, _pathToModels);
+            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, _pathToModels);
 
             var startDate = new DateTime(2005, 1, 11);
             var endDate = DateTime.Today.AddDays(-1.0);
@@ -78,7 +78,7 @@ namespace ModelTrainer
                 //model.Parameters.KernelRank = 200;
                 //model.Parameters.RegressionPoint = StockChangePointMethod.PreviousCloseToClose;
 
-                var dataset = datasetService.GetTrainingData(stock, startDate, endDate);
+                var dataset = datasetService.GetTrainingData(stock, new DefaultDatasetFilter(startDate, endDate));
 
                 var filteredDataset = dataset.Value;
                 int numTestExamples = 100;
@@ -159,7 +159,7 @@ namespace ModelTrainer
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks));
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             int numArticlesDays = 10;
@@ -179,7 +179,7 @@ namespace ModelTrainer
             var bow = new BagOfWordsFeatureVectorExtractor(dictionary.Value, textProcessor);
             var articlesRepo = new NYTArticleRepository(_pathToArticles);
             var articlesAccess = new NYTArticleAccessService(accessKeys, articlesRepo);
-            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks), new PlaceholderStockHistoryRepository(), _pathToStocks);
+            var stocksRepo = new YahooFinanceStockAccessService(new StockDataRepository(_pathToStocks));
 
             var cache = new FeatureJsonCache<FeatureVector>(_pathToCache);
             var candlestickExtractor = new CandlestickStockFeatureExtractor();

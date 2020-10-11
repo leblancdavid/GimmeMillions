@@ -155,6 +155,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\DefaultDatasetFilter.cs" />
+    <Compile Include="Features\Extractors\NormalizedVolumePriceActionFeatureExtractor.cs" />
     <Compile Include="Features\Extractors\StockIndicatorsFeatureExtractionV2.cs" />
     <Compile Include="Features\Services\CandlestickStockWithFuturesFeatureDatasetService.cs" />
     <Compile Include="Features\Services\CandlestickStockFeatureDatasetService.cs" />
@@ -189,7 +191,6 @@
     <Compile Include="Features\IFeatureDictionaryRepository.cs" />
     <Compile Include="Features\IFeatureExtractor.cs" />
     <Compile Include="Features\ITextProcessor.cs" />
-    <Compile Include="Features\Services\RandomFeatureDatasetService.cs" />
     <Compile Include="Features\Processing\UsaLanguageChecker.cs" />
     <Compile Include="Keys\AccessKey.cs" />
     <Compile Include="Keys\IAccessKeyRepository.cs" />
@@ -258,7 +259,6 @@
     <Compile Include="Stocks\StockData.cs" />
     <Compile Include="Stocks\StockHistory.cs" />
     <Compile Include="Stocks\StockRecommendation.cs" />
-    <Compile Include="Stocks\StockRecommendationSystem.cs" />
     <Compile Include="Stocks\StockRecommendationSystemConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
