@@ -65,11 +65,13 @@ namespace GimmeMillions.Domain.Stocks
                     return;
                 }
                 var result = model.Predict(feature.Value);
-                recommendations.Add(new StockRecommendation(symbol, result, lastStock.Close * (1.0m + (decimal)result.Score / 100.0m)));
+                recommendations.Add(new StockRecommendation(date, symbol, 
+                    (decimal)result.Probability, 
+                    lastStock.Close * (1.0m + (decimal)result.Score / 100.0m), lastStock.Close));
                 //}
             });
 
-            return recommendations.ToList().OrderByDescending(x => x.Prediction.Probability);
+            return recommendations.ToList().OrderByDescending(x => x.Prediction);
         }
 
         public IEnumerable<StockRecommendation> GetAllRecommendationsForToday(bool updateStockHistory = false)
@@ -80,12 +82,6 @@ namespace GimmeMillions.Domain.Stocks
         public IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keepTop = 10, bool updateStockHistory = false)
         {
             var recommendations = GetAllRecommendations(date).Take(keepTop);
-            var scoreSum = recommendations.Sum(x => x.Prediction.Score);
-            foreach (var r in recommendations)
-            {
-                r.RecommendedInvestmentPercentage = r.Prediction.Score / scoreSum;
-            }
-
             return recommendations;
         }
 
@@ -111,11 +107,14 @@ namespace GimmeMillions.Domain.Stocks
                     return;
                 }
                 var result = model.Predict(feature.Value);
-                recommendations.Add(new StockRecommendation(symbol, result, lastStock.Close * (1.0m + (decimal)result.Score / 100.0m)));
+                recommendations.Add(new StockRecommendation(date, symbol, 
+                    (decimal)result.Probability, 
+                    lastStock.Close * (1.0m + (decimal)result.Score / 100.0m),
+                    lastStock.Close));
                 //}
             });
 
-            return recommendations.ToList().OrderByDescending(x => x.Prediction.Probability);
+            return recommendations.ToList().OrderByDescending(x => x.Prediction);
         }
 
         public IEnumerable<StockRecommendation> GetRecommendationsForToday(int keepTop = 10, bool updateStockHistory = false)
