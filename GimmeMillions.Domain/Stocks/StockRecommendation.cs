@@ -9,17 +9,24 @@ namespace GimmeMillions.Domain.Stocks
 {
     public class StockRecommendation
     {
+        public int Id { get; private set; }
+        public DateTime Date { get; private set; }
         public string Symbol { get; private set; }
-        public double RecommendedInvestmentPercentage { get; set; }
-
-        public StockPrediction Prediction { get; private set; }
+        public decimal Prediction { get; private set; }
+        public decimal PreviousClose { get; private set; }
         public decimal PredictedPriceTarget { get; private set; }
-        public StockRecommendation(string symbol, StockPrediction prediction, decimal priceTarget)
+        public StockRecommendation(DateTime date, string symbol, decimal prediction, decimal priceTarget, decimal previousClose)
         {
+            Date = date;
             Symbol = symbol;
             Prediction = prediction;
             PredictedPriceTarget = priceTarget;
-            RecommendedInvestmentPercentage = 0.0;
+            PreviousClose = previousClose;
+        }
+
+        public StockRecommendation()
+        {
+
         }
     }
 }

@@ -168,6 +168,7 @@
     <Compile Include="Migrations\GimmeMillionsContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLStockHistoryRepository.cs" />
+    <Compile Include="SQLStockRecommendationRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
