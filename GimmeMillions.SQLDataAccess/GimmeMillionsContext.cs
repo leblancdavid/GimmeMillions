@@ -8,6 +8,7 @@ namespace GimmeMillions.SQLDataAccess
     {
         public DbSet<FeatureVector> FeatureVectors { get; set; }
         public DbSet<StockHistory> StockHistories { get; set; }
+        public DbSet<StockRecommendation> StockRecommendations { get; set; }
 
         public GimmeMillionsContext(DbContextOptions<GimmeMillionsContext> options)
             : base(options)
@@ -16,10 +17,10 @@ namespace GimmeMillions.SQLDataAccess
         public GimmeMillionsContext()
         { }
         //Uncomment this when you want to add a migration? Not sure why but it's apparently necessary
-        //protected override void OnConfiguring(DbContextOptionsBuilder options)
-        //    => options.UseSqlite("DataSource=default.db");
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
+            => options.UseSqlite("DataSource=default.db");
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options) { }
+        //protected override void OnConfiguring(DbContextOptionsBuilder options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
