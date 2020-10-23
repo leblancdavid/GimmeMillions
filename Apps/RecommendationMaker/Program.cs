@@ -53,6 +53,7 @@ namespace RecommendationMaker
                        context.Database.Migrate();
                        var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
                        var stocksRepo = new DefaultStockRepository(stockSqlDb);
+                       var recommendationRepo = new SQLStockRecommendationRepository(optionsBuilder.Options);
 
                        if (!string.IsNullOrEmpty(o.WatchlistFile))
                        {
@@ -63,17 +64,17 @@ namespace RecommendationMaker
                        {
                            if(o.Model == "aadvark")
                            {
-                               recommendationSystem = RecommendationSystemFactory.GetAadvarkRecommendationSystem(stocksRepo, o.PathToModel);
+                               recommendationSystem = RecommendationSystemFactory.GetAadvarkRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
                            }
                            else
                            {
-                               recommendationSystem = RecommendationSystemFactory.GetBadgerRecommendationSystem(stocksRepo, o.PathToModel);
+                               recommendationSystem = RecommendationSystemFactory.GetBadgerRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
                                model = "badger";
                            }
                        }
                        else
                        {
-                           recommendationSystem = RecommendationSystemFactory.GetAadvarkRecommendationSystem(stocksRepo, o.PathToModel);
+                           recommendationSystem = RecommendationSystemFactory.GetAadvarkRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
                        }
 
                        if(!string.IsNullOrEmpty(o.Date))

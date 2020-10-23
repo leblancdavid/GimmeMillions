@@ -17,15 +17,18 @@ namespace GimmeMillions.Domain.Stocks
     {
         private IStockPredictionModel<FeatureVector> model;
         private IFeatureDatasetService<FeatureVector> _featureDatasetService;
+        private IStockRecommendationRepository _stockRecommendationRepository;
         private StockRecommendationSystemConfiguration _systemConfiguration;
         private string _pathToModels;
         private string _systemId;
 
         public CandlestickStockRecommendationSystem(IFeatureDatasetService<FeatureVector> featureDatasetService,
+            IStockRecommendationRepository stockRecommendationRepository,
             string pathToModels,
             string systemId)
         {
             _featureDatasetService = featureDatasetService;
+            _stockRecommendationRepository = stockRecommendationRepository;
             _systemConfiguration = new StockRecommendationSystemConfiguration();
             _pathToModels = pathToModels;
             _systemId = systemId;
@@ -68,9 +71,11 @@ namespace GimmeMillions.Domain.Stocks
                     return;
                 }
                 var result = model.Predict(feature.Value);
-                recommendations.Add(new StockRecommendation(_systemId, date, symbol, 
-                    (decimal)result.Probability, 
-                    lastStock.Close * (1.0m + (decimal)result.Score / 100.0m), lastStock.Close));
+                var rec = new StockRecommendation(_systemId, date, symbol,
+                    (decimal)result.Probability,
+                    lastStock.Close * (1.0m + (decimal)result.Score / 100.0m), lastStock.Close);
+                recommendations.Add(rec);
+                _stockRecommendationRepository.AddRecommendation(rec);
                 //}
             });
 
@@ -115,10 +120,11 @@ namespace GimmeMillions.Domain.Stocks
                     return;
                 }
                 var result = model.Predict(feature.Value);
-                recommendations.Add(new StockRecommendation(_systemId, date, symbol, 
-                    (decimal)result.Probability, 
-                    lastStock.Close * (1.0m + (decimal)result.Score / 100.0m),
-                    lastStock.Close));
+                var rec = new StockRecommendation(_systemId, date, symbol,
+                    (decimal)result.Probability,
+                    lastStock.Close * (1.0m + (decimal)result.Score / 100.0m), lastStock.Close);
+                recommendations.Add(rec);
+                _stockRecommendationRepository.AddRecommendation(rec);
                 //}
             });
 
