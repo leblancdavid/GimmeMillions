@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GimmeMillions.SQLDataAccess
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbMigrator", "Apps\DbMigrator\DbMigrator.csproj", "{E816B07D-B52E-4F44-ADAD-1F4E99D8F795}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationEvaluation", "Apps\RecommendationEvaluation\RecommendationEvaluation.csproj", "{DB1C9210-87CF-418C-8445-AAA07600E2F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -115,6 +117,14 @@ Global
 		{E816B07D-B52E-4F44-ADAD-1F4E99D8F795}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E816B07D-B52E-4F44-ADAD-1F4E99D8F795}.Release|x64.ActiveCfg = Release|Any CPU
 		{E816B07D-B52E-4F44-ADAD-1F4E99D8F795}.Release|x64.Build.0 = Release|Any CPU
+		{DB1C9210-87CF-418C-8445-AAA07600E2F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB1C9210-87CF-418C-8445-AAA07600E2F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB1C9210-87CF-418C-8445-AAA07600E2F7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DB1C9210-87CF-418C-8445-AAA07600E2F7}.Debug|x64.Build.0 = Debug|Any CPU
+		{DB1C9210-87CF-418C-8445-AAA07600E2F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB1C9210-87CF-418C-8445-AAA07600E2F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB1C9210-87CF-418C-8445-AAA07600E2F7}.Release|x64.ActiveCfg = Release|Any CPU
+		{DB1C9210-87CF-418C-8445-AAA07600E2F7}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -127,6 +137,7 @@ Global
 		{D1F4F067-D11C-4C69-BD90-659F664EB651} = {0EBDE5AA-DB44-4830-9234-5DAA16386E4A}
 		{7FD996E1-8FFE-413D-8B84-46A68F0DA37D} = {0EBDE5AA-DB44-4830-9234-5DAA16386E4A}
 		{E816B07D-B52E-4F44-ADAD-1F4E99D8F795} = {0EBDE5AA-DB44-4830-9234-5DAA16386E4A}
+		{DB1C9210-87CF-418C-8445-AAA07600E2F7} = {0EBDE5AA-DB44-4830-9234-5DAA16386E4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1AC6AAE2-C385-494A-B0BB-CE2501C90DB9}
