@@ -48,7 +48,7 @@ namespace RecommendationEvaluation
             string model = "aadvark";
             IStockRepository stocksRepo = null;
             IStockRecommendationRepository recommendationRepo = null;
-            IEnumerable<string> stockSymbols;
+            IEnumerable<string> stockSymbols = null;
             Parser.Default.ParseArguments<Options>(args)
                    .WithParsed<Options>(o =>
                    {
@@ -101,11 +101,73 @@ namespace RecommendationEvaluation
                        
                    });
 
+            if (stockSymbols == null)
+                return;
+
+            int maxNumDays = 30;
+            var accuracyTable = new double[maxNumDays];
+            int totalSamples = 0;
+            foreach(var symbol in stockSymbols)
+            {
+                var recommendations = recommendationRepo.GetStockRecommendations(model, symbol);
+                foreach(var r in recommendations)
+                {
+                    if (r.Prediction < 10.0m && r.Date < startDate)
+                        continue;
+
+                    var result = Evaluate(r, stocksRepo);
+                    if (result == null)
+                        continue;
+
+                    for(int i = result.DaysToHitTarget; i < maxNumDays; ++i)
+                    {
+                        accuracyTable[i]++;
+                    }
+                    totalSamples++;
+                }
+            }
+
+            using (System.IO.StreamWriter file =
+                new System.IO.StreamWriter($"results.txt"))
+            {
+                for (int i = 0; i < maxNumDays; ++i)
+                {
+                    accuracyTable[i] /= totalSamples;
+                    file.WriteLine(accuracyTable[i]);
+                }
+            }
+
         }
 
-        private void UpdateRecommendations(IStockRecommendationSystem<FeatureVector> recommendationSystem,
-            DateTime date, IEnumerable<string> stockSymbols)
+        private static RecommendationEvaluationResults Evaluate(StockRecommendation stockRecommendation,
+            IStockRepository stocksRepo)
         {
+            var stockData = stocksRepo.GetStocks(stockRecommendation.Symbol)
+                .Where(x => x.Date >= stockRecommendation.Date)
+                .OrderBy(y => y.Date);
+            if(stockData == null)
+            {
+                return null;
+            }
+
+            int days = 0;
+            var result = new RecommendationEvaluationResults(stockRecommendation);
+            foreach (var sd in stockData)
+            {
+                if (sd.High > result.HighOverPeriod)
+                {
+                    result.HighOverPeriod = sd.High;
+                }
+
+                if (sd.High >= stockRecommendation.PredictedPriceTarget)
+                {
+                    result.DaysToHitTarget = days;
+                    break;
+                }
+                days++;
+            }
+
+            return result;
         }
     }
 }
