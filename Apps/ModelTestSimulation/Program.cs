@@ -31,7 +31,7 @@ namespace ModelTestSimulation
             string dictionaryToUse = "USA";
             var datasetService = GetHistoricalFeatureDatasetService(dictionaryToUse);
             //var recommendationSystem = new StockRecommendationSystem<HistoricalFeatureVector>(datasetService, _pathToModels);
-            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, _pathToModels);
+            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, _pathToModels, "aadvark");
 
             var stockRepository = new StockDataRepository(_pathToStocks);
 

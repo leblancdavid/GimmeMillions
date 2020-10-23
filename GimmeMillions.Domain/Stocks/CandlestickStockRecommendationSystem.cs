@@ -19,13 +19,16 @@ namespace GimmeMillions.Domain.Stocks
         private IFeatureDatasetService<FeatureVector> _featureDatasetService;
         private StockRecommendationSystemConfiguration _systemConfiguration;
         private string _pathToModels;
+        private string _systemId;
 
         public CandlestickStockRecommendationSystem(IFeatureDatasetService<FeatureVector> featureDatasetService,
-            string pathToModels)
+            string pathToModels,
+            string systemId)
         {
             _featureDatasetService = featureDatasetService;
             _systemConfiguration = new StockRecommendationSystemConfiguration();
             _pathToModels = pathToModels;
+            _systemId = systemId;
         }
 
         public void AddModel(IStockPredictionModel<FeatureVector> stockPredictionModel)
@@ -65,7 +68,7 @@ namespace GimmeMillions.Domain.Stocks
                     return;
                 }
                 var result = model.Predict(feature.Value);
-                recommendations.Add(new StockRecommendation(date, symbol, 
+                recommendations.Add(new StockRecommendation(_systemId, date, symbol, 
                     (decimal)result.Probability, 
                     lastStock.Close * (1.0m + (decimal)result.Score / 100.0m), lastStock.Close));
                 //}
@@ -112,7 +115,7 @@ namespace GimmeMillions.Domain.Stocks
                     return;
                 }
                 var result = model.Predict(feature.Value);
-                recommendations.Add(new StockRecommendation(date, symbol, 
+                recommendations.Add(new StockRecommendation(_systemId, date, symbol, 
                     (decimal)result.Probability, 
                     lastStock.Close * (1.0m + (decimal)result.Score / 100.0m),
                     lastStock.Close));

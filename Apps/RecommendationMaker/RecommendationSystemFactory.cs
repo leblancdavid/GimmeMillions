@@ -35,7 +35,7 @@ namespace RecommendationMaker
             int numStockSamples = 60, outputPeriod = 5;
             bool usesCompositeIndex = true;
             var datasetService = GetCandlestickFeatureDatasetService(stockRepository, numStockSamples, outputPeriod, usesCompositeIndex);
-            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, pathToModels);
+            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, pathToModels, "aadvark");
 
             string modelEncoding = "Indicators-MACD(32,16,12,7)VWAP(12,7)RSI(12,7)CMF(24,7),nFalse-v1_60d-5p_withComposite";
             var model = new MLStockFastForestCandlestickModel();
@@ -51,7 +51,7 @@ namespace RecommendationMaker
         {
             int numStockSamples = 200, outputPeriod = 5;
             var datasetService = GetCandlestickFeatureDatasetServiceV2(stockRepository, numStockSamples, outputPeriod);
-            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, pathToModels);
+            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, pathToModels, "badger");
 
             string modelEncoding = "Indicators-Boll(200)MACD(160,80,60,5)VWAP(160,5)RSI(160,5)CMF(160,5),nFalse-v2_200d-5p_withFutures";
             var model = new MLStockFastForestCandlestickModelV2();
