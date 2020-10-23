@@ -17,29 +17,29 @@ namespace RecommendationMaker
 {
     class Program
     {
-        static string _pathToModels = "Models";
-        static string _dbLocation = "C:/Databases/gm.db";
         
         public class Options
         {
             [Option('w', "watchlist", Required = false, HelpText = "The watchlist file to pick from for recommendations")]
             public string WatchlistFile { get; set; }
+
             [Option('m', "model", Required = false, HelpText = "The type of model to predict")]
             public string Model { get; set; }
+            
             [Option('d', "date", Required = false, HelpText = "The date to make prediction")]
             public string Date { get; set; }
+
+            [Option('p', "pathToModel", Required = true, HelpText = "The path to the model file")]
+            public string PathToModel { get; set; }
+
+            [Option('f', "database", Required = true, HelpText = "The database file to use")]
+            public string DatabaseLocation { get; set; }
         }
 
         static void Main(string[] args)
         {
             Console.WriteLine($"Running recommendations... args: {string.Join(" ", args)}");
             var optionsBuilder = new DbContextOptionsBuilder<GimmeMillionsContext>();
-            optionsBuilder.UseSqlite($"Data Source={_dbLocation}");
-            var context = new GimmeMillionsContext(optionsBuilder.Options);
-            context.Database.Migrate();
-            var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
-
-            var stocksRepo = new DefaultStockRepository(stockSqlDb);
 
             var stockList = new List<string>();
             IStockRecommendationSystem<FeatureVector> recommendationSystem = null;
@@ -48,7 +48,13 @@ namespace RecommendationMaker
             Parser.Default.ParseArguments<Options>(args)
                    .WithParsed<Options>(o =>
                    {
-                       if(!string.IsNullOrEmpty(o.WatchlistFile))
+                       optionsBuilder.UseSqlite($"Data Source={o.DatabaseLocation}");
+                       var context = new GimmeMillionsContext(optionsBuilder.Options);
+                       context.Database.Migrate();
+                       var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
+                       var stocksRepo = new DefaultStockRepository(stockSqlDb);
+
+                       if (!string.IsNullOrEmpty(o.WatchlistFile))
                        {
                            stockList = GetStockSymbolsFromWatchlistFile(o.WatchlistFile);
                        }
@@ -57,26 +63,28 @@ namespace RecommendationMaker
                        {
                            if(o.Model == "aadvark")
                            {
-                               recommendationSystem = RecommendationSystemFactory.GetAadvarkRecommendationSystem(stocksRepo, _pathToModels);
+                               recommendationSystem = RecommendationSystemFactory.GetAadvarkRecommendationSystem(stocksRepo, o.PathToModel);
                            }
                            else
                            {
-                               recommendationSystem = RecommendationSystemFactory.GetBadgerRecommendationSystem(stocksRepo, _pathToModels);
+                               recommendationSystem = RecommendationSystemFactory.GetBadgerRecommendationSystem(stocksRepo, o.PathToModel);
                                model = "badger";
                            }
                        }
                        else
                        {
-                           recommendationSystem = RecommendationSystemFactory.GetAadvarkRecommendationSystem(stocksRepo, _pathToModels);
+                           recommendationSystem = RecommendationSystemFactory.GetAadvarkRecommendationSystem(stocksRepo, o.PathToModel);
                        }
 
                        if(!string.IsNullOrEmpty(o.Date))
                        {
                            date = DateTime.Parse(o.Date);
                        }
+
+
+                       
                    });
 
-            //var date = DateTime.Today.AddDays(1.0);
 
             IEnumerable<StockRecommendation> recommendations;
             if(stockList.Any())
@@ -89,7 +97,7 @@ namespace RecommendationMaker
             }
 
             using (System.IO.StreamWriter file =
-            new System.IO.StreamWriter($"C:\\Recommendations\\{model}-{date.ToString("yyyy-MM-dd")}"))
+            new System.IO.StreamWriter($"C:\\Stocks\\{model}-{date.ToString("yyyy-MM-dd")}"))
             {
                 string text = $"Stock recommendation for {date.ToString("MM/dd/yyyy")}:";
                 Console.WriteLine(text);

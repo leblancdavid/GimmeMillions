@@ -100,7 +100,12 @@ namespace GimmeMillions.Domain.Stocks
                 else
                     stockData = _featureDatasetService.StockAccess.GetStocks(symbol).ToList();
 
-                var lastStock = stockData.Where(x => x.Date < date).Last();
+                var lastStock = stockData.Where(x => x.Date < date).LastOrDefault();
+                if(lastStock == null)
+                {
+                    return;
+                }
+
                 var feature = _featureDatasetService.GetFeatureVector(symbol, date);
                 if (feature.IsFailure)
                 {
