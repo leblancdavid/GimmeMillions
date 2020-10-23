@@ -17,7 +17,7 @@ namespace RecommendationMaker
 {
     class Program
     {
-        static string _pathToModels = "../../../../Repository/Models";
+        static string _pathToModels = "Models";
         static string _dbLocation = "C:/Databases/gm.db";
         
         public class Options
@@ -32,6 +32,7 @@ namespace RecommendationMaker
 
         static void Main(string[] args)
         {
+            Console.WriteLine($"Running recommendations... args: {string.Join(" ", args)}");
             var optionsBuilder = new DbContextOptionsBuilder<GimmeMillionsContext>();
             optionsBuilder.UseSqlite($"Data Source={_dbLocation}");
             var context = new GimmeMillionsContext(optionsBuilder.Options);
