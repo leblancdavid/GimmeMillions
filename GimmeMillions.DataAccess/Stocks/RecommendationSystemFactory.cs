@@ -1,15 +1,8 @@
-﻿using GimmeMillions.DataAccess.Stocks;
-using GimmeMillions.Domain.Features;
+﻿using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;
-using GimmeMillions.SQLDataAccess;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RecommendationMaker
+namespace GimmeMillions.DataAccess.Stocks
 {
     public static class RecommendationSystemFactory
     {
