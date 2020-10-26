@@ -13,6 +13,8 @@ namespace GimmeMillions.Domain.Stocks
         {
             get
             {
+                if (AverageLongTermVolume == 0.0m)
+                    return 0.0m;
                 return AverageShortTermVolume / AverageLongTermVolume;
             }
         }
@@ -23,6 +25,8 @@ namespace GimmeMillions.Domain.Stocks
         {
             get
             {
+                if (AverageLongTermDayRange == 0.0m)
+                    return 0.0m;
                 return AverageShortTermDayRange / AverageLongTermDayRange;
             }
         }
@@ -33,6 +37,8 @@ namespace GimmeMillions.Domain.Stocks
         {
             get
             {
+                if (AverageLongTermTrend == 0.0m)
+                    return 0.0m;
                 return AverageShortTermTrend / AverageLongTermTrend;
             }
         }

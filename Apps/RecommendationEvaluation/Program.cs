@@ -104,7 +104,7 @@ namespace RecommendationEvaluation
             if (stockSymbols == null)
                 return;
 
-            var statsCalculator = new DefaultStockStatisticsCalculator(5, 100);
+            var statsCalculator = new DefaultStockStatisticsCalculator(3, 50);
 
             RecordAccuracyBasedOnStats("results.txt", model, startDate, endDate,
                 stocksRepo, recommendationRepo, statsCalculator, stockSymbols);
@@ -119,7 +119,7 @@ namespace RecommendationEvaluation
            IEnumerable<string> stockSymbols)
         {
             int maxNumDays = 30;
-            int tableRows = 6;
+            int tableRows = 2;
             var accuracyTable = new double[tableRows, maxNumDays];
             var totalSamples = new int[tableRows];
             Console.WriteLine("Evaluating...");
@@ -130,45 +130,35 @@ namespace RecommendationEvaluation
                 var recommendations = recommendationRepo.GetStockRecommendations(model, symbol);
                 foreach (var r in recommendations)
                 {
-                    if (r.Prediction < 12.0m || r.Prediction >= 16.0m || r.Date < startDate || r.Date > endDate)
+                    if (r.Prediction < 10.0m || r.Prediction >= 16.0m || r.Date < startDate || r.Date > endDate)
                         continue;
 
                     var result = Evaluate(r, stocksRepo, stockStatisticsCalculator);
                     if (result == null)
                         continue;
 
-                    if(result.Statistics.VolumeRatio > 1.0m)
-                    {
-                        UpdateTable(accuracyTable, 0, result.DaysToHitTarget, maxNumDays);
-                        totalSamples[0]++;
-                    }
-                    else
+                    //int predictionIndex = (int)Math.Floor(result.Statistics.DayRangeRatio * 2.0m);
+                    //int predictionIndex = (int)Math.Floor(result.Statistics.VolumeRatio * 2.0m);
+                    //int predictionIndex = (int)Math.Floor(result.Statistics.AverageShortTermTrend + 40.0m / 5.0m);
+                    //if (predictionIndex >= tableRows)
+                    //    predictionIndex = tableRows - 1;
+                    //if (predictionIndex < 0)
+                    //    predictionIndex = 0;
+                    //UpdateTable(accuracyTable, predictionIndex, result.DaysToHitTarget, maxNumDays);
+                    //totalSamples[predictionIndex]++;
+                    UpdateTable(accuracyTable, 0, result.DaysToHitTarget, maxNumDays);
+                    totalSamples[0]++;
+
+                    //Optimal predictions
+                    if(r.Prediction > 12.0m && r.Prediction < 15.0m &&
+                        result.Statistics.VolumeRatio >= 1.0m && result.Statistics.VolumeRatio <= 3.0m &&
+                        result.Statistics.DayRangeRatio >= 1.0m && result.Statistics.DayRangeRatio <= 3.0m &&
+                        Math.Abs(result.Statistics.AverageShortTermTrend) > 5.0m)
                     {
                         UpdateTable(accuracyTable, 1, result.DaysToHitTarget, maxNumDays);
                         totalSamples[1]++;
                     }
 
-                    if (result.Statistics.DayRangeRatio > 1.0m)
-                    {
-                        UpdateTable(accuracyTable, 2, result.DaysToHitTarget, maxNumDays);
-                        totalSamples[2]++;
-                    }
-                    else
-                    {
-                        UpdateTable(accuracyTable, 3, result.DaysToHitTarget, maxNumDays);
-                        totalSamples[3]++;
-                    }
-
-                    if (result.Statistics.TrendRatio > 1.0m)
-                    {
-                        UpdateTable(accuracyTable, 4, result.DaysToHitTarget, maxNumDays);
-                        totalSamples[4]++;
-                    }
-                    else
-                    {
-                        UpdateTable(accuracyTable, 5, result.DaysToHitTarget, maxNumDays);
-                        totalSamples[5]++;
-                    }
                 }
                 progress++;
             }
