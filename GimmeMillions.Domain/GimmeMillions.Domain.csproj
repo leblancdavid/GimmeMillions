@@ -250,17 +250,20 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stocks\CandlestickStockRecommendationSystem.cs" />
     <Compile Include="Stocks\DefaultStockRepository.cs" />
+    <Compile Include="Stocks\DefaultStockStatisticsCalculator.cs" />
     <Compile Include="Stocks\FrequencyTimeframe.cs" />
     <Compile Include="Stocks\IStockAccessService.cs" />
     <Compile Include="Stocks\IStockHistoryRepository.cs" />
     <Compile Include="Stocks\IStockRecommendationRepository.cs" />
     <Compile Include="Stocks\IStockRecommendationSystem.cs" />
     <Compile Include="Stocks\IStockRepository.cs" />
+    <Compile Include="Stocks\IStockStatisticsCalculator.cs" />
     <Compile Include="Stocks\PlaceholderStockHistoryRepository.cs" />
     <Compile Include="Stocks\StockData.cs" />
     <Compile Include="Stocks\StockHistory.cs" />
     <Compile Include="Stocks\StockRecommendation.cs" />
     <Compile Include="Stocks\StockRecommendationSystemConfiguration.cs" />
+    <Compile Include="Stocks\StockStatistics.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

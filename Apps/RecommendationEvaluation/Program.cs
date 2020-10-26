@@ -104,17 +104,28 @@ namespace RecommendationEvaluation
             if (stockSymbols == null)
                 return;
 
+            RecordAccuracy("results.txt", model, startDate, endDate,
+                stocksRepo, recommendationRepo, stockSymbols);
+
+        }
+
+        private static void RecordAccuracy(string filename,
+            string model, DateTime startDate, DateTime endDate,
+            IStockRepository stocksRepo, 
+            IStockRecommendationRepository recommendationRepo,
+            IEnumerable<string> stockSymbols)
+        {
             int maxNumDays = 30;
             int maxPrediction = 20;
             var accuracyTable = new double[maxPrediction, maxNumDays];
             var totalSamples = new int[maxPrediction];
             Console.WriteLine("Evaluating...");
             double progress = 0;
-            foreach(var symbol in stockSymbols)
+            foreach (var symbol in stockSymbols)
             {
                 Console.Write("\r{0}%   ", (progress / (double)stockSymbols.Count()) * 100.0);
                 var recommendations = recommendationRepo.GetStockRecommendations(model, symbol);
-                foreach(var r in recommendations)
+                foreach (var r in recommendations)
                 {
                     if (r.Prediction < 0.0m || r.Prediction >= 20.0m || r.Date < startDate || r.Date > endDate)
                         continue;
@@ -124,7 +135,7 @@ namespace RecommendationEvaluation
                         continue;
 
                     int predictionIndex = (int)Math.Floor(r.Prediction);
-                    for(int i = result.DaysToHitTarget; i < maxNumDays; ++i)
+                    for (int i = result.DaysToHitTarget; i < maxNumDays; ++i)
                     {
                         accuracyTable[predictionIndex, i]++;
                     }
@@ -134,7 +145,7 @@ namespace RecommendationEvaluation
             }
 
             using (System.IO.StreamWriter file =
-                new System.IO.StreamWriter($"results.txt"))
+                new System.IO.StreamWriter(filename))
             {
                 for (int j = 0; j < maxPrediction; ++j)
                 {
@@ -148,13 +159,12 @@ namespace RecommendationEvaluation
                     for (int j = 0; j < maxPrediction; ++j)
                     {
                         accuracyTable[j, i] /= (double)totalSamples[j];
-                        file.Write(accuracyTable[j, i]); 
+                        file.Write(accuracyTable[j, i]);
                         file.Write("\t");
                     }
                     file.Write("\n");
                 }
             }
-
         }
 
         private static RecommendationEvaluationResults Evaluate(StockRecommendation stockRecommendation,
