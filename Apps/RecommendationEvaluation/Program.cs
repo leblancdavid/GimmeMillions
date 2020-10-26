@@ -105,35 +105,53 @@ namespace RecommendationEvaluation
                 return;
 
             int maxNumDays = 30;
-            var accuracyTable = new double[maxNumDays];
-            int totalSamples = 0;
+            int maxPrediction = 20;
+            var accuracyTable = new double[maxPrediction, maxNumDays];
+            var totalSamples = new int[maxPrediction];
+            Console.WriteLine("Evaluating...");
+            double progress = 0;
             foreach(var symbol in stockSymbols)
             {
+                Console.Write("\r{0}%   ", (progress / (double)stockSymbols.Count()) * 100.0);
                 var recommendations = recommendationRepo.GetStockRecommendations(model, symbol);
                 foreach(var r in recommendations)
                 {
-                    if (r.Prediction < 10.0m && r.Date < startDate)
+                    if (r.Prediction < 0.0m || r.Prediction >= 20.0m || r.Date < startDate || r.Date > endDate)
                         continue;
 
                     var result = Evaluate(r, stocksRepo);
                     if (result == null)
                         continue;
 
+                    int predictionIndex = (int)Math.Floor(r.Prediction);
                     for(int i = result.DaysToHitTarget; i < maxNumDays; ++i)
                     {
-                        accuracyTable[i]++;
+                        accuracyTable[predictionIndex, i]++;
                     }
-                    totalSamples++;
+                    totalSamples[predictionIndex]++;
                 }
+                progress++;
             }
 
             using (System.IO.StreamWriter file =
                 new System.IO.StreamWriter($"results.txt"))
             {
+                for (int j = 0; j < maxPrediction; ++j)
+                {
+                    file.Write($"{j}%\t");
+                }
+
+                file.Write("\n");
+
                 for (int i = 0; i < maxNumDays; ++i)
                 {
-                    accuracyTable[i] /= totalSamples;
-                    file.WriteLine(accuracyTable[i]);
+                    for (int j = 0; j < maxPrediction; ++j)
+                    {
+                        accuracyTable[j, i] /= (double)totalSamples[j];
+                        file.Write(accuracyTable[j, i]); 
+                        file.Write("\t");
+                    }
+                    file.Write("\n");
                 }
             }
 
@@ -150,6 +168,9 @@ namespace RecommendationEvaluation
                 return null;
             }
 
+            if (!stockData.Any())
+                return null;
+            
             int days = 0;
             var result = new RecommendationEvaluationResults(stockRecommendation);
             foreach (var sd in stockData)
