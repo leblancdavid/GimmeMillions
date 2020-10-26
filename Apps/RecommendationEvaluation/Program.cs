@@ -104,15 +104,111 @@ namespace RecommendationEvaluation
             if (stockSymbols == null)
                 return;
 
-            RecordAccuracy("results.txt", model, startDate, endDate,
-                stocksRepo, recommendationRepo, stockSymbols);
+            var statsCalculator = new DefaultStockStatisticsCalculator(5, 100);
 
+            RecordAccuracyBasedOnStats("results.txt", model, startDate, endDate,
+                stocksRepo, recommendationRepo, statsCalculator, stockSymbols);
+
+        }
+
+        private static void RecordAccuracyBasedOnStats(string filename,
+           string model, DateTime startDate, DateTime endDate,
+           IStockRepository stocksRepo,
+           IStockRecommendationRepository recommendationRepo,
+           IStockStatisticsCalculator stockStatisticsCalculator,
+           IEnumerable<string> stockSymbols)
+        {
+            int maxNumDays = 30;
+            int tableRows = 6;
+            var accuracyTable = new double[tableRows, maxNumDays];
+            var totalSamples = new int[tableRows];
+            Console.WriteLine("Evaluating...");
+            double progress = 0;
+            foreach (var symbol in stockSymbols)
+            {
+                Console.Write("\r{0}%   ", (progress / (double)stockSymbols.Count()) * 100.0);
+                var recommendations = recommendationRepo.GetStockRecommendations(model, symbol);
+                foreach (var r in recommendations)
+                {
+                    if (r.Prediction < 12.0m || r.Prediction >= 16.0m || r.Date < startDate || r.Date > endDate)
+                        continue;
+
+                    var result = Evaluate(r, stocksRepo, stockStatisticsCalculator);
+                    if (result == null)
+                        continue;
+
+                    if(result.Statistics.VolumeRatio > 1.0m)
+                    {
+                        UpdateTable(accuracyTable, 0, result.DaysToHitTarget, maxNumDays);
+                        totalSamples[0]++;
+                    }
+                    else
+                    {
+                        UpdateTable(accuracyTable, 1, result.DaysToHitTarget, maxNumDays);
+                        totalSamples[1]++;
+                    }
+
+                    if (result.Statistics.DayRangeRatio > 1.0m)
+                    {
+                        UpdateTable(accuracyTable, 2, result.DaysToHitTarget, maxNumDays);
+                        totalSamples[2]++;
+                    }
+                    else
+                    {
+                        UpdateTable(accuracyTable, 3, result.DaysToHitTarget, maxNumDays);
+                        totalSamples[3]++;
+                    }
+
+                    if (result.Statistics.TrendRatio > 1.0m)
+                    {
+                        UpdateTable(accuracyTable, 4, result.DaysToHitTarget, maxNumDays);
+                        totalSamples[4]++;
+                    }
+                    else
+                    {
+                        UpdateTable(accuracyTable, 5, result.DaysToHitTarget, maxNumDays);
+                        totalSamples[5]++;
+                    }
+                }
+                progress++;
+            }
+
+            using (System.IO.StreamWriter file =
+                new System.IO.StreamWriter(filename))
+            {
+                for (int j = 0; j < tableRows; ++j)
+                {
+                    file.Write($"{j}%\t");
+                }
+
+                file.Write("\n");
+
+                for (int i = 0; i < maxNumDays; ++i)
+                {
+                    for (int j = 0; j < tableRows; ++j)
+                    {
+                        accuracyTable[j, i] /= (double)totalSamples[j];
+                        file.Write(accuracyTable[j, i]);
+                        file.Write("\t");
+                    }
+                    file.Write("\n");
+                }
+            }
+        }
+
+        private static void UpdateTable(double[,] accuracy, int index, int daysToHit, int maxNumDays)
+        {
+            for (int i = daysToHit; i < maxNumDays; ++i)
+            {
+                accuracy[index, i]++;
+            }
         }
 
         private static void RecordAccuracy(string filename,
             string model, DateTime startDate, DateTime endDate,
             IStockRepository stocksRepo, 
             IStockRecommendationRepository recommendationRepo,
+            IStockStatisticsCalculator stockStatisticsCalculator,
             IEnumerable<string> stockSymbols)
         {
             int maxNumDays = 30;
@@ -127,10 +223,10 @@ namespace RecommendationEvaluation
                 var recommendations = recommendationRepo.GetStockRecommendations(model, symbol);
                 foreach (var r in recommendations)
                 {
-                    if (r.Prediction < 0.0m || r.Prediction >= 20.0m || r.Date < startDate || r.Date > endDate)
+                    if (r.Prediction < 12.0m || r.Prediction >= 16.0m || r.Date < startDate || r.Date > endDate)
                         continue;
 
-                    var result = Evaluate(r, stocksRepo);
+                    var result = Evaluate(r, stocksRepo, stockStatisticsCalculator);
                     if (result == null)
                         continue;
 
@@ -168,10 +264,18 @@ namespace RecommendationEvaluation
         }
 
         private static RecommendationEvaluationResults Evaluate(StockRecommendation stockRecommendation,
-            IStockRepository stocksRepo)
+            IStockRepository stocksRepo,
+            IStockStatisticsCalculator stockStatisticsCalculator)
         {
-            var stockData = stocksRepo.GetStocks(stockRecommendation.Symbol)
-                .Where(x => x.Date >= stockRecommendation.Date)
+            var stockData = stocksRepo.GetStocks(stockRecommendation.Symbol);
+
+            var stats = stockStatisticsCalculator.Compute(stockData, stockRecommendation.Date);
+            if(stats.IsFailure)
+            {
+                return null;
+            }
+
+            stockData = stockData.Where(x => x.Date >= stockRecommendation.Date)
                 .OrderBy(y => y.Date);
             if(stockData == null)
             {
@@ -182,7 +286,7 @@ namespace RecommendationEvaluation
                 return null;
             
             int days = 0;
-            var result = new RecommendationEvaluationResults(stockRecommendation);
+            var result = new RecommendationEvaluationResults(stockRecommendation, stats.Value);
             foreach (var sd in stockData)
             {
                 if (sd.High > result.HighOverPeriod)

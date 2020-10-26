@@ -10,9 +10,11 @@ namespace RecommendationEvaluation
     public class RecommendationEvaluationResults
     {
         public StockRecommendation StockRecommendation { get; private set; }
-        public RecommendationEvaluationResults(StockRecommendation stockRecommendation)
+        public StockStatistics Statistics { get; private set; }
+        public RecommendationEvaluationResults(StockRecommendation stockRecommendation, StockStatistics stockStatistics)
         {
             StockRecommendation = stockRecommendation;
+            Statistics = stockStatistics;
             DaysToHitTarget = 0;
         }
 
