@@ -150,9 +150,9 @@ namespace RecommendationEvaluation
                     totalSamples[0]++;
 
                     //Optimal predictions
-                    if(r.Prediction > 12.0m && r.Prediction < 15.0m &&
-                        result.Statistics.VolumeRatio >= 1.0m && result.Statistics.VolumeRatio <= 3.0m &&
-                        result.Statistics.DayRangeRatio >= 1.0m && result.Statistics.DayRangeRatio <= 3.0m &&
+                    if(r.Prediction > 10.0m && r.Prediction < 15.0m &&
+                        result.Statistics.VolumeRatio >= 1.0m && result.Statistics.VolumeRatio <= 5.0m &&
+                        result.Statistics.DayRangeRatio >= 1.0m && result.Statistics.DayRangeRatio <= 5.0m &&
                         Math.Abs(result.Statistics.AverageShortTermTrend) > 5.0m)
                     {
                         UpdateTable(accuracyTable, 1, result.DaysToHitTarget, maxNumDays);
