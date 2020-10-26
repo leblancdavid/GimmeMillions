@@ -54,8 +54,8 @@ namespace GimmeMillions.Domain.Stocks
 
             var stockSymbols = _featureDatasetService.StockAccess.GetSymbols();
 
-            //Parallel.ForEach(stockSymbols, symbol =>
-            foreach(var symbol in stockSymbols)
+            Parallel.ForEach(stockSymbols, symbol =>
+            //foreach(var symbol in stockSymbols)
             {
                 List<StockData> stockData;
                 if (updateStockHistory)
@@ -68,8 +68,8 @@ namespace GimmeMillions.Domain.Stocks
                 var feature = _featureDatasetService.GetFeatureVector(symbol, date);
                 if (feature.IsFailure)
                 {
-                    continue;
-                    //return;
+                    //continue;
+                    return;
                 }
                 var result = model.Predict(feature.Value);
                 var rec = new StockRecommendation(_systemId, date, symbol,
@@ -77,8 +77,8 @@ namespace GimmeMillions.Domain.Stocks
                     lastStock.Close * (1.0m + (decimal)result.Score / 100.0m), lastStock.Close);
                 recommendations.Add(rec);
                 _stockRecommendationRepository.AddRecommendation(rec);
-            }
-            //});
+            //}
+            });
 
             return recommendations.ToList().OrderByDescending(x => x.Prediction);
         }
@@ -100,8 +100,8 @@ namespace GimmeMillions.Domain.Stocks
             if (updateStockHistory)
                 _featureDatasetService.StockAccess.UpdateFutures();
 
-            //Parallel.ForEach(symbols, symbol =>
-            foreach(var symbol in symbols)
+            Parallel.ForEach(symbols, symbol =>
+            //foreach(var symbol in symbols)
             {
                 List<StockData> stockData;
                 if (updateStockHistory)
@@ -112,15 +112,15 @@ namespace GimmeMillions.Domain.Stocks
                 var lastStock = stockData.Where(x => x.Date < date).LastOrDefault();
                 if(lastStock == null)
                 {
-                    continue;
-                    //return;
+                    //continue;
+                    return;
                 }
 
                 var feature = _featureDatasetService.GetFeatureVector(symbol, date);
                 if (feature.IsFailure)
                 {
-                    continue;
-                    //return;
+                    //continue;
+                    return;
                 }
                 var result = model.Predict(feature.Value);
                 var rec = new StockRecommendation(_systemId, date, symbol,
@@ -128,8 +128,8 @@ namespace GimmeMillions.Domain.Stocks
                     lastStock.Close * (1.0m + (decimal)result.Score / 100.0m), lastStock.Close);
                 recommendations.Add(rec);
                 _stockRecommendationRepository.AddRecommendation(rec);
-            }
-            //});
+            //}
+            });
 
             return recommendations.ToList().OrderByDescending(x => x.Prediction);
         }

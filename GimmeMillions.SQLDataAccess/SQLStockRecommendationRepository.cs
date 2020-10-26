@@ -10,6 +10,7 @@ namespace GimmeMillions.SQLDataAccess
     public class SQLStockRecommendationRepository : IStockRecommendationRepository
     {
         private readonly DbContextOptions<GimmeMillionsContext> _dbContextOptions;
+        private object _saveLock = new object();
         public SQLStockRecommendationRepository(DbContextOptions<GimmeMillionsContext> dbContextOptions)
         {
             _dbContextOptions = dbContextOptions;
@@ -27,7 +28,10 @@ namespace GimmeMillions.SQLDataAccess
                 if (stock == null)
                 {
                     context.StockRecommendations.Add(recommendation);
-                    context.SaveChanges();
+                    lock(_saveLock)
+                    {
+                        context.SaveChanges();
+                    }
                 }
 
                 return Result.Ok();
