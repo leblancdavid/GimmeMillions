@@ -151,8 +151,8 @@ namespace GimmeMillions.Domain.ML.Binary
                     var normVector = x.Input;
                     return new StockRiseDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    x.Output.PercentDayChange >= 0,
-                    (float)x.Output.PercentDayChange,
+                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    trainingOutputMapper.GetOutputValue(x.Output),
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
                 GetSchemaDefinition(firstFeature.Input));

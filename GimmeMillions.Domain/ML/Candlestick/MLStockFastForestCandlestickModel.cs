@@ -42,12 +42,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
         public FastForestCandlestickModelParameters Parameters { get; set; }
         public CandlestickPredictionModelMetadata<FastForestCandlestickModelParameters> Metadata { get; private set; }
 
-        public string StockSymbol { get; set; }
-
         public bool IsTrained => Metadata.IsTrained;
-
-        public string Encoding => Metadata.FeatureEncoding;
-        
 
         public MLStockFastForestCandlestickModel()
         {
@@ -103,33 +98,6 @@ namespace GimmeMillions.Domain.ML.Candlestick
             };
         }
 
-        private StockPrediction Predict(FeatureVector input, bool group)
-        {
-            //Load the data into a view
-            var inputDataView = _mLContext.Data.LoadFromEnumerable(
-                new List<StockCandlestickDataFeature>()
-                {
-                    new StockCandlestickDataFeature(Array.ConvertAll(input.Data, y => (float)y), group, 0.0f,
-                    (int)input.Date.DayOfWeek / 7.0f, input.Date.Month / 366.0f)
-                },
-                GetSchemaDefinition(input));
-
-            var prediction = _model.Transform(inputDataView);
-
-            var score = prediction.GetColumn<float>("Score").ToArray();
-            var groupId = prediction.GetColumn<uint>("GroupId").ToArray();
-            //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
-            var probability = prediction.GetColumn<float>("Probability").ToArray();
-
-            return new StockPrediction()
-            {
-                Score = score[0],
-                PredictedLabel = score[0] > 0.0f,
-                Probability = probability[0]
-                //Probability = score[0]
-            };
-        }
-
         public Result Save(string pathToModel)
         {
             try
@@ -167,7 +135,6 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var rnd = new Random();
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
-            //var meanHigh = dataset.Average(x => x.Output.PercentChangeHighToPreviousClose) / 2.0;
             var trainData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Take(trainingCount).Select(x =>
                 {
@@ -196,30 +163,9 @@ namespace GimmeMillions.Domain.ML.Candlestick
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
 
-            // var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm();
-
-            //var estimator = _mLContext.Transforms.Conversion.MapValueToKey(new[] {
-            //    new  InputOutputColumnPair("GroupId", "Symbol"),
-            //    new  InputOutputColumnPair("Label", "Label")
-            //    }).Append(
-            //     _mLContext.Ranking.Trainers.LightGbm("Label", "Features", "GroupId", "Value"));
-            //    .Append(_mLContext.BinaryClassification.Calibrators.Naive());
-
-            //var estimator = _mLContext.Regression.Trainers.FastForest(
-            //           "Value", "Features",
-            //           numberOfLeaves: Parameters.NumOfLeaves,
-            //           numberOfTrees: Parameters.NumOfTrees,
-            //           minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
-
-            //var estimator = _mLContext.Regression.Trainers.Sdca("Value", "Features");
-
             var estimator = _mLContext.BinaryClassification.Trainers.FastForest(numberOfTrees: Parameters.NumOfTrees,
                 numberOfLeaves: Parameters.NumOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves)
                 .Append(_mLContext.BinaryClassification.Calibrators.Platt());
-
-            //Metadata.TrainingResults = CrossValidationResultsToMetrics(
-            //    _mLContext.Ranking.Cross(
-            //        trainData, estimator, numberOfFolds: Parameters.NumCrossValidations));
 
             _model = estimator.Fit(trainData);
 
@@ -227,12 +173,6 @@ namespace GimmeMillions.Domain.ML.Candlestick
             if (testData != null)
             {
                 var testPredictions = _model.Transform(testData);
-                //var testResults = _mLContext.MulticlassClassification.Evaluate(testPredictions);
-                //Metadata.TrainingResults = new ModelMetrics(testResults);
-
-               // var scores = testPredictions.GetColumn<float>("Score").ToArray();
-                //var probabilities = testPredictions.GetColumn<float>("Probability").ToArray();
-                //var predictedLabels = testPredictions.GetColumn<bool>("PredictedLabel").ToArray();
                 var labels = testData.GetColumn<bool>("Label").ToArray();
                 var values = testData.GetColumn<float>("Value").ToArray();
                 var features = testData.GetColumn<float[]>("Features").ToArray();
@@ -300,50 +240,6 @@ namespace GimmeMillions.Domain.ML.Candlestick
             definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
 
             return definedSchema;
-        }
-
-        public decimal GetMedian(decimal[] sourceNumbers)
-        {
-            //Framework 2.0 version of this method. there is an easier way in F4        
-            if (sourceNumbers == null || sourceNumbers.Length == 0)
-                throw new System.Exception("Median of empty array not defined.");
-
-            //make sure the list is sorted, but use a new array
-            decimal[] sortedPNumbers = (decimal[])sourceNumbers.Clone();
-            Array.Sort(sortedPNumbers);
-
-            //get the median
-            int size = sortedPNumbers.Length;
-            int mid = size / 2;
-            decimal median = (size % 2 != 0) ? (decimal)sortedPNumbers[mid] : ((decimal)sortedPNumbers[mid] + (decimal)sortedPNumbers[mid - 1]) / 2;
-            return median;
-        }
-
-        public uint GetRank(decimal number, decimal min, decimal max)
-        {
-            if(number < min)
-                return 1;
-            if(number > max)
-                return 4;
-            if (number > 0.0m)
-                return 3;
-            else
-                return 2;
-        }
-
-        public float GetValue(decimal number, decimal min, decimal max)
-        {
-            var n = number;
-            if (n < min)
-            {
-                n = min;
-            }
-            if (n > max)
-            {
-                n = max;
-            }
-
-            return (float)((n - min)/(max - min));
         }
     }
 }

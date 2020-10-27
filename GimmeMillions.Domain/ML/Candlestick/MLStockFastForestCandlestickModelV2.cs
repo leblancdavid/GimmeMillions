@@ -148,20 +148,15 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var firstFeature = dataset.FirstOrDefault();
 
-            var medianValue = dataset
-                .Select(x => x.Output.PercentChangeHighToPreviousClose)
-                .OrderBy(x => x)
-                .ElementAt(dataset.Count() / 2);
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
             var trainData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Take(trainingCount).Select(x =>
                 {
                     var normVector = x.Input;
-                    var v =(float)(x.Output.PercentChangeHighToPreviousClose);
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    v > (float)medianValue,
-                    v,
+                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    trainingOutputMapper.GetOutputValue(x.Output),
                     x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
@@ -170,11 +165,10 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 dataset.Skip(trainingCount).Select(x =>
                 {
                     var normVector = x.Input;
-                    var v = (float)(x.Output.PercentChangeHighToPreviousClose);
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    v > (float)medianValue,
-                    v,
+                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    trainingOutputMapper.GetOutputValue(x.Output),
                     x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
