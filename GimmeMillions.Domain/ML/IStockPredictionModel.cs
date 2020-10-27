@@ -7,7 +7,6 @@ namespace GimmeMillions.Domain.ML
 {
     public interface IStockPredictionModel<TFeature> where TFeature: FeatureVector
     {
-        string StockSymbol { get; }
         string Encoding { get; }
         bool IsTrained { get; }
 
