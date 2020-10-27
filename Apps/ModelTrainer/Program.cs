@@ -42,7 +42,7 @@ namespace ModelTrainer
             //"V", "EBAY", "WMT", "LUV", "NKE", "JNJ", "SYF", "HLT", "CVS"};
             var datasetService = GetHistoricalFeatureDatasetService(dictionaryToUse);
 
-            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, _pathToModels);
+            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, _pathToModels, "badger");
 
             var startDate = new DateTime(2005, 1, 11);
             var endDate = DateTime.Today.AddDays(-1.0);

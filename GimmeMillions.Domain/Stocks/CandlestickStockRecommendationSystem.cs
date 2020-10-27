@@ -17,15 +17,21 @@ namespace GimmeMillions.Domain.Stocks
     {
         private IStockPredictionModel<FeatureVector> model;
         private IFeatureDatasetService<FeatureVector> _featureDatasetService;
+        private IStockRecommendationRepository _stockRecommendationRepository;
         private StockRecommendationSystemConfiguration _systemConfiguration;
         private string _pathToModels;
+        private string _systemId;
 
         public CandlestickStockRecommendationSystem(IFeatureDatasetService<FeatureVector> featureDatasetService,
-            string pathToModels)
+            IStockRecommendationRepository stockRecommendationRepository,
+            string pathToModels,
+            string systemId)
         {
             _featureDatasetService = featureDatasetService;
+            _stockRecommendationRepository = stockRecommendationRepository;
             _systemConfiguration = new StockRecommendationSystemConfiguration();
             _pathToModels = pathToModels;
+            _systemId = systemId;
         }
 
         public void AddModel(IStockPredictionModel<FeatureVector> stockPredictionModel)
@@ -62,14 +68,19 @@ namespace GimmeMillions.Domain.Stocks
                 var feature = _featureDatasetService.GetFeatureVector(symbol, date);
                 if (feature.IsFailure)
                 {
+                    //continue;
                     return;
                 }
                 var result = model.Predict(feature.Value);
-                recommendations.Add(new StockRecommendation(symbol, result, lastStock.Close * (1.0m + (decimal)result.Score / 100.0m)));
-                //}
+                var rec = new StockRecommendation(_systemId, date, symbol,
+                    (decimal)result.Probability,
+                    lastStock.Close * (1.0m + (decimal)result.Score / 100.0m), lastStock.Close);
+                recommendations.Add(rec);
+                _stockRecommendationRepository.AddRecommendation(rec);
+            //}
             });
 
-            return recommendations.ToList().OrderByDescending(x => x.Prediction.Probability);
+            return recommendations.ToList().OrderByDescending(x => x.Prediction);
         }
 
         public IEnumerable<StockRecommendation> GetAllRecommendationsForToday(bool updateStockHistory = false)
@@ -80,12 +91,6 @@ namespace GimmeMillions.Domain.Stocks
         public IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keepTop = 10, bool updateStockHistory = false)
         {
             var recommendations = GetAllRecommendations(date).Take(keepTop);
-            var scoreSum = recommendations.Sum(x => x.Prediction.Score);
-            foreach (var r in recommendations)
-            {
-                r.RecommendedInvestmentPercentage = r.Prediction.Score / scoreSum;
-            }
-
             return recommendations;
         }
 
@@ -96,7 +101,7 @@ namespace GimmeMillions.Domain.Stocks
                 _featureDatasetService.StockAccess.UpdateFutures();
 
             Parallel.ForEach(symbols, symbol =>
-            //foreach(var symbol in stockSymbols)
+            //foreach(var symbol in symbols)
             {
                 List<StockData> stockData;
                 if (updateStockHistory)
@@ -104,18 +109,29 @@ namespace GimmeMillions.Domain.Stocks
                 else
                     stockData = _featureDatasetService.StockAccess.GetStocks(symbol).ToList();
 
-                var lastStock = stockData.Where(x => x.Date < date).Last();
+                var lastStock = stockData.Where(x => x.Date < date).LastOrDefault();
+                if(lastStock == null)
+                {
+                    //continue;
+                    return;
+                }
+
                 var feature = _featureDatasetService.GetFeatureVector(symbol, date);
                 if (feature.IsFailure)
                 {
+                    //continue;
                     return;
                 }
                 var result = model.Predict(feature.Value);
-                recommendations.Add(new StockRecommendation(symbol, result, lastStock.Close * (1.0m + (decimal)result.Score / 100.0m)));
-                //}
+                var rec = new StockRecommendation(_systemId, date, symbol,
+                    (decimal)result.Probability,
+                    lastStock.Close * (1.0m + (decimal)result.Score / 100.0m), lastStock.Close);
+                recommendations.Add(rec);
+                _stockRecommendationRepository.AddRecommendation(rec);
+            //}
             });
 
-            return recommendations.ToList().OrderByDescending(x => x.Prediction.Probability);
+            return recommendations.ToList().OrderByDescending(x => x.Prediction);
         }
 
         public IEnumerable<StockRecommendation> GetRecommendationsForToday(int keepTop = 10, bool updateStockHistory = false)

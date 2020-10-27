@@ -1,14 +1,8 @@
-﻿using GimmeMillions.DataAccess.Stocks;
-using GimmeMillions.Domain.Features;
+﻿using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RecommendationMaker
+namespace GimmeMillions.DataAccess.Stocks
 {
     public static class RecommendationSystemFactory
     {
@@ -30,12 +24,13 @@ namespace RecommendationMaker
         /// <returns></returns>
         public static IStockRecommendationSystem<FeatureVector> GetAadvarkRecommendationSystem(
             IStockRepository stockRepository,
+            IStockRecommendationRepository stockRecommendationRepository,
             string pathToModels)
         {
             int numStockSamples = 60, outputPeriod = 5;
             bool usesCompositeIndex = true;
             var datasetService = GetCandlestickFeatureDatasetService(stockRepository, numStockSamples, outputPeriod, usesCompositeIndex);
-            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, pathToModels);
+            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, stockRecommendationRepository, pathToModels, "aadvark");
 
             string modelEncoding = "Indicators-MACD(32,16,12,7)VWAP(12,7)RSI(12,7)CMF(24,7),nFalse-v1_60d-5p_withComposite";
             var model = new MLStockFastForestCandlestickModel();
@@ -47,11 +42,12 @@ namespace RecommendationMaker
 
         public static IStockRecommendationSystem<FeatureVector> GetBadgerRecommendationSystem(
             IStockRepository stockRepository,
+            IStockRecommendationRepository stockRecommendationRepository,
             string pathToModels)
         {
             int numStockSamples = 200, outputPeriod = 5;
             var datasetService = GetCandlestickFeatureDatasetServiceV2(stockRepository, numStockSamples, outputPeriod);
-            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, pathToModels);
+            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, stockRecommendationRepository, pathToModels, "badger");
 
             string modelEncoding = "Indicators-Boll(200)MACD(160,80,60,5)VWAP(160,5)RSI(160,5)CMF(160,5),nFalse-v2_200d-5p_withFutures";
             var model = new MLStockFastForestCandlestickModelV2();

@@ -12,6 +12,7 @@ namespace GimmeMillions.SQLDataAccess
     public class SQLStockHistoryRepository : IStockHistoryRepository
     {
         private readonly DbContextOptions<GimmeMillionsContext> _dbContextOptions;
+        private object _accessLock = new object();
         public SQLStockHistoryRepository(DbContextOptions<GimmeMillionsContext> dbContextOptions)
         {
             _dbContextOptions = dbContextOptions;
@@ -34,7 +35,10 @@ namespace GimmeMillions.SQLDataAccess
                     stock.HistoricalDataStr = stockData.HistoricalDataStr;
                     stock.LastUpdated = stockData.LastUpdated;
                 }
-                context.SaveChanges();
+                lock(_accessLock)
+                {
+                    context.SaveChanges();
+                }
                 return Result.Ok();
             }
             catch(Exception ex)
@@ -45,9 +49,20 @@ namespace GimmeMillions.SQLDataAccess
 
         public void Delete(string symbol)
         {
-            var context = new GimmeMillionsContext(_dbContextOptions);
-            context.StockHistories.RemoveRange(context.StockHistories.Where(x => x.Symbol == symbol));
-            context.SaveChanges();
+            try
+            {
+                var context = new GimmeMillionsContext(_dbContextOptions);
+                context.StockHistories.RemoveRange(context.StockHistories.Where(x => x.Symbol == symbol));
+                lock(_accessLock)
+                {
+                    context.SaveChanges();
+                }
+            }
+            catch
+            {
+
+            }
+            
         }
 
         public DateTime GetLastUpdated(string symbol)
@@ -64,22 +79,37 @@ namespace GimmeMillions.SQLDataAccess
 
         public Result<StockHistory> GetStock(string symbol)
         {
-            var context = new GimmeMillionsContext(_dbContextOptions);
-            var stock = context.StockHistories.FirstOrDefault(x => x.Symbol == symbol);
-            if(stock == null)
+            try
             {
-                return Result.Failure<StockHistory>($"Cannot find stock {symbol} in database");
-            }
+                var context = new GimmeMillionsContext(_dbContextOptions);
+                var stock = context.StockHistories.FirstOrDefault(x => x.Symbol == symbol);
+                if (stock == null)
+                {
+                    return Result.Failure<StockHistory>($"Cannot find stock {symbol} in database");
+                }
 
-            stock.LoadData();
-            return Result.Ok<StockHistory>(stock);
+                //This call causes concurrency issues sometimes, so just putting a lock around it to be safe
+                lock(_accessLock)
+                {
+                    stock.LoadData();
+                }
+                return Result.Ok<StockHistory>(stock);
+            }
+            catch(Exception ex)
+            {
+                return Result.Failure<StockHistory>(ex.Message);
+            }
+            
         }
 
         public IEnumerable<StockHistory> GetStocks()
         {
             var context = new GimmeMillionsContext(_dbContextOptions);
             var stocks = context.StockHistories.ToList();
-            stocks.ForEach(x => x.LoadData());
+            lock(_accessLock)
+            {
+                stocks.ForEach(x => x.LoadData());
+            }
             return stocks;
         }
 

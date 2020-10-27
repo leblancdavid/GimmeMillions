@@ -31,7 +31,7 @@ namespace ModelTestSimulation
             string dictionaryToUse = "USA";
             var datasetService = GetHistoricalFeatureDatasetService(dictionaryToUse);
             //var recommendationSystem = new StockRecommendationSystem<HistoricalFeatureVector>(datasetService, _pathToModels);
-            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, _pathToModels);
+            var recommendationSystem = new CandlestickStockRecommendationSystem(datasetService, _pathToModels, "aadvark");
 
             var stockRepository = new StockDataRepository(_pathToStocks);
 
@@ -91,7 +91,7 @@ namespace ModelTestSimulation
 
                 Console.WriteLine($"Current money: ${currentMoney.ToString("#.##")}");
                 var recommendations = recommendationSystem.GetAllRecommendations(currentDate)
-                    .Where(x => x.Prediction.PredictedLabel).Take(3).ToList();
+                    .Where(x => x.Prediction > 0.0m).Take(3).ToList();
                 Console.Write("Investments: ");
                 decimal leftover = currentMoney;
                 decimal returnOnInvestment = 0.0m;
@@ -108,7 +108,7 @@ namespace ModelTestSimulation
 
                     //decimal investAmmount = (decimal)r.RecommendedInvestmentPercentage * currentMoney;
                     decimal investAmmount = currentMoney / recommendations.Count();
-                    Console.Write($"{r.Symbol} (p: {r.Prediction.Probability}): {investAmmount.ToString("#.##")} ({stock.Value.PercentDayChange.ToString("#.##")}%), ");
+                    Console.Write($"{r.Symbol} (p: {r.Prediction}): {investAmmount.ToString("#.##")} ({stock.Value.PercentDayChange.ToString("#.##")}%), ");
                     leftover -= investAmmount;
                     returnOnInvestment += investAmmount * (1.0m + stock.Value.PercentDayChange / 100m);
                 }

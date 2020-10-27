@@ -67,31 +67,38 @@ namespace GimmeMillions.Domain.Stocks
         {
             var historicalData = new List<StockData>();
 
-            var lines = dataStr.Split('\n'); 
-            StockData previous = null;
-            foreach (var line in lines)
+            try
             {
-                var fields = line.Split(',');
-                DateTime date;
-                decimal open, high, low, close, adjustedClose, volume;
-                if (DateTime.TryParse(fields[0], out date) &&
-                    decimal.TryParse(fields[1], out open) &&
-                    decimal.TryParse(fields[2], out high) &&
-                    decimal.TryParse(fields[3], out low) &&
-                    decimal.TryParse(fields[4], out close) &&
-                    decimal.TryParse(fields[5], out adjustedClose) &&
-                    decimal.TryParse(fields[6], out volume))
+                var lines = dataStr.Split('\n');
+                StockData previous = null;
+                foreach (var line in lines)
                 {
-                    var stock = new StockData(symbol, date, open, high, low, close, adjustedClose, volume);
-                    if (previous != null)
+                    var fields = line.Split(',');
+                    DateTime date;
+                    decimal open, high, low, close, adjustedClose, volume;
+                    if (DateTime.TryParse(fields[0], out date) &&
+                        decimal.TryParse(fields[1], out open) &&
+                        decimal.TryParse(fields[2], out high) &&
+                        decimal.TryParse(fields[3], out low) &&
+                        decimal.TryParse(fields[4], out close) &&
+                        decimal.TryParse(fields[5], out adjustedClose) &&
+                        decimal.TryParse(fields[6], out volume))
                     {
-                        stock.PreviousClose = previous.Close;
+                        var stock = new StockData(symbol, date, open, high, low, close, adjustedClose, volume);
+                        if (previous != null)
+                        {
+                            stock.PreviousClose = previous.Close;
+                        }
+                        historicalData.Add(stock);
+                        previous = stock;
                     }
-                    historicalData.Add(stock);
-                    previous = stock;
                 }
             }
-            
+            catch(Exception ex)
+            {
+
+            }
+
 
             return historicalData;
         }

@@ -8,6 +8,7 @@ namespace GimmeMillions.SQLDataAccess
     {
         public DbSet<FeatureVector> FeatureVectors { get; set; }
         public DbSet<StockHistory> StockHistories { get; set; }
+        public DbSet<StockRecommendation> StockRecommendations { get; set; }
 
         public GimmeMillionsContext(DbContextOptions<GimmeMillionsContext> options)
             : base(options)
