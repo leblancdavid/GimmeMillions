@@ -13,19 +13,14 @@ namespace DNNTrainer
 {
     public class MarketFuturesTrainer
     {
-        string _pathToModels = "../../../../Repository/Models";
+        public MarketFuturesTrainer()
+        {
 
-        public void Train()
+        }
+        public void Train(string modelFile)
         {
             //var datasetService = GetCandlestickFeatureDatasetService(60, 5, true);
             var datasetService = GetCandlestickFeatureDatasetServiceV2(200, 5, false);
-            var logFile = "logs/log";
-            Directory.CreateDirectory("logs");
-            var loggers = new List<ILogger>()
-            {
-                new FileLogger(logFile),
-                new ConsoleLogger()
-            };
 
             var model = new MLStockFastForestCandlestickModelV2();
             model.Parameters.NumCrossValidations = 2;
@@ -36,14 +31,13 @@ namespace DNNTrainer
             //var endTrainingData = new DateTime(2019, 1, 1);
             var endTrainingData = DateTime.Today;
 
-            decimal minPrice = 1.0m;
-            decimal maxPrice = 20.0m;
-            decimal minVol = 500000m;
-            decimal maxHighPercent = 40.0m; //max high will filter out huge gains due to news
-            var dataset = datasetService.GetAllTrainingData(new DefaultDatasetFilter(new DateTime(2000, 1, 30), endTrainingData,
-                minPrice, maxPrice, minVol, maxPercentHigh: maxHighPercent), false);
-            var trainingResults = model.Train(dataset, 0.0, null);
-            model.Save(_pathToModels);
+            var trainingData = new List<(FeatureVector Input, StockData Output)>();
+            trainingData.AddRange(datasetService.GetTrainingData("DIA", null, true).Value);
+            trainingData.AddRange(datasetService.GetTrainingData("SPY", null, true).Value); 
+            trainingData.AddRange(datasetService.GetTrainingData("QQQ", null, true).Value);
+            trainingData.AddRange(datasetService.GetTrainingData("^RUT", null, true).Value);
+            var trainingResults = model.Train(trainingData, 0.0, null);
+            model.Save(modelFile);
         }
 
         private static IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetServiceV2(
@@ -60,9 +54,6 @@ namespace DNNTrainer
 
             var stocksRepo = new YahooFinanceStockAccessService(new DefaultStockRepository(stockSqlDb));
 
-            //var candlestickExtractor = new CandlestickStockFeatureExtractor();
-            //use default values for meow!
-            //var indictatorsExtractor = new StockIndicatorsFeatureExtraction(normalize: false);
             var indictatorsExtractor = new StockIndicatorsFeatureExtractionV2(10,
                 numStockSamples,
                 (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
@@ -70,9 +61,6 @@ namespace DNNTrainer
                 (int)(numStockSamples * 0.8), 5,
                 (int)(numStockSamples * 0.8), 5,
                 false);
-
-            //var indictatorsExtractor = new NormalizedVolumePriceActionFeatureExtractor(numStockSamples);
-
             return new CandlestickStockWithFuturesFeatureDatasetService(indictatorsExtractor, stocksRepo,
                 numStockSamples, stockOutputPeriod);
         }
