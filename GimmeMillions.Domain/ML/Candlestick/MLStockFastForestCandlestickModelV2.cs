@@ -28,11 +28,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
         public FastForestCandlestickModelParameters Parameters { get; set; }
         public CandlestickPredictionModelMetadata<FastForestCandlestickModelParameters> Metadata { get; private set; }
 
-        public string StockSymbol { get; set; }
-
         public bool IsTrained => Metadata.IsTrained;
-
-        public string Encoding => Metadata.FeatureEncoding;
         
 
         public MLStockFastForestCandlestickModelV2()
@@ -45,17 +41,15 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
         }
 
-        public Result Load(string pathToModel, string symbol, string encoding)
+        public Result Load(string pathToModel)
         {
             try
             {
-                string directory = $"{pathToModel}/{_modelId}/{encoding}";
-
                 Metadata = JsonConvert.DeserializeObject<CandlestickPredictionModelMetadata<FastForestCandlestickModelParameters>>(
-                    File.ReadAllText($"{ directory}/Metadata.json"));
+                    File.ReadAllText($"{pathToModel}-Metadata.json"));
 
                 DataViewSchema schema = null;
-                _model = _mLContext.Model.Load($"{directory}/Model.zip", out schema);
+                _model = _mLContext.Model.Load($"{pathToModel}-Model.zip", out schema);
 
                 return Result.Ok();
             }
@@ -127,14 +121,14 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     return Result.Failure("Model has not been trained or loaded");
                 }
 
-                string directory = $"{pathToModel}/{_modelId}/{Metadata.FeatureEncoding}";
-                if (!Directory.Exists(directory))
+           
+                if (!Directory.Exists(pathToModel))
                 {
-                    Directory.CreateDirectory(directory);
+                    Directory.CreateDirectory(pathToModel);
                 }
 
-                File.WriteAllText($"{directory}/Metadata.json", JsonConvert.SerializeObject(Metadata, Formatting.Indented));
-                _mLContext.Model.Save(_model, _dataSchema, $"{directory}/Model.zip");
+                File.WriteAllText($"{pathToModel}-Metadata.json", JsonConvert.SerializeObject(Metadata, Formatting.Indented));
+                _mLContext.Model.Save(_model, _dataSchema, $"{pathToModel}-Model.zip");
 
                 return Result.Ok();
             }

@@ -34,7 +34,7 @@ namespace GimmeMillions.DataAccess.Stocks
 
             string modelEncoding = "Indicators-MACD(32,16,12,7)VWAP(12,7)RSI(12,7)CMF(24,7),nFalse-v1_60d-5p_withComposite";
             var model = new MLStockFastForestCandlestickModel();
-            model.Load(pathToModels, "ANY_SYMBOL", modelEncoding);
+            model.Load(pathToModels);
             recommendationSystem.AddModel(model);
 
             return recommendationSystem;
@@ -51,7 +51,7 @@ namespace GimmeMillions.DataAccess.Stocks
 
             string modelEncoding = "Indicators-Boll(200)MACD(160,80,60,5)VWAP(160,5)RSI(160,5)CMF(160,5),nFalse-v2_200d-5p_withFutures";
             var model = new MLStockFastForestCandlestickModelV2();
-            model.Load(pathToModels, "ANY_SYMBOL", modelEncoding);
+            model.Load(pathToModels);
             recommendationSystem.AddModel(model);
 
             return recommendationSystem;

@@ -53,8 +53,6 @@ namespace GimmeMillions.Domain.ML.Binary
 
         public bool IsTrained => Metadata.IsTrained;
 
-        public string Encoding => Metadata.FeatureEncoding;
-
         public MLStockBinaryFastForestModel()
         {
             Metadata = new BinaryPredictionModelMetadata<FastTreeBinaryModelParameters>();
@@ -64,17 +62,15 @@ namespace GimmeMillions.Domain.ML.Binary
 
         }
 
-        public Result Load(string pathToModel, string symbol, string encoding)
+        public Result Load(string pathToModel)
         {
             try
             {
-                string directory = $"{pathToModel}/{encoding}";
-
                 Metadata = JsonConvert.DeserializeObject<BinaryPredictionModelMetadata<FastTreeBinaryModelParameters>>(
-                    File.ReadAllText($"{ directory}/{symbol}-meta.json"));
+                    File.ReadAllText($"{pathToModel}.json"));
 
                 DataViewSchema schema = null;
-                _model = _mLContext.Model.Load($"{directory}/{Metadata.StockSymbol}-predictor.zip", out schema);
+                _model = _mLContext.Model.Load(pathToModel, out schema);
 
                 return Result.Ok();
             }

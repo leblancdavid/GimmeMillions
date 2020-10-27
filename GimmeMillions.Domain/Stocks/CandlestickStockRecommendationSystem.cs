@@ -150,7 +150,7 @@ namespace GimmeMillions.Domain.Stocks
 
             var modelInfo = _systemConfiguration.Models.FirstOrDefault();
             model = (MLStockFastForestCandlestickModel)Activator.CreateInstance(modelInfo.ModelType);
-            var loadResult = model.Load(modelInfo.PathToModel, modelInfo.Symbol, modelInfo.Encoding);
+            var loadResult = model.Load(modelInfo.PathToModel);
             if (loadResult.IsSuccess)
             {
                 return Result.Failure($"Model could not be loaded");

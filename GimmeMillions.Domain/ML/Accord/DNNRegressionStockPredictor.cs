@@ -34,7 +34,7 @@ namespace GimmeMillions.Domain.ML.Accord
             _loggers = loggers;
         }
 
-        public Result Load(string pathToModel, string symbol, string encoding)
+        public Result Load(string pathToModel)
         {
             throw new NotImplementedException();
         }
