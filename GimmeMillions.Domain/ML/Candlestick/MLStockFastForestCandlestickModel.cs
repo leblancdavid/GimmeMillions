@@ -155,7 +155,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
             }
         }
 
-        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction)
+        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction,
+            ITrainingOutputMapper trainingOutputMapper)
         {
             if (!dataset.Any())
             {
@@ -164,50 +165,17 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var firstFeature = dataset.FirstOrDefault();
 
-            //var filteredDatasetPositives = dataset.Where(x => Math.Abs(x.Output.PercentDayChange) < 1.0m);
-            //var medianPercent = GetMedian(filteredDatasetPositives.Select(x => x.Output.PercentDayChange).ToArray());
-            //Load the data into a view
-            //var datasetViewPos = _mLContext.Data.LoadFromEnumerable(
-            //    dataset.Select(x =>
-            //    {
-            //        var normVector = x.Input;
-            //        return new StockCandlestickDataFeature(
-            //        Array.ConvertAll(x.Input.Data, y => (float)y),
-            //        x.Output.PercentDayChange > 0.0m,
-            //        (float)x.Output.PercentDayChange,
-            //        x.Output.PercentDayChange > 0.0m ? 1 : 0,
-            //        (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
-            //    }),
-            //    GetSchemaDefinition(firstFeature.Input));
-
-            //IDataView trainData = null; //= dataSplit.TrainSet;
-            //IDataView testData = null; // dataSplit.TestSet;
-            //if (testFraction > 0.0)
-            //{
-            //    var dataSplit = _mLContext.Data.TrainTestSplit(datasetViewPos, testFraction: testFraction);
-            //    trainData = dataSplit.TrainSet;
-            //    testData = dataSplit.TestSet;
-            //}
-            //else
-            //{
-            //    trainData = datasetViewPos;
-            //}
-
             var rnd = new Random();
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
             //var meanHigh = dataset.Average(x => x.Output.PercentChangeHighToPreviousClose) / 2.0;
-            var meanHigh = 3.0;
             var trainData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Take(trainingCount).Select(x =>
                 {
                     var normVector = x.Input;
-                    //var v = GetValue(x.Output.PercentDayChange, -10, 10);
-                    //var v = (float)x.Output.PercentChangeHighToPreviousClose;
-                    var v =(float)(x.Output.PercentChangeHighToPreviousClose);
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    v > (float)meanHigh,
-                    v,
+                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    trainingOutputMapper.GetOutputValue(x.Output),
                     x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
@@ -216,13 +184,10 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 dataset.Skip(trainingCount).Select(x =>
                 {
                     var normVector = x.Input;
-                    //var v = GetValue(x.Output.PercentDayChange, -10, 10);
-                    //var v = (float)x.Output.PercentChangeHighToPreviousClose;
-                    var v = (float)(x.Output.PercentChangeHighToPreviousClose);
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    v > (float)meanHigh,
-                    v,
+                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    trainingOutputMapper.GetOutputValue(x.Output),
                     x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),

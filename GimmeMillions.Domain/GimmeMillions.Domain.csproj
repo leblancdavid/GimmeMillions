@@ -202,6 +202,7 @@
     <Compile Include="ML\Candlestick\MLStockFastForestCandlestickModelV2.cs" />
     <Compile Include="ML\Candlestick\StockCandlestickRegressionFeature.cs" />
     <Compile Include="ML\Candlestick\StockCandlestickDataFeature.cs" />
+    <Compile Include="ML\ITrainingOutputMapper.cs" />
     <Compile Include="ML\ModelMetrics.cs" />
     <Compile Include="ML\Binary\IBinaryStockPredictionModel.cs" />
     <Compile Include="ML\Candlestick\CandlestickPredictionModelMetadata.cs" />

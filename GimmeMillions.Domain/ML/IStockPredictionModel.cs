@@ -9,7 +9,9 @@ namespace GimmeMillions.Domain.ML
     {
         bool IsTrained { get; }
 
-        Result<ModelMetrics> Train(IEnumerable<(TFeature Input, StockData Output)> dataset, double testFraction);
+        Result<ModelMetrics> Train(IEnumerable<(TFeature Input, StockData Output)> dataset, 
+            double testFraction, 
+            ITrainingOutputMapper trainingOutputMapper);
         StockPrediction Predict(TFeature Input);
         Result Save(string pathToModel);
         Result Load(string pathToModel);

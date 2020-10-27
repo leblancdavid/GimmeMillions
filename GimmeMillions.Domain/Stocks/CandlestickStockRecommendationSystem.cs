@@ -162,7 +162,7 @@ namespace GimmeMillions.Domain.Stocks
         public Result RetrainModels(DateTime startTime, DateTime endTime)
         {
             var trainingData = _featureDatasetService.GetAllTrainingData();
-            var trainingResult = model.Train(trainingData, 0.0);
+            var trainingResult = model.Train(trainingData, 0.0, null);
             if (trainingResult.IsFailure)
             {
                 return Result.Failure(trainingResult.Error);

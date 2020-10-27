@@ -68,7 +68,8 @@ namespace GimmeMillions.Domain.ML.Accord
             throw new NotImplementedException();
         }
 
-        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction)
+        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction,
+            ITrainingOutputMapper trainingOutputMapper)
         {
             var datasetList = dataset.ToList();
             var newsInput = datasetList.Select(x => x.Input.Data).ToArray();
