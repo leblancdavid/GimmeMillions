@@ -16,12 +16,12 @@ namespace DNNTrainer
     {
         public bool GetBinaryValue(StockData stockData)
         {
-            return stockData.PercentDayChange > 0.0m;
+            return stockData.PercentChangeHighToPreviousClose > 0.0m;
         }
 
         public float GetOutputValue(StockData stockData)
         {
-            return (float)stockData.PercentDayChange;
+            return (float)stockData.PercentChangeHighToPreviousClose;
         }
     };
     public class MarketFuturesTrainer
@@ -37,7 +37,7 @@ namespace DNNTrainer
             //var datasetService = GetCandlestickFeatureDatasetService(60, 5, true);
             var datasetService = GetCandlestickFeatureDatasetServiceV2(200, 2, false);
 
-            var model = new MLStockFastForestCandlestickModel();
+            var model = new MLStockFastForestCandlestickModelV2();
             model.Parameters.NumCrossValidations = 2;
             model.Parameters.NumOfTrees = 2000;
             model.Parameters.NumOfLeaves = 200;
