@@ -203,17 +203,19 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 var values = testData.GetColumn<float>("Value").ToArray();
                 var features = testData.GetColumn<float[]>("Features").ToArray();
 
-                var predictionData = new List<(float Score, float Probability, bool PredictedLabel, bool ActualLabel)>();
+                var predictionData = new List<(float Score, float ActualScore, bool PredictedLabel, bool ActualLabel)>();
                 for(int i = 0; i < features.Length; ++i)
                 {
                     var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
-
-                    predictionData.Add(((float)posS.Score, values[i], posS.Score > 0.0, labels[i]));
+                    if(Math.Abs(posS.Score) > 0.75)
+                        predictionData.Add(((float)posS.Score, values[i], posS.Score > 0.0, labels[i]));
                 }
 
                 predictionData = predictionData.OrderByDescending(x => x.Score).ToList();
                 var runningAccuracy = new List<double>();
+                var runningError = new List<double>();
+                var totalError = 0.0;
                 double correct = 0.0;
                 for(int i = 0; i < predictionData.Count; ++i)
                 {
@@ -221,7 +223,9 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     {
                         correct++;
                     }
+                    totalError += Math.Abs(predictionData[i].Score - predictionData[i].ActualScore);
                     runningAccuracy.Add(correct / (double)(i + 1));
+                    runningError.Add(totalError / (double)(i + 1));
                 }
 
 

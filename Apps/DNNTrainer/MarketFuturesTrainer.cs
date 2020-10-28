@@ -16,12 +16,12 @@ namespace DNNTrainer
     {
         public bool GetBinaryValue(StockData stockData)
         {
-            return stockData.PercentChangeHighToPreviousClose > 0.0m;
+            return stockData.PercentChangeFromPreviousClose > 0.0m;
         }
 
         public float GetOutputValue(StockData stockData)
         {
-            return (float)stockData.PercentChangeHighToPreviousClose;
+            return (float)stockData.PercentChangeFromPreviousClose;
         }
     };
     public class MarketFuturesTrainer
@@ -35,20 +35,20 @@ namespace DNNTrainer
         public void Train(string modelFile)
         {
             //var datasetService = GetCandlestickFeatureDatasetService(60, 5, true);
-            var datasetService = GetCandlestickFeatureDatasetServiceV2(200, 5, false);
+            var datasetService = GetCandlestickFeatureDatasetServiceV2(200, 10, false);
 
-            var model = new MLStockRangePredictorModel();
+            var model = new MLStockFastForestCandlestickModelV2();
             //model.Parameters.NumCrossValidations = 2;
             //model.Parameters.NumOfTrees = 2000;
             //model.Parameters.NumOfLeaves = 200;
             //model.Parameters.MinNumOfLeaves = 100;
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            var filter = new DefaultDatasetFilter(maxPercentHigh: 10.0m, maxPercentLow: 10.0m);
-            trainingData.AddRange(datasetService.GetTrainingData("DIA", filter, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("SPY", filter, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("QQQ", filter, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("^RUT", filter, true).Value);
+            //var filter = new DefaultDatasetFilter(maxPercentHigh: 10.0m, maxPercentLow: 10.0m);
+            trainingData.AddRange(datasetService.GetTrainingData("DIA", null, true).Value);
+            trainingData.AddRange(datasetService.GetTrainingData("SPY", null, true).Value);
+            trainingData.AddRange(datasetService.GetTrainingData("QQQ", null, true).Value);
+            trainingData.AddRange(datasetService.GetTrainingData("^RUT", null, true).Value);
             var trainingResults = model.Train(trainingData, 0.1, new PercentDayChangeOutputMapper());
             model.Save(modelFile);
         }
