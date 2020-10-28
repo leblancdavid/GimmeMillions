@@ -200,6 +200,7 @@
     <Compile Include="ML\Accord\SupervisedNormalizationDataTransformer.cs" />
     <Compile Include="ML\Binary\BinaryPredictionModelMetadata.cs" />
     <Compile Include="ML\Candlestick\MLStockFastForestCandlestickModelV2.cs" />
+    <Compile Include="ML\Candlestick\MLStockRangePredictorModel.cs" />
     <Compile Include="ML\Candlestick\StockCandlestickRegressionFeature.cs" />
     <Compile Include="ML\Candlestick\StockCandlestickDataFeature.cs" />
     <Compile Include="ML\IStockRangePredictor.cs" />

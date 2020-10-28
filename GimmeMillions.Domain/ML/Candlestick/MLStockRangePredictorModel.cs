@@ -1,0 +1,254 @@
+﻿using CSharpFunctionalExtensions;
+using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.ML.Candlestick;
+using GimmeMillions.Domain.Stocks;
+using Microsoft.ML;
+using Microsoft.ML.Data;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GimmeMillions.Domain.ML
+{
+    public class StockRangePredictorModelParameters
+    {
+        public StockRangePredictorModelParameters()
+        {
+            
+        }
+
+    }
+    public class MLStockRangePredictorModel : IStockRangePredictor
+    {
+        private MLContext _mLContext; 
+        private DataViewSchema _dataSchema;
+        private int _seed;
+        private ITransformer _lowRangeModel;
+        private ITransformer _highRangeModel;
+        public bool IsTrained => Metadata.IsTrained;
+        public CandlestickPredictionModelMetadata<StockRangePredictorModelParameters> Metadata { get; private set; }
+        public StockRangePredictorModelParameters Parameters { get; set; }
+        public MLStockRangePredictorModel()
+        {
+            Metadata = new CandlestickPredictionModelMetadata<StockRangePredictorModelParameters>();
+            _seed = 27;
+            _mLContext = new MLContext(_seed);
+            Parameters = new StockRangePredictorModelParameters();
+        }
+
+        public Result Load(string pathToModel)
+        {
+            try
+            {
+                Metadata = JsonConvert.DeserializeObject<CandlestickPredictionModelMetadata<StockRangePredictorModelParameters>>(
+                    File.ReadAllText($"{pathToModel}-Metadata.json"));
+
+                DataViewSchema schema = null;
+                _lowRangeModel = _mLContext.Model.Load($"{pathToModel}-LowModel.zip", out schema);
+                _highRangeModel = _mLContext.Model.Load($"{pathToModel}-HighModel.zip", out schema);
+
+                return Result.Ok();
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure($"Unable to load the model: {ex.Message}");
+            }
+        }
+
+        public StockRangePrediction Predict(FeatureVector input)
+        {
+            //Load the data into a view
+            var inputDataView = _mLContext.Data.LoadFromEnumerable(
+                new List<StockCandlestickDataFeature>()
+                {
+                    new StockCandlestickDataFeature(Array.ConvertAll(input.Data, y => (float)y), false, 0.0f,
+                    (int)input.Date.DayOfWeek / 7.0f, input.Date.Month / 366.0f)
+                },
+                GetSchemaDefinition(input));
+
+            var lowP = _lowRangeModel.Transform(inputDataView);
+            var lowScore = lowP.GetColumn<float>("Score").ToArray();
+
+            var highP = _highRangeModel.Transform(inputDataView);
+            var highScore = highP.GetColumn<float>("Score").ToArray();
+            //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
+            //var probability = prediction.GetColumn<float>("Probability").ToArray();
+
+            return new StockRangePrediction()
+            {
+                PredictedLow = lowScore[0],
+                PredictedHigh = highScore[0]
+            };
+        }
+
+        public Result Save(string pathToModel)
+        {
+            try
+            {
+                if (!Metadata.IsTrained)
+                {
+                    return Result.Failure("Model has not been trained or loaded");
+                }
+
+
+                if (!Directory.Exists(pathToModel))
+                {
+                    Directory.CreateDirectory(pathToModel);
+                }
+
+                File.WriteAllText($"{pathToModel}-Metadata.json", JsonConvert.SerializeObject(Metadata, Formatting.Indented));
+                _mLContext.Model.Save(_lowRangeModel, _dataSchema, $"{pathToModel}-LowModel.zip");
+                _mLContext.Model.Save(_highRangeModel, _dataSchema, $"{pathToModel}-HighModel.zip");
+
+                return Result.Ok();
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure($"Unable to save the model: {ex.Message}");
+            }
+        }
+
+        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction, ITrainingOutputMapper trainingOutputMapper)
+        {
+            if (!dataset.Any())
+            {
+                return Result.Failure<ModelMetrics>($"Training dataset is empty");
+            }
+
+            var estimator = _mLContext.Regression.Trainers.Gam(labelColumnName: "Value");
+
+            var firstFeature = dataset.FirstOrDefault();
+            Metadata.FeatureEncoding = firstFeature.Input.Encoding;
+
+            //TRAIN THE LOW RANGE PREDICTOR
+            int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
+            var trainLowData = _mLContext.Data.LoadFromEnumerable(
+                dataset.Take(trainingCount).Select(x =>
+                {
+                    var normVector = x.Input;
+                    return new StockCandlestickDataFeature(
+                    Array.ConvertAll(x.Input.Data, y => (float)y),
+                    trainingOutputMapper.GetBinaryValue(x.Output),
+                   (float)x.Output.PercentChangeLowToPreviousClose,
+                    x.Output.Symbol,
+                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
+                }),
+                GetSchemaDefinition(firstFeature.Input));
+            var testLowData = _mLContext.Data.LoadFromEnumerable(
+                dataset.Skip(trainingCount).Select(x =>
+                {
+                    var normVector = x.Input;
+                    return new StockCandlestickDataFeature(
+                    Array.ConvertAll(x.Input.Data, y => (float)y),
+                    (x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose) > 0,
+                    (float)(x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose) / 2.0f,
+                    x.Output.Symbol,
+                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
+                }),
+                GetSchemaDefinition(firstFeature.Input));
+
+            _dataSchema = trainLowData.Schema;
+            _lowRangeModel = estimator.Fit(trainLowData);
+
+            var trainHighData = _mLContext.Data.LoadFromEnumerable(
+                dataset.Take(trainingCount).Select(x =>
+                {
+                    var normVector = x.Input;
+                    return new StockCandlestickDataFeature(
+                    Array.ConvertAll(x.Input.Data, y => (float)y),
+                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    (float)x.Output.PercentChangeHighToPreviousClose,
+                    x.Output.Symbol,
+                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
+                }),
+                GetSchemaDefinition(firstFeature.Input));
+            var testHighData = _mLContext.Data.LoadFromEnumerable(
+                dataset.Skip(trainingCount).Select(x =>
+                {
+                    var normVector = x.Input;
+                    return new StockCandlestickDataFeature(
+                    Array.ConvertAll(x.Input.Data, y => (float)y),
+                    (x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose) > 0,
+                    (float)(x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose) / 2.0f,
+                    x.Output.Symbol,
+                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
+                }),
+                GetSchemaDefinition(firstFeature.Input));
+
+            _highRangeModel = estimator.Fit(trainHighData);
+
+
+            Metadata.TrainingResults = new ModelMetrics();
+            if (testLowData != null)
+            {
+                var testPredictions = _lowRangeModel.Transform(testLowData);
+                var labels = testLowData.GetColumn<bool>("Label").ToArray();
+                var values = testLowData.GetColumn<float>("Value").ToArray();
+                var features = testLowData.GetColumn<float[]>("Features").ToArray();
+
+                var predictionData = new List<(float Low, float High, float Value, bool Result)>();
+                for (int i = 0; i < features.Length; ++i)
+                {
+                    var p = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
+                    //predictionData.Add(((float)p.PredictedLow, (float)p.PredictedHigh, values[i], values[i] > 0.0f == (p.PredictedLow > 0.0)));
+                    predictionData.Add(((float)p.PredictedLow, (float)p.PredictedHigh, values[i], values[i] > 0.0f == (p.PredictedHigh + p.PredictedLow > 0.0)));
+                }
+
+                predictionData = predictionData.OrderBy(x => x.Value).ToList();
+                var runningAccuracy = new List<double>();
+                double correct = 0.0;
+                for (int i = 0; i < predictionData.Count; ++i)
+                {
+                    if (predictionData[i].Result)
+                    {
+                        correct++;
+                    }
+                    runningAccuracy.Add(correct / (double)(i + 1));
+                }
+            }
+
+            if (testHighData != null)
+            {
+                var testPredictions = _highRangeModel.Transform(testHighData);
+                var labels = testHighData.GetColumn<bool>("Label").ToArray();
+                var values = testHighData.GetColumn<float>("Value").ToArray();
+                var features = testHighData.GetColumn<float[]>("Features").ToArray();
+
+                var predictionData = new List<(float Low, float High, float Value, bool Result)>();
+                for (int i = 0; i < features.Length; ++i)
+                {
+                    var p = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
+                    predictionData.Add(((float)p.PredictedLow, (float)p.PredictedHigh, values[i], values[i] > 0.0f == (p.PredictedHigh + p.PredictedLow > 0.0)));
+                }
+
+                predictionData = predictionData.OrderByDescending(x => x.Value).ToList();
+                var runningAccuracy = new List<double>();
+                double correct = 0.0;
+                for (int i = 0; i < predictionData.Count; ++i)
+                {
+                    if (predictionData[i].Result)
+                    {
+                        correct++;
+                    }
+                    runningAccuracy.Add(correct / (double)(i + 1));
+                }
+            }
+            return Result.Ok<ModelMetrics>(Metadata.TrainingResults);
+        }
+
+        private SchemaDefinition GetSchemaDefinition(FeatureVector vector)
+        {
+            int featureDimension = vector.Length;
+            var definedSchema = SchemaDefinition.Create(typeof(StockCandlestickDataFeature));
+            var featureColumn = definedSchema["Features"].ColumnType as VectorDataViewType;
+            var vectorItemType = ((VectorDataViewType)definedSchema[0].ColumnType).ItemType;
+            definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
+
+            return definedSchema;
+        }
+    }
+}

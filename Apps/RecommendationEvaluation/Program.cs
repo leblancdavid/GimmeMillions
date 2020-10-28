@@ -1,6 +1,7 @@
 ﻿using CommandLine;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.SQLDataAccess;
 using Microsoft.EntityFrameworkCore;
