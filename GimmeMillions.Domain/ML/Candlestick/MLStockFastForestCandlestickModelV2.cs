@@ -191,8 +191,9 @@ namespace GimmeMillions.Domain.ML.Candlestick
             //      numberOfLeaves: Parameters.NumOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
             //var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations:10)
             //   .Append(_mLContext.BinaryClassification.Calibrators.Platt());
-            var estimator = _mLContext.Regression.Trainers.Gam(labelColumnName: "Value");
-
+            //var estimator = _mLContext.Regression.Trainers.Gam(labelColumnName: "Value");
+            var estimator = _mLContext.Regression.Trainers.FastForest(labelColumnName: "Value", numberOfTrees: Parameters.NumOfTrees,
+                numberOfLeaves: Parameters.NumOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
             _model = estimator.Fit(trainData);
 
             Metadata.TrainingResults = new ModelMetrics();
@@ -208,7 +209,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 {
                     var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
-                    if(Math.Abs(posS.Score) > 0.75)
+                    //if(Math.Abs(posS.Score) > 0.75)
                         predictionData.Add(((float)posS.Score, values[i], posS.Score > 0.0, labels[i]));
                 }
 
