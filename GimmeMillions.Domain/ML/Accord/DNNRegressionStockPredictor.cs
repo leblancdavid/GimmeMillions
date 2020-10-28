@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Accord
 {
-    public class DNNRegressionStockPredictor : IStockPredictionModel<FeatureVector>
+    public class DNNRegressionStockPredictor : IStockPredictionModel<FeatureVector, StockPrediction>
     {
         public string StockSymbol { get; set; }
 

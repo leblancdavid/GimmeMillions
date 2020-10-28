@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Candlestick
 {
-    interface ICandlestickStockPredictionModel<TParams, TFeature> : IStockPredictionModel<TFeature>
+    interface ICandlestickStockPredictionModel<TParams, TFeature> : IStockPredictionModel<TFeature, StockPrediction>
         where TFeature : FeatureVector
     {
         TParams Parameters { get; set; }

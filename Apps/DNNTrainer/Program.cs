@@ -9,7 +9,7 @@ namespace DNNTrainer
         static void Main(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<GimmeMillionsContext>();
-            optionsBuilder.UseSqlite($"Data Source=C:\\Recommendations\\App\\RecommendationMaker\\gm.db");
+            optionsBuilder.UseSqlite($"Data Source=C:\\Stocks\\gm.db");
             var context = new GimmeMillionsContext(optionsBuilder.Options);
             context.Database.Migrate();
 

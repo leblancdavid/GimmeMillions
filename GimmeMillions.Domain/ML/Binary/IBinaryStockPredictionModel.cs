@@ -2,7 +2,7 @@
 
 namespace GimmeMillions.Domain.ML.Binary
 {
-    public interface IBinaryStockPredictionModel<TParams, TFeature> : IStockPredictionModel<TFeature>
+    public interface IBinaryStockPredictionModel<TParams, TFeature> : IStockPredictionModel<TFeature, StockPrediction>
         where TFeature : FeatureVector
     {
         TParams Parameters { get; set; }

@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.Stocks
 {
-    public class CandlestickStockRecommendationSystem : IStockRecommendationSystem<FeatureVector>
+    public class CandlestickStockRecommendationSystem : IStockRecommendationSystem<FeatureVector, StockPrediction>
     {
-        private IStockPredictionModel<FeatureVector> model;
+        private IStockPredictionModel<FeatureVector, StockPrediction> model;
         private IFeatureDatasetService<FeatureVector> _featureDatasetService;
         private IStockRecommendationRepository _stockRecommendationRepository;
         private StockRecommendationSystemConfiguration _systemConfiguration;
@@ -34,7 +34,7 @@ namespace GimmeMillions.Domain.Stocks
             _systemId = systemId;
         }
 
-        public void AddModel(IStockPredictionModel<FeatureVector> stockPredictionModel)
+        public void AddModel(IStockPredictionModel<FeatureVector, StockPrediction> stockPredictionModel)
         {
             //_systemConfiguration.Models.Add(("ANY_STOCK",
             //        _pathToModels,

@@ -1,4 +1,5 @@
 ﻿using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;
 
@@ -22,7 +23,7 @@ namespace GimmeMillions.DataAccess.Stocks
         ///  Path to where the expected model lives
         /// </param>
         /// <returns></returns>
-        public static IStockRecommendationSystem<FeatureVector> GetAadvarkRecommendationSystem(
+        public static IStockRecommendationSystem<FeatureVector, StockPrediction> GetAadvarkRecommendationSystem(
             IStockRepository stockRepository,
             IStockRecommendationRepository stockRecommendationRepository,
             string pathToModels)
@@ -40,7 +41,7 @@ namespace GimmeMillions.DataAccess.Stocks
             return recommendationSystem;
         }
 
-        public static IStockRecommendationSystem<FeatureVector> GetBadgerRecommendationSystem(
+        public static IStockRecommendationSystem<FeatureVector, StockPrediction> GetBadgerRecommendationSystem(
             IStockRepository stockRepository,
             IStockRecommendationRepository stockRecommendationRepository,
             string pathToModels)
