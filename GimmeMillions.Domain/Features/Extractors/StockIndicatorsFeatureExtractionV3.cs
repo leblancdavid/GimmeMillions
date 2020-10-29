@@ -67,7 +67,7 @@ namespace GimmeMillions.Domain.Features
             _kernels[_rsiSlope] = GetNormalizedWavelet(_rsiSlope);
             _kernels[_cmfSlope] = GetNormalizedWavelet(_cmfSlope);
 
-            Encoding = $"Indicators-Boll({_bollingerLength})MACD({_slowEma},{_fastEma},{_macdEma},{_macdSlope})VWAP({_vwap},{_vwapSlope})RSI({_rsi},{_rsiSlope})CMF({_cmf},{_cmfSlope}),-v{_version}";
+            Encoding = $"Indicators-Pivots({_numPivots},{_pivotKernel})Boll({_bollingerLength})MACD({_slowEma},{_fastEma},{_macdEma},{_macdSlope})VWAP({_vwap},{_vwapSlope})RSI({_rsi},{_rsiSlope})CMF({_cmf},{_cmfSlope}),-v{_version}";
         }
 
         public double[] Extract(IEnumerable<(StockData Data, float Weight)> data)
@@ -97,9 +97,8 @@ namespace GimmeMillions.Domain.Features
                     out cmfVals[i - 1], out cmfSlopeVals[i - 1]);
             }
 
-            return CalculatePivots(ordered)
-                       .Concat(boll)
-                       .Concat(macdVals)
+            return boll
+                       //.Concat(macdVals)
                        .Concat(macdSlopeVals)
                        .Concat(vwapVals)
                        .Concat(vwapSlopeVals)
@@ -107,6 +106,17 @@ namespace GimmeMillions.Domain.Features
                        .Concat(rsiSlopeVals)
                        .Concat(cmfVals)
                        .Concat(cmfSlopeVals).ToArray();
+
+            //return CalculatePivots(ordered)
+            //           .Concat(boll)
+            //           .Concat(macdVals)
+            //           .Concat(macdSlopeVals)
+            //           .Concat(vwapVals)
+            //           .Concat(vwapSlopeVals)
+            //           .Concat(rsiVals)
+            //           .Concat(rsiSlopeVals)
+            //           .Concat(cmfVals)
+            //           .Concat(cmfSlopeVals).ToArray();
 
         }
 
@@ -387,12 +397,11 @@ namespace GimmeMillions.Domain.Features
             if (!pivots.Any())
                 return clusters;
 
-            double min = pivots.Min();
-            double max = pivots.Max();
-            double split = (max - min) / ((double)_numPivots + 2.0);
-            for(int i = 1; i <= _numPivots; ++i)
+            double mean = pivots.Average();
+            double stdev = pivots.Average(x => Math.Abs(x - mean));
+            for(int i = _numPivots / -2; i <= _numPivots / 2; ++i)
             {
-                clusters.Add((double)i * split + min);
+                clusters.Add((double)i * stdev + mean);
             }
 
             RunKMeans(pivots, clusters);
@@ -428,6 +437,9 @@ namespace GimmeMillions.Domain.Features
                 //Update the clusters
                 for (int i = 0; i < clusters.Count; ++i)
                 {
+                    var updateList = assignedPivots.Where(x => x.Index == i);
+                    if (!updateList.Any())
+                        continue;
                     clusters[i] = assignedPivots.Where(x => x.Index == i).Average(x => x.Pivot);
                 }
 

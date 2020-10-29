@@ -41,7 +41,7 @@ namespace DNNTrainer
             var model = new MLStockFastForestCandlestickModel();
             model.Parameters.NumCrossValidations = 2;
             model.Parameters.NumOfTrees = 2000;
-            model.Parameters.NumOfLeaves = 200;
+            model.Parameters.NumOfLeaves = 20;
             model.Parameters.MinNumOfLeaves = 100;
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
@@ -63,13 +63,13 @@ namespace DNNTrainer
         {
             var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
 
-            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV2(10,
+            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV3(10,
                 numStockSamples,
                 (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
                 (int)(numStockSamples * 0.8), 5,
                 (int)(numStockSamples * 0.8), 5,
                 (int)(numStockSamples * 0.8), 5,
-                false);
+                5, 5);
             return new CandlestickStockWithFuturesFeatureDatasetService(indictatorsExtractor, stocksRepo,
                 numStockSamples, stockOutputPeriod);
         }

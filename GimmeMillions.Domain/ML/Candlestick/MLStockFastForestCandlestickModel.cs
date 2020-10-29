@@ -184,7 +184,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
-                    if(posS.Probability > 75.0 || posS.Probability < 25.0) 
+                    //if(posS.Probability > 75.0 || posS.Probability < 25.0) 
                         predictionData.Add(((float)posS.Score, (float)posS.Probability, posS.Probability > 50.0, labels[i]));
                 }
 
