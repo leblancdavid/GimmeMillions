@@ -25,6 +25,8 @@ namespace GimmeMillions.Domain.Features
         private int _cmf = 24;
         private int _cmfSlope = 7;
         private int _version = 3;
+        private int _numPivots = 5;
+        private int _pivotKernel = 5;
 
         private Dictionary<int, double[]> _kernels;
 
@@ -40,7 +42,9 @@ namespace GimmeMillions.Domain.Features
             int rsi = 12,
             int rsiSlope = 7,
             int cmf = 24,
-            int cmfSlope = 7)
+            int cmfSlope = 7,
+            int numPivots = 5,
+            int pivotKernel = 5)
         {
             _timeSampling = timesampling;
             _bollingerLength = bollingerLength;
@@ -54,6 +58,8 @@ namespace GimmeMillions.Domain.Features
             _rsiSlope = rsiSlope;
             _cmf = cmf;
             _cmfSlope = cmfSlope;
+            _numPivots = numPivots;
+            _pivotKernel = pivotKernel;
 
             _kernels = new Dictionary<int, double[]>();
             _kernels[_macdSlope] = GetNormalizedWavelet(_macdSlope);
@@ -91,7 +97,8 @@ namespace GimmeMillions.Domain.Features
                     out cmfVals[i - 1], out cmfSlopeVals[i - 1]);
             }
 
-            return boll
+            return CalculatePivots(ordered)
+                       .Concat(boll)
                        .Concat(macdVals)
                        .Concat(macdSlopeVals)
                        .Concat(vwapVals)
@@ -304,6 +311,128 @@ namespace GimmeMillions.Domain.Features
             }
 
             return kernel;
+        }
+
+        private double[] CalculatePivots(List<(StockData Data, float Weight)> data)
+        {
+            var clusters = GetClusters(GetPivots(data));
+            var sample = data.First();
+            var orderedHigh = clusters.OrderBy(x => Math.Abs((double)sample.Data.High - x)).ToList();
+            var highPivots = new double[orderedHigh.Count];
+            for(int i = 0; i < orderedHigh.Count; ++i)
+            {
+                highPivots[i] = (orderedHigh[i] - (double)sample.Data.High) / (double)sample.Data.High;
+            }
+            var orderedLow = clusters.OrderBy(x => Math.Abs((double)sample.Data.Low - x)).ToList();
+            var lowPivots = new double[orderedLow.Count];
+            for (int i = 0; i < orderedLow.Count; ++i)
+            {
+                if(sample.Data.Low == 0.0m)
+                {
+                    lowPivots[i] = 0.0;
+                }
+                else
+                {
+                    lowPivots[i] = (orderedLow[i] - (double)sample.Data.Low) / (double)sample.Data.Low;
+                }
+            }
+
+            return highPivots.Concat(lowPivots).ToArray();
+        }
+
+        private List<double> GetPivots(List<(StockData Data, float Weight)> data)
+        {
+            var pivots = new List<double>();
+            int k = _pivotKernel / 2;
+            for(int i = k; i < data.Count - k; ++i)
+            {
+                bool resistance = true;
+                for(int j = i - k; j < i + k; ++j)
+                {
+                    if (j == i)
+                        continue;
+                    if(data[i].Data.High < data[j].Data.High)
+                    {
+                        resistance = false;
+                        break;
+                    }
+                }
+                if(resistance)
+                {
+                    pivots.Add((double)data[i].Data.High);
+                }
+
+                bool support = true;
+                for (int j = i - k; j < i + k; ++j)
+                {
+                    if (j == i)
+                        continue;
+                    if (data[i].Data.Low > data[j].Data.Low)
+                    {
+                        support = false;
+                        break;
+                    }
+                }
+                if (support)
+                {
+                    pivots.Add((double)data[i].Data.Low);
+                }
+            }
+            return pivots;
+        }
+
+        private List<double> GetClusters(List<double> pivots)
+        {
+            var clusters = new List<double>();
+            if (!pivots.Any())
+                return clusters;
+
+            double min = pivots.Min();
+            double max = pivots.Max();
+            double split = (max - min) / ((double)_numPivots + 2.0);
+            for(int i = 1; i <= _numPivots; ++i)
+            {
+                clusters.Add((double)i * split + min);
+            }
+
+            RunKMeans(pivots, clusters);
+            return clusters;
+        }
+
+        private void RunKMeans(List<double> pivots, List<double> clusters)
+        {
+            var assignedPivots = pivots.Select(x => { return (Pivot: x, Index: 0); }).ToArray();
+            int iterations = 0;
+            while (iterations < 10)
+            {
+                for(int j = 0; j < assignedPivots.Length; ++j)
+                {
+                    double minDistance = double.MaxValue;
+                    int clusterIndex = 0;
+                    for(int i = 0; i < clusters.Count; ++i)
+                    {
+                        double d = Math.Abs(assignedPivots[j].Pivot - clusters[i]);
+                        if(d < minDistance)
+                        {
+                            minDistance = d;
+                            clusterIndex = i;
+                        }
+                    }
+
+                    if(assignedPivots[j].Index != clusterIndex)
+                    {
+                        assignedPivots[j].Index = clusterIndex;
+                    }
+                }
+
+                //Update the clusters
+                for (int i = 0; i < clusters.Count; ++i)
+                {
+                    clusters[i] = assignedPivots.Where(x => x.Index == i).Average(x => x.Pivot);
+                }
+
+                iterations++;
+            }
         }
     }
 }
