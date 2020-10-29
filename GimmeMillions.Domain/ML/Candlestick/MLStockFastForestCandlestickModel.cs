@@ -199,8 +199,6 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     }
                     runningAccuracy.Add(correct / (double)(i + 1));
                 }
-
-
             }
             return Result.Ok<ModelMetrics>(Metadata.TrainingResults);
         }

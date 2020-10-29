@@ -43,7 +43,7 @@ namespace RecommendationEvaluation
             var optionsBuilder = new DbContextOptionsBuilder<GimmeMillionsContext>();
 
             var stockList = new List<string>();
-            IStockRecommendationSystem<FeatureVector> recommendationSystem = null;
+            IStockRecommendationSystem<FeatureVector, StockPrediction> recommendationSystem = null;
             var startDate = DateTime.Today;
             var endDate = DateTime.Today;
             string model = "aadvark";
