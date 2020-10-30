@@ -114,7 +114,6 @@ namespace GimmeMillions.Domain.Features
             //    .Concat(vwapVals).Concat(vwapSlopeVals).ToArray();
             return macdVals.Concat(macdSlopeVals)
                 .Concat(rsiVals).Concat(rsiSlopeVals)
-                .Concat(boll)
                 .Concat(vwapVals).Concat(vwapSlopeVals).ToArray();
             //return boll
             //           .Concat(macdVals)
