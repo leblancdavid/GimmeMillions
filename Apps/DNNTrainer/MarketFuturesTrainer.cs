@@ -36,7 +36,7 @@ namespace DNNTrainer
         public void Train(string modelFile)
         {
             //var datasetService = GetCandlestickFeatureDatasetService(60, 5, true);
-            var datasetService = GetCandlestickFeatureDatasetServiceV2(200, 15, false);
+            var datasetService = GetCandlestickFeatureDatasetServiceV2(200, 5, false);
 
             var model = new MLStockFastForestCandlestickModel();
             model.Parameters.NumCrossValidations = 2;
@@ -51,8 +51,19 @@ namespace DNNTrainer
             trainingData.AddRange(datasetService.GetTrainingData("QQQ", null, true).Value);
             trainingData.AddRange(datasetService.GetTrainingData("^RUT", null, true).Value);
 
-            var trainingResults = model.Train(trainingData, 0.1, new PercentDayChangeOutputMapper());
+            var trainingResults = model.Train(trainingData, 0.0, new PercentDayChangeOutputMapper());
             model.Save(modelFile);
+
+            var diaSamples = datasetService.GetFeatures("DIA").Where(x => x.Date > new DateTime(2020, 1, 1));
+            using (System.IO.StreamWriter file =
+            new System.IO.StreamWriter($"C:\\Stocks\\dia-test.txt"))
+            {
+                foreach (var sample in diaSamples)
+                {
+                    var prediction = model.Predict(sample);
+                    file.WriteLine($"{sample.Date}\t{prediction.Probability}");
+                }
+            }
         }
 
         private IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetServiceV2(

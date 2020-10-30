@@ -118,7 +118,7 @@ namespace GimmeMillions.Domain.Features
                     $"No stock found for symbol '{symbol}'");
             }
 
-            var stocksVector = GetStockFeatureVector(symbol, date, stocks, _numStockDailySamples);
+            var stocksVector = GetStockFeatureVector(date, stocks, _numStockDailySamples);
             if (stocksVector.IsFailure)
             {
                 return Result.Failure<FeatureVector>(stocksVector.Error);
