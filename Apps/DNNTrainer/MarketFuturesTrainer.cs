@@ -52,7 +52,7 @@ namespace DNNTrainer
             trainingData.AddRange(datasetService.GetTrainingData("QQQ", null, true).Value);
             trainingData.AddRange(datasetService.GetTrainingData("^RUT", null, true).Value);
 
-            var trainingResults = model.Train(trainingData, 0.1, new PercentDayChangeOutputMapper());
+            var trainingResults = model.Train(trainingData, 0.0, new PercentDayChangeOutputMapper());
             model.Save(modelFile);
 
             var diaSamples = datasetService.GetFeatures("DIA").Where(x => x.Date > new DateTime(2020, 1, 1));

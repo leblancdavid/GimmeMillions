@@ -225,8 +225,16 @@ namespace GimmeMillions.Domain.Features
             for (int i = 1; i < derivatives.Length - 1; ++i)
             {
                 //if the derivative goes from negative to positive, or positive to negative, there's a shift in the trend
+                //if ((derivatives[i] > 0.0 && derivatives[i - 1] <= 0.0) ||
+                //    (derivatives[i] < 0.0 && derivatives[i - 1] >= 0.0))
+                //{
+                //    inflectionIndex.Add(i);
+                //}
+
                 if ((derivatives[i] > 0.0 && derivatives[i - 1] <= 0.0) ||
-                    (derivatives[i] < 0.0 && derivatives[i - 1] >= 0.0))
+                    (derivatives[i] < 0.0 && derivatives[i - 1] >= 0.0) ||
+                    (derivatives[i] > derivatives[i - 1] && derivatives[i] > derivatives[i + 1] && derivatives[i] > 0.0) ||
+                    (derivatives[i] < derivatives[i - 1] && derivatives[i] < derivatives[i + 1] && derivatives[i] < 0.0))
                 {
                     inflectionIndex.Add(i);
                 }
