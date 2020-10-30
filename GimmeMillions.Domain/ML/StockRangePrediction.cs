@@ -10,5 +10,6 @@ namespace GimmeMillions.Domain.ML
     {
         public double PredictedLow { get; set; }
         public double PredictedHigh { get; set; }
+        public double Sentiment { get; set; }
     }
 }

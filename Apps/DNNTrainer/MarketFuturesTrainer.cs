@@ -38,11 +38,12 @@ namespace DNNTrainer
             //var datasetService = GetCandlestickFeatureDatasetService(60, 5, true);
             var datasetService = GetCandlestickFeatureDatasetServiceV2(50, 11, false);
 
-            var model = new MLStockFastForestCandlestickModel();
-            model.Parameters.NumCrossValidations = 2;
-            model.Parameters.NumOfTrees = 2000;
-            model.Parameters.NumOfLeaves = 200;
-            model.Parameters.MinNumOfLeaves = 1;
+            //var model = new MLStockFastForestCandlestickModel();
+            //model.Parameters.NumCrossValidations = 2;
+            //model.Parameters.NumOfTrees = 2000;
+            //model.Parameters.NumOfLeaves = 200;
+            //model.Parameters.MinNumOfLeaves = 1;
+            var model = new MLStockRangePredictorModel();
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             //var filter = new DefaultDatasetFilter(maxPercentHigh: 10.0m, maxPercentLow: 10.0m);
@@ -61,7 +62,7 @@ namespace DNNTrainer
                 foreach (var sample in diaSamples)
                 {
                     var prediction = model.Predict(sample);
-                    file.WriteLine($"{sample.Date}\t{prediction.Probability}");
+                    file.WriteLine($"{sample.Date}\t{prediction.Sentiment}\t{prediction.PredictedHigh}\t{prediction.PredictedLow}");
                 }
             }
         }

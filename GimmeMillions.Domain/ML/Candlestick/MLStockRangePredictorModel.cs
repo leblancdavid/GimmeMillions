@@ -29,6 +29,8 @@ namespace GimmeMillions.Domain.ML
         private int _seed;
         private ITransformer _lowRangeModel;
         private ITransformer _highRangeModel;
+        private ITransformer _sentimentModel;
+
         public bool IsTrained => Metadata.IsTrained;
         public CandlestickPredictionModelMetadata<StockRangePredictorModelParameters> Metadata { get; private set; }
         public StockRangePredictorModelParameters Parameters { get; set; }
@@ -50,6 +52,7 @@ namespace GimmeMillions.Domain.ML
                 DataViewSchema schema = null;
                 _lowRangeModel = _mLContext.Model.Load($"{pathToModel}-LowModel.zip", out schema);
                 _highRangeModel = _mLContext.Model.Load($"{pathToModel}-HighModel.zip", out schema);
+                _sentimentModel = _mLContext.Model.Load($"{pathToModel}-SentimentModel.zip", out schema);
 
                 return Result.Ok();
             }
@@ -75,13 +78,17 @@ namespace GimmeMillions.Domain.ML
 
             var highP = _highRangeModel.Transform(inputDataView);
             var highScore = highP.GetColumn<float>("Score").ToArray();
+
+            var sP = _sentimentModel.Transform(inputDataView);
+            var sScore = sP.GetColumn<float>("Probability").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
             //var probability = prediction.GetColumn<float>("Probability").ToArray();
 
             return new StockRangePrediction()
             {
                 PredictedLow = lowScore[0],
-                PredictedHigh = highScore[0]
+                PredictedHigh = highScore[0],
+                Sentiment = sScore[0] * 100.0f
             };
         }
 
@@ -103,6 +110,7 @@ namespace GimmeMillions.Domain.ML
                 File.WriteAllText($"{pathToModel}-Metadata.json", JsonConvert.SerializeObject(Metadata, Formatting.Indented));
                 _mLContext.Model.Save(_lowRangeModel, _dataSchema, $"{pathToModel}-LowModel.zip");
                 _mLContext.Model.Save(_highRangeModel, _dataSchema, $"{pathToModel}-HighModel.zip");
+                _mLContext.Model.Save(_sentimentModel, _dataSchema, $"{pathToModel}-SentimentModel.zip");
 
                 return Result.Ok();
             }
@@ -119,7 +127,7 @@ namespace GimmeMillions.Domain.ML
                 return Result.Failure<ModelMetrics>($"Training dataset is empty");
             }
 
-            var estimator = _mLContext.Regression.Trainers.Gam(labelColumnName: "Value");
+            var rangeEstimator = _mLContext.Regression.Trainers.Gam(labelColumnName: "Value");
 
             var firstFeature = dataset.FirstOrDefault();
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
@@ -145,14 +153,14 @@ namespace GimmeMillions.Domain.ML
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
                     (x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose) > 0,
-                    (float)(x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose) / 2.0f,
+                   (float)x.Output.PercentChangeLowToPreviousClose,
                     x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
                 GetSchemaDefinition(firstFeature.Input));
 
             _dataSchema = trainLowData.Schema;
-            _lowRangeModel = estimator.Fit(trainLowData);
+            _lowRangeModel = rangeEstimator.Fit(trainLowData);
 
             var trainHighData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Take(trainingCount).Select(x =>
@@ -172,65 +180,70 @@ namespace GimmeMillions.Domain.ML
                     var normVector = x.Input;
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    (x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose) > 0,
-                    (float)(x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose) / 2.0f,
+                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    (float)x.Output.PercentChangeHighToPreviousClose,
                     x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
                 GetSchemaDefinition(firstFeature.Input));
 
-            _highRangeModel = estimator.Fit(trainHighData);
+            _highRangeModel = rangeEstimator.Fit(trainHighData);
 
+            var trainData = _mLContext.Data.LoadFromEnumerable(
+               dataset.Take(trainingCount).Select(x =>
+               {
+                   var normVector = x.Input;
+                   return new StockCandlestickDataFeature(
+                   Array.ConvertAll(x.Input.Data, y => (float)y),
+                   trainingOutputMapper.GetBinaryValue(x.Output),
+                   trainingOutputMapper.GetOutputValue(x.Output),
+                   x.Output.Symbol,
+                   (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
+               }),
+               GetSchemaDefinition(firstFeature.Input));
+            var testData = _mLContext.Data.LoadFromEnumerable(
+                dataset.Skip(trainingCount).Select(x =>
+                {
+                    var normVector = x.Input;
+                    return new StockCandlestickDataFeature(
+                    Array.ConvertAll(x.Input.Data, y => (float)y),
+                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    trainingOutputMapper.GetOutputValue(x.Output),
+                    x.Output.Symbol,
+                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
+                }),
+                GetSchemaDefinition(firstFeature.Input));
+
+
+            var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 10)
+                .Append(_mLContext.BinaryClassification.Calibrators.Platt());
+
+            _sentimentModel = estimator.Fit(trainData);
 
             Metadata.TrainingResults = new ModelMetrics();
-            if (testLowData != null)
+            if (testData != null)
             {
-                var testPredictions = _lowRangeModel.Transform(testLowData);
-                var labels = testLowData.GetColumn<bool>("Label").ToArray();
-                var values = testLowData.GetColumn<float>("Value").ToArray();
-                var features = testLowData.GetColumn<float[]>("Features").ToArray();
+                var testPredictions = _sentimentModel.Transform(testData);
+                var labels = testData.GetColumn<bool>("Label").ToArray();
+                var values = testData.GetColumn<float>("Value").ToArray();
+                var features = testData.GetColumn<float[]>("Features").ToArray();
 
-                var predictionData = new List<(float Low, float High, float Value, bool Result)>();
+                var predictionData = new List<(float Score, float Probability, bool PredictedLabel, bool ActualLabel)>();
                 for (int i = 0; i < features.Length; ++i)
                 {
-                    var p = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
-                    //predictionData.Add(((float)p.PredictedLow, (float)p.PredictedHigh, values[i], values[i] > 0.0f == (p.PredictedLow > 0.0)));
-                    predictionData.Add(((float)p.PredictedLow, (float)p.PredictedHigh, values[i], values[i] > 0.0f == (p.PredictedHigh + p.PredictedLow > 0.0)));
+                    var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
+                    //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
+
+                    //if(posS.Probability > 90.0 || posS.Probability < 10.0) 
+                    predictionData.Add(((float)posS.Sentiment, (float)posS.Sentiment, posS.Sentiment > 50.0, labels[i]));
                 }
 
-                predictionData = predictionData.OrderBy(x => x.Value).ToList();
+                predictionData = predictionData.OrderByDescending(x => x.Probability).ToList();
                 var runningAccuracy = new List<double>();
                 double correct = 0.0;
                 for (int i = 0; i < predictionData.Count; ++i)
                 {
-                    if (predictionData[i].Result)
-                    {
-                        correct++;
-                    }
-                    runningAccuracy.Add(correct / (double)(i + 1));
-                }
-            }
-
-            if (testHighData != null)
-            {
-                var testPredictions = _highRangeModel.Transform(testHighData);
-                var labels = testHighData.GetColumn<bool>("Label").ToArray();
-                var values = testHighData.GetColumn<float>("Value").ToArray();
-                var features = testHighData.GetColumn<float[]>("Features").ToArray();
-
-                var predictionData = new List<(float Low, float High, float Value, bool Result)>();
-                for (int i = 0; i < features.Length; ++i)
-                {
-                    var p = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
-                    predictionData.Add(((float)p.PredictedLow, (float)p.PredictedHigh, values[i], values[i] > 0.0f == (p.PredictedHigh + p.PredictedLow > 0.0)));
-                }
-
-                predictionData = predictionData.OrderByDescending(x => x.Value).ToList();
-                var runningAccuracy = new List<double>();
-                double correct = 0.0;
-                for (int i = 0; i < predictionData.Count; ++i)
-                {
-                    if (predictionData[i].Result)
+                    if (predictionData[i].PredictedLabel == predictionData[i].ActualLabel)
                     {
                         correct++;
                     }

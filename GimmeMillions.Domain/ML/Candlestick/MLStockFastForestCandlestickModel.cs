@@ -167,8 +167,6 @@ namespace GimmeMillions.Domain.ML.Candlestick
             var estimator = _mLContext.BinaryClassification.Trainers.FastForest(numberOfTrees: Parameters.NumOfTrees,
                 numberOfLeaves: Parameters.NumOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves)
                 .Append(_mLContext.BinaryClassification.Calibrators.Platt());
-            //var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 10)
-            //    .Append(_mLContext.BinaryClassification.Calibrators.Platt());
 
             _model = estimator.Fit(trainData);
 
