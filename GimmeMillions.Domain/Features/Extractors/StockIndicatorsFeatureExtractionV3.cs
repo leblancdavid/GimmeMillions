@@ -97,52 +97,20 @@ namespace GimmeMillions.Domain.Features
                     out cmfVals[i - 1], out cmfSlopeVals[i - 1]);
             }
 
-            //return macdVals.Concat(macdSlopeVals).ToArray();
-            //return macdSlopeVals/*.Concat(macdVals)*/.ToArray();
-            //return boll;
-            //return vwapVals/*.Concat(vwapSlopeVals)*/.ToArray();
-            //return rsiVals.Concat(rsiSlopeVals).ToArray();
-            //return rsiSlopeVals.ToArray();
-            //return cmfVals.Concat(cmfSlopeVals).ToArray();
-            //return cmfSlopeVals.ToArray();
-            //return macdVals.Concat(macdSlopeVals).Concat(rsiVals).Concat(rsiSlopeVals).ToArray();
-            //return macdVals.Concat(macdSlopeVals)
-            //    .Concat(rsiVals).Concat(rsiSlopeVals)
-            //    .Concat(cmfVals).Concat(cmfSlopeVals).ToArray();
-            //return macdVals.Concat(macdSlopeVals)
-            //    .Concat(rsiVals).Concat(rsiSlopeVals)
-            //    .Concat(vwapVals).Concat(vwapSlopeVals).ToArray();
             return macdVals.Concat(macdSlopeVals)
                 .Concat(rsiVals).Concat(rsiSlopeVals)
-                .Concat(vwapVals).Concat(vwapSlopeVals).ToArray();
-            //return boll
-            //           .Concat(macdVals)
-            //           .Concat(macdSlopeVals)
-            //           .Concat(vwapVals)
-            //           .Concat(vwapSlopeVals)
-            //           .Concat(rsiVals)
-            //           .Concat(rsiSlopeVals)
-            //           .Concat(cmfVals)
-            //           .Concat(cmfSlopeVals).ToArray();
-
-            //return CalculatePivots(ordered)
-            //           .Concat(boll)
-            //           .Concat(macdVals)
-            //           .Concat(macdSlopeVals)
-            //           .Concat(vwapVals)
-            //           .Concat(vwapSlopeVals)
-            //           .Concat(rsiVals)
-            //           .Concat(rsiSlopeVals)
-            //           .Concat(cmfVals)
-            //           .Concat(cmfSlopeVals).ToArray();
+                .Concat(vwapVals).Concat(vwapSlopeVals)
+                .Concat(boll)
+                .Concat(cmfVals).Concat(cmfSlopeVals).ToArray();
 
         }
 
         private double CalculateBollinger(List<(StockData Data, float Weight)> data,
             int length)
         {
-            var mean = data.Sum(x => x.Data.Close)/(decimal)length;
-            var stdev = Math.Sqrt(data.Sum(x => Math.Pow((double)(x.Data.Close - mean), 2.0)) / (double)length);
+            var subData = data.Take(length);
+            var mean = subData.Average(x => x.Data.Close);
+            var stdev = Math.Sqrt(subData.Sum(x => Math.Pow((double)(x.Data.Close - mean), 2.0)) / (double)length);
 
             return (double)(data.First().Data.Close - mean) / stdev;
         }

@@ -17,7 +17,7 @@ namespace DNNTrainer
     {
         public bool GetBinaryValue(StockData stockData)
         {
-            return stockData.PercentChangeFromPreviousClose > 0.5m;
+            return stockData.PercentChangeFromPreviousClose > 0.0m;
         }
 
         public float GetOutputValue(StockData stockData)
@@ -36,13 +36,13 @@ namespace DNNTrainer
         public void Train(string modelFile)
         {
             //var datasetService = GetCandlestickFeatureDatasetService(60, 5, true);
-            var datasetService = GetCandlestickFeatureDatasetServiceV2(200, 5, false);
+            var datasetService = GetCandlestickFeatureDatasetServiceV2(50, 11, false);
 
             var model = new MLStockFastForestCandlestickModel();
             model.Parameters.NumCrossValidations = 2;
             model.Parameters.NumOfTrees = 2000;
-            model.Parameters.NumOfLeaves = 20;
-            model.Parameters.MinNumOfLeaves = 10;
+            model.Parameters.NumOfLeaves = 200;
+            model.Parameters.MinNumOfLeaves = 1;
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             //var filter = new DefaultDatasetFilter(maxPercentHigh: 10.0m, maxPercentLow: 10.0m);
@@ -51,7 +51,7 @@ namespace DNNTrainer
             trainingData.AddRange(datasetService.GetTrainingData("QQQ", null, true).Value);
             trainingData.AddRange(datasetService.GetTrainingData("^RUT", null, true).Value);
 
-            var trainingResults = model.Train(trainingData, 0.0, new PercentDayChangeOutputMapper());
+            var trainingResults = model.Train(trainingData, 0.1, new PercentDayChangeOutputMapper());
             model.Save(modelFile);
 
             var diaSamples = datasetService.GetFeatures("DIA").Where(x => x.Date > new DateTime(2020, 1, 1));
@@ -73,7 +73,7 @@ namespace DNNTrainer
         {
             var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
 
-            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV3(10,
+            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV3(5,
                 numStockSamples,
                 (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
                 (int)(numStockSamples * 0.8), 5,

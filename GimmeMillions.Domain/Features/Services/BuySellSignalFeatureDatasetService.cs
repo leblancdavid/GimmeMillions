@@ -222,10 +222,10 @@ namespace GimmeMillions.Domain.Features
                 ++k;
             }
             var inflectionIndex = new List<int>();
-            for (int i = 1; i < derivatives.Length; ++i)
+            for (int i = 1; i < derivatives.Length - 1; ++i)
             {
                 //if the derivative goes from negative to positive, or positive to negative, there's a shift in the trend
-                if((derivatives[i] > 0.0 && derivatives[i - 1] <= 0.0) || 
+                if ((derivatives[i] > 0.0 && derivatives[i - 1] <= 0.0) ||
                     (derivatives[i] < 0.0 && derivatives[i - 1] >= 0.0))
                 {
                     inflectionIndex.Add(i);
