@@ -194,5 +194,10 @@ namespace GimmeMillions.Domain.Features
 
             return trainingData;
         }
+
+        public IEnumerable<FeatureVector> GetFeatures(string symbol)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

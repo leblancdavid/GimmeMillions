@@ -95,6 +95,14 @@ namespace GimmeMillions.Domain.Stocks
             }
         }
 
+        public decimal Average
+        {
+            get
+            {
+                return (High + Low + Open + Close) / 4.0m;
+            }
+        }
+
         public decimal TopWickPercent
         {
             get

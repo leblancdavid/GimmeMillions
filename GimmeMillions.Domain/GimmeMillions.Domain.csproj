@@ -159,6 +159,7 @@
     <Compile Include="Features\Extractors\NormalizedVolumePriceActionFeatureExtractor.cs" />
     <Compile Include="Features\Extractors\StockIndicatorsFeatureExtractionV3.cs" />
     <Compile Include="Features\Extractors\StockIndicatorsFeatureExtractionV2.cs" />
+    <Compile Include="Features\Services\BuySellSignalFeatureDatasetService.cs" />
     <Compile Include="Features\Services\CandlestickStockWithFuturesFeatureDatasetService.cs" />
     <Compile Include="Features\Services\CandlestickStockFeatureDatasetService.cs" />
     <Compile Include="Features\Extractors\CandlestickSimplifiedStockFeatureExtractor.cs" />

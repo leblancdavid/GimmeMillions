@@ -354,5 +354,10 @@ namespace GimmeMillions.Domain.Features
 
             return _featureCache.GetFeature($"{_articlesEncodingKey}", date);
         }
+
+        public IEnumerable<FeatureVector> GetFeatures(string symbol)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

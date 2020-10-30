@@ -319,5 +319,10 @@ namespace GimmeMillions.Domain.Features
 
             return Result.Ok<IEnumerable<(FeatureVector Input, StockData Output)>>(trainingData.OrderBy(x => x.Output.Date));
         }
+
+        public IEnumerable<FeatureVector> GetFeatures(string symbol)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

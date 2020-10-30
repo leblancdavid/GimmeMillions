@@ -36,13 +36,13 @@ namespace DNNTrainer
         public void Train(string modelFile)
         {
             //var datasetService = GetCandlestickFeatureDatasetService(60, 5, true);
-            var datasetService = GetCandlestickFeatureDatasetServiceV2(200, 5, false);
+            var datasetService = GetCandlestickFeatureDatasetServiceV2(200, 15, false);
 
             var model = new MLStockFastForestCandlestickModel();
             model.Parameters.NumCrossValidations = 2;
             model.Parameters.NumOfTrees = 2000;
-            model.Parameters.NumOfLeaves = 200;
-            model.Parameters.MinNumOfLeaves = 1;
+            model.Parameters.NumOfLeaves = 20;
+            model.Parameters.MinNumOfLeaves = 10;
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             //var filter = new DefaultDatasetFilter(maxPercentHigh: 10.0m, maxPercentLow: 10.0m);
@@ -51,14 +51,13 @@ namespace DNNTrainer
             trainingData.AddRange(datasetService.GetTrainingData("QQQ", null, true).Value);
             trainingData.AddRange(datasetService.GetTrainingData("^RUT", null, true).Value);
 
-            var averageGain = trainingData.Average(x => x.Output.PercentChangeFromPreviousClose);
             var trainingResults = model.Train(trainingData, 0.1, new PercentDayChangeOutputMapper());
             model.Save(modelFile);
         }
 
         private IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetServiceV2(
            int numStockSamples = 40,
-           int stockOutputPeriod = 3,
+           int kernelSize = 9,
            bool includeFutures = false)
         {
             var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
@@ -70,8 +69,8 @@ namespace DNNTrainer
                 (int)(numStockSamples * 0.8), 5,
                 (int)(numStockSamples * 0.8), 5,
                 5, 5);
-            return new CandlestickStockWithFuturesFeatureDatasetService(indictatorsExtractor, stocksRepo,
-                numStockSamples, stockOutputPeriod);
+            return new BuySellSignalFeatureDatasetService(indictatorsExtractor, stocksRepo,
+                numStockSamples, kernelSize);
         }
     }
 }

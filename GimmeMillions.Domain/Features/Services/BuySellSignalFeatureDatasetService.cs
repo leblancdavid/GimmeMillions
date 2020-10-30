@@ -16,6 +16,7 @@ namespace GimmeMillions.Domain.Features
         private int _numStockDailySamples = 20;
         private int _derivativeKernel = 9;
         private double[] _gaussianKernel;
+        private double[] _gaussianDerivative;
         private string _stocksEncodingKey;
         private string _encodingKey;
 
@@ -39,7 +40,8 @@ namespace GimmeMillions.Domain.Features
 
             _numStockDailySamples = numStockDailySamples;
             _derivativeKernel = derivativeKernel;
-            _gaussianKernel = GetGaussianDerivativeKernel(_derivativeKernel);
+            _gaussianKernel = GetGaussianKernel(_derivativeKernel);
+            _gaussianDerivative = GetGaussianDerivativeKernel(_derivativeKernel);
             string timeIndicator = $"{_numStockDailySamples}d-{_derivativeKernel}k";
             _stocksEncodingKey = $"{_stockFeatureExtractor.Encoding}_{timeIndicator}";
             _encodingKey = _stocksEncodingKey;
@@ -126,7 +128,7 @@ namespace GimmeMillions.Domain.Features
             return Result.Ok(compositeVector);
         }
 
-        private Result<double[]> GetStockFeatureVector(string symbol, DateTime date, List<StockData> stocks, int numSamples)
+        private Result<double[]> GetStockFeatureVector(DateTime date, List<StockData> stocks, int numSamples)
         {
             double[] stocksVector;
             var stockFeaturesToExtract = new List<(StockData Article, float Weight)>();
@@ -198,13 +200,24 @@ namespace GimmeMillions.Domain.Features
                 filter = new DefaultDatasetFilter();
             }
 
-            var derivatives = new double[stocks.Count];
+            var smooth = new double[stocks.Count];
             int k = _derivativeKernel / 2;
+            for (int i = 0; i < stocks.Count - _derivativeKernel; ++i)
+            {
+                for (int j = 0; j < _derivativeKernel; ++j)
+                {
+                    smooth[k] += _gaussianKernel[j] * (double)stocks[i+j].Close;
+                }
+                ++k;
+            }
+
+            var derivatives = new double[stocks.Count];
+            k = _derivativeKernel / 2;
             for (int i = 0; i < stocks.Count - _derivativeKernel; ++i)
             {
                 for(int j = 0; j < _derivativeKernel; ++j)
                 {
-                    derivatives[k] += _gaussianKernel[j] * (double)stocks[i].Close;
+                    derivatives[k] += _gaussianDerivative[j] * smooth[i+j];
                 }
                 ++k;
             }
@@ -212,8 +225,8 @@ namespace GimmeMillions.Domain.Features
             for (int i = 1; i < derivatives.Length; ++i)
             {
                 //if the derivative goes from negative to positive, or positive to negative, there's a shift in the trend
-                if((derivatives[i] > 0.0 && derivatives[i - 1] < 0.0) || 
-                    (derivatives[i] < 0.0 && derivatives[i - 1] > 0.0))
+                if((derivatives[i] > 0.0 && derivatives[i - 1] <= 0.0) || 
+                    (derivatives[i] < 0.0 && derivatives[i - 1] >= 0.0))
                 {
                     inflectionIndex.Add(i);
                 }
@@ -237,7 +250,7 @@ namespace GimmeMillions.Domain.Features
                     {
                         low = stocks[j].Low;
                     }
-                    if (stocks[j].High < high)
+                    if (stocks[j].High > high)
                     {
                         high = stocks[j].High;
                     }
@@ -262,7 +275,7 @@ namespace GimmeMillions.Domain.Features
             double sigma = (double)length / 6.0;
             double e = 2.71828;
             double pi = 3.14159;
-            double f = -1.0 / (Math.Sqrt(2.0 * pi) * Math.Pow(sigma, 3.0));
+            double f = -1.0;// / (Math.Sqrt(2.0 * pi) * Math.Pow(sigma, 2.0));
             int center = length / 2;
             var kernel = new double[length];
             for (int i = 0; i < length; ++i)
@@ -272,6 +285,44 @@ namespace GimmeMillions.Domain.Features
             }
 
             return kernel;
+        }
+
+        private double[] GetGaussianKernel(int length)
+        {
+            double sigma = (double)length / 6.0;
+            double e = 2.71828;
+            double pi = 3.14159;
+            double f = 1.0 / Math.Sqrt(sigma * sigma * 2.0 * pi);
+            int center = length / 2;
+            var kernel = new double[length];
+            for (int i = 0; i < length; ++i)
+            {
+                double x = i - center;
+                kernel[i] = f * Math.Pow(e, -1.0 * x * x / (2.0 * sigma * sigma));
+            }
+
+            return kernel;
+        }
+
+        public IEnumerable<FeatureVector> GetFeatures(string symbol)
+        {
+            var stocks = _stockRepository.GetStocks(symbol, FrequencyTimeframe.Daily).ToList();
+            var features = new List<FeatureVector>();
+            if (!stocks.Any())
+            {
+                return features;
+            }
+
+            foreach(var date in stocks)
+            {
+                var f = GetStockFeatureVector(date.Date, stocks, _numStockDailySamples);
+                if (f.IsFailure)
+                    continue;
+
+                features.Add(new FeatureVector(f.Value, date.Date, _encodingKey));
+            }
+
+            return features;
         }
     }
 }
