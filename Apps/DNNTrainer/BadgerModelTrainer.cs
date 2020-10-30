@@ -41,7 +41,7 @@ namespace DNNTrainer
             model.Parameters.NumCrossValidations = 2;
             model.Parameters.NumOfTrees = 2000;
             model.Parameters.NumOfLeaves = 200;
-            model.Parameters.MinNumOfLeaves = 100;
+            model.Parameters.MinNumOfLeaves = 10;
 
             //var endTrainingData = new DateTime(2019, 1, 1);
             var endTrainingData = DateTime.Today;

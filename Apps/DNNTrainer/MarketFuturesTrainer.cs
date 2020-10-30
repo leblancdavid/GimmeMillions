@@ -41,8 +41,8 @@ namespace DNNTrainer
             var model = new MLStockFastForestCandlestickModel();
             model.Parameters.NumCrossValidations = 2;
             model.Parameters.NumOfTrees = 2000;
-            model.Parameters.NumOfLeaves = 20;
-            model.Parameters.MinNumOfLeaves = 100;
+            model.Parameters.NumOfLeaves = 200;
+            model.Parameters.MinNumOfLeaves = 1;
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             //var filter = new DefaultDatasetFilter(maxPercentHigh: 10.0m, maxPercentLow: 10.0m);

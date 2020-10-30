@@ -97,15 +97,34 @@ namespace GimmeMillions.Domain.Features
                     out cmfVals[i - 1], out cmfSlopeVals[i - 1]);
             }
 
-            return boll
-                       //.Concat(macdVals)
-                       .Concat(macdSlopeVals)
-                       .Concat(vwapVals)
-                       .Concat(vwapSlopeVals)
-                       .Concat(rsiVals)
-                       .Concat(rsiSlopeVals)
-                       .Concat(cmfVals)
-                       .Concat(cmfSlopeVals).ToArray();
+            //return macdVals.Concat(macdSlopeVals).ToArray();
+            //return macdSlopeVals/*.Concat(macdVals)*/.ToArray();
+            //return boll;
+            //return vwapVals/*.Concat(vwapSlopeVals)*/.ToArray();
+            //return rsiVals.Concat(rsiSlopeVals).ToArray();
+            //return rsiSlopeVals.ToArray();
+            //return cmfVals.Concat(cmfSlopeVals).ToArray();
+            //return cmfSlopeVals.ToArray();
+            //return macdVals.Concat(macdSlopeVals).Concat(rsiVals).Concat(rsiSlopeVals).ToArray();
+            //return macdVals.Concat(macdSlopeVals)
+            //    .Concat(rsiVals).Concat(rsiSlopeVals)
+            //    .Concat(cmfVals).Concat(cmfSlopeVals).ToArray();
+            //return macdVals.Concat(macdSlopeVals)
+            //    .Concat(rsiVals).Concat(rsiSlopeVals)
+            //    .Concat(vwapVals).Concat(vwapSlopeVals).ToArray();
+            return macdVals.Concat(macdSlopeVals)
+                .Concat(rsiVals).Concat(rsiSlopeVals)
+                .Concat(boll)
+                .Concat(vwapVals).Concat(vwapSlopeVals).ToArray();
+            //return boll
+            //           .Concat(macdVals)
+            //           .Concat(macdSlopeVals)
+            //           .Concat(vwapVals)
+            //           .Concat(vwapSlopeVals)
+            //           .Concat(rsiVals)
+            //           .Concat(rsiSlopeVals)
+            //           .Concat(cmfVals)
+            //           .Concat(cmfSlopeVals).ToArray();
 
             //return CalculatePivots(ordered)
             //           .Concat(boll)
