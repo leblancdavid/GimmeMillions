@@ -15,6 +15,7 @@ namespace GimmeMillions.Domain.Features
         private IStockAccessService _stockRepository;
         private int _numStockDailySamples = 20;
         private int _derivativeKernel = 9;
+        private double[] _gaussianKernel;
         private string _stocksEncodingKey;
         private string _encodingKey;
 
@@ -28,7 +29,7 @@ namespace GimmeMillions.Domain.Features
         }
 
 
-        public CandlestickStockWithFuturesFeatureDatasetService(IFeatureExtractor<StockData> stockFeatureExtractor,
+        public BuySellSignalFeatureDatasetService(IFeatureExtractor<StockData> stockFeatureExtractor,
             IStockAccessService stockRepository,
             int numStockDailySamples = 20,
             int derivativeKernel = 9)
@@ -38,7 +39,7 @@ namespace GimmeMillions.Domain.Features
 
             _numStockDailySamples = numStockDailySamples;
             _derivativeKernel = derivativeKernel;
-
+            _gaussianKernel = GetGaussianDerivativeKernel(_derivativeKernel);
             string timeIndicator = $"{_numStockDailySamples}d-{_derivativeKernel}k";
             _stocksEncodingKey = $"{_stockFeatureExtractor.Encoding}_{timeIndicator}";
             _encodingKey = _stocksEncodingKey;
@@ -196,27 +197,57 @@ namespace GimmeMillions.Domain.Features
             {
                 filter = new DefaultDatasetFilter();
             }
+
+            var derivatives = new double[stocks.Count];
+            int k = _derivativeKernel / 2;
+            for (int i = 0; i < stocks.Count - _derivativeKernel; ++i)
+            {
+                for(int j = 0; j < _derivativeKernel; ++j)
+                {
+                    derivatives[k] += _gaussianKernel[j] * (double)stocks[i].Close;
+                }
+                ++k;
+            }
+            var inflectionIndex = new List<int>();
+            for (int i = 1; i < derivatives.Length; ++i)
+            {
+                //if the derivative goes from negative to positive, or positive to negative, there's a shift in the trend
+                if((derivatives[i] > 0.0 && derivatives[i - 1] < 0.0) || 
+                    (derivatives[i] < 0.0 && derivatives[i - 1] > 0.0))
+                {
+                    inflectionIndex.Add(i);
+                }
+            }
+
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
-            //var trainingData = new List<(FeatureVector Input, StockData Output)>();
+            for (int i = 1; i < inflectionIndex.Count; ++i)
+            {
+                var data = GetData(symbol, stocks[inflectionIndex[i - 1]].Date, stocks);
+                if (data.IsFailure)
+                    continue;
 
-            //decimal averageDayRange = stockOutputs.Average(x => x.PercentDayRange);
-            ////foreach (var stock in stockOutputs)
-            //Parallel.ForEach(stockOutputs, (stock) =>
-            //{
-            //    if (filter.Pass(stock))
-            //    {
-            //        var data = GetData(symbol, stock.Date, stocks);
-            //        if (data.IsFailure)
-            //        {
-            //            //continue;
-            //            return;
-            //        }
+                var start = stocks[inflectionIndex[i - 1]];
+                var end = stocks[inflectionIndex[i]];
+                decimal high = 0.0m;
+                decimal low = decimal.MaxValue;
+                decimal volume = 0.0m;
+                for (int j = inflectionIndex[i - 1]; j < inflectionIndex[i]; ++j)
+                {
+                    if(stocks[j].Low < low)
+                    {
+                        low = stocks[j].Low;
+                    }
+                    if (stocks[j].High < high)
+                    {
+                        high = stocks[j].High;
+                    }
+                    volume += stocks[j].Volume;
+                }
 
-            //        stock.AveragePercentDayRange = averageDayRange;
-            //        trainingData.Add((data.Value, stock));
-            //    }
-            //});
-            //}
+                var output = new StockData(symbol, start.Date, start.Open, high, low, end.Close, end.AdjustedClose, start.PreviousClose);
+                trainingData.Add((data.Value, output));
+            }
+
             if (!trainingData.Any())
             {
                 return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(
@@ -224,6 +255,23 @@ namespace GimmeMillions.Domain.Features
             }
 
             return Result.Ok<IEnumerable<(FeatureVector Input, StockData Output)>>(trainingData.OrderBy(x => x.Output.Date));
+        }
+
+        private double[] GetGaussianDerivativeKernel(int length)
+        {
+            double sigma = (double)length / 6.0;
+            double e = 2.71828;
+            double pi = 3.14159;
+            double f = -1.0 / (Math.Sqrt(2.0 * pi) * Math.Pow(sigma, 3.0));
+            int center = length / 2;
+            var kernel = new double[length];
+            for (int i = 0; i < length; ++i)
+            {
+                double x = i - center;
+                kernel[i] = f * x * Math.Pow(e, -1.0 * x * x / (2.0 * sigma * sigma));
+            }
+
+            return kernel;
         }
     }
 }
