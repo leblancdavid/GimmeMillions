@@ -157,6 +157,7 @@
   <ItemGroup>
     <Compile Include="Features\DefaultDatasetFilter.cs" />
     <Compile Include="Features\Extractors\NormalizedVolumePriceActionFeatureExtractor.cs" />
+    <Compile Include="Features\Extractors\RawStockFeatureExtractor.cs" />
     <Compile Include="Features\Extractors\StockIndicatorsFeatureExtractionV3.cs" />
     <Compile Include="Features\Extractors\StockIndicatorsFeatureExtractionV2.cs" />
     <Compile Include="Features\Services\BuySellSignalFeatureDatasetService.cs" />

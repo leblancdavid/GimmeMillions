@@ -215,7 +215,7 @@ namespace GimmeMillions.Domain.ML
                 GetSchemaDefinition(firstFeature.Input));
 
 
-            var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 10)
+            var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 500)
                 .Append(_mLContext.BinaryClassification.Calibrators.Platt());
 
             _sentimentModel = estimator.Fit(trainData);
