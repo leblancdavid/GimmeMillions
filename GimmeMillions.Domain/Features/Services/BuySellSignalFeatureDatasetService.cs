@@ -136,34 +136,41 @@ namespace GimmeMillions.Domain.Features
 
         private Result<double[]> GetStockFeatureVector(DateTime date, List<StockData> stocks, int numSamples)
         {
-            double[] stocksVector;
-            var stockFeaturesToExtract = new List<(StockData Article, float Weight)>();
-            var outputStock = stocks.FirstOrDefault(x => x.Date.Date.Year == date.Year
-                            && x.Date.Date.Month == date.Month
-                            && x.Date.Date.Day == date.Day);
-            int stockIndex;
-            if (date > stocks.Last().Date)
-                stockIndex = stocks.Count - 1;
-            else
-                stockIndex = stocks.IndexOf(outputStock) - 1;
-
-            for (int i = 0; i < numSamples; ++i)
+            try
             {
-                int j = stockIndex - i;
-                if (j < 0)
+                double[] stocksVector;
+                var stockFeaturesToExtract = new List<(StockData Article, float Weight)>();
+                var outputStock = stocks.FirstOrDefault(x => x.Date.Date.Year == date.Year
+                                && x.Date.Date.Month == date.Month
+                                && x.Date.Date.Day == date.Day);
+                int stockIndex;
+                if (date > stocks.Last().Date)
+                    stockIndex = stocks.Count - 1;
+                else
+                    stockIndex = stocks.IndexOf(outputStock) - 1;
+
+                for (int i = 0; i < numSamples; ++i)
                 {
-                    break;
+                    int j = stockIndex - i;
+                    if (j < 0)
+                    {
+                        break;
+                    }
+                    stockFeaturesToExtract.Add((stocks[j], 1.0f));
                 }
-                stockFeaturesToExtract.Add((stocks[j], 1.0f));
+
+                if (stockFeaturesToExtract.Count() != numSamples)
+                    return Result.Failure<double[]>(
+                        $"No stock data found on {date.ToString("yyyy/MM/dd")}"); ;
+
+                stocksVector = _stockFeatureExtractor.Extract(stockFeaturesToExtract);
+
+                return Result.Ok(stocksVector);
             }
-
-            if (stockFeaturesToExtract.Count() != numSamples)
-                return Result.Failure<double[]>(
-                    $"No stock data found on {date.ToString("yyyy/MM/dd")}"); ;
-
-            stocksVector = _stockFeatureExtractor.Extract(stockFeaturesToExtract);
-
-            return Result.Ok(stocksVector);
+            catch(Exception ex)
+            {
+                return Result.Failure<double[]>(ex.Message);
+            }
         }
 
         public Result<FeatureVector> GetFeatureVector(string symbol, DateTime date)
@@ -201,81 +208,88 @@ namespace GimmeMillions.Domain.Features
             List<StockData> stocks,
             IDatasetFilter filter = null)
         {
-            if (filter == null)
+            try
             {
-                filter = new DefaultDatasetFilter();
-            }
-
-            var smooth = new double[stocks.Count];
-            int k = _derivativeKernel / 2;
-            for (int i = 0; i < stocks.Count - _derivativeKernel; ++i)
-            {
-                for (int j = 0; j < _derivativeKernel; ++j)
+                if (filter == null)
                 {
-                    smooth[k] += _gaussianKernel[j] * (double)stocks[i+j].Close;
+                    filter = new DefaultDatasetFilter();
                 }
-                ++k;
-            }
 
-            var derivatives = new double[stocks.Count];
-            k = _derivativeKernel / 2;
-            for (int i = 0; i < stocks.Count - _derivativeKernel; ++i)
-            {
-                for(int j = 0; j < _derivativeKernel; ++j)
+                var smooth = new double[stocks.Count];
+                int k = _derivativeKernel / 2;
+                for (int i = 0; i < stocks.Count - _derivativeKernel; ++i)
                 {
-                    derivatives[k] += _gaussianDerivative[j] * smooth[i+j];
-                }
-                ++k;
-            }
-            var inflectionIndex = new List<int>();
-            for (int i = 1; i < derivatives.Length - 1; ++i)
-            {
-                if ((derivatives[i] > 0.0 && derivatives[i - 1] <= 0.0) ||
-                    (derivatives[i] < 0.0 && derivatives[i - 1] >= 0.0) ||
-                    (derivatives[i] > derivatives[i - 1] && derivatives[i] > derivatives[i + 1] && derivatives[i] > 0.0) ||
-                    (derivatives[i] < derivatives[i - 1] && derivatives[i] < derivatives[i + 1] && derivatives[i] < 0.0))
-                {
-                    inflectionIndex.Add(i);
-                }
-            }
-
-            var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
-            for (int i = 1; i < inflectionIndex.Count; ++i)
-            {
-                var data = GetData(symbol, stocks[inflectionIndex[i - 1]].Date, stocks);
-                if (data.IsFailure)
-                    continue;
-
-                var start = stocks[inflectionIndex[i - 1]];
-                var end = stocks[inflectionIndex[i]];
-                decimal high = 0.0m;
-                decimal low = decimal.MaxValue;
-                decimal volume = 0.0m;
-                for (int j = inflectionIndex[i - 1]; j < inflectionIndex[i]; ++j)
-                {
-                    if(stocks[j].Low < low)
+                    for (int j = 0; j < _derivativeKernel; ++j)
                     {
-                        low = stocks[j].Low;
+                        smooth[k] += _gaussianKernel[j] * (double)stocks[i + j].Close;
                     }
-                    if (stocks[j].High > high)
-                    {
-                        high = stocks[j].High;
-                    }
-                    volume += stocks[j].Volume;
+                    ++k;
                 }
 
-                var output = new StockData(symbol, start.Date, start.Open, high, low, end.Close, end.AdjustedClose, start.PreviousClose);
-                if(filter.Pass(output))
-                    trainingData.Add((data.Value, output));
-            }
+                var derivatives = new double[stocks.Count];
+                k = _derivativeKernel / 2;
+                for (int i = 0; i < stocks.Count - _derivativeKernel; ++i)
+                {
+                    for (int j = 0; j < _derivativeKernel; ++j)
+                    {
+                        derivatives[k] += _gaussianDerivative[j] * smooth[i + j];
+                    }
+                    ++k;
+                }
+                var inflectionIndex = new List<int>();
+                for (int i = 1; i < derivatives.Length - 1; ++i)
+                {
+                    if ((derivatives[i] > 0.0 && derivatives[i - 1] <= 0.0) ||
+                        (derivatives[i] < 0.0 && derivatives[i - 1] >= 0.0) ||
+                        (derivatives[i] > derivatives[i - 1] && derivatives[i] > derivatives[i + 1] && derivatives[i] > 0.0) ||
+                        (derivatives[i] < derivatives[i - 1] && derivatives[i] < derivatives[i + 1] && derivatives[i] < 0.0))
+                    {
+                        inflectionIndex.Add(i);
+                    }
+                }
 
-            if (!trainingData.Any())
+                var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
+                for (int i = 1; i < inflectionIndex.Count; ++i)
+                {
+                    var data = GetData(symbol, stocks[inflectionIndex[i - 1]].Date, stocks);
+                    if (data.IsFailure)
+                        continue;
+
+                    var start = stocks[inflectionIndex[i - 1]];
+                    var end = stocks[inflectionIndex[i]];
+                    decimal high = 0.0m;
+                    decimal low = decimal.MaxValue;
+                    decimal volume = 0.0m;
+                    for (int j = inflectionIndex[i - 1]; j < inflectionIndex[i]; ++j)
+                    {
+                        if (stocks[j].Low < low)
+                        {
+                            low = stocks[j].Low;
+                        }
+                        if (stocks[j].High > high)
+                        {
+                            high = stocks[j].High;
+                        }
+                        volume += stocks[j].Volume;
+                    }
+
+                    var output = new StockData(symbol, start.Date, start.Open, high, low, end.Close, end.AdjustedClose, volume, start.PreviousClose);
+                    if (filter.Pass(output))
+                        trainingData.Add((data.Value, output));
+                }
+
+                if (!trainingData.Any())
+                {
+                    return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(
+                        $"No training data found for symbol '{symbol}' between specified dates");
+                }
+
+                return Result.Ok<IEnumerable<(FeatureVector Input, StockData Output)>>(trainingData.OrderBy(x => x.Output.Date));
+            }
+            catch(Exception ex)
             {
-                return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(
-                    $"No training data found for symbol '{symbol}' between specified dates");
+                return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(ex.Message);
             }
-
-            return Result.Ok<IEnumerable<(FeatureVector Input, StockData Output)>>(trainingData.OrderBy(x => x.Output.Date));
         }
 
         private double[] GetGaussianDerivativeKernel(int length)
