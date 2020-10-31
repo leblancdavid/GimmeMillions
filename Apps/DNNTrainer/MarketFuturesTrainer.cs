@@ -36,13 +36,13 @@ namespace DNNTrainer
         public void Train(string modelFile)
         {
             //var datasetService = GetCandlestickFeatureDatasetService(60, 5, true);
-            var datasetService = GetCandlestickFeatureDatasetServiceV2(100, 11, false);
+            var datasetService = GetCandlestickFeatureDatasetServiceV3(50, 5, 11);
 
             var model = new MLStockFastForestCandlestickModel();
             model.Parameters.NumCrossValidations = 2;
             model.Parameters.NumOfTrees = 2000;
-            model.Parameters.NumOfLeaves = 200;
-            model.Parameters.MinNumOfLeaves = 1;
+            model.Parameters.NumOfLeaves = 20;
+            model.Parameters.MinNumOfLeaves = 5;
             //var model = new MLStockRangePredictorModel();
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
@@ -71,20 +71,20 @@ namespace DNNTrainer
             }
         }
 
-        private IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetServiceV2(
+        private IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetServiceV3(
            int numStockSamples = 40,
-           int kernelSize = 9,
-           bool includeFutures = false)
+           int timesampling = 5,
+           int kernelSize = 9)
         {
             var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
 
-            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV3(5,
-                numStockSamples,
-                (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
-                (int)(numStockSamples * 0.8), 5,
-                (int)(numStockSamples * 0.8), 5,
-                (int)(numStockSamples * 0.8), 5,
-                5, 5);
+            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV3(timesampling,
+                numStockSamples, //BOLL
+                (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5, //MACD
+                (int)(numStockSamples), 5, //VWAP
+                (int)(numStockSamples), 5, //RSI
+                (int)(numStockSamples), 5, //CMF
+                5);
             return new BuySellSignalFeatureDatasetService(indictatorsExtractor, stocksRepo,
                 numStockSamples, kernelSize);
         }

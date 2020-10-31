@@ -25,7 +25,6 @@ namespace GimmeMillions.Domain.Features
         private int _cmf = 24;
         private int _cmfSlope = 7;
         private int _version = 3;
-        private int _numPivots = 5;
         private int _pivotKernel = 5;
 
         private Dictionary<int, double[]> _kernels;
@@ -43,7 +42,6 @@ namespace GimmeMillions.Domain.Features
             int rsiSlope = 7,
             int cmf = 24,
             int cmfSlope = 7,
-            int numPivots = 5,
             int pivotKernel = 5)
         {
             _timeSampling = timesampling;
@@ -58,7 +56,6 @@ namespace GimmeMillions.Domain.Features
             _rsiSlope = rsiSlope;
             _cmf = cmf;
             _cmfSlope = cmfSlope;
-            _numPivots = numPivots;
             _pivotKernel = pivotKernel;
 
             _kernels = new Dictionary<int, double[]>();
@@ -67,14 +64,16 @@ namespace GimmeMillions.Domain.Features
             _kernels[_rsiSlope] = GetNormalizedWavelet(_rsiSlope);
             _kernels[_cmfSlope] = GetNormalizedWavelet(_cmfSlope);
             _fibonacciLevels = new double[] { 0.0, 0.382, 0.5, 0.618, 1.0, 1.618 };
-            Encoding = $"Indicators-Pivots({_numPivots},{_pivotKernel})Boll({_bollingerLength})MACD({_slowEma},{_fastEma},{_macdEma},{_macdSlope})VWAP({_vwap},{_vwapSlope})RSI({_rsi},{_rsiSlope})CMF({_cmf},{_cmfSlope}),-v{_version}";
+            Encoding = $"Indicators-Pivots({_pivotKernel})Boll({_bollingerLength})MACD({_slowEma},{_fastEma},{_macdEma},{_macdSlope})VWAP({_vwap},{_vwapSlope})RSI({_rsi},{_rsiSlope})CMF({_cmf},{_cmfSlope}),-v{_version}";
         }
 
         public double[] Extract(IEnumerable<(StockData Data, float Weight)> data)
         {
             var featureVector = new List<double>();
             var boll = new double[_timeSampling];
+            var volume = new double[_timeSampling];
             var fibs = new List<double>();
+            var volatility = new List<double>();
             var macdVals = new double[_timeSampling];
             var macdSlopeVals = new double[_timeSampling];
             var vwapVals = new double[_timeSampling];
@@ -88,7 +87,9 @@ namespace GimmeMillions.Domain.Features
             for (int i = 1; i <= _timeSampling; ++i)
             {
                 boll[i - 1] = CalculateBollinger(ordered, _bollingerLength / i);
-                fibs = fibs.Concat(GetFibonacciRings(ordered, ordered.Count / i)).ToList();
+                volume[i - 1] = GetVolumeChange(ordered, ordered.Count / (i + 1));
+                fibs = fibs.Concat(GetFibonacciRings(ordered, ordered.Count / (i + 1))).ToList();
+                volatility = volatility.Concat(GetVolatility(ordered, ordered.Count / (i + 1))).ToList();
                 CalculateMACD(ordered, _slowEma / i, _fastEma / i, _macdEma / i, _macdSlope, 
                     out macdVals[i - 1], out macdSlopeVals[i - 1]);
                 CalculateVWAP(ordered, _vwap / i, _vwapSlope, 
@@ -104,8 +105,38 @@ namespace GimmeMillions.Domain.Features
                 .Concat(vwapVals).Concat(vwapSlopeVals)
                 .Concat(boll)
                 .Concat(fibs)
-                .Concat(cmfVals).Concat(cmfSlopeVals).ToArray();
+                .Concat(volume)
+                .Concat(cmfVals).Concat(cmfSlopeVals)
+                .ToArray();
 
+        }
+
+        public double GetVolumeChange(List<(StockData Data, float Weight)> data, int length)
+        {
+            double averageVolume = data.Average(x => (double)x.Data.Volume);
+            double volume = data.Take(length).Average(x => (double)x.Data.Volume);
+            return volume / averageVolume;
+        }
+
+        public double[] GetVolatility(List<(StockData Data, float Weight)> data, int length)
+        {
+            double averageDayRange = data.Average(x => (double)x.Data.PercentDayRange);
+            double averageBody = data.Average(x => (double)Math.Abs(x.Data.PercentDayChange));
+            double averageBottom = data.Average(x => (double)x.Data.BottomWickPercent);
+            double averageTop = data.Average(x => (double)Math.Abs(x.Data.TopWickPercent));
+            var subData = data.Take(length).ToList();
+            double range = subData.Average(x => (double)x.Data.PercentDayRange);
+            double bodyRange = subData.Average(x => (double)Math.Abs(x.Data.PercentDayChange));
+            double botRange = subData.Average(x => (double)x.Data.BottomWickPercent);
+            double topRange = subData.Average(x => (double)Math.Abs(x.Data.TopWickPercent));
+
+            var stats = new double[4];
+            stats[0] = range / averageDayRange;
+            stats[1] = bodyRange / averageBody;
+            stats[2] = botRange / averageBottom;
+            stats[3] = topRange / averageTop;
+
+            return stats;
         }
 
         public double[] GetFibonacciRings(List<(StockData Data, float Weight)> data, int length)
@@ -388,32 +419,6 @@ namespace GimmeMillions.Domain.Features
             return kernel;
         }
 
-        private double[] CalculatePivots(List<(StockData Data, float Weight)> data)
-        {
-            var clusters = GetClusters(GetPivots(data));
-            var sample = data.First();
-            var orderedHigh = clusters.OrderBy(x => Math.Abs((double)sample.Data.High - x)).ToList();
-            var highPivots = new double[orderedHigh.Count];
-            for(int i = 0; i < orderedHigh.Count; ++i)
-            {
-                highPivots[i] = (orderedHigh[i] - (double)sample.Data.High) / (double)sample.Data.High;
-            }
-            var orderedLow = clusters.OrderBy(x => Math.Abs((double)sample.Data.Low - x)).ToList();
-            var lowPivots = new double[orderedLow.Count];
-            for (int i = 0; i < orderedLow.Count; ++i)
-            {
-                if(sample.Data.Low == 0.0m)
-                {
-                    lowPivots[i] = 0.0;
-                }
-                else
-                {
-                    lowPivots[i] = (orderedLow[i] - (double)sample.Data.Low) / (double)sample.Data.Low;
-                }
-            }
-
-            return highPivots.Concat(lowPivots).ToArray();
-        }
 
         private List<(double p, int i)> GetPivots(List<(StockData Data, float Weight)> data)
         {
@@ -454,62 +459,6 @@ namespace GimmeMillions.Domain.Features
                 }
             }
             return pivots;
-        }
-
-        private List<double> GetClusters(List<(double p, int i)> pivots)
-        {
-            var clusters = new List<double>();
-            if (!pivots.Any())
-                return clusters;
-
-            double mean = pivots.Average(x => x.p);
-            double stdev = pivots.Average(x => Math.Abs(x.p - mean));
-            for(int i = _numPivots / -2; i <= _numPivots / 2; ++i)
-            {
-                clusters.Add((double)i * stdev + mean);
-            }
-
-            RunKMeans(pivots, clusters);
-            return clusters;
-        }
-
-        private void RunKMeans(List<(double p, int i)> pivots, List<double> clusters)
-        {
-            var assignedPivots = pivots.Select(x => { return (Pivot: x.p, Index: 0); }).ToArray();
-            int iterations = 0;
-            while (iterations < 10)
-            {
-                for(int j = 0; j < assignedPivots.Length; ++j)
-                {
-                    double minDistance = double.MaxValue;
-                    int clusterIndex = 0;
-                    for(int i = 0; i < clusters.Count; ++i)
-                    {
-                        double d = Math.Abs(assignedPivots[j].Pivot - clusters[i]);
-                        if(d < minDistance)
-                        {
-                            minDistance = d;
-                            clusterIndex = i;
-                        }
-                    }
-
-                    if(assignedPivots[j].Index != clusterIndex)
-                    {
-                        assignedPivots[j].Index = clusterIndex;
-                    }
-                }
-
-                //Update the clusters
-                for (int i = 0; i < clusters.Count; ++i)
-                {
-                    var updateList = assignedPivots.Where(x => x.Index == i);
-                    if (!updateList.Any())
-                        continue;
-                    clusters[i] = assignedPivots.Where(x => x.Index == i).Average(x => x.Pivot);
-                }
-
-                iterations++;
-            }
         }
     }
 }
