@@ -55,12 +55,18 @@ namespace GimmeMillions.Domain.Features
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             var stockSymbols = _stockRepository.GetSymbols();
 
+            var updateLock = new object();
             Parallel.ForEach(stockSymbols, symbol =>
             //foreach (var stock in stocks)
             {
-                var stocks = updateStocks ?
-                   _stockRepository.UpdateStocks(symbol, FrequencyTimeframe.Daily).ToList() :
-                   _stockRepository.GetStocks(symbol, FrequencyTimeframe.Daily).ToList();
+                List<StockData> stocks = null;
+                lock(updateLock)
+                {
+                    stocks = updateStocks ?
+                      _stockRepository.UpdateStocks(symbol, FrequencyTimeframe.Daily).ToList() :
+                      _stockRepository.GetStocks(symbol, FrequencyTimeframe.Daily).ToList();
+                }
+               
                 if (!stocks.Any())
                 {
                     return;
@@ -224,13 +230,6 @@ namespace GimmeMillions.Domain.Features
             var inflectionIndex = new List<int>();
             for (int i = 1; i < derivatives.Length - 1; ++i)
             {
-                //if the derivative goes from negative to positive, or positive to negative, there's a shift in the trend
-                //if ((derivatives[i] > 0.0 && derivatives[i - 1] <= 0.0) ||
-                //    (derivatives[i] < 0.0 && derivatives[i - 1] >= 0.0))
-                //{
-                //    inflectionIndex.Add(i);
-                //}
-
                 if ((derivatives[i] > 0.0 && derivatives[i - 1] <= 0.0) ||
                     (derivatives[i] < 0.0 && derivatives[i - 1] >= 0.0) ||
                     (derivatives[i] > derivatives[i - 1] && derivatives[i] > derivatives[i + 1] && derivatives[i] > 0.0) ||
@@ -266,7 +265,8 @@ namespace GimmeMillions.Domain.Features
                 }
 
                 var output = new StockData(symbol, start.Date, start.Open, high, low, end.Close, end.AdjustedClose, start.PreviousClose);
-                trainingData.Add((data.Value, output));
+                if(filter.Pass(output))
+                    trainingData.Add((data.Value, output));
             }
 
             if (!trainingData.Any())
