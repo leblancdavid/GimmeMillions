@@ -213,6 +213,7 @@
     <Compile Include="ML\Candlestick\CandlestickPredictionModelMetadata.cs" />
     <Compile Include="ML\Candlestick\ICandlestickStockPredictionModel.cs" />
     <Compile Include="ML\Candlestick\MLStockFastForestCandlestickModel.cs" />
+    <Compile Include="ML\PercentDayChangeOutputMapper.cs" />
     <Compile Include="ML\Regression\IRegressionStockPredictionModel.cs" />
     <Compile Include="ML\Regression\MLRegressionMetrics.cs" />
     <Compile Include="ML\Regression\MLRegressionStockKernelEstimationLinearModel.cs" />
