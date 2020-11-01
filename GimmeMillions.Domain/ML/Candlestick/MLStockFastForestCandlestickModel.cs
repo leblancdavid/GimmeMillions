@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using Accord.Math;
+using CSharpFunctionalExtensions;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML.Transforms;
 using GimmeMillions.Domain.Stocks;
@@ -39,39 +40,30 @@ namespace GimmeMillions.Domain.ML.Candlestick
         private ITransformer _model;
 
         private DataViewSchema _dataSchema;
-        private string _modelId = "FFCandlestickModel-v1";
-        //private string _modelId = "SVMCandlestickModel-v1";
         public FastForestCandlestickModelParameters Parameters { get; set; }
         public CandlestickPredictionModelMetadata<FastForestCandlestickModelParameters> Metadata { get; private set; }
 
-        public string StockSymbol { get; set; }
-
         public bool IsTrained => Metadata.IsTrained;
-
-        public string Encoding => Metadata.FeatureEncoding;
-        
 
         public MLStockFastForestCandlestickModel()
         {
             Metadata = new CandlestickPredictionModelMetadata<FastForestCandlestickModelParameters>();
-            Metadata.ModelId = _modelId;
             _seed = 27;
             _mLContext = new MLContext(_seed);
             Parameters = new FastForestCandlestickModelParameters();
 
         }
 
-        public Result Load(string pathToModel, string symbol, string encoding)
+        public Result Load(string pathToModel)
         {
             try
             {
-                string directory = $"{pathToModel}/{_modelId}/{encoding}";
 
                 Metadata = JsonConvert.DeserializeObject<CandlestickPredictionModelMetadata<FastForestCandlestickModelParameters>>(
-                    File.ReadAllText($"{ directory}/Metadata.json"));
+                    File.ReadAllText($"{pathToModel}-Metadata.json"));
 
                 DataViewSchema schema = null;
-                _model = _mLContext.Model.Load($"{directory}/Model.zip", out schema);
+                _model = _mLContext.Model.Load($"{pathToModel}-Model.zip", out schema);
 
                 return Result.Ok();
             }
@@ -107,33 +99,6 @@ namespace GimmeMillions.Domain.ML.Candlestick
             };
         }
 
-        private StockPrediction Predict(FeatureVector input, bool group)
-        {
-            //Load the data into a view
-            var inputDataView = _mLContext.Data.LoadFromEnumerable(
-                new List<StockCandlestickDataFeature>()
-                {
-                    new StockCandlestickDataFeature(Array.ConvertAll(input.Data, y => (float)y), group, 0.0f,
-                    (int)input.Date.DayOfWeek / 7.0f, input.Date.Month / 366.0f)
-                },
-                GetSchemaDefinition(input));
-
-            var prediction = _model.Transform(inputDataView);
-
-            var score = prediction.GetColumn<float>("Score").ToArray();
-            var groupId = prediction.GetColumn<uint>("GroupId").ToArray();
-            //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
-            var probability = prediction.GetColumn<float>("Probability").ToArray();
-
-            return new StockPrediction()
-            {
-                Score = score[0],
-                PredictedLabel = score[0] > 0.0f,
-                Probability = probability[0]
-                //Probability = score[0]
-            };
-        }
-
         public Result Save(string pathToModel)
         {
             try
@@ -143,14 +108,13 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     return Result.Failure("Model has not been trained or loaded");
                 }
 
-                string directory = $"{pathToModel}/{_modelId}/{Metadata.FeatureEncoding}";
-                if (!Directory.Exists(directory))
+                if (!Directory.Exists(pathToModel))
                 {
-                    Directory.CreateDirectory(directory);
+                    Directory.CreateDirectory(pathToModel);
                 }
 
-                File.WriteAllText($"{directory}/Metadata.json", JsonConvert.SerializeObject(Metadata, Formatting.Indented));
-                _mLContext.Model.Save(_model, _dataSchema, $"{directory}/Model.zip");
+                File.WriteAllText($"{pathToModel}-Metadata.json", JsonConvert.SerializeObject(Metadata, Formatting.Indented));
+                _mLContext.Model.Save(_model, _dataSchema, $"{pathToModel}-Model.zip");
 
                 return Result.Ok();
             }
@@ -160,7 +124,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
             }
         }
 
-        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction)
+        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction,
+            ITrainingOutputMapper trainingOutputMapper)
         {
             if (!dataset.Any())
             {
@@ -169,50 +134,16 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var firstFeature = dataset.FirstOrDefault();
 
-            //var filteredDatasetPositives = dataset.Where(x => Math.Abs(x.Output.PercentDayChange) < 1.0m);
-            //var medianPercent = GetMedian(filteredDatasetPositives.Select(x => x.Output.PercentDayChange).ToArray());
-            //Load the data into a view
-            //var datasetViewPos = _mLContext.Data.LoadFromEnumerable(
-            //    dataset.Select(x =>
-            //    {
-            //        var normVector = x.Input;
-            //        return new StockCandlestickDataFeature(
-            //        Array.ConvertAll(x.Input.Data, y => (float)y),
-            //        x.Output.PercentDayChange > 0.0m,
-            //        (float)x.Output.PercentDayChange,
-            //        x.Output.PercentDayChange > 0.0m ? 1 : 0,
-            //        (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
-            //    }),
-            //    GetSchemaDefinition(firstFeature.Input));
-
-            //IDataView trainData = null; //= dataSplit.TrainSet;
-            //IDataView testData = null; // dataSplit.TestSet;
-            //if (testFraction > 0.0)
-            //{
-            //    var dataSplit = _mLContext.Data.TrainTestSplit(datasetViewPos, testFraction: testFraction);
-            //    trainData = dataSplit.TrainSet;
-            //    testData = dataSplit.TestSet;
-            //}
-            //else
-            //{
-            //    trainData = datasetViewPos;
-            //}
-
             var rnd = new Random();
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
-            //var meanHigh = dataset.Average(x => x.Output.PercentChangeHighToPreviousClose) / 2.0;
-            var meanHigh = 3.0;
             var trainData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Take(trainingCount).Select(x =>
                 {
                     var normVector = x.Input;
-                    //var v = GetValue(x.Output.PercentDayChange, -10, 10);
-                    //var v = (float)x.Output.PercentChangeHighToPreviousClose;
-                    var v =(float)(x.Output.PercentChangeHighToPreviousClose);
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    v > (float)meanHigh,
-                    v,
+                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    trainingOutputMapper.GetOutputValue(x.Output),
                     x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
@@ -221,13 +152,10 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 dataset.Skip(trainingCount).Select(x =>
                 {
                     var normVector = x.Input;
-                    //var v = GetValue(x.Output.PercentDayChange, -10, 10);
-                    //var v = (float)x.Output.PercentChangeHighToPreviousClose;
-                    var v = (float)(x.Output.PercentChangeHighToPreviousClose);
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    v > (float)meanHigh,
-                    v,
+                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    trainingOutputMapper.GetOutputValue(x.Output),
                     x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
@@ -236,43 +164,17 @@ namespace GimmeMillions.Domain.ML.Candlestick
             _dataSchema = trainData.Schema;
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
 
-            // var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm();
-
-            //var estimator = _mLContext.Transforms.Conversion.MapValueToKey(new[] {
-            //    new  InputOutputColumnPair("GroupId", "Symbol"),
-            //    new  InputOutputColumnPair("Label", "Label")
-            //    }).Append(
-            //     _mLContext.Ranking.Trainers.LightGbm("Label", "Features", "GroupId", "Value"));
-            //    .Append(_mLContext.BinaryClassification.Calibrators.Naive());
-
-            //var estimator = _mLContext.Regression.Trainers.FastForest(
-            //           "Value", "Features",
-            //           numberOfLeaves: Parameters.NumOfLeaves,
-            //           numberOfTrees: Parameters.NumOfTrees,
-            //           minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves);
-
-            //var estimator = _mLContext.Regression.Trainers.Sdca("Value", "Features");
-
-            var estimator = _mLContext.BinaryClassification.Trainers.FastForest(numberOfTrees: Parameters.NumOfTrees,
-                numberOfLeaves: Parameters.NumOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves)
+            //var estimator = _mLContext.BinaryClassification.Trainers.FastForest(numberOfTrees: Parameters.NumOfTrees,
+            //    numberOfLeaves: Parameters.NumOfLeaves, minimumExampleCountPerLeaf: Parameters.MinNumOfLeaves)
+            //    .Append(_mLContext.BinaryClassification.Calibrators.Platt());
+            var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 500)
                 .Append(_mLContext.BinaryClassification.Calibrators.Platt());
-
-            //Metadata.TrainingResults = CrossValidationResultsToMetrics(
-            //    _mLContext.Ranking.Cross(
-            //        trainData, estimator, numberOfFolds: Parameters.NumCrossValidations));
-
             _model = estimator.Fit(trainData);
 
             Metadata.TrainingResults = new ModelMetrics();
             if (testData != null)
             {
                 var testPredictions = _model.Transform(testData);
-                //var testResults = _mLContext.MulticlassClassification.Evaluate(testPredictions);
-                //Metadata.TrainingResults = new ModelMetrics(testResults);
-
-               // var scores = testPredictions.GetColumn<float>("Score").ToArray();
-                //var probabilities = testPredictions.GetColumn<float>("Probability").ToArray();
-                //var predictedLabels = testPredictions.GetColumn<bool>("PredictedLabel").ToArray();
                 var labels = testData.GetColumn<bool>("Label").ToArray();
                 var values = testData.GetColumn<float>("Value").ToArray();
                 var features = testData.GetColumn<float[]>("Features").ToArray();
@@ -283,10 +185,11 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
-                    predictionData.Add(((float)posS.Score, values[i], posS.Score > 0.0, labels[i]));
+                    if(posS.Probability > 70.0 || posS.Probability < 30.0) 
+                        predictionData.Add(((float)posS.Score, (float)posS.Probability, posS.Probability > 50.0, labels[i]));
                 }
 
-                predictionData = predictionData.OrderByDescending(x => x.Score).ToList();
+                predictionData = predictionData.OrderByDescending(x => x.Probability).ToList();
                 var runningAccuracy = new List<double>();
                 double correct = 0.0;
                 for(int i = 0; i < predictionData.Count; ++i)
@@ -297,8 +200,6 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     }
                     runningAccuracy.Add(correct / (double)(i + 1));
                 }
-
-
             }
             return Result.Ok<ModelMetrics>(Metadata.TrainingResults);
         }
@@ -340,50 +241,6 @@ namespace GimmeMillions.Domain.ML.Candlestick
             definedSchema[0].ColumnType = new VectorDataViewType(vectorItemType, featureDimension);
 
             return definedSchema;
-        }
-
-        public decimal GetMedian(decimal[] sourceNumbers)
-        {
-            //Framework 2.0 version of this method. there is an easier way in F4        
-            if (sourceNumbers == null || sourceNumbers.Length == 0)
-                throw new System.Exception("Median of empty array not defined.");
-
-            //make sure the list is sorted, but use a new array
-            decimal[] sortedPNumbers = (decimal[])sourceNumbers.Clone();
-            Array.Sort(sortedPNumbers);
-
-            //get the median
-            int size = sortedPNumbers.Length;
-            int mid = size / 2;
-            decimal median = (size % 2 != 0) ? (decimal)sortedPNumbers[mid] : ((decimal)sortedPNumbers[mid] + (decimal)sortedPNumbers[mid - 1]) / 2;
-            return median;
-        }
-
-        public uint GetRank(decimal number, decimal min, decimal max)
-        {
-            if(number < min)
-                return 1;
-            if(number > max)
-                return 4;
-            if (number > 0.0m)
-                return 3;
-            else
-                return 2;
-        }
-
-        public float GetValue(decimal number, decimal min, decimal max)
-        {
-            var n = number;
-            if (n < min)
-            {
-                n = min;
-            }
-            if (n > max)
-            {
-                n = max;
-            }
-
-            return (float)((n - min)/(max - min));
         }
     }
 }

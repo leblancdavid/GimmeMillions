@@ -1,7 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
-using GimmeMillions.Domain.ML.Candlestick;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
@@ -13,16 +12,16 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.Stocks
 {
-    public class CandlestickStockRecommendationSystem : IStockRecommendationSystem<FeatureVector>
+    public class StockRangeRecommendationSystem : IStockRecommendationSystem<FeatureVector>
     {
-        private IStockPredictionModel<FeatureVector, StockPrediction> model;
+        private IStockPredictionModel<FeatureVector, StockRangePrediction> model;
         private IFeatureDatasetService<FeatureVector> _featureDatasetService;
         private IStockRecommendationRepository _stockRecommendationRepository;
         private StockRecommendationSystemConfiguration _systemConfiguration;
         private string _pathToModels;
         private string _systemId;
 
-        public CandlestickStockRecommendationSystem(IFeatureDatasetService<FeatureVector> featureDatasetService,
+        public StockRangeRecommendationSystem(IFeatureDatasetService<FeatureVector> featureDatasetService,
             IStockRecommendationRepository stockRecommendationRepository,
             string pathToModels,
             string systemId)
@@ -34,12 +33,8 @@ namespace GimmeMillions.Domain.Stocks
             _systemId = systemId;
         }
 
-        public void AddModel(IStockPredictionModel<FeatureVector, StockPrediction> stockPredictionModel)
+        public void AddModel(IStockPredictionModel<FeatureVector, StockRangePrediction> stockPredictionModel)
         {
-            //_systemConfiguration.Models.Add(("ANY_STOCK",
-            //        _pathToModels,
-            //        stockPredictionModel.Encoding,
-            //        stockPredictionModel.GetType()));
             model = stockPredictionModel;
         }
 
@@ -47,7 +42,7 @@ namespace GimmeMillions.Domain.Stocks
         {
             var recommendations = new ConcurrentBag<StockRecommendation>();
 
-            if(updateStockHistory)
+            if (updateStockHistory)
             {
                 _featureDatasetService.StockAccess.UpdateFutures();
             }
@@ -73,10 +68,10 @@ namespace GimmeMillions.Domain.Stocks
                 }
                 var result = model.Predict(feature.Value);
                 var rec = new StockRecommendation(_systemId, date, symbol,
-                    (decimal)result.Probability, lastStock.Close);
+                    (decimal)result.PredictedHigh, (decimal)result.PredictedLow, (decimal)result.Sentiment, lastStock.Close);
                 recommendations.Add(rec);
                 _stockRecommendationRepository.AddRecommendation(rec);
-            //}
+                //}
             });
 
             return recommendations.ToList().OrderByDescending(x => x.Prediction);
@@ -109,7 +104,7 @@ namespace GimmeMillions.Domain.Stocks
                     stockData = _featureDatasetService.StockAccess.GetStocks(symbol).ToList();
 
                 var lastStock = stockData.Where(x => x.Date < date).LastOrDefault();
-                if(lastStock == null)
+                if (lastStock == null)
                 {
                     //continue;
                     return;
@@ -123,10 +118,11 @@ namespace GimmeMillions.Domain.Stocks
                 }
                 var result = model.Predict(feature.Value);
                 var rec = new StockRecommendation(_systemId, date, symbol,
-                    (decimal)result.Probability, lastStock.Close);
+                    (decimal)result.PredictedHigh, (decimal)result.PredictedLow,
+                    (decimal)result.Sentiment, lastStock.Close);
                 recommendations.Add(rec);
                 _stockRecommendationRepository.AddRecommendation(rec);
-            //}
+                //}
             });
 
             return recommendations.ToList().OrderByDescending(x => x.Prediction);
@@ -147,13 +143,13 @@ namespace GimmeMillions.Domain.Stocks
             _systemConfiguration = JsonConvert.DeserializeObject<StockRecommendationSystemConfiguration>(json);
 
             var modelInfo = _systemConfiguration.Models.FirstOrDefault();
-            model = (MLStockFastForestCandlestickModel)Activator.CreateInstance(modelInfo.ModelType);
+            model = (IStockPredictionModel<FeatureVector, StockRangePrediction>)Activator.CreateInstance(modelInfo.ModelType);
             var loadResult = model.Load(modelInfo.PathToModel);
             if (loadResult.IsSuccess)
             {
                 return Result.Failure($"Model could not be loaded");
             }
-        
+
             return Result.Ok();
         }
 

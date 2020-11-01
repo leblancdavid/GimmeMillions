@@ -42,7 +42,7 @@ namespace GimmeMillions.Domain.Tests.ML
             //var dataset = datasetService.GetTrainingData("AMZN", new DateTime(2001, 1, 30), endTrainingData).Value;
             //dataset.Any().Should().BeTrue();
 
-            var trainingResults = model.Train(dataset, 0.1);
+            var trainingResults = model.Train(dataset, 0.1, null);
 
             int trainingCount = (int)(dataset.Count() * 0.9);
             //model.Save(_pathToModels);
@@ -74,7 +74,7 @@ namespace GimmeMillions.Domain.Tests.ML
             var dataset = datasetService.GetAllTrainingData(new DefaultDatasetFilter(new DateTime(2010, 1, 30)), false);
             dataset.Any().Should().BeTrue();
 
-            var trainingResults = model.Train(dataset, 0.0);
+            var trainingResults = model.Train(dataset, 0.0, null);
 
             model.Save(_pathToModels);
         }

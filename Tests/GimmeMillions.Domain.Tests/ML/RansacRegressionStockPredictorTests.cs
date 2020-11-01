@@ -35,7 +35,7 @@ namespace GimmeMillions.Domain.Tests.ML
             var endTrainingData = DateTime.Today;
             var dataset = datasetService.GetAllTrainingData(new DefaultDatasetFilter(new DateTime(2010, 1, 30), endTrainingData));
 
-            var trainingResults = model.Train(dataset, 0.1);
+            var trainingResults = model.Train(dataset, 0.1, null);
         }
 
         private IFeatureDatasetService<FeatureVector> GetHistoricalFeatureDatasetService(int numArticleDays = 10,

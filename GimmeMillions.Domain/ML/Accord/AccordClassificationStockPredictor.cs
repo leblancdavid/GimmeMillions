@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.ML.Accord
 {
-    public class AccordClassificationStockPredictor : IStockPredictionModel<FeatureVector>
+    public class AccordClassificationStockPredictor : IStockPredictionModel<FeatureVector, StockPrediction>
     {
         private int _rank = 1000;
         private int _pcaRank = 200;
@@ -38,7 +38,7 @@ namespace GimmeMillions.Domain.ML.Accord
 
         public string Encoding { get; set; }
 
-        public Result Load(string pathToModel, string symbol, string encoding)
+        public Result Load(string pathToModel)
         {
             throw new NotImplementedException();
         }
@@ -68,7 +68,8 @@ namespace GimmeMillions.Domain.ML.Accord
             throw new NotImplementedException();
         }
 
-        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction)
+        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction,
+            ITrainingOutputMapper trainingOutputMapper)
         {
             var datasetList = dataset.ToList();
             var newsInput = datasetList.Select(x => x.Input.Data).ToArray();

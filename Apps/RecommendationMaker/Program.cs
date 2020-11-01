@@ -1,10 +1,6 @@
 ﻿using CommandLine;
-using GimmeMillions.DataAccess.Articles;
-using GimmeMillions.DataAccess.Features;
-using GimmeMillions.DataAccess.Keys;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
-using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.SQLDataAccess;
 using Microsoft.EntityFrameworkCore;
@@ -66,10 +62,15 @@ namespace RecommendationMaker
                            {
                                recommendationSystem = RecommendationSystemFactory.GetAadvarkRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
                            }
-                           else
+                           else if (o.Model == "badger")
                            {
                                recommendationSystem = RecommendationSystemFactory.GetBadgerRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
                                model = "badger";
+                           }
+                           else if (o.Model == "cat")
+                           {
+                               recommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
+                               model = "cat";
                            }
                        }
                        else
@@ -86,9 +87,53 @@ namespace RecommendationMaker
                        
                    });
 
+            RunFuturesRecommendations(recommendationSystem, model, date);
+            RunDailyRecommendations(recommendationSystem, stockList, model, date);
 
+        }
+        private static void RunFuturesRecommendations(IStockRecommendationSystem<FeatureVector> recommendationSystem,
+            string model, DateTime date)
+        {
             IEnumerable<StockRecommendation> recommendations;
-            if(stockList.Any())
+            var stockList = new List<string>()
+            {
+                "DIA", "QQQ", "SPY"
+            };
+            
+            recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, true);
+            
+            using (System.IO.StreamWriter file =
+            new System.IO.StreamWriter($"C:\\Stocks\\{model}-futures-{date.ToString("yyyy-MM-dd")}"))
+            {
+                string text = $"Stock recommendation for {date.ToString("MM/dd/yyyy")}:";
+                Console.WriteLine(text);
+                //file.WriteLine(text);
+                int i = 0;
+                foreach (var r in recommendations)
+                {
+                    text = $"{r.Symbol}, " +
+                         $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
+                        $"gain: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                        $"high: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                        $"loss: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                        $"low: {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                    Console.WriteLine(text);
+                    //if(i < keepTop)
+                    //{
+                    file.WriteLine(text);
+                    //s}
+                    ++i;
+                }
+            }
+        }
+
+        private static void RunDailyRecommendations(IStockRecommendationSystem<FeatureVector> recommendationSystem,
+            IEnumerable<string> stockList,
+            string model,
+            DateTime date)
+        {
+            IEnumerable<StockRecommendation> recommendations;
+            if (stockList.Any())
             {
                 recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, true);
             }
@@ -97,8 +142,9 @@ namespace RecommendationMaker
                 recommendations = recommendationSystem.GetAllRecommendations(date, true);
             }
 
+            recommendations = recommendations.OrderByDescending(x => x.Sentiment).ToList();
             using (System.IO.StreamWriter file =
-            new System.IO.StreamWriter($"C:\\Stocks\\{model}-{date.ToString("yyyy-MM-dd")}"))
+            new System.IO.StreamWriter($"C:\\Stocks\\{model}-long-{date.ToString("yyyy-MM-dd")}"))
             {
                 string text = $"Stock recommendation for {date.ToString("MM/dd/yyyy")}:";
                 Console.WriteLine(text);
@@ -106,22 +152,47 @@ namespace RecommendationMaker
                 int i = 0;
                 foreach (var r in recommendations)
                 {
-                    text = $"{r.Symbol}, {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, pt: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}";
+                    text = $"{r.Symbol}, " +
+                        $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
+                        $"gain: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                        $"high: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                        $"loss: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                        $"low: {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
                     Console.WriteLine(text);
                     //if(i < keepTop)
                     //{
-                        file.WriteLine(text);
+                    file.WriteLine(text);
                     //s}
                     ++i;
                 }
             }
-            //foreach(var r in recommendations)
-            //{
-            //    Console.WriteLine($"{r.Symbol}: {r.Prediction.Score} ({r.Prediction.Probability})");
-            //}
 
+            recommendations = recommendations.OrderBy(x => x.Sentiment).ToList();
+            using (System.IO.StreamWriter file =
+            new System.IO.StreamWriter($"C:\\Stocks\\{model}-short-{date.ToString("yyyy-MM-dd")}"))
+            {
+                string text = $"Stock recommendation for {date.ToString("MM/dd/yyyy")}:";
+                Console.WriteLine(text);
+                //file.WriteLine(text);
+                int i = 0;
+                foreach (var r in recommendations)
+                {
+                    text = $"{r.Symbol}, " +
+                        $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
+                        $"gain: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                        $"high: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                        $"loss: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                        $"low: {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                    Console.WriteLine(text);
+                    //if(i < keepTop)
+                    //{
+                    file.WriteLine(text);
+                    //s}
+                    ++i;
+                }
+            }
         }
-        
+
         private static List<string> GetStockSymbolsFromWatchlistFile(string file, int lineSkip = 4)
         {
             var symbols = new List<string>();

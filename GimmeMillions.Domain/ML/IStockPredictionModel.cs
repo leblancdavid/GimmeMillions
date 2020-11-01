@@ -5,15 +5,15 @@ using System.Collections.Generic;
 
 namespace GimmeMillions.Domain.ML
 {
-    public interface IStockPredictionModel<TFeature> where TFeature: FeatureVector
+    public interface IStockPredictionModel<TFeature, TPrediction> where TFeature: FeatureVector
     {
-        string StockSymbol { get; }
-        string Encoding { get; }
         bool IsTrained { get; }
 
-        Result<ModelMetrics> Train(IEnumerable<(TFeature Input, StockData Output)> dataset, double testFraction);
-        StockPrediction Predict(TFeature Input);
+        Result<ModelMetrics> Train(IEnumerable<(TFeature Input, StockData Output)> dataset, 
+            double testFraction, 
+            ITrainingOutputMapper trainingOutputMapper);
+        TPrediction Predict(TFeature Input);
         Result Save(string pathToModel);
-        Result Load(string pathToModel, string symbol, string encoding);
+        Result Load(string pathToModel);
     }
 }

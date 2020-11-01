@@ -169,6 +169,10 @@
     <Compile Include="Migrations\20201023180737_AddStockRecommendations.designer.cs">
       <DependentUpon>20201023180737_AddStockRecommendations.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\20201101014921_UpdateRecommendationTable.cs" />
+    <Compile Include="Migrations\20201101014921_UpdateRecommendationTable.designer.cs">
+      <DependentUpon>20201101014921_UpdateRecommendationTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\GimmeMillionsContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLStockHistoryRepository.cs" />

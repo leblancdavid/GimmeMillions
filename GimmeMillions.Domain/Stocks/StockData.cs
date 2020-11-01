@@ -17,6 +17,8 @@ namespace GimmeMillions.Domain.Stocks
         {
             get
             {
+                if (Open == 0.0m)
+                    return 0.0m;
                 return (decimal)100.0 * (Close - Open) / Open;
             }
         }
@@ -38,6 +40,8 @@ namespace GimmeMillions.Domain.Stocks
         {
             get
             {
+                if (Open == 0.0m)
+                    return 0.0m;
                 return 100.0m * (High - Open) / Open;
             }
         }
@@ -46,6 +50,8 @@ namespace GimmeMillions.Domain.Stocks
         {
             get
             {
+                if (Low == 0.0m)
+                    return 0.0m;
                 return 100.0m * (High - Low) / Low;
             }
         }
@@ -56,6 +62,8 @@ namespace GimmeMillions.Domain.Stocks
         {
             get
             {
+                if (PreviousClose == 0.0m)
+                    return 0.0m;
                 return 100.0m * (High - PreviousClose) / PreviousClose;
             }
         }
@@ -64,6 +72,8 @@ namespace GimmeMillions.Domain.Stocks
         {
             get
             {
+                if (PreviousClose == 0.0m)
+                    return 0.0m;
                 return 100.0m * (Low - PreviousClose) / PreviousClose;
             }
         }
@@ -72,16 +82,38 @@ namespace GimmeMillions.Domain.Stocks
         {
             get
             {
+                if (PreviousClose == 0.0m)
+                    return 0.0m;
                 return 100.0m * (Open - PreviousClose) / PreviousClose;
             }
         }
-
 
         public decimal PercentChangeFromPreviousClose
         {
             get
             {
+                if (PreviousClose == 0.0m)
+                    return 0.0m;
                 return 100.0m * (Close - PreviousClose) / PreviousClose;
+            }
+        }
+
+        public decimal AverageTrend
+        {
+            get
+            {
+                return (PercentChangeHighToPreviousClose +
+                    PercentChangeLowToPreviousClose +
+                    PercentChangeOpenToPreviousClose +
+                    PercentChangeFromPreviousClose) / 4.0m;
+            }
+        }
+
+        public decimal Average
+        {
+            get
+            {
+                return (High + Low + Open + Close) / 4.0m;
             }
         }
 
@@ -89,7 +121,12 @@ namespace GimmeMillions.Domain.Stocks
         {
             get
             {
-                if(PercentDayChange > 0.0m)
+                if (Open == 0.0m)
+                {
+                    return 0.0m;
+                }
+
+                if (PercentDayChange > 0.0m)
                 {
                     return 100.0m * (High - Close) / Open;
                 }
@@ -104,6 +141,11 @@ namespace GimmeMillions.Domain.Stocks
         {
             get
             {
+                if(Open == 0.0m)
+                {
+                    return 0.0m;
+                }
+
                 if (PercentDayChange > 0.0m)
                 {
                     return 100.0m * (Open - Low) / Open;

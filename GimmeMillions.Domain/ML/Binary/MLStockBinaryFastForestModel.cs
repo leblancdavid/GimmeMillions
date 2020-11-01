@@ -53,8 +53,6 @@ namespace GimmeMillions.Domain.ML.Binary
 
         public bool IsTrained => Metadata.IsTrained;
 
-        public string Encoding => Metadata.FeatureEncoding;
-
         public MLStockBinaryFastForestModel()
         {
             Metadata = new BinaryPredictionModelMetadata<FastTreeBinaryModelParameters>();
@@ -64,17 +62,15 @@ namespace GimmeMillions.Domain.ML.Binary
 
         }
 
-        public Result Load(string pathToModel, string symbol, string encoding)
+        public Result Load(string pathToModel)
         {
             try
             {
-                string directory = $"{pathToModel}/{encoding}";
-
                 Metadata = JsonConvert.DeserializeObject<BinaryPredictionModelMetadata<FastTreeBinaryModelParameters>>(
-                    File.ReadAllText($"{ directory}/{symbol}-meta.json"));
+                    File.ReadAllText($"{pathToModel}.json"));
 
                 DataViewSchema schema = null;
-                _model = _mLContext.Model.Load($"{directory}/{Metadata.StockSymbol}-predictor.zip", out schema);
+                _model = _mLContext.Model.Load(pathToModel, out schema);
 
                 return Result.Ok();
             }
@@ -136,7 +132,8 @@ namespace GimmeMillions.Domain.ML.Binary
             }
         }
 
-        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction)
+        public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, double testFraction,
+            ITrainingOutputMapper trainingOutputMapper)
         {
             if (!dataset.Any())
             {
@@ -154,8 +151,8 @@ namespace GimmeMillions.Domain.ML.Binary
                     var normVector = x.Input;
                     return new StockRiseDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    x.Output.PercentDayChange >= 0,
-                    (float)x.Output.PercentDayChange,
+                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    trainingOutputMapper.GetOutputValue(x.Output),
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
                 GetSchemaDefinition(firstFeature.Input));

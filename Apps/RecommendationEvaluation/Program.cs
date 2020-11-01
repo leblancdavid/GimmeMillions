@@ -1,6 +1,7 @@
 ﻿using CommandLine;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.SQLDataAccess;
 using Microsoft.EntityFrameworkCore;
@@ -65,10 +66,14 @@ namespace RecommendationEvaluation
                            {
                                recommendationSystem = RecommendationSystemFactory.GetAadvarkRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
                            }
-                           else
+                           else if(o.Model == "badger")
                            {
                                recommendationSystem = RecommendationSystemFactory.GetBadgerRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
                                model = "badger";
+                           }
+                           else if(o.Model == "cat")
+                           {
+                               recommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
                            }
                        }
                        else

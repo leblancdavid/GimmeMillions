@@ -10,14 +10,41 @@ namespace GimmeMillions.Domain.Stocks
         public string Symbol { get; private set; }
         public decimal Prediction { get; private set; }
         public decimal PreviousClose { get; private set; }
-        public decimal PredictedPriceTarget { get; private set; }
-        public StockRecommendation(string systemId, DateTime date, string symbol, decimal prediction, decimal priceTarget, decimal previousClose)
+        public decimal PredictedPriceTarget
+        { 
+            get
+            {
+                return PreviousClose * (1.0m + Prediction / 100.0m);
+            }
+        }
+        public decimal LowPrediction { get; private set; }
+        public decimal PredictedLowTarget
+        {
+            get
+            {
+                return PreviousClose * (1.0m + LowPrediction / 100.0m);
+            }
+        }
+
+        public decimal Sentiment { get; private set; }
+        public StockRecommendation(string systemId, DateTime date, string symbol, decimal prediction, decimal previousClose)
         {
             SystemId = systemId;
             Date = date;
             Symbol = symbol;
             Prediction = prediction;
-            PredictedPriceTarget = priceTarget;
+            PreviousClose = previousClose;
+        }
+
+        public StockRecommendation(string systemId, DateTime date, string symbol, 
+            decimal highPrediction, decimal lowPrediction, decimal sentiment, decimal previousClose)
+        {
+            SystemId = systemId;
+            Date = date;
+            Symbol = symbol;
+            Prediction = highPrediction;
+            LowPrediction = lowPrediction;
+            Sentiment = sentiment;
             PreviousClose = previousClose;
         }
 

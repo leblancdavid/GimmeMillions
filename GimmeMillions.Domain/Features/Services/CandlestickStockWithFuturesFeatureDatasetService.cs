@@ -258,21 +258,21 @@ namespace GimmeMillions.Domain.Features
                     $"No output stocks found for symbol '{symbol}'");
             }
 
-            List<StockData> dowStocks = updateStocks ?
-                   _stockRepository.UpdateStocks(DOW_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList() :
-                   _stockRepository.GetStocks(DOW_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList(); ;
-            List<StockData> snpStocks = updateStocks ?
-                   _stockRepository.UpdateStocks(SNP_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList() :
-                   _stockRepository.GetStocks(SNP_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList(); ;
-            List<StockData> nasStocks = updateStocks ?
-                   _stockRepository.UpdateStocks(NASDAQ_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList() :
-                   _stockRepository.GetStocks(NASDAQ_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList();
-            List<StockData> rutStocks = updateStocks ?
-                   _stockRepository.UpdateStocks(RUSSEL_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList() :
-                   _stockRepository.GetStocks(RUSSEL_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList();
+            //List<StockData> dowStocks = updateStocks ?
+            //       _stockRepository.UpdateStocks(DOW_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList() :
+            //       _stockRepository.GetStocks(DOW_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList(); ;
+            //List<StockData> snpStocks = updateStocks ?
+            //       _stockRepository.UpdateStocks(SNP_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList() :
+            //       _stockRepository.GetStocks(SNP_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList(); ;
+            //List<StockData> nasStocks = updateStocks ?
+            //       _stockRepository.UpdateStocks(NASDAQ_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList() :
+            //       _stockRepository.GetStocks(NASDAQ_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList();
+            //List<StockData> rutStocks = updateStocks ?
+            //       _stockRepository.UpdateStocks(RUSSEL_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList() :
+            //       _stockRepository.GetStocks(RUSSEL_FUTURE_SYMBOL, FrequencyTimeframe.Daily).ToList();
 
             return GetTrainingData(symbol, stocks, stockOutputs, 
-                dowStocks, snpStocks, nasStocks, rutStocks,
+                null, null, null, null,
                 filter);
 
         }
@@ -290,27 +290,27 @@ namespace GimmeMillions.Domain.Features
             {
                 filter = new DefaultDatasetFilter();
             }
-            //var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
-            var trainingData = new List<(FeatureVector Input, StockData Output)>();
+            var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
+            //var trainingData = new List<(FeatureVector Input, StockData Output)>();
 
             decimal averageDayRange = stockOutputs.Average(x => x.PercentDayRange);
-            foreach (var stock in stockOutputs)
-            //Parallel.ForEach(stockOutputs, (stock) =>
+            //foreach (var stock in stockOutputs)
+            Parallel.ForEach(stockOutputs, (stock) =>
             {
                 if (filter.Pass(stock))
                 {
                     var data = GetData(symbol, stock.Date, stocks, dowStocks, snpStocks, nasStocks, rutStocks);
                     if (data.IsFailure)
                     {
-                        continue;
-                        //return;
+                        //continue;
+                        return;
                     }
 
                     stock.AveragePercentDayRange = averageDayRange;
                     trainingData.Add((data.Value, stock));
                 }
-            //});
-            }
+            });
+            //}
             if (!trainingData.Any())
             {
                 return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(
@@ -318,6 +318,11 @@ namespace GimmeMillions.Domain.Features
             }
 
             return Result.Ok<IEnumerable<(FeatureVector Input, StockData Output)>>(trainingData.OrderBy(x => x.Output.Date));
+        }
+
+        public IEnumerable<FeatureVector> GetFeatures(string symbol)
+        {
+            throw new NotImplementedException();
         }
     }
 }
