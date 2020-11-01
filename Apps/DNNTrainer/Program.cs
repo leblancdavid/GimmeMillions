@@ -19,14 +19,14 @@ namespace DNNTrainer
             //var trainer = new MarketFuturesTrainer(new DefaultStockRepository(stockSqlDb));
             //trainer.Train("C:\\Recommendations\\App\\RecommendationMaker\\Models\\MarketFutures");
 
-            var trainer = new CobraModelTrainer(new DefaultStockRepository(stockSqlDb), 
+            var trainer = new CatModelTrainer(new DefaultStockRepository(stockSqlDb), 
                 new DefaultDatasetFilter(
                     maxPercentHigh: 40.0m, 
                 maxPercentLow: 40.0m,
                 minPrice: 2.0m,
                 maxPrice: 30.0m,
                 minVolume: 500000.0m));
-            trainer.Train("C:\\Recommendations\\App\\RecommendationMaker\\Models\\CobraSmallCaps");
+            trainer.Train("C:\\Recommendations\\App\\RecommendationMaker\\Models\\CatSmallCaps");
         }
 
     }
