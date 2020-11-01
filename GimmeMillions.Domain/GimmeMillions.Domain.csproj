@@ -262,6 +262,7 @@
     <Compile Include="Stocks\PlaceholderStockHistoryRepository.cs" />
     <Compile Include="Stocks\StockData.cs" />
     <Compile Include="Stocks\StockHistory.cs" />
+    <Compile Include="Stocks\StockRangeRecommendationSystem.cs" />
     <Compile Include="Stocks\StockRecommendation.cs" />
     <Compile Include="Stocks\StockRecommendationSystemConfiguration.cs" />
     <Compile Include="Stocks\StockStatistics.cs" />

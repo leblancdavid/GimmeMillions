@@ -23,7 +23,7 @@ namespace GimmeMillions.DataAccess.Stocks
         ///  Path to where the expected model lives
         /// </param>
         /// <returns></returns>
-        public static IStockRecommendationSystem<FeatureVector, StockPrediction> GetAadvarkRecommendationSystem(
+        public static IStockRecommendationSystem<FeatureVector> GetAadvarkRecommendationSystem(
             IStockRepository stockRepository,
             IStockRecommendationRepository stockRecommendationRepository,
             string pathToModels)
@@ -41,7 +41,7 @@ namespace GimmeMillions.DataAccess.Stocks
             return recommendationSystem;
         }
 
-        public static IStockRecommendationSystem<FeatureVector, StockPrediction> GetBadgerRecommendationSystem(
+        public static IStockRecommendationSystem<FeatureVector> GetBadgerRecommendationSystem(
             IStockRepository stockRepository,
             IStockRecommendationRepository stockRecommendationRepository,
             string pathToModels)
@@ -53,6 +53,24 @@ namespace GimmeMillions.DataAccess.Stocks
             string modelEncoding = "Indicators-Boll(200)MACD(160,80,60,5)VWAP(160,5)RSI(160,5)CMF(160,5),nFalse-v2_200d-5p_withFutures";
             var model = new MLStockFastForestCandlestickModelV2();
             model.Load(pathToModels);
+            recommendationSystem.AddModel(model);
+
+            return recommendationSystem;
+        }
+
+        public static IStockRecommendationSystem<FeatureVector> GetCatRecommendationSystem(
+            IStockRepository stockRepository,
+            IStockRecommendationRepository stockRecommendationRepository,
+            string pathToModel)
+        {
+            var stocksRepo = new YahooFinanceStockAccessService(stockRepository);
+            var extractor = new RawStockFeatureExtractor();
+            var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo, 20, 5);
+            var model = new MLStockRangePredictorModel();
+            var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
+                pathToModel, "cat");
+
+            model.Load(pathToModel);
             recommendationSystem.AddModel(model);
 
             return recommendationSystem;

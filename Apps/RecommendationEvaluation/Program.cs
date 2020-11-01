@@ -43,7 +43,7 @@ namespace RecommendationEvaluation
             var optionsBuilder = new DbContextOptionsBuilder<GimmeMillionsContext>();
 
             var stockList = new List<string>();
-            IStockRecommendationSystem<FeatureVector, StockPrediction> recommendationSystem = null;
+            IStockRecommendationSystem<FeatureVector> recommendationSystem = null;
             var startDate = DateTime.Today;
             var endDate = DateTime.Today;
             string model = "aadvark";
@@ -66,10 +66,14 @@ namespace RecommendationEvaluation
                            {
                                recommendationSystem = RecommendationSystemFactory.GetAadvarkRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
                            }
-                           else
+                           else if(o.Model == "badger")
                            {
                                recommendationSystem = RecommendationSystemFactory.GetBadgerRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
                                model = "badger";
+                           }
+                           else if(o.Model == "cat")
+                           {
+                               recommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
                            }
                        }
                        else

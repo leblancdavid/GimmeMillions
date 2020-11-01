@@ -6,10 +6,6 @@ namespace GimmeMillions.SQLDataAccess.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "PredictedPriceTarget",
-                table: "StockRecommendations");
-
             migrationBuilder.AddColumn<decimal>(
                 name: "LowPrediction",
                 table: "StockRecommendations",
