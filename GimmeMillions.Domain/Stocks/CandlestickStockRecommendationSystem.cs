@@ -73,8 +73,7 @@ namespace GimmeMillions.Domain.Stocks
                 }
                 var result = model.Predict(feature.Value);
                 var rec = new StockRecommendation(_systemId, date, symbol,
-                    (decimal)result.Probability,
-                    lastStock.Close * (1.0m + (decimal)result.Score / 100.0m), lastStock.Close);
+                    (decimal)result.Probability, lastStock.Close);
                 recommendations.Add(rec);
                 _stockRecommendationRepository.AddRecommendation(rec);
             //}
@@ -124,8 +123,7 @@ namespace GimmeMillions.Domain.Stocks
                 }
                 var result = model.Predict(feature.Value);
                 var rec = new StockRecommendation(_systemId, date, symbol,
-                    (decimal)result.Probability,
-                    lastStock.Close * (1.0m + (decimal)result.Score / 100.0m), lastStock.Close);
+                    (decimal)result.Probability, lastStock.Close);
                 recommendations.Add(rec);
                 _stockRecommendationRepository.AddRecommendation(rec);
             //}
