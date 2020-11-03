@@ -29,6 +29,9 @@ namespace RecommendationMaker
             [Option('p', "pathToModel", Required = true, HelpText = "The path to the model file")]
             public string PathToModel { get; set; }
 
+            [Option('q', "pathToFuturesModel", Required = true, HelpText = "The path to the futures model file")]
+            public string PathToFuturesModel { get; set; }
+
             [Option('f', "database", Required = true, HelpText = "The database file to use")]
             public string DatabaseLocation { get; set; }
         }
@@ -40,6 +43,7 @@ namespace RecommendationMaker
 
             var stockList = new List<string>();
             IStockRecommendationSystem<FeatureVector> recommendationSystem = null;
+            IStockRecommendationSystem<FeatureVector> futuresRecommendationSystem = null;
             var date = DateTime.Today;
             string model = "aadvark";
             Parser.Default.ParseArguments<Options>(args)
@@ -71,6 +75,7 @@ namespace RecommendationMaker
                            else if (o.Model == "cat")
                            {
                                recommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
+                               futuresRecommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(stocksRepo, recommendationRepo, o.PathToFuturesModel);
                                model = "cat";
                            }
                        }
@@ -88,7 +93,7 @@ namespace RecommendationMaker
                        
                    });
 
-            RunFuturesRecommendations(recommendationSystem, model, date);
+            RunFuturesRecommendations(futuresRecommendationSystem, model, date);
             RunDailyRecommendations(recommendationSystem, stockList, model, date);
 
         }
@@ -101,8 +106,7 @@ namespace RecommendationMaker
                 "DIA", "QQQ", "SPY"
             };
 
-            var filter = new DefaultStockFilter();
-            recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, filter, true);
+            recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, null, true);
             
             using (System.IO.StreamWriter file =
             new System.IO.StreamWriter($"C:\\Stocks\\{model}-futures-{date.ToString("yyyy-MM-dd")}"))
@@ -135,7 +139,7 @@ namespace RecommendationMaker
             DateTime date)
         {
             IEnumerable<StockRecommendation> recommendations;
-            var filter = new DefaultStockFilter();
+            var filter = new DefaultStockFilter(minVolume: 500000m, maxPercentHigh: 20.0m, maxPercentLow: 20.0m);
             if (stockList.Any())
             {
                 recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, filter, true);
