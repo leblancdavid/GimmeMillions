@@ -155,7 +155,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Features\DefaultDatasetFilter.cs" />
+    <Compile Include="Stocks\Filters\DefaultDatasetFilter.cs" />
     <Compile Include="Features\Extractors\NormalizedVolumePriceActionFeatureExtractor.cs" />
     <Compile Include="Features\Extractors\RawStockFeatureExtractor.cs" />
     <Compile Include="Features\Extractors\StockIndicatorsFeatureExtractionV3.cs" />
@@ -254,7 +254,7 @@
     <Compile Include="Stocks\DefaultStockStatisticsCalculator.cs" />
     <Compile Include="Stocks\FrequencyTimeframe.cs" />
     <Compile Include="Stocks\IStockAccessService.cs" />
-    <Compile Include="Stocks\IStockFilter.cs" />
+    <Compile Include="Stocks\Filters\IStockFilter.cs" />
     <Compile Include="Stocks\IStockHistoryRepository.cs" />
     <Compile Include="Stocks\IStockRecommendationRepository.cs" />
     <Compile Include="Stocks\IStockRecommendationSystem.cs" />

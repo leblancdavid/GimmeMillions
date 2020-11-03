@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using GimmeMillions.Domain.Articles;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.Domain.Stocks.Filters;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

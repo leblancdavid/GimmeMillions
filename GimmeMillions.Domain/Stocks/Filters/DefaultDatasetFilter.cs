@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GimmeMillions.Domain.Features
+namespace GimmeMillions.Domain.Stocks.Filters
 {
     public class DefaultDatasetFilter : IStockFilter
     {

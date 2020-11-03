@@ -1,4 +1,4 @@
-﻿namespace GimmeMillions.Domain.Stocks
+﻿namespace GimmeMillions.Domain.Stocks.Filters
 {
     public interface IStockFilter
     {

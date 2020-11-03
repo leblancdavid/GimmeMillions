@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.Domain.Stocks.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
