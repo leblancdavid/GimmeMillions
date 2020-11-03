@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
+using GimmeMillions.Domain.Stocks.Filters;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
@@ -38,7 +39,7 @@ namespace GimmeMillions.Domain.Stocks
             model = stockPredictionModel;
         }
 
-        public IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date, bool updateStockHistory = false)
+        public IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date, IStockFilter filter = null, bool updateStockHistory = false)
         {
             var recommendations = new ConcurrentBag<StockRecommendation>();
 
@@ -77,18 +78,18 @@ namespace GimmeMillions.Domain.Stocks
             return recommendations.ToList().OrderByDescending(x => x.Prediction);
         }
 
-        public IEnumerable<StockRecommendation> GetAllRecommendationsForToday(bool updateStockHistory = false)
+        public IEnumerable<StockRecommendation> GetAllRecommendationsForToday(IStockFilter filter = null, bool updateStockHistory = false)
         {
-            return GetAllRecommendations(DateTime.Today);
+            return GetAllRecommendations(DateTime.Today, filter);
         }
 
-        public IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keepTop = 10, bool updateStockHistory = false)
+        public IEnumerable<StockRecommendation> GetRecommendations(DateTime date, IStockFilter filter = null, int keepTop = 10, bool updateStockHistory = false)
         {
-            var recommendations = GetAllRecommendations(date).Take(keepTop);
+            var recommendations = GetAllRecommendations(date, filter).Take(keepTop);
             return recommendations;
         }
 
-        public IEnumerable<StockRecommendation> GetRecommendationsFor(IEnumerable<string> symbols, DateTime date, bool updateStockHistory = false)
+        public IEnumerable<StockRecommendation> GetRecommendationsFor(IEnumerable<string> symbols, DateTime date, IStockFilter filter = null, bool updateStockHistory = false)
         {
             var recommendations = new ConcurrentBag<StockRecommendation>();
             if (updateStockHistory)
@@ -128,9 +129,9 @@ namespace GimmeMillions.Domain.Stocks
             return recommendations.ToList().OrderByDescending(x => x.Prediction);
         }
 
-        public IEnumerable<StockRecommendation> GetRecommendationsForToday(int keepTop = 10, bool updateStockHistory = false)
+        public IEnumerable<StockRecommendation> GetRecommendationsForToday(IStockFilter filter = null, int keepTop = 10, bool updateStockHistory = false)
         {
-            return GetRecommendations(DateTime.Today, keepTop);
+            return GetRecommendations(DateTime.Today, filter, keepTop);
         }
 
         public Result LoadConfiguration(string configurationFile)

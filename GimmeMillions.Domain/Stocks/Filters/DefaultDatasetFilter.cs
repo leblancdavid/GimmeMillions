@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.Stocks.Filters
 {
-    public class DefaultDatasetFilter : IStockFilter
+    public class DefaultStockFilter : IStockFilter
     {
         private DateTime _startTime;
         private DateTime _endTime;
@@ -17,7 +17,7 @@ namespace GimmeMillions.Domain.Stocks.Filters
         private decimal _maxVolume;
         private decimal _maxPercentHigh;
         private decimal _maxPercentLow;
-        public DefaultDatasetFilter(DateTime start = default(DateTime),
+        public DefaultStockFilter(DateTime start = default(DateTime),
             DateTime end = default(DateTime),
             decimal minPrice = 0.0m, decimal maxPrice = decimal.MaxValue,
             decimal minVolume = 0.0m, decimal maxVolume = decimal.MaxValue,

@@ -21,7 +21,7 @@ namespace DNNTrainer
             //trainer.Train("C:\\Recommendations\\App\\RecommendationMaker\\Models\\MarketFutures");
 
             var trainer = new CatModelTrainer(new DefaultStockRepository(stockSqlDb), 
-                new DefaultDatasetFilter(
+                new DefaultStockFilter(
                     maxPercentHigh: 40.0m, 
                 maxPercentLow: 40.0m,
                 minPrice: 2.0m,

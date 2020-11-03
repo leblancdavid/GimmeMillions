@@ -213,7 +213,7 @@ namespace GimmeMillions.Domain.Features
             {
                 if (filter == null)
                 {
-                    filter = new DefaultDatasetFilter();
+                    filter = new DefaultStockFilter();
                 }
 
                 var smooth = new double[stocks.Count];

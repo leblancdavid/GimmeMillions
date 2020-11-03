@@ -280,7 +280,7 @@ namespace GimmeMillions.Domain.Features
 
             if (filter == null)
             {
-                filter = new DefaultDatasetFilter();
+                filter = new DefaultStockFilter();
             }
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             //var trainingData = new List<(HistoricalFeatureVector Input, StockData Output)>();

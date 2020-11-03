@@ -2,6 +2,7 @@
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.Domain.Stocks.Filters;
 using GimmeMillions.SQLDataAccess;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -99,8 +100,9 @@ namespace RecommendationMaker
             {
                 "DIA", "QQQ", "SPY"
             };
-            
-            recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, true);
+
+            var filter = new DefaultStockFilter();
+            recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, filter, true);
             
             using (System.IO.StreamWriter file =
             new System.IO.StreamWriter($"C:\\Stocks\\{model}-futures-{date.ToString("yyyy-MM-dd")}"))
@@ -133,13 +135,14 @@ namespace RecommendationMaker
             DateTime date)
         {
             IEnumerable<StockRecommendation> recommendations;
+            var filter = new DefaultStockFilter();
             if (stockList.Any())
             {
-                recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, true);
+                recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, filter, true);
             }
             else
             {
-                recommendations = recommendationSystem.GetAllRecommendations(date, true);
+                recommendations = recommendationSystem.GetAllRecommendations(date, filter, true);
             }
 
             recommendations = recommendations.OrderByDescending(x => x.Sentiment).ToList();
