@@ -51,7 +51,7 @@ namespace GimmeMillions.Domain.Features
         }
 
         public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(
-            IDatasetFilter filter = null, 
+            IStockFilter filter = null, 
             bool updateStocks = false)
         {
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
@@ -239,7 +239,7 @@ namespace GimmeMillions.Domain.Features
 
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(
             string symbol,
-            IDatasetFilter filter = null, 
+            IStockFilter filter = null, 
             bool updateStocks = false)
         {
             var stocks = updateStocks ?
@@ -284,7 +284,7 @@ namespace GimmeMillions.Domain.Features
             List<StockData> snpStocks, 
             List<StockData> nasStocks,
             List<StockData> rutStocks,
-            IDatasetFilter filter = null)
+            IStockFilter filter = null)
         {
             if (filter == null)
             {

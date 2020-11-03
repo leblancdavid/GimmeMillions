@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GimmeMillions.Domain.Stocks
 {
@@ -217,5 +219,18 @@ namespace GimmeMillions.Domain.Stocks
         }
 
         private StockData() { } //default constructor
+
+        public static StockData Combine(IEnumerable<StockData> stockDatas)
+        {
+            decimal high = stockDatas.Max(x => x.High);
+            decimal low = stockDatas.Min(x => x.Low);
+            decimal volume = stockDatas.Sum(x => x.Volume);
+            DateTime date = stockDatas.Min(x => x.Date);
+            DateTime endDate = stockDatas.Max(x => x.Date);
+
+            var first = stockDatas.First(x => x.Date == date);
+            var last = stockDatas.First(x => x.Date == endDate);
+            return new StockData(first.Symbol, date, first.Open, high, low, last.Close, last.AdjustedClose, volume, first.PreviousClose);
+        }
     }
 }

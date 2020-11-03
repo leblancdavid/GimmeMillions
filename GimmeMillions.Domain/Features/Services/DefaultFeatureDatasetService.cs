@@ -104,7 +104,7 @@ namespace GimmeMillions.Domain.Features
         }
 
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol,
-            IDatasetFilter filter = null,
+            IStockFilter filter = null,
             bool updateStocks = false)
         {
             var stocks = updateStocks ?
@@ -178,7 +178,7 @@ namespace GimmeMillions.Domain.Features
         }
 
         public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(
-            IDatasetFilter filter = null,
+            IStockFilter filter = null,
              bool updateStocks = false)
         {
             var trainingData = new List<(FeatureVector Input, StockData Output)>();

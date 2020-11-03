@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.Features
 {
-    public class DefaultDatasetFilter : IDatasetFilter
+    public class DefaultDatasetFilter : IStockFilter
     {
         private DateTime _startTime;
         private DateTime _endTime;

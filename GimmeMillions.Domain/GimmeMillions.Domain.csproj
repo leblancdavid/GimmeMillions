@@ -254,6 +254,7 @@
     <Compile Include="Stocks\DefaultStockStatisticsCalculator.cs" />
     <Compile Include="Stocks\FrequencyTimeframe.cs" />
     <Compile Include="Stocks\IStockAccessService.cs" />
+    <Compile Include="Stocks\IStockFilter.cs" />
     <Compile Include="Stocks\IStockHistoryRepository.cs" />
     <Compile Include="Stocks\IStockRecommendationRepository.cs" />
     <Compile Include="Stocks\IStockRecommendationSystem.cs" />
