@@ -13,8 +13,8 @@ namespace DNNTrainer
     public class CatModelTrainer
     {
         private IStockRepository _stockRepository;
-        private IDatasetFilter _filter;
-        public CatModelTrainer(IStockRepository stockRepository, IDatasetFilter filter)
+        private IStockFilter _filter;
+        public CatModelTrainer(IStockRepository stockRepository, IStockFilter filter)
         {
             _stockRepository = stockRepository;
             _filter = filter;
