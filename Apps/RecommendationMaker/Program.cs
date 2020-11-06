@@ -86,7 +86,14 @@ namespace RecommendationMaker
 
                        if(!string.IsNullOrEmpty(o.Date))
                        {
-                           date = DateTime.Parse(o.Date);
+                           if(o.Date.ToLower() == "tomorrow")
+                           {
+                               date = date.AddDays(1.0);
+                           }
+                           else
+                           {
+                               date = DateTime.Parse(o.Date);
+                           }
                        }
 
 
@@ -149,7 +156,7 @@ namespace RecommendationMaker
                 recommendations = recommendationSystem.GetAllRecommendations(date, filter, true);
             }
 
-            recommendations = recommendations.OrderByDescending(x => x.Sentiment).ToList();
+            recommendations = recommendations.OrderByDescending(x => x.Prediction).ToList();
             using (System.IO.StreamWriter file =
             new System.IO.StreamWriter($"C:\\Stocks\\{model}-long-{date.ToString("yyyy-MM-dd")}"))
             {
@@ -174,7 +181,7 @@ namespace RecommendationMaker
                 }
             }
 
-            recommendations = recommendations.OrderBy(x => x.Sentiment).ToList();
+            recommendations = recommendations.OrderBy(x => x.LowPrediction).ToList();
             using (System.IO.StreamWriter file =
             new System.IO.StreamWriter($"C:\\Stocks\\{model}-short-{date.ToString("yyyy-MM-dd")}"))
             {
