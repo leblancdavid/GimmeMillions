@@ -237,7 +237,7 @@ namespace GimmeMillions.Domain.ML
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
                     //if(posS.Probability > 90.0 || posS.Probability < 10.0) 
-                    predictionData.Add(((float)posS.Sentiment, (float)posS.Sentiment, posS.Sentiment > 0.0, labels[i]));
+                    predictionData.Add(((float)posS.Sentiment, (float)values[i], posS.Sentiment > 0.0, labels[i]));
                 }
 
                 predictionData = predictionData.OrderByDescending(x => x.Probability).ToList();
