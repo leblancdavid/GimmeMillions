@@ -80,7 +80,7 @@ namespace GimmeMillions.Domain.ML
             var highScore = highP.GetColumn<float>("Score").ToArray();
 
             var sP = _sentimentModel.Transform(inputDataView);
-            var sScore = sP.GetColumn<float>("Probability").ToArray();
+            var sScore = sP.GetColumn<float>("Score").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
             //var probability = prediction.GetColumn<float>("Probability").ToArray();
 
@@ -88,7 +88,8 @@ namespace GimmeMillions.Domain.ML
             {
                 PredictedLow = lowScore[0],
                 PredictedHigh = highScore[0],
-                Sentiment = sScore[0] * 100.0f
+                Sentiment = sScore[0]
+                //Sentiment = highScore[0] / (highScore[0] - lowScore[0]) * 100.0f
             };
         }
 
@@ -152,7 +153,7 @@ namespace GimmeMillions.Domain.ML
                     var normVector = x.Input;
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    (x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose) > 0,
+                    trainingOutputMapper.GetBinaryValue(x.Output),
                    (float)x.Output.PercentChangeLowToPreviousClose,
                     x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
@@ -215,10 +216,11 @@ namespace GimmeMillions.Domain.ML
                 GetSchemaDefinition(firstFeature.Input));
 
 
-            var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 500)
-                .Append(_mLContext.BinaryClassification.Calibrators.Platt());
+            //var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 500)
+            //    .Append(_mLContext.BinaryClassification.Calibrators.Platt());
+            //var estimator = _mLContext.BinaryClassification.Trainers.FastTree();
 
-            _sentimentModel = estimator.Fit(trainData);
+            _sentimentModel = rangeEstimator.Fit(trainData);
 
             Metadata.TrainingResults = new ModelMetrics();
             if (testData != null)
@@ -235,7 +237,7 @@ namespace GimmeMillions.Domain.ML
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
                     //if(posS.Probability > 90.0 || posS.Probability < 10.0) 
-                    predictionData.Add(((float)posS.Sentiment, (float)posS.Sentiment, posS.Sentiment > 50.0, labels[i]));
+                    predictionData.Add(((float)posS.Sentiment, (float)posS.Sentiment, posS.Sentiment > 0.0, labels[i]));
                 }
 
                 predictionData = predictionData.OrderByDescending(x => x.Probability).ToList();
@@ -249,7 +251,7 @@ namespace GimmeMillions.Domain.ML
                     }
                     runningAccuracy.Add(correct / (double)(i + 1));
                 }
-            }
+           }
             return Result.Ok<ModelMetrics>(Metadata.TrainingResults);
         }
 

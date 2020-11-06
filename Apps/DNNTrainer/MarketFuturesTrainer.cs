@@ -24,7 +24,8 @@ namespace DNNTrainer
         }
         public void Train(string modelFile)
         {
-            var datasetService = GetCandlestickFeatureDatasetServiceV3(20, 5, 5);
+            //var datasetService = GetRawFeaturesBuySellSignalDatasetService(20, 5, 5);
+            var datasetService = GetRawFeaturesCandlestickDatasetService(20);
 
             var model = new MLStockRangePredictorModel();
 
@@ -34,21 +35,21 @@ namespace DNNTrainer
             trainingData.AddRange(datasetService.GetTrainingData("SPY", null, true).Value);
             trainingData.AddRange(datasetService.GetTrainingData("QQQ", null, true).Value);
             trainingData.AddRange(datasetService.GetTrainingData("^RUT", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("^RUI", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("^DJT", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("^DJU", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("^DJI", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("^GSPC", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("^IXIC", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("^NDX", null, true).Value);
+            //trainingData.AddRange(datasetService.GetTrainingData("^RUI", null, true).Value);
+            //trainingData.AddRange(datasetService.GetTrainingData("^DJT", null, true).Value);
+            //trainingData.AddRange(datasetService.GetTrainingData("^DJU", null, true).Value);
+            //trainingData.AddRange(datasetService.GetTrainingData("^DJI", null, true).Value);
+            //trainingData.AddRange(datasetService.GetTrainingData("^GSPC", null, true).Value);
+            //trainingData.AddRange(datasetService.GetTrainingData("^IXIC", null, true).Value);
+            //trainingData.AddRange(datasetService.GetTrainingData("^NDX", null, true).Value);
 
             var averageGrowth = trainingData.Average(x => x.Output.PercentChangeFromPreviousClose);
 
-            var trainingResults = model.Train(trainingData, 0.0, new PercentDayChangeOutputMapper(averageGrowth));
+            var trainingResults = model.Train(trainingData, 0.1, new PercentDayChangeOutputMapper(averageGrowth));
             model.Save(modelFile);
         }
 
-        private IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetServiceV3(
+        private IFeatureDatasetService<FeatureVector> GetRawFeaturesBuySellSignalDatasetService(
            int numStockSamples = 40,
            int timesampling = 5,
            int kernelSize = 9)
@@ -57,6 +58,15 @@ namespace DNNTrainer
             var extractor = new RawStockFeatureExtractor();
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                 numStockSamples, kernelSize);
+        }
+
+        private IFeatureDatasetService<FeatureVector> GetRawFeaturesCandlestickDatasetService(
+           int numStockSamples = 40)
+        {
+            var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
+            var extractor = new RawStockFeatureExtractor();
+            return new CandlestickStockWithFuturesFeatureDatasetService(extractor, stocksRepo,
+                numStockSamples, 3);
         }
     }
 }
