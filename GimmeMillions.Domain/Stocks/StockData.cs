@@ -170,6 +170,9 @@ namespace GimmeMillions.Domain.Stocks
                 return ((Close - Low) - (High - Close)) / (High - Low);
             }
         }
+
+        public decimal Signal { get; set; }
+
         public StockData(string symbol, DateTime date, 
             decimal open, decimal high, decimal low, decimal close, decimal adjClose, decimal volume)
         {

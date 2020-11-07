@@ -24,8 +24,8 @@ namespace DNNTrainer
         }
         public void Train(string modelFile)
         {
-            //var datasetService = GetRawFeaturesBuySellSignalDatasetService(20, 5, 5);
-            var datasetService = GetRawFeaturesCandlestickDatasetService(20);
+            var datasetService = GetRawFeaturesBuySellSignalDatasetService(20, 11);
+            //var datasetService = GetRawFeaturesCandlestickDatasetService(20);
 
             var model = new MLStockRangePredictorModel();
 
@@ -51,7 +51,6 @@ namespace DNNTrainer
 
         private IFeatureDatasetService<FeatureVector> GetRawFeaturesBuySellSignalDatasetService(
            int numStockSamples = 40,
-           int timesampling = 5,
            int kernelSize = 9)
         {
             var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
