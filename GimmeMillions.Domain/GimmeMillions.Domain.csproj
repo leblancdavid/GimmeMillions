@@ -155,6 +155,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ML\SignalOutputMapper.cs" />
     <Compile Include="Stocks\Filters\DefaultDatasetFilter.cs" />
     <Compile Include="Features\Extractors\NormalizedVolumePriceActionFeatureExtractor.cs" />
     <Compile Include="Features\Extractors\RawStockFeatureExtractor.cs" />

@@ -270,8 +270,24 @@ namespace GimmeMillions.Domain.Features
                             var data = GetData(symbol, sample.Date, stocks);
                             if (data.IsSuccess)
                             {
-                                var output = new StockData(symbol, sample.Date, sample.Open, sample.High, sample.Low,
-                                    sample.Close, sample.AdjustedClose, sample.Volume, sample.PreviousClose);
+                                decimal high = 0.0m;
+                                decimal low = decimal.MaxValue;
+                                for(int l = j; l < inflectionIndex[i].Index; ++l)
+                                {
+                                    if(stocks[l].High > high)
+                                    {
+                                        high = stocks[l].High;
+                                    }
+                                    if (stocks[l].Low < low)
+                                    {
+                                        low = stocks[l].Low;
+                                    }
+                                }
+
+                                var output = new StockData(symbol, sample.Date, sample.Open, high, low,
+                                    stocks[inflectionIndex[i].Index - 1].Close,
+                                    stocks[inflectionIndex[i].Index - 1].AdjustedClose, 
+                                    sample.Volume, sample.PreviousClose);
                                 output.Signal = (decimal)signal;
                                 trainingData.Add((data.Value, output));
                                 signalCheck.Add(signal);
@@ -280,8 +296,6 @@ namespace GimmeMillions.Domain.Features
                         signal += signalStep;
                         ++j;
                     }
-
-                    
                 }
 
                 //var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();

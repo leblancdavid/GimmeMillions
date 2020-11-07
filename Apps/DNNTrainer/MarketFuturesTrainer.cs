@@ -24,7 +24,7 @@ namespace DNNTrainer
         }
         public void Train(string modelFile)
         {
-            var datasetService = GetRawFeaturesBuySellSignalDatasetService(20, 11);
+            var datasetService = GetRawFeaturesBuySellSignalDatasetService(30, 11);
             //var datasetService = GetRawFeaturesCandlestickDatasetService(20);
 
             var model = new MLStockRangePredictorModel();
@@ -43,9 +43,9 @@ namespace DNNTrainer
             //trainingData.AddRange(datasetService.GetTrainingData("^IXIC", null, true).Value);
             //trainingData.AddRange(datasetService.GetTrainingData("^NDX", null, true).Value);
 
-            var averageGrowth = trainingData.Average(x => x.Output.PercentChangeFromPreviousClose);
-
-            var trainingResults = model.Train(trainingData, 0.1, new PercentDayChangeOutputMapper(averageGrowth));
+            //var averageGrowth = trainingData.Average(x => x.Output.PercentChangeFromPreviousClose);
+            //var trainingResults = model.Train(trainingData, 0.1, new PercentDayChangeOutputMapper(averageGrowth));
+            var trainingResults = model.Train(trainingData, 0.1, new SignalOutputMapper());
             model.Save(modelFile);
         }
 
