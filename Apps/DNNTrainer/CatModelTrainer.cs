@@ -40,7 +40,7 @@ namespace DNNTrainer
            int kernelSize = 9)
         {
             var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
-            var extractor = new RawStockFeatureExtractor();
+            var extractor = new RawCandlesStockFeatureExtractor();
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                 numStockSamples, kernelSize);
         }

@@ -128,13 +128,18 @@ namespace GimmeMillions.Domain.ML
                 return Result.Failure<ModelMetrics>($"Training dataset is empty");
             }
 
-            var rangeEstimator = _mLContext.Regression.Trainers.Gam(labelColumnName: "Value");
-
+            //var rangeEstimator = _mLContext.Regression.Trainers.Gam(labelColumnName: "Value");
+            //var rangeEstimator = _mLContext.Regression.Trainers.FastTree(labelColumnName: "Value");
+            //var rangeEstimator = _mLContext.Regression.Trainers.FastForest(labelColumnName: "Value",
+            //    numberOfLeaves: 20, numberOfTrees: 2000, minimumExampleCountPerLeaf: 10);
             var firstFeature = dataset.FirstOrDefault();
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
 
             //TRAIN THE LOW RANGE PREDICTOR
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
+
+            var rangeEstimator = _mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: trainingCount / 150);
+
             var trainLowData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Take(trainingCount).Select(x =>
                 {
@@ -236,7 +241,7 @@ namespace GimmeMillions.Domain.ML
                     var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
-                    if(posS.Sentiment > 0.80 || posS.Sentiment < 0.20) 
+                    //if(posS.Sentiment > 0.80 || posS.Sentiment < 0.20) 
                         predictionData.Add(((float)posS.Sentiment, (float)values[i], posS.Sentiment > 0.5, labels[i]));
                 }
 

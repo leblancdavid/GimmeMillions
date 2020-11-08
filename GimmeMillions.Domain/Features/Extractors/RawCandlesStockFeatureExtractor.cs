@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.Features
 {
-    public class RawStockFeatureExtractor : IFeatureExtractor<StockData>
+    public class RawCandlesStockFeatureExtractor : IFeatureExtractor<StockData>
     {
         public string Encoding { get; private set; }
 
-        public RawStockFeatureExtractor()
+        public RawCandlesStockFeatureExtractor()
         {
             Encoding = "RawFeatures";
         }
