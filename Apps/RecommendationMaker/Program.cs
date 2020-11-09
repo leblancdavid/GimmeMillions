@@ -2,6 +2,7 @@
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.Domain.Stocks.Filters;
 using GimmeMillions.SQLDataAccess;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -28,6 +29,9 @@ namespace RecommendationMaker
             [Option('p', "pathToModel", Required = true, HelpText = "The path to the model file")]
             public string PathToModel { get; set; }
 
+            [Option('q', "pathToFuturesModel", Required = true, HelpText = "The path to the futures model file")]
+            public string PathToFuturesModel { get; set; }
+
             [Option('f', "database", Required = true, HelpText = "The database file to use")]
             public string DatabaseLocation { get; set; }
         }
@@ -39,6 +43,7 @@ namespace RecommendationMaker
 
             var stockList = new List<string>();
             IStockRecommendationSystem<FeatureVector> recommendationSystem = null;
+            IStockRecommendationSystem<FeatureVector> futuresRecommendationSystem = null;
             var date = DateTime.Today;
             string model = "aadvark";
             Parser.Default.ParseArguments<Options>(args)
@@ -70,6 +75,7 @@ namespace RecommendationMaker
                            else if (o.Model == "cat")
                            {
                                recommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
+                               futuresRecommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(stocksRepo, recommendationRepo, o.PathToFuturesModel);
                                model = "cat";
                            }
                        }
@@ -80,14 +86,21 @@ namespace RecommendationMaker
 
                        if(!string.IsNullOrEmpty(o.Date))
                        {
-                           date = DateTime.Parse(o.Date);
+                           if(o.Date.ToLower() == "tomorrow")
+                           {
+                               date = date.AddDays(1.0);
+                           }
+                           else
+                           {
+                               date = DateTime.Parse(o.Date);
+                           }
                        }
 
 
                        
                    });
 
-            RunFuturesRecommendations(recommendationSystem, model, date);
+            RunFuturesRecommendations(futuresRecommendationSystem, model, date);
             RunDailyRecommendations(recommendationSystem, stockList, model, date);
 
         }
@@ -99,8 +112,8 @@ namespace RecommendationMaker
             {
                 "DIA", "QQQ", "SPY"
             };
-            
-            recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, true);
+
+            recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, null, true);
             
             using (System.IO.StreamWriter file =
             new System.IO.StreamWriter($"C:\\Stocks\\{model}-futures-{date.ToString("yyyy-MM-dd")}"))
@@ -133,13 +146,14 @@ namespace RecommendationMaker
             DateTime date)
         {
             IEnumerable<StockRecommendation> recommendations;
+            var filter = new DefaultStockFilter(minVolume: 500000m, maxPercentHigh: 20.0m, maxPercentLow: 20.0m);
             if (stockList.Any())
             {
-                recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, true);
+                recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, filter, true);
             }
             else
             {
-                recommendations = recommendationSystem.GetAllRecommendations(date, true);
+                recommendations = recommendationSystem.GetAllRecommendations(date, filter, true);
             }
 
             recommendations = recommendations.OrderByDescending(x => x.Sentiment).ToList();

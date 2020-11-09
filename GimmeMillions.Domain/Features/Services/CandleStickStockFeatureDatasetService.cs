@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using GimmeMillions.Domain.Articles;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.Domain.Stocks.Filters;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -54,7 +55,7 @@ namespace GimmeMillions.Domain.Features
 
         }
 
-        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(IDatasetFilter filter = null,
+        public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(IStockFilter filter = null,
             bool updateStocks = false)
         {
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
@@ -242,7 +243,7 @@ namespace GimmeMillions.Domain.Features
         }
 
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(
-            string symbol, IDatasetFilter filter = null,
+            string symbol, IStockFilter filter = null,
             bool updateStocks = false)
         {
             var stocks = updateStocks ?
@@ -279,7 +280,7 @@ namespace GimmeMillions.Domain.Features
 
             if (filter == null)
             {
-                filter = new DefaultDatasetFilter();
+                filter = new DefaultStockFilter();
             }
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             //var trainingData = new List<(HistoricalFeatureVector Input, StockData Output)>();

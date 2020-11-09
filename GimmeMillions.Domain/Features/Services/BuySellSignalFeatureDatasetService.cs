@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using GimmeMillions.Domain.Articles;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.Domain.Stocks.Filters;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -49,7 +50,7 @@ namespace GimmeMillions.Domain.Features
         }
 
         public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(
-            IDatasetFilter filter = null, 
+            IStockFilter filter = null, 
             bool updateStocks = false)
         {
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
@@ -187,7 +188,7 @@ namespace GimmeMillions.Domain.Features
 
         public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(
             string symbol,
-            IDatasetFilter filter = null, 
+            IStockFilter filter = null, 
             bool updateStocks = false)
         {
             var stocks = updateStocks ?
@@ -206,13 +207,13 @@ namespace GimmeMillions.Domain.Features
 
         private Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol,
             List<StockData> stocks,
-            IDatasetFilter filter = null)
+            IStockFilter filter = null)
         {
             try
             {
                 if (filter == null)
                 {
-                    filter = new DefaultDatasetFilter();
+                    filter = new DefaultStockFilter();
                 }
 
                 var smooth = new double[stocks.Count];
@@ -236,47 +237,96 @@ namespace GimmeMillions.Domain.Features
                     }
                     ++k;
                 }
-                var inflectionIndex = new List<int>();
-                for (int i = 1; i < derivatives.Length - 1; ++i)
+                var inflectionIndex = new List<(int Index, bool BuySignal)>();
+                for (int i = 0; i < derivatives.Length; ++i)
                 {
-                    if ((derivatives[i] > 0.0 && derivatives[i - 1] <= 0.0) ||
-                        (derivatives[i] < 0.0 && derivatives[i - 1] >= 0.0) ||
-                        (derivatives[i] > derivatives[i - 1] && derivatives[i] > derivatives[i + 1] && derivatives[i] > 0.0) ||
-                        (derivatives[i] < derivatives[i - 1] && derivatives[i] < derivatives[i + 1] && derivatives[i] < 0.0))
+                    if ((derivatives[i] > 0.0 && derivatives[i - 1] <= 0.0))
                     {
-                        inflectionIndex.Add(i);
+                        inflectionIndex.Add((i, false));
+                    }
+                    if (derivatives[i] < 0.0 && derivatives[i - 1] >= 0.0)
+                    {
+                        inflectionIndex.Add((i, true));
                     }
                 }
 
                 var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
+                var signalCheck = new List<double>();
                 for (int i = 1; i < inflectionIndex.Count; ++i)
                 {
-                    var data = GetData(symbol, stocks[inflectionIndex[i - 1]].Date, stocks);
-                    if (data.IsFailure)
-                        continue;
-
-                    var start = stocks[inflectionIndex[i - 1]];
-                    var end = stocks[inflectionIndex[i]];
-                    decimal high = 0.0m;
-                    decimal low = decimal.MaxValue;
-                    decimal volume = 0.0m;
-                    for (int j = inflectionIndex[i - 1]; j < inflectionIndex[i]; ++j)
+                    int j = inflectionIndex[i - 1].Index;
+                    double signalStep = 1.0 / (double)(inflectionIndex[i].Index - j);
+                    double signal = 0.0;
+                    if (inflectionIndex[i - 1].BuySignal)
                     {
-                        if (stocks[j].Low < low)
-                        {
-                            low = stocks[j].Low;
-                        }
-                        if (stocks[j].High > high)
-                        {
-                            high = stocks[j].High;
-                        }
-                        volume += stocks[j].Volume;
+                        signalStep *= -1.0;
+                        signal = 1.0;
                     }
+                    while(j < inflectionIndex[i].Index)
+                    {
+                        var sample = stocks[j];
+                        if (filter.Pass(sample))
+                        {
+                            var data = GetData(symbol, sample.Date, stocks);
+                            if (data.IsSuccess)
+                            {
+                                decimal high = 0.0m;
+                                decimal low = decimal.MaxValue;
+                                for(int l = j; l < inflectionIndex[i].Index; ++l)
+                                {
+                                    if(stocks[l].High > high)
+                                    {
+                                        high = stocks[l].High;
+                                    }
+                                    if (stocks[l].Low < low)
+                                    {
+                                        low = stocks[l].Low;
+                                    }
+                                }
 
-                    var output = new StockData(symbol, start.Date, start.Open, high, low, end.Close, end.AdjustedClose, volume, start.PreviousClose);
-                    if (filter.Pass(output))
-                        trainingData.Add((data.Value, output));
+                                var output = new StockData(symbol, sample.Date, sample.Open, high, low,
+                                    stocks[inflectionIndex[i].Index - 1].Close,
+                                    stocks[inflectionIndex[i].Index - 1].AdjustedClose, 
+                                    sample.Volume, sample.PreviousClose);
+                                output.Signal = (decimal)signal;
+                                trainingData.Add((data.Value, output));
+                                signalCheck.Add(signal);
+                            }
+                        }
+                        signal += signalStep;
+                        ++j;
+                    }
                 }
+
+                //var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
+                //for (int i = 1; i < inflectionIndex.Count; ++i)
+                //{
+                //    var data = GetData(symbol, stocks[inflectionIndex[i - 1].Index].Date, stocks);
+                //    if (data.IsFailure)
+                //        continue;
+
+                //    var start = stocks[inflectionIndex[i - 1].Index];
+                //    var end = stocks[inflectionIndex[i].Index];
+                //    decimal high = 0.0m;
+                //    decimal low = decimal.MaxValue;
+                //    decimal volume = 0.0m;
+                //    for (int j = inflectionIndex[i - 1].Index; j < inflectionIndex[i].Index; ++j)
+                //    {
+                //        if (stocks[j].Low < low)
+                //        {
+                //            low = stocks[j].Low;
+                //        }
+                //        if (stocks[j].High > high)
+                //        {
+                //            high = stocks[j].High;
+                //        }
+                //        volume += stocks[j].Volume;
+                //    }
+
+                //    var output = new StockData(symbol, start.Date, start.Open, high, low, end.Close, end.AdjustedClose, volume, start.PreviousClose);
+                //    if (filter.Pass(output))
+                //        trainingData.Add((data.Value, output));
+                //}
 
                 if (!trainingData.Any())
                 {

@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
+using GimmeMillions.Domain.Stocks.Filters;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
@@ -20,17 +21,20 @@ namespace GimmeMillions.Domain.Stocks
         private StockRecommendationSystemConfiguration _systemConfiguration;
         private string _pathToModels;
         private string _systemId;
+        private int _filterLength = 3;
 
         public StockRangeRecommendationSystem(IFeatureDatasetService<FeatureVector> featureDatasetService,
             IStockRecommendationRepository stockRecommendationRepository,
             string pathToModels,
-            string systemId)
+            string systemId,
+            int filterLength)
         {
             _featureDatasetService = featureDatasetService;
             _stockRecommendationRepository = stockRecommendationRepository;
             _systemConfiguration = new StockRecommendationSystemConfiguration();
             _pathToModels = pathToModels;
             _systemId = systemId;
+            _filterLength = filterLength;
         }
 
         public void AddModel(IStockPredictionModel<FeatureVector, StockRangePrediction> stockPredictionModel)
@@ -38,7 +42,7 @@ namespace GimmeMillions.Domain.Stocks
             model = stockPredictionModel;
         }
 
-        public IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date, bool updateStockHistory = false)
+        public IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date, IStockFilter filter = null, bool updateStockHistory = false)
         {
             var recommendations = new ConcurrentBag<StockRecommendation>();
 
@@ -49,6 +53,7 @@ namespace GimmeMillions.Domain.Stocks
 
             var stockSymbols = _featureDatasetService.StockAccess.GetSymbols();
 
+            var saveLock = new object();
             Parallel.ForEach(stockSymbols, symbol =>
             //foreach(var symbol in stockSymbols)
             {
@@ -58,7 +63,19 @@ namespace GimmeMillions.Domain.Stocks
                 else
                     stockData = _featureDatasetService.StockAccess.GetStocks(symbol).ToList();
 
-                var lastStock = stockData.Where(x => x.Date < date).Last();
+                if(!stockData.Any())
+                {
+                    //continue;
+                    return;
+                }
+
+                stockData.Reverse();
+                if(filter != null && !filter.Pass(StockData.Combine(stockData.Take(_filterLength))))
+                {
+                    //continue;
+                    return;
+                }
+                var lastStock = stockData.First();
 
                 var feature = _featureDatasetService.GetFeatureVector(symbol, date);
                 if (feature.IsFailure)
@@ -70,30 +87,34 @@ namespace GimmeMillions.Domain.Stocks
                 var rec = new StockRecommendation(_systemId, date, symbol,
                     (decimal)result.PredictedHigh, (decimal)result.PredictedLow, (decimal)result.Sentiment, lastStock.Close);
                 recommendations.Add(rec);
-                _stockRecommendationRepository.AddRecommendation(rec);
+                lock(saveLock)
+                {
+                    _stockRecommendationRepository.AddRecommendation(rec);
+                }
                 //}
             });
 
-            return recommendations.ToList().OrderByDescending(x => x.Prediction);
+            return recommendations.ToList().OrderByDescending(x => x.Sentiment);
         }
 
-        public IEnumerable<StockRecommendation> GetAllRecommendationsForToday(bool updateStockHistory = false)
+        public IEnumerable<StockRecommendation> GetAllRecommendationsForToday(IStockFilter filter = null, bool updateStockHistory = false)
         {
-            return GetAllRecommendations(DateTime.Today);
+            return GetAllRecommendations(DateTime.Today, filter);
         }
 
-        public IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keepTop = 10, bool updateStockHistory = false)
+        public IEnumerable<StockRecommendation> GetRecommendations(DateTime date, IStockFilter filter = null, int keepTop = 10, bool updateStockHistory = false)
         {
-            var recommendations = GetAllRecommendations(date).Take(keepTop);
+            var recommendations = GetAllRecommendations(date, filter).Take(keepTop);
             return recommendations;
         }
 
-        public IEnumerable<StockRecommendation> GetRecommendationsFor(IEnumerable<string> symbols, DateTime date, bool updateStockHistory = false)
+        public IEnumerable<StockRecommendation> GetRecommendationsFor(IEnumerable<string> symbols, DateTime date, IStockFilter filter = null, bool updateStockHistory = false)
         {
             var recommendations = new ConcurrentBag<StockRecommendation>();
             if (updateStockHistory)
                 _featureDatasetService.StockAccess.UpdateFutures();
 
+            var saveLock = new object();
             Parallel.ForEach(symbols, symbol =>
             //foreach(var symbol in symbols)
             {
@@ -103,12 +124,19 @@ namespace GimmeMillions.Domain.Stocks
                 else
                     stockData = _featureDatasetService.StockAccess.GetStocks(symbol).ToList();
 
-                var lastStock = stockData.Where(x => x.Date < date).LastOrDefault();
-                if (lastStock == null)
+                if (!stockData.Any())
                 {
                     //continue;
                     return;
                 }
+
+                stockData.Reverse();
+                if (filter != null && !filter.Pass(StockData.Combine(stockData.Take(_filterLength))))
+                {
+                    //continue;
+                    return;
+                }
+                var lastStock = stockData.First();
 
                 var feature = _featureDatasetService.GetFeatureVector(symbol, date);
                 if (feature.IsFailure)
@@ -121,16 +149,20 @@ namespace GimmeMillions.Domain.Stocks
                     (decimal)result.PredictedHigh, (decimal)result.PredictedLow,
                     (decimal)result.Sentiment, lastStock.Close);
                 recommendations.Add(rec);
-                _stockRecommendationRepository.AddRecommendation(rec);
+
+                lock (saveLock)
+                {
+                    _stockRecommendationRepository.AddRecommendation(rec);
+                }
                 //}
             });
 
-            return recommendations.ToList().OrderByDescending(x => x.Prediction);
+            return recommendations.ToList().OrderByDescending(x => x.Sentiment);
         }
 
-        public IEnumerable<StockRecommendation> GetRecommendationsForToday(int keepTop = 10, bool updateStockHistory = false)
+        public IEnumerable<StockRecommendation> GetRecommendationsForToday(IStockFilter filter = null, int keepTop = 10, bool updateStockHistory = false)
         {
-            return GetRecommendations(DateTime.Today, keepTop);
+            return GetRecommendations(DateTime.Today, filter, keepTop);
         }
 
         public Result LoadConfiguration(string configurationFile)

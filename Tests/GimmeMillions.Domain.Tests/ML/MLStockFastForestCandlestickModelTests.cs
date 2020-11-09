@@ -6,6 +6,7 @@ using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.Domain.Stocks.Filters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,7 +39,7 @@ namespace GimmeMillions.Domain.Tests.ML
             model.Parameters.MinNumOfLeaves = 5;
 
             var endTrainingData =  DateTime.Today;
-            var dataset = datasetService.GetAllTrainingData(new DefaultDatasetFilter(new DateTime(2010, 1, 30), endTrainingData));
+            var dataset = datasetService.GetAllTrainingData(new DefaultStockFilter(new DateTime(2010, 1, 30), endTrainingData));
             //var dataset = datasetService.GetTrainingData("AMZN", new DateTime(2001, 1, 30), endTrainingData).Value;
             //dataset.Any().Should().BeTrue();
 
@@ -71,7 +72,7 @@ namespace GimmeMillions.Domain.Tests.ML
             model.Parameters.NumOfLeaves = 200;
             model.Parameters.MinNumOfLeaves = 100;
 
-            var dataset = datasetService.GetAllTrainingData(new DefaultDatasetFilter(new DateTime(2010, 1, 30)), false);
+            var dataset = datasetService.GetAllTrainingData(new DefaultStockFilter(new DateTime(2010, 1, 30)), false);
             dataset.Any().Should().BeTrue();
 
             var trainingResults = model.Train(dataset, 0.0, null);

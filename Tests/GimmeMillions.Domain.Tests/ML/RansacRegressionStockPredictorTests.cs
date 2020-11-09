@@ -6,6 +6,7 @@ using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML.Accord;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.Domain.Stocks.Filters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,7 +34,7 @@ namespace GimmeMillions.Domain.Tests.ML
             var model = new DNNRegressionStockPredictor();
 
             var endTrainingData = DateTime.Today;
-            var dataset = datasetService.GetAllTrainingData(new DefaultDatasetFilter(new DateTime(2010, 1, 30), endTrainingData));
+            var dataset = datasetService.GetAllTrainingData(new DefaultStockFilter(new DateTime(2010, 1, 30), endTrainingData));
 
             var trainingResults = model.Train(dataset, 0.1, null);
         }

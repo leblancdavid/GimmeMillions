@@ -64,11 +64,12 @@ namespace GimmeMillions.DataAccess.Stocks
             string pathToModel)
         {
             var stocksRepo = new YahooFinanceStockAccessService(stockRepository);
-            var extractor = new RawStockFeatureExtractor();
-            var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo, 20, 5);
+            var extractor = new RawCandlesStockFeatureExtractor();
+            var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo, 15, 20);
             var model = new MLStockRangePredictorModel();
+            int filterLength = 3;
             var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
-                pathToModel, "cat");
+                pathToModel, "cat", filterLength);
 
             model.Load(pathToModel);
             recommendationSystem.AddModel(model);

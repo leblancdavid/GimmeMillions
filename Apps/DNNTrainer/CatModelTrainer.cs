@@ -2,6 +2,7 @@
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.Domain.Stocks.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,8 @@ namespace DNNTrainer
     public class CatModelTrainer
     {
         private IStockRepository _stockRepository;
-        private IDatasetFilter _filter;
-        public CatModelTrainer(IStockRepository stockRepository, IDatasetFilter filter)
+        private IStockFilter _filter;
+        public CatModelTrainer(IStockRepository stockRepository, IStockFilter filter)
         {
             _stockRepository = stockRepository;
             _filter = filter;
@@ -22,15 +23,14 @@ namespace DNNTrainer
         }
         public void Train(string modelFile)
         {
-            var datasetService = GetCandlestickFeatureDatasetServiceV3(20, 5);
-
+            var datasetService = GetRawFeaturesBuySellSignalDatasetService(15, 20);
             var model = new MLStockRangePredictorModel();
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(datasetService.GetAllTrainingData(_filter, true));
             var averageGrowth = trainingData.Average(x => x.Output.PercentChangeFromPreviousClose);
 
-            var trainingResults = model.Train(trainingData, 0.0, new PercentDayChangeOutputMapper(averageGrowth));
+            var trainingResults = model.Train(trainingData, 0.0, new SignalOutputMapper());
             model.Save(modelFile);
         }
 
@@ -39,7 +39,19 @@ namespace DNNTrainer
            int kernelSize = 9)
         {
             var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
-            var extractor = new RawStockFeatureExtractor();
+            var extractor = new RawCandlesStockFeatureExtractor();
+            return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+                numStockSamples, kernelSize);
+        }
+
+        private IFeatureDatasetService<FeatureVector> GetRawFeaturesBuySellSignalDatasetService(
+           int numStockSamples = 40,
+           int kernelSize = 9)
+        {
+            var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
+            var extractor = new RawCandlesStockFeatureExtractor();
+            //var extractor = new RawPriceStockFeatureExtractor();
+
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                 numStockSamples, kernelSize);
         }

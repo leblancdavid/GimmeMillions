@@ -24,7 +24,8 @@ namespace DNNTrainer
         }
         public void Train(string modelFile)
         {
-            var datasetService = GetCandlestickFeatureDatasetServiceV3(20, 5, 5);
+            var datasetService = GetRawFeaturesBuySellSignalDatasetService(15, 20);
+            //var datasetService = GetRawFeaturesCandlestickDatasetService(20);
 
             var model = new MLStockRangePredictorModel();
 
@@ -42,21 +43,42 @@ namespace DNNTrainer
             trainingData.AddRange(datasetService.GetTrainingData("^IXIC", null, true).Value);
             trainingData.AddRange(datasetService.GetTrainingData("^NDX", null, true).Value);
 
-            var averageGrowth = trainingData.Average(x => x.Output.PercentChangeFromPreviousClose);
-
-            var trainingResults = model.Train(trainingData, 0.0, new PercentDayChangeOutputMapper(averageGrowth));
+            //var averageGrowth = trainingData.Average(x => x.Output.PercentChangeFromPreviousClose);
+            //var trainingResults = model.Train(trainingData, 0.1, new PercentDayChangeOutputMapper(averageGrowth));
+            var trainingResults = model.Train(trainingData, 0.0, new SignalOutputMapper());
             model.Save(modelFile);
+
+            //var diaSamples = datasetService.GetFeatures("DIA").Where(x => x.Date > new DateTime(2020, 1, 1));
+            //using (System.IO.StreamWriter file =
+            //new System.IO.StreamWriter($"C:\\Stocks\\dia_results.txt"))
+            //{
+            //    foreach (var sample in diaSamples)
+            //    {
+            //        var prediction = model.Predict(sample);
+            //        file.WriteLine($"{sample.Date}\t{prediction.Sentiment}\t{prediction.PredictedLow}\t{prediction.PredictedHigh}");
+            //    }
+            //}
         }
 
-        private IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetServiceV3(
+        private IFeatureDatasetService<FeatureVector> GetRawFeaturesBuySellSignalDatasetService(
            int numStockSamples = 40,
-           int timesampling = 5,
            int kernelSize = 9)
         {
             var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
-            var extractor = new RawStockFeatureExtractor();
+            var extractor = new RawCandlesStockFeatureExtractor();
+            //var extractor = new RawPriceStockFeatureExtractor();
+            
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                 numStockSamples, kernelSize);
+        }
+
+        private IFeatureDatasetService<FeatureVector> GetRawFeaturesCandlestickDatasetService(
+           int numStockSamples = 40)
+        {
+            var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
+            var extractor = new RawCandlesStockFeatureExtractor();
+            return new CandlestickStockWithFuturesFeatureDatasetService(extractor, stocksRepo,
+                numStockSamples, 3);
         }
     }
 }

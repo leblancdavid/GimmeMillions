@@ -16,6 +16,6 @@
   "AverageLowerProbability": 0.0,
   "AverageUpperScore": 0.0,
   "AverageLowerScore": 0.0,
-  "FeatureEncoding": "RawFeatures_20d-5k",
+  "FeatureEncoding": "RawFeatures_15d-20k",
   "ModelId": null
 }

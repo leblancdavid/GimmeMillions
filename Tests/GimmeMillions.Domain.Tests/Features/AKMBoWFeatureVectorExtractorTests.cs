@@ -5,6 +5,7 @@ using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Articles;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.Domain.Stocks.Filters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,7 +32,7 @@ namespace GimmeMillions.Domain.Tests.Features
             var featureExtractor = GetFeatureExtractor();
             var datasetService = GetBoWFeatureDatasetService();
 
-            var dataset = datasetService.GetTrainingData("F", new DefaultDatasetFilter(new DateTime(2010, 1, 30)));
+            var dataset = datasetService.GetTrainingData("F", new DefaultStockFilter(new DateTime(2010, 1, 30)));
 
             var akmFeatureExtractor = new AKMBoWFeatureVectorExtractor(featureExtractor, 1000);
             akmFeatureExtractor.Train(dataset.Value.Select(x => x.Input));
