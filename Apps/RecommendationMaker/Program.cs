@@ -156,7 +156,7 @@ namespace RecommendationMaker
                 recommendations = recommendationSystem.GetAllRecommendations(date, filter, true);
             }
 
-            recommendations = recommendations.OrderByDescending(x => x.Prediction).ToList();
+            recommendations = recommendations.OrderByDescending(x => x.Sentiment).ToList();
             using (System.IO.StreamWriter file =
             new System.IO.StreamWriter($"C:\\Stocks\\{model}-long-{date.ToString("yyyy-MM-dd")}"))
             {
@@ -181,7 +181,7 @@ namespace RecommendationMaker
                 }
             }
 
-            recommendations = recommendations.OrderBy(x => x.LowPrediction).ToList();
+            recommendations = recommendations.OrderBy(x => x.Sentiment).ToList();
             using (System.IO.StreamWriter file =
             new System.IO.StreamWriter($"C:\\Stocks\\{model}-short-{date.ToString("yyyy-MM-dd")}"))
             {

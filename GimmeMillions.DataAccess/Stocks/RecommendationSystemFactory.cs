@@ -65,7 +65,7 @@ namespace GimmeMillions.DataAccess.Stocks
         {
             var stocksRepo = new YahooFinanceStockAccessService(stockRepository);
             var extractor = new RawCandlesStockFeatureExtractor();
-            var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo, 20, 5);
+            var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo, 15, 20);
             var model = new MLStockRangePredictorModel();
             int filterLength = 3;
             var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,

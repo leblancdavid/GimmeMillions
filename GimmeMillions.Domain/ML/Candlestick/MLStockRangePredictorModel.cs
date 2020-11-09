@@ -88,7 +88,7 @@ namespace GimmeMillions.Domain.ML
             {
                 PredictedLow = lowScore[0],
                 PredictedHigh = highScore[0],
-                Sentiment = sScore[0]
+                Sentiment = sScore[0] * 100.0
                 //Sentiment = highScore[0] / (highScore[0] - lowScore[0]) * 100.0f
             };
         }
