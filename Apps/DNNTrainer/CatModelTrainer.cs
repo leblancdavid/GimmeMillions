@@ -23,15 +23,14 @@ namespace DNNTrainer
         }
         public void Train(string modelFile)
         {
-            var datasetService = GetCandlestickFeatureDatasetServiceV3(20, 5);
-
+            var datasetService = GetRawFeaturesBuySellSignalDatasetService(15, 20);
             var model = new MLStockRangePredictorModel();
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(datasetService.GetAllTrainingData(_filter, true));
             var averageGrowth = trainingData.Average(x => x.Output.PercentChangeFromPreviousClose);
 
-            var trainingResults = model.Train(trainingData, 0.0, new PercentDayChangeOutputMapper(averageGrowth));
+            var trainingResults = model.Train(trainingData, 0.0, new SignalOutputMapper());
             model.Save(modelFile);
         }
 
@@ -41,6 +40,18 @@ namespace DNNTrainer
         {
             var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
             var extractor = new RawCandlesStockFeatureExtractor();
+            return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+                numStockSamples, kernelSize);
+        }
+
+        private IFeatureDatasetService<FeatureVector> GetRawFeaturesBuySellSignalDatasetService(
+           int numStockSamples = 40,
+           int kernelSize = 9)
+        {
+            var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
+            var extractor = new RawCandlesStockFeatureExtractor();
+            //var extractor = new RawPriceStockFeatureExtractor();
+
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                 numStockSamples, kernelSize);
         }

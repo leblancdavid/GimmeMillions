@@ -17,17 +17,17 @@ namespace DNNTrainer
 
             var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
-            var trainer = new MarketFuturesTrainer(new DefaultStockRepository(stockSqlDb));
-            trainer.Train("C:\\Recommendations\\App\\RecommendationMaker\\Models\\MarketFutures");
+            //var trainer = new MarketFuturesTrainer(new DefaultStockRepository(stockSqlDb));
+            //trainer.Train("C:\\Recommendations\\App\\RecommendationMaker\\Models\\MarketFutures");
 
-            //var trainer = new CatModelTrainer(new DefaultStockRepository(stockSqlDb), 
-            //    new DefaultStockFilter(
-            //        maxPercentHigh: 40.0m, 
-            //    maxPercentLow: 40.0m,
-            //    minPrice: 2.0m,
-            //    maxPrice: 30.0m,
-            //    minVolume: 500000.0m));
-            //rainer.Train("C:\\Recommendations\\App\\RecommendationMaker\\Models\\CatSmallCaps");
+            var trainer = new CatModelTrainer(new DefaultStockRepository(stockSqlDb),
+                new DefaultStockFilter(
+                    maxPercentHigh: 40.0m,
+                maxPercentLow: 40.0m,
+                minPrice: 5.0m,
+                maxPrice: 50.0m,
+                minVolume: 100000.0m));
+            trainer.Train("C:\\Recommendations\\App\\RecommendationMaker\\Models\\CatSmallCaps");
         }
 
     }
