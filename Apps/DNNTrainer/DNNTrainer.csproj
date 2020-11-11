@@ -159,6 +159,7 @@
   <ItemGroup>
     <Compile Include="BadgerModelTrainer.cs" />
     <Compile Include="CatModelTrainer.cs" />
+    <Compile Include="CryptoCatModelTrainer.cs" />
     <Compile Include="MarketFuturesTrainer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
