@@ -26,23 +26,10 @@ namespace DNNTrainer
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(datasetService.GetTrainingData("BTC-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("ETH-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("USDT-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("XRP-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("LINK-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("BCH-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("BNB-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("LTC-USD", null, true).Value);
-            //trainingData.AddRange(datasetService.GetTrainingData("DOT2-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("DOT1-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("ADA-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("BSV-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("EOS-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("XMR-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("TRX-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("XLM-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("XMR-USD", null, true).Value);
-            trainingData.AddRange(datasetService.GetTrainingData("NEO-USD", null, true).Value);
+            //trainingData.AddRange(datasetService.GetTrainingData("ETH-USD", null, true).Value);
+            //trainingData.AddRange(datasetService.GetTrainingData("USDT-USD", null, true).Value);
+            //trainingData.AddRange(datasetService.GetTrainingData("XRP-USD", null, true).Value);
+            //trainingData.AddRange(datasetService.GetTrainingData("LINK-USD", null, true).Value);
 
             var trainingResults = model.Train(trainingData, 0.0, new SignalOutputMapper());
             model.Save(modelFile);

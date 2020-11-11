@@ -21,7 +21,7 @@ namespace DNNTrainer
             //trainer.Train("C:\\Recommendations\\App\\RecommendationMaker\\Models\\MarketFutures");
 
             var trainer = new CryptoCatModelTrainer(new DefaultStockRepository(stockSqlDb));
-            trainer.Train("C:\\Recommendations\\App\\RecommendationMaker\\Models\\CryptoCat");
+            trainer.Train("C:\\Stocks\\Models\\CryptoCat\\CryptoCat");
 
             //var trainer = new CatModelTrainer(new DefaultStockRepository(stockSqlDb),
             //    new DefaultStockFilter(

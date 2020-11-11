@@ -144,9 +144,19 @@ namespace GimmeMillions.Domain.Features
                 var outputStock = stocks.FirstOrDefault(x => x.Date.Date.Year == date.Year
                                 && x.Date.Date.Month == date.Month
                                 && x.Date.Date.Day == date.Day);
-                int stockIndex;
-                if (date > stocks.Last().Date)
-                    stockIndex = stocks.Count - 1;
+                int stockIndex = 0;
+                if (outputStock == null || date > stocks.Last().Date)
+                {
+                    for(int i = stocks.Count - 1; i >= 0; --i)
+                    {
+                        if(stocks[i].Date < date)
+                        {
+                            stockIndex = i;
+                            break;
+                        }
+
+                    }
+                }
                 else
                     stockIndex = stocks.IndexOf(outputStock) - 1;
 
