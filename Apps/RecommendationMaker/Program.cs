@@ -19,18 +19,12 @@ namespace RecommendationMaker
         {
             [Option('w', "watchlist", Required = false, HelpText = "The watchlist file to pick from for recommendations")]
             public string WatchlistFile { get; set; }
-
-            [Option('m', "model", Required = false, HelpText = "The type of model to predict")]
-            public string Model { get; set; }
             
             [Option('d', "date", Required = false, HelpText = "The date to make prediction")]
             public string Date { get; set; }
 
             [Option('p', "pathToModel", Required = true, HelpText = "The path to the model file")]
             public string PathToModel { get; set; }
-
-            [Option('q', "pathToFuturesModel", Required = true, HelpText = "The path to the futures model file")]
-            public string PathToFuturesModel { get; set; }
 
             [Option('f', "database", Required = true, HelpText = "The database file to use")]
             public string DatabaseLocation { get; set; }
@@ -45,7 +39,7 @@ namespace RecommendationMaker
             IStockRecommendationSystem<FeatureVector> recommendationSystem = null;
             IStockRecommendationSystem<FeatureVector> futuresRecommendationSystem = null;
             var date = DateTime.Today;
-            string model = "aadvark";
+            string model = "cat";
             Parser.Default.ParseArguments<Options>(args)
                    .WithParsed<Options>(o =>
                    {
@@ -61,29 +55,12 @@ namespace RecommendationMaker
                            stockList = GetStockSymbolsFromWatchlistFile(o.WatchlistFile);
                        }
 
-                       if(!string.IsNullOrEmpty(o.Model))
-                       {
-                           if(o.Model == "aadvark")
-                           {
-                               recommendationSystem = RecommendationSystemFactory.GetAadvarkRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
-                           }
-                           else if (o.Model == "badger")
-                           {
-                               recommendationSystem = RecommendationSystemFactory.GetBadgerRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
-                               model = "badger";
-                           }
-                           else if (o.Model == "cat")
-                           {
-                               recommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
-                               futuresRecommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(stocksRepo, recommendationRepo, o.PathToFuturesModel);
-                               model = "cat";
-                           }
-                       }
-                       else
-                       {
-                           recommendationSystem = RecommendationSystemFactory.GetAadvarkRecommendationSystem(stocksRepo, recommendationRepo, o.PathToModel);
-                       }
-
+                       recommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(stocksRepo, recommendationRepo, 
+                            $"{o.PathToModel}\\CatSmallCaps\\CatSmallCaps");
+                       futuresRecommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(stocksRepo, recommendationRepo,
+                            $"{o.PathToModel}\\MarketFutures\\MarketFutures");
+                       model = "cat";
+                         
                        if(!string.IsNullOrEmpty(o.Date))
                        {
                            if(o.Date.ToLower() == "tomorrow")
@@ -101,9 +78,51 @@ namespace RecommendationMaker
                    });
 
             RunFuturesRecommendations(futuresRecommendationSystem, model, date);
+            RunCryptoRecommendations(recommendationSystem, model, date);
             RunDailyRecommendations(recommendationSystem, stockList, model, date);
 
         }
+
+        private static void RunCryptoRecommendations(IStockRecommendationSystem<FeatureVector> recommendationSystem,
+            string model, DateTime date)
+        {
+            IEnumerable<StockRecommendation> recommendations;
+            var stockList = new List<string>()
+            {
+                "BTC-USD", 
+                "ETH-USD", 
+                "XRP-USD", 
+                "LINK-USD",
+            };
+
+            recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, null, true)
+                .OrderByDescending(x => x.Sentiment).ToList();
+
+            using (System.IO.StreamWriter file =
+            new System.IO.StreamWriter($"C:\\Stocks\\{model}-crypto-{date.ToString("yyyy-MM-dd")}"))
+            {
+                string text = $"Stock recommendation for {date.ToString("MM/dd/yyyy")}:";
+                Console.WriteLine(text);
+                //file.WriteLine(text);
+                int i = 0;
+                foreach (var r in recommendations)
+                {
+                    text = $"{r.Symbol}, " +
+                         $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
+                        $"gain: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                        $"high: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                        $"loss: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                        $"low: {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                    Console.WriteLine(text);
+                    //if(i < keepTop)
+                    //{
+                    file.WriteLine(text);
+                    //s}
+                    ++i;
+                }
+            }
+        }
+
         private static void RunFuturesRecommendations(IStockRecommendationSystem<FeatureVector> recommendationSystem,
             string model, DateTime date)
         {

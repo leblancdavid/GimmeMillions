@@ -154,7 +154,7 @@ namespace GimmeMillions.Domain.Stocks
                 {
                     _stockRecommendationRepository.AddRecommendation(rec);
                 }
-                //}
+            //}
             });
 
             return recommendations.ToList().OrderByDescending(x => x.Sentiment);
