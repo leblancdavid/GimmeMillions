@@ -145,7 +145,7 @@ namespace GimmeMillions.Domain.Stocks
                 return Result.Failure($"Model configuration named {configurationFile} could not be found");
             }
             
-            return Result.Ok();
+            return Result.Success();
         }
 
         public Result RetrainModels(DateTime startTime, DateTime endTime)
@@ -158,14 +158,14 @@ namespace GimmeMillions.Domain.Stocks
             }
             model.Save(_pathToModels);
 
-            return Result.Ok();
+            return Result.Success();
         }
 
         public Result SaveConfiguration(string configurationFile)
         {
             File.WriteAllText(configurationFile, JsonConvert.SerializeObject(_systemConfiguration, Formatting.Indented));
 
-            return Result.Ok();
+            return Result.Success();
         }
     }
 }

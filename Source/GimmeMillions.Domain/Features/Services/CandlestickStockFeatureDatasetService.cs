@@ -110,7 +110,7 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<(FeatureVector Input, StockData Output)>(
                    featureVector.Error);
             }
-            return Result.Ok<(FeatureVector Input, StockData Output)>((featureVector.Value, stockOutput));
+            return Result.Success<(FeatureVector Input, StockData Output)>((featureVector.Value, stockOutput));
         }
 
         private Result<FeatureVector> GetData(string symbol,
@@ -164,7 +164,7 @@ namespace GimmeMillions.Domain.Features
                 if (_featureCache != null)
                     _featureCache.UpdateCache($"{_encodingKey}/{symbol}", compositeVector);
 
-                return Result.Ok(compositeVector);
+                return Result.Success(compositeVector);
             }
 
             var extractedVector = new FeatureVector(stocksVector.Value.ToArray(), date, _encodingKey);
@@ -172,7 +172,7 @@ namespace GimmeMillions.Domain.Features
             if (_featureCache != null)
                 _featureCache.UpdateCache($"{_encodingKey}/{symbol}", extractedVector);
 
-            return Result.Ok(extractedVector);
+            return Result.Success(extractedVector);
         }
 
         private Result<double[]> GetStockFeatureVector(string symbol, DateTime date, List<StockData> stocks, int numSamples)
@@ -216,7 +216,7 @@ namespace GimmeMillions.Domain.Features
                 stocksVector = symbolsResult.Value.Data;
             }
 
-            return Result.Ok(stocksVector);
+            return Result.Success(stocksVector);
         }
 
         public Result<FeatureVector> GetFeatureVector(string symbol, DateTime date)
@@ -305,7 +305,7 @@ namespace GimmeMillions.Domain.Features
                     $"No training data found for symbol '{symbol}' between specified dates");
             }
 
-            return Result.Ok<IEnumerable<(FeatureVector Input, StockData Output)>>(trainingData.OrderBy(x => x.Output.Date));
+            return Result.Success<IEnumerable<(FeatureVector Input, StockData Output)>>(trainingData.OrderBy(x => x.Output.Date));
         }
 
         Result<FeatureVector> TryGetFromCache(DateTime date, string symbol)

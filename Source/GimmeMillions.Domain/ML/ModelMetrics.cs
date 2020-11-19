@@ -31,7 +31,7 @@ namespace GimmeMillions.Domain.ML
             AreaUnderPrecisionRecallCurve = metrics.AreaUnderPrecisionRecallCurve;
         }
 
-        public string ToString()
+        public override string ToString()
         {
             return $"AUC: {AreaUnderPrecisionRecallCurve}, Acc: {Accuracy}, PP: {PositivePrecision}, PR: {PositiveRecall}, NP: {NegativePrecision}, NR: {NegativeRecall}, F1: {F1Score}, Error: {Error}";
         }

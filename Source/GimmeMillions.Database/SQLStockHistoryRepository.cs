@@ -39,7 +39,7 @@ namespace GimmeMillions.SQLDataAccess
                 {
                     context.SaveChanges();
                 }
-                return Result.Ok();
+                return Result.Success();
             }
             catch(Exception ex)
             {
@@ -93,7 +93,7 @@ namespace GimmeMillions.SQLDataAccess
                 {
                     stock.LoadData();
                 }
-                return Result.Ok<StockHistory>(stock);
+                return Result.Success<StockHistory>(stock);
             }
             catch(Exception ex)
             {

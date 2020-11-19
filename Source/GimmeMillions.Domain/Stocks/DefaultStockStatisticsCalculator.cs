@@ -39,7 +39,7 @@ namespace GimmeMillions.Domain.Stocks
             stats.AverageLongTermDayRange = longList.Average(x => x.PercentDayRange);
             stats.AverageShortTermTrend = shortList.Average(x => x.PercentChangeFromPreviousClose);
             stats.AverageLongTermTrend = longList.Average(x => x.PercentChangeFromPreviousClose);
-            return Result.Ok(stats);
+            return Result.Success(stats);
         }
     }
 }

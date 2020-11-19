@@ -111,7 +111,7 @@ namespace GimmeMillions.Domain.Features
                 return Result.Failure<(FeatureVector Input, StockData Output)>(
                    featureVector.Error);
             }
-            return Result.Ok<(FeatureVector Input, StockData Output)>((featureVector.Value, stockOutput));
+            return Result.Success<(FeatureVector Input, StockData Output)>((featureVector.Value, stockOutput));
         }
 
         private Result<FeatureVector> GetData(string symbol,
@@ -131,7 +131,7 @@ namespace GimmeMillions.Domain.Features
             }
 
             var compositeVector = new FeatureVector(stocksVector.Value, date, _encodingKey);
-            return Result.Ok(compositeVector);
+            return Result.Success(compositeVector);
         }
 
         private Result<double[]> GetStockFeatureVector(DateTime date, List<StockData> stocks, int numSamples)
@@ -175,7 +175,7 @@ namespace GimmeMillions.Domain.Features
 
                 stocksVector = _stockFeatureExtractor.Extract(stockFeaturesToExtract);
 
-                return Result.Ok(stocksVector);
+                return Result.Success(stocksVector);
             }
             catch(Exception ex)
             {
@@ -343,7 +343,7 @@ namespace GimmeMillions.Domain.Features
                         $"No training data found for symbol '{symbol}' between specified dates");
                 }
 
-                return Result.Ok<IEnumerable<(FeatureVector Input, StockData Output)>>(trainingData.OrderBy(x => x.Output.Date));
+                return Result.Success<IEnumerable<(FeatureVector Input, StockData Output)>>(trainingData.OrderBy(x => x.Output.Date));
             }
             catch(Exception ex)
             {
@@ -355,7 +355,6 @@ namespace GimmeMillions.Domain.Features
         {
             double sigma = (double)length / 6.0;
             double e = 2.71828;
-            double pi = 3.14159;
             double f = -1.0;// / (Math.Sqrt(2.0 * pi) * Math.Pow(sigma, 2.0));
             int center = length / 2;
             var kernel = new double[length];

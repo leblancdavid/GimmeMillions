@@ -34,7 +34,7 @@ namespace GimmeMillions.SQLDataAccess
                     }
                 }
 
-                return Result.Ok();
+                return Result.Success();
             }
             catch (Exception ex)
             {
@@ -54,7 +54,7 @@ namespace GimmeMillions.SQLDataAccess
                     context.StockRecommendations.Update(recommendation);
                     context.SaveChanges();
                 }
-                return Result.Ok();
+                return Result.Success();
             }
             catch (Exception ex)
             {
@@ -73,7 +73,7 @@ namespace GimmeMillions.SQLDataAccess
             {
                 return Result.Failure<StockRecommendation>($"No recommendation found for {symbol} for sytem {systemId} on {dateTime.ToString()}");
             }
-            return Result.Ok<StockRecommendation>(stock);
+            return Result.Success<StockRecommendation>(stock);
         }
 
         public IEnumerable<StockRecommendation> GetStockRecommendations(string systemId, string symbol)

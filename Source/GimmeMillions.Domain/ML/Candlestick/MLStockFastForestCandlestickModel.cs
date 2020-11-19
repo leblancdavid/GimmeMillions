@@ -62,7 +62,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 DataViewSchema schema = null;
                 _model = _mLContext.Model.Load($"{pathToModel}-Model.zip", out schema);
 
-                return Result.Ok();
+                return Result.Success();
             }
             catch (Exception ex)
             {
@@ -113,7 +113,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 File.WriteAllText($"{pathToModel}-Metadata.json", JsonConvert.SerializeObject(Metadata, Formatting.Indented));
                 _mLContext.Model.Save(_model, _dataSchema, $"{pathToModel}-Model.zip");
 
-                return Result.Ok();
+                return Result.Success();
             }
             catch (Exception ex)
             {
@@ -198,7 +198,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     runningAccuracy.Add(correct / (double)(i + 1));
                 }
             }
-            return Result.Ok<ModelMetrics>(Metadata.TrainingResults);
+            return Result.Success<ModelMetrics>(Metadata.TrainingResults);
         }
 
         private ModelMetrics CrossValidationResultsToMetrics<T>(IReadOnlyList<CrossValidationResult<T>> crossValidationResults)

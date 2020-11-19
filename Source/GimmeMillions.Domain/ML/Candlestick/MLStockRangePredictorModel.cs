@@ -52,7 +52,7 @@ namespace GimmeMillions.Domain.ML
                 _highRangeModel = _mLContext.Model.Load($"{pathToModel}-HighModel.zip", out schema);
                 _sentimentModel = _mLContext.Model.Load($"{pathToModel}-SentimentModel.zip", out schema);
 
-                return Result.Ok();
+                return Result.Success();
             }
             catch (Exception ex)
             {
@@ -111,7 +111,7 @@ namespace GimmeMillions.Domain.ML
                 _mLContext.Model.Save(_highRangeModel, _dataSchema, $"{pathToModel}-HighModel.zip");
                 _mLContext.Model.Save(_sentimentModel, _dataSchema, $"{pathToModel}-SentimentModel.zip");
 
-                return Result.Ok();
+                return Result.Success();
             }
             catch (Exception ex)
             {
@@ -255,7 +255,7 @@ namespace GimmeMillions.Domain.ML
                     runningAccuracy.Add(correct / (double)(i + 1));
                 }
            }
-            return Result.Ok<ModelMetrics>(Metadata.TrainingResults);
+            return Result.Success<ModelMetrics>(Metadata.TrainingResults);
         }
 
         private SchemaDefinition GetSchemaDefinition(FeatureVector vector)

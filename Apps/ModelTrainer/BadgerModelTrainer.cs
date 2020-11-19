@@ -1,6 +1,5 @@
 ﻿using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
-using GimmeMillions.Domain.Logging;
 using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.Domain.Stocks.Filters;
@@ -29,13 +28,6 @@ namespace DNNTrainer
         {
             //var datasetService = GetCandlestickFeatureDatasetService(60, 5, true);
             var datasetService = GetCandlestickFeatureDatasetServiceV2(200, 5, false);
-            var logFile = "logs/log";
-            Directory.CreateDirectory("logs");
-            var loggers = new List<ILogger>()
-            {
-                new FileLogger(logFile),
-                new ConsoleLogger()
-            };
             //var model = new DNNRegressionStockPredictor(loggers);
             //var model = new MLStockFastForestCandlestickModel();
             var model = new MLStockFastForestCandlestickModelV2();
