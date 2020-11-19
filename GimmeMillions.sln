@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GimmeMillions.Domain", "GimmeMillions.Domain\GimmeMillions.Domain.csproj", "{33C44D32-3FE7-4B05-9D8D-0E3018F608C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GimmeMillions.Domain.OLD", "GimmeMillions.Domain\GimmeMillions.Domain.OLD.csproj", "{33C44D32-3FE7-4B05-9D8D-0E3018F608C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GimmeMillions.DataAccess", "GimmeMillions.DataAccess\GimmeMillions.DataAccess.csproj", "{437B1FA4-2D43-44B8-B1D9-63006A0D1612}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GimmeMillions.DataAccess.OLD", "GimmeMillions.DataAccess\GimmeMillions.DataAccess.OLD.csproj", "{437B1FA4-2D43-44B8-B1D9-63006A0D1612}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B0E16F1D-5F27-4C13-9117-2D625BB588F6}"
 EndProject
@@ -15,13 +15,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{0EBDE5AA-D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GimmeMillions.Domain.Tests", "Tests\GimmeMillions.Domain.Tests\GimmeMillions.Domain.Tests.csproj", "{BC7B0190-4F97-4727-B827-187BB4E24324}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationMaker", "Apps\RecommendationMaker\RecommendationMaker.csproj", "{93ECD420-65E1-424F-B2E1-786BD0DC2969}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationMaker.OLD", "Apps\RecommendationMaker\RecommendationMaker.OLD.csproj", "{93ECD420-65E1-424F-B2E1-786BD0DC2969}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNNTrainer", "Apps\DNNTrainer\DNNTrainer.csproj", "{D1F4F067-D11C-4C69-BD90-659F664EB651}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNNTrainer.OLD", "Apps\DNNTrainer\DNNTrainer.OLD.csproj", "{D1F4F067-D11C-4C69-BD90-659F664EB651}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GimmeMillions.SQLDataAccess", "GimmeMillions.SQLDataAccess\GimmeMillions.SQLDataAccess.csproj", "{2E4BCDBB-F262-4E74-86D9-C59C2991B4F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GimmeMillions.SQLDataAccess.OLD", "GimmeMillions.SQLDataAccess\GimmeMillions.SQLDataAccess.OLD.csproj", "{2E4BCDBB-F262-4E74-86D9-C59C2991B4F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationEvaluation", "Apps\RecommendationEvaluation\RecommendationEvaluation.csproj", "{DB1C9210-87CF-418C-8445-AAA07600E2F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationEvaluation.OLD", "Apps\RecommendationEvaluation\RecommendationEvaluation.OLD.csproj", "{DB1C9210-87CF-418C-8445-AAA07600E2F7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source", "{CEF39BB3-5E2B-4F40-B2FE-A1E618D86AC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GimmeMillions.Domain", "Source\GimmeMillions.Domain\GimmeMillions.Domain.csproj", "{C45DB11E-81AF-4DD4-B87A-EA2C381C0DB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,6 +99,14 @@ Global
 		{DB1C9210-87CF-418C-8445-AAA07600E2F7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DB1C9210-87CF-418C-8445-AAA07600E2F7}.Release|x64.ActiveCfg = Release|Any CPU
 		{DB1C9210-87CF-418C-8445-AAA07600E2F7}.Release|x64.Build.0 = Release|Any CPU
+		{C45DB11E-81AF-4DD4-B87A-EA2C381C0DB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C45DB11E-81AF-4DD4-B87A-EA2C381C0DB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C45DB11E-81AF-4DD4-B87A-EA2C381C0DB7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C45DB11E-81AF-4DD4-B87A-EA2C381C0DB7}.Debug|x64.Build.0 = Debug|Any CPU
+		{C45DB11E-81AF-4DD4-B87A-EA2C381C0DB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C45DB11E-81AF-4DD4-B87A-EA2C381C0DB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C45DB11E-81AF-4DD4-B87A-EA2C381C0DB7}.Release|x64.ActiveCfg = Release|Any CPU
+		{C45DB11E-81AF-4DD4-B87A-EA2C381C0DB7}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,6 +117,7 @@ Global
 		{93ECD420-65E1-424F-B2E1-786BD0DC2969} = {0EBDE5AA-DB44-4830-9234-5DAA16386E4A}
 		{D1F4F067-D11C-4C69-BD90-659F664EB651} = {0EBDE5AA-DB44-4830-9234-5DAA16386E4A}
 		{DB1C9210-87CF-418C-8445-AAA07600E2F7} = {0EBDE5AA-DB44-4830-9234-5DAA16386E4A}
+		{C45DB11E-81AF-4DD4-B87A-EA2C381C0DB7} = {CEF39BB3-5E2B-4F40-B2FE-A1E618D86AC5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1AC6AAE2-C385-494A-B0BB-CE2501C90DB9}

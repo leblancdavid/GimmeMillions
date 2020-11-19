@@ -81,13 +81,13 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GimmeMillions.DataAccess\GimmeMillions.DataAccess.csproj">
+    <ProjectReference Include="..\..\GimmeMillions.DataAccess\GimmeMillions.DataAccess.OLD.csproj">
       <Project>{437B1FA4-2D43-44B8-B1D9-63006A0D1612}</Project>
-      <Name>GimmeMillions.DataAccess</Name>
+      <Name>GimmeMillions.DataAccess.OLD</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\GimmeMillions.Domain\GimmeMillions.Domain.csproj">
+    <ProjectReference Include="..\..\GimmeMillions.Domain\GimmeMillions.Domain.OLD.csproj">
       <Project>{33C44D32-3FE7-4B05-9D8D-0E3018F608C5}</Project>
-      <Name>GimmeMillions.Domain</Name>
+      <Name>GimmeMillions.Domain.OLD</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DB1C9210-87CF-418C-8445-AAA07600E2F7}</ProjectGuid>
+    <ProjectGuid>{D1F4F067-D11C-4C69-BD90-659F664EB651}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>RecommendationEvaluation</RootNamespace>
-    <AssemblyName>RecommendationEvaluation</AssemblyName>
+    <RootNamespace>DNNTrainer</RootNamespace>
+    <AssemblyName>DNNTrainer</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -25,15 +25,17 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -48,31 +50,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BadgerModelTrainer.cs" />
+    <Compile Include="CatModelTrainer.cs" />
+    <Compile Include="CryptoCatModelTrainer.cs" />
+    <Compile Include="MarketFuturesTrainer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RecommendationEvaluationResults.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GimmeMillions.DataAccess\GimmeMillions.DataAccess.csproj">
+    <ProjectReference Include="..\..\GimmeMillions.DataAccess\GimmeMillions.DataAccess.OLD.csproj">
       <Project>{437b1fa4-2d43-44b8-b1d9-63006a0d1612}</Project>
-      <Name>GimmeMillions.DataAccess</Name>
+      <Name>GimmeMillions.DataAccess.OLD</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\GimmeMillions.Domain\GimmeMillions.Domain.csproj">
+    <ProjectReference Include="..\..\GimmeMillions.Domain\GimmeMillions.Domain.OLD.csproj">
       <Project>{33c44d32-3fe7-4b05-9d8d-0e3018f608c5}</Project>
-      <Name>GimmeMillions.Domain</Name>
+      <Name>GimmeMillions.Domain.OLD</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\GimmeMillions.SQLDataAccess\GimmeMillions.SQLDataAccess.csproj">
+    <ProjectReference Include="..\..\GimmeMillions.SQLDataAccess\GimmeMillions.SQLDataAccess.OLD.csproj">
       <Project>{2e4bcdbb-f262-4e74-86d9-c59c2991b4f7}</Project>
-      <Name>GimmeMillions.SQLDataAccess</Name>
+      <Name>GimmeMillions.SQLDataAccess.OLD</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CommandLineParser">
-      <Version>2.8.0</Version>
-    </PackageReference>
     <PackageReference Include="CSharpFunctionalExtensions">
       <Version>2.7.1</Version>
     </PackageReference>

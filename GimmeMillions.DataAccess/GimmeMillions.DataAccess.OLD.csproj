@@ -4,20 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D1F4F067-D11C-4C69-BD90-659F664EB651}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>DNNTrainer</RootNamespace>
-    <AssemblyName>DNNTrainer</AssemblyName>
+    <ProjectGuid>{437B1FA4-2D43-44B8-B1D9-63006A0D1612}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GimmeMillions.DataAccess</RootNamespace>
+    <AssemblyName>GimmeMillions.DataAccess</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,23 +22,39 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,39 +63,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BadgerModelTrainer.cs" />
-    <Compile Include="CatModelTrainer.cs" />
-    <Compile Include="CryptoCatModelTrainer.cs" />
-    <Compile Include="MarketFuturesTrainer.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Articles\NYTArticleAccessService.cs" />
+    <Compile Include="Articles\NYTArticleRepository.cs" />
+    <Compile Include="Articles\NYTArticleResponse.cs" />
+    <Compile Include="Features\FeatureDictionaryJsonRepository.cs" />
+    <Compile Include="Features\FeatureJsonCache.cs" />
+    <Compile Include="Keys\NYTApiAccessKeyRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stocks\RecommendationSystemFactory.cs" />
+    <Compile Include="Stocks\StockDataRepository.cs" />
+    <Compile Include="Stocks\YahooFinanceStockAccessService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\GimmeMillions.DataAccess\GimmeMillions.DataAccess.csproj">
-      <Project>{437b1fa4-2d43-44b8-b1d9-63006a0d1612}</Project>
-      <Name>GimmeMillions.DataAccess</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\GimmeMillions.Domain\GimmeMillions.Domain.csproj">
+    <ProjectReference Include="..\GimmeMillions.Domain\GimmeMillions.Domain.OLD.csproj">
       <Project>{33c44d32-3fe7-4b05-9d8d-0e3018f608c5}</Project>
-      <Name>GimmeMillions.Domain</Name>
+      <Name>GimmeMillions.Domain.OLD</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\GimmeMillions.SQLDataAccess\GimmeMillions.SQLDataAccess.csproj">
-      <Project>{2e4bcdbb-f262-4e74-86d9-c59c2991b4f7}</Project>
-      <Name>GimmeMillions.SQLDataAccess</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions">
-      <Version>2.7.1</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite">
-      <Version>3.1.7</Version>
+      <Version>2.3.0</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="RestSharp">
+      <Version>106.10.1</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

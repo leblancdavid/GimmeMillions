@@ -4,19 +4,20 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2E4BCDBB-F262-4E74-86D9-C59C2991B4F7}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GimmeMillions.SQLDataAccess</RootNamespace>
-    <AssemblyName>GimmeMillions.SQLDataAccess</AssemblyName>
+    <ProjectGuid>{93ECD420-65E1-424F-B2E1-786BD0DC2969}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>RecommendationMaker</RootNamespace>
+    <AssemblyName>RecommendationMaker</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,8 +25,10 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -46,49 +49,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GimmeMillionsContext.cs" />
-    <Compile Include="Migrations\20200820031006_InitialDb.cs" />
-    <Compile Include="Migrations\20200820031006_InitialDb.designer.cs">
-      <DependentUpon>20200820031006_InitialDb.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200823194854_LastUpdatedDateTimeStockHistory.cs" />
-    <Compile Include="Migrations\20200823194854_LastUpdatedDateTimeStockHistory.designer.cs">
-      <DependentUpon>20200823194854_LastUpdatedDateTimeStockHistory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20201023180737_AddStockRecommendations.cs" />
-    <Compile Include="Migrations\20201023180737_AddStockRecommendations.designer.cs">
-      <DependentUpon>20201023180737_AddStockRecommendations.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20201101014921_UpdateRecommendationTable.cs" />
-    <Compile Include="Migrations\20201101014921_UpdateRecommendationTable.designer.cs">
-      <DependentUpon>20201101014921_UpdateRecommendationTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\GimmeMillionsContextModelSnapshot.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SQLStockHistoryRepository.cs" />
-    <Compile Include="SQLStockRecommendationRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GimmeMillions.Domain\GimmeMillions.Domain.csproj">
-      <Project>{33C44D32-3FE7-4B05-9D8D-0E3018F608C5}</Project>
-      <Name>GimmeMillions.Domain</Name>
+    <ProjectReference Include="..\..\GimmeMillions.DataAccess\GimmeMillions.DataAccess.OLD.csproj">
+      <Project>{437b1fa4-2d43-44b8-b1d9-63006a0d1612}</Project>
+      <Name>GimmeMillions.DataAccess.OLD</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GimmeMillions.Domain\GimmeMillions.Domain.OLD.csproj">
+      <Project>{33c44d32-3fe7-4b05-9d8d-0e3018f608c5}</Project>
+      <Name>GimmeMillions.Domain.OLD</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\GimmeMillions.SQLDataAccess\GimmeMillions.SQLDataAccess.OLD.csproj">
+      <Project>{2e4bcdbb-f262-4e74-86d9-c59c2991b4f7}</Project>
+      <Name>GimmeMillions.SQLDataAccess.OLD</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommandLineParser">
+      <Version>2.8.0</Version>
+    </PackageReference>
     <PackageReference Include="CSharpFunctionalExtensions">
-      <Version>2.7.1</Version>
+      <Version>2.3.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces">
       <Version>1.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Bcl.HashCode">
       <Version>1.1.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CSharp">
-      <Version>4.7.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Data.Sqlite.Core">
       <Version>3.1.7</Version>
@@ -105,11 +97,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers">
       <Version>3.1.7</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
-      <Version>3.1.7</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational">
       <Version>3.1.7</Version>
     </PackageReference>
@@ -118,11 +105,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core">
       <Version>3.1.7</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
-      <Version>3.1.7</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions">
       <Version>3.1.7</Version>
@@ -161,7 +143,7 @@
       <Version>3.1.7</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>9.0.1</Version>
+      <Version>12.0.3</Version>
     </PackageReference>
     <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3">
       <Version>2.0.2</Version>
