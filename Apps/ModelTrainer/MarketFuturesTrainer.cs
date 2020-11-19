@@ -1,15 +1,8 @@
 ﻿using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
-using GimmeMillions.Domain.Logging;
 using GimmeMillions.Domain.ML;
-using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;
-using GimmeMillions.SQLDataAccess;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace DNNTrainer
 {

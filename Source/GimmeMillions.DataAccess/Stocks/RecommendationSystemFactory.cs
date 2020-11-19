@@ -2,6 +2,7 @@
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;
+using System;
 
 namespace GimmeMillions.DataAccess.Stocks
 {
@@ -65,7 +66,7 @@ namespace GimmeMillions.DataAccess.Stocks
         {
             var stocksRepo = new YahooFinanceStockAccessService(stockRepository);
             var extractor = new RawCandlesStockFeatureExtractor();
-            var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo, 15, 20);
+            var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo, StockDataPeriod.Day, 15, 20);
             var model = new MLStockRangePredictorModel();
             int filterLength = 3;
             var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
@@ -88,7 +89,7 @@ namespace GimmeMillions.DataAccess.Stocks
             var indictatorsExtractor = new StockIndicatorsFeatureExtraction(normalize: false);
 
             return new CandlestickStockFeatureDatasetService(indictatorsExtractor, stocksRepo,
-                numStockSamples, stockOutputPeriod, includeComposites, null, false);
+                StockDataPeriod.Day, numStockSamples, includeComposites, null, false);
         }
 
         private static IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetServiceV2(
@@ -106,7 +107,7 @@ namespace GimmeMillions.DataAccess.Stocks
                 false);
 
             return new CandlestickStockWithFuturesFeatureDatasetService(indictatorsExtractor, stocksRepo,
-                numStockSamples, stockOutputPeriod);
+                StockDataPeriod.Day, numStockSamples);
         }
     }
 }
