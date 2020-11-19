@@ -23,7 +23,7 @@ namespace GimmeMillions.Domain.Stocks
             {
                 return Result.Failure<StockData>($"Unable to retrieve stock {symbol} for date {date.ToString("MM/dd/yyyy")}");
             }
-            return Result.Ok(stockFound.First());
+            return Result.Success(stockFound.First());
         }
 
         public IEnumerable<StockData> GetStocks(string symbol, FrequencyTimeframe timeframe = FrequencyTimeframe.Daily)

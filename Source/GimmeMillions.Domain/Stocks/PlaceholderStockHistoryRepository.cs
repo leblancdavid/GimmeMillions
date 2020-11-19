@@ -11,7 +11,7 @@ namespace GimmeMillions.Domain.Stocks
     {
         public Result AddOrUpdateStock(StockHistory stockData)
         {
-            return Result.Ok();
+            return Result.Success();
         }
 
         public void Delete(string symbol)

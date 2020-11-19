@@ -94,7 +94,7 @@ namespace GimmeMillions.Domain.Stocks
                     }
                 }
             }
-            catch(Exception ex)
+            catch(Exception)
             {
 
             }
