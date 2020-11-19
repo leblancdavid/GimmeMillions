@@ -44,7 +44,7 @@ namespace DNNTrainer
 
             //var averageGrowth = trainingData.Average(x => x.Output.PercentChangeFromPreviousClose);
             //var trainingResults = model.Train(trainingData, 0.1, new PercentDayChangeOutputMapper(averageGrowth));
-            var trainingResults = model.Train(trainingData, 0.0, new SignalOutputMapper());
+            var trainingResults = model.Train(trainingData, 0.1, new SignalOutputMapper());
             model.Save(modelFile);
 
             //var diaSamples = datasetService.GetFeatures("DIA").Where(x => x.Date > new DateTime(2020, 1, 1));
