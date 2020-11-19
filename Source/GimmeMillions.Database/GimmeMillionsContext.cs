@@ -2,7 +2,7 @@
 using GimmeMillions.Domain.Stocks;
 using Microsoft.EntityFrameworkCore;
 
-namespace GimmeMillions.SQLDataAccess
+namespace GimmeMillions.Database
 {
     public class GimmeMillionsContext : DbContext
     {
@@ -16,11 +16,12 @@ namespace GimmeMillions.SQLDataAccess
 
         public GimmeMillionsContext()
         { }
+
         //Uncomment this when you want to add a migration? Not sure why but it's apparently necessary
         //protected override void OnConfiguring(DbContextOptionsBuilder options)
         //    => options.UseSqlite("DataSource=default.db");
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options) { }
+        //protected override void OnConfiguring(DbContextOptionsBuilder options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,4 +1,5 @@
 ﻿using GimmeMillions.DataAccess.Stocks;
+using GimmeMillions.Database;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;

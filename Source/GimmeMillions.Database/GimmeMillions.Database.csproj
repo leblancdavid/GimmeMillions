@@ -16,6 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,18 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Migrations\20200820031006_InitialDb.designer.cs">
-      <DependentUpon>20200820031006_InitialDb.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Migrations\20200823194854_LastUpdatedDateTimeStockHistory.designer.cs">
-      <DependentUpon>20200823194854_LastUpdatedDateTimeStockHistory.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Migrations\20201023180737_AddStockRecommendations.designer.cs">
-      <DependentUpon>20201023180737_AddStockRecommendations.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Migrations\20201101014921_UpdateRecommendationTable.designer.cs">
-      <DependentUpon>20201101014921_UpdateRecommendationTable.cs</DependentUpon>
-    </Compile>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
