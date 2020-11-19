@@ -35,8 +35,8 @@ namespace GimmeMillions.Domain.Stocks
             stats.Date = date;
             stats.AverageShortTermVolume = shortList.Average(x => x.Volume);
             stats.AverageLongTermVolume = longList.Average(x => x.Volume);
-            stats.AverageShortTermDayRange = shortList.Average(x => x.PercentDayRange);
-            stats.AverageLongTermDayRange = longList.Average(x => x.PercentDayRange);
+            stats.AverageShortTermDayRange = shortList.Average(x => x.PercentPeriodRange);
+            stats.AverageLongTermDayRange = longList.Average(x => x.PercentPeriodRange);
             stats.AverageShortTermTrend = shortList.Average(x => x.PercentChangeFromPreviousClose);
             stats.AverageLongTermTrend = longList.Average(x => x.PercentChangeFromPreviousClose);
             return Result.Success(stats);

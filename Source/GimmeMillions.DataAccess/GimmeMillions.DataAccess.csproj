@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Alpaca.Markets" Version="3.9.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GimmeMillions.Domain\GimmeMillions.Domain.csproj" />
   </ItemGroup>
 

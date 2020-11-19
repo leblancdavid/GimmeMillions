@@ -20,6 +20,8 @@ namespace GimmeMillions.Domain.Features
         private string _stocksEncodingKey;
         private string _encodingKey;
 
+        public StockDataPeriod Period { get; private set; }
+
         public bool RefreshCache { get; set; }
         public IStockAccessService StockAccess
         {
@@ -32,6 +34,7 @@ namespace GimmeMillions.Domain.Features
 
         public BuySellSignalFeatureDatasetService(IFeatureExtractor<StockData> stockFeatureExtractor,
             IStockAccessService stockRepository,
+            StockDataPeriod period,
             int numStockDailySamples = 20,
             int derivativeKernel = 9)
         {
@@ -45,12 +48,13 @@ namespace GimmeMillions.Domain.Features
             string timeIndicator = $"{_numStockDailySamples}d-{_derivativeKernel}k";
             _stocksEncodingKey = $"{_stockFeatureExtractor.Encoding}_{timeIndicator}";
             _encodingKey = _stocksEncodingKey;
+            Period = period;
 
         }
 
         public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(
-            IStockFilter filter = null, 
-            bool updateStocks = false)
+            IStockFilter filter = null,
+            bool updateStocks = false, int historyLimit = 0)
         {
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             var stockSymbols = _stockRepository.GetSymbols();
@@ -60,25 +64,22 @@ namespace GimmeMillions.Domain.Features
             //foreach (var stock in stocks)
             {
                 List<StockData> stocks = null;
-                lock(updateLock)
+                lock (updateLock)
                 {
                     stocks = updateStocks ?
-                      _stockRepository.UpdateStocks(symbol, FrequencyTimeframe.Daily).ToList() :
-                      _stockRepository.GetStocks(symbol, FrequencyTimeframe.Daily).ToList();
+                      _stockRepository.UpdateStocks(symbol, Period).ToList() :
+                      _stockRepository.GetStocks(symbol, Period).ToList();
                 }
-               
+
                 if (!stocks.Any())
                 {
                     return;
                 }
 
                 var td = GetTrainingData(symbol, stocks, filter);
-                if (td.IsSuccess)
+                foreach (var sample in td)
                 {
-                    foreach(var sample in td.Value)
-                    {
-                        trainingData.Add(sample);
-                    }
+                    trainingData.Add(sample);
                 }
                 //}
             });
@@ -89,13 +90,13 @@ namespace GimmeMillions.Domain.Features
         public Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date)
         {
 
-            var stocks = _stockRepository.GetStocks(symbol, FrequencyTimeframe.Daily).ToList();
+            var stocks = _stockRepository.GetStocks(symbol, Period).ToList();
             if (!stocks.Any())
             {
                 return Result.Failure<(FeatureVector Input, StockData Output)>(
                     $"No stock found for symbol '{symbol}' on {date.ToString("yyyy/MM/dd")}");
             }
-            var stockOutput = _stockRepository.GetStocks(symbol).FirstOrDefault(
+            var stockOutput = _stockRepository.GetStocks(symbol, Period).FirstOrDefault(
                                 x => x.Date.Date.Year == date.Year
                                 && x.Date.Date.Month == date.Month
                                 && x.Date.Date.Day == date.Day);
@@ -106,7 +107,7 @@ namespace GimmeMillions.Domain.Features
             }
 
             var featureVector = GetData(symbol, stockOutput.Date, stocks);
-            if(featureVector.IsFailure)
+            if (featureVector.IsFailure)
             {
                 return Result.Failure<(FeatureVector Input, StockData Output)>(
                    featureVector.Error);
@@ -140,15 +141,16 @@ namespace GimmeMillions.Domain.Features
             {
                 double[] stocksVector;
                 var stockFeaturesToExtract = new List<(StockData Article, float Weight)>();
-                var outputStock = stocks.FirstOrDefault(x => x.Date.Date.Year == date.Year
-                                && x.Date.Date.Month == date.Month
-                                && x.Date.Date.Day == date.Day);
+                //var outputStock = stocks.FirstOrDefault(x => x.Date.Date.Year == date.Year
+                //                && x.Date.Date.Month == date.Month
+                //                && x.Date.Date.Day == date.Day); 
+                var outputStock = stocks.FirstOrDefault(x => x.Date == date);
                 int stockIndex = 0;
                 if (outputStock == null || date > stocks.Last().Date)
                 {
-                    for(int i = stocks.Count - 1; i >= 0; --i)
+                    for (int i = stocks.Count - 1; i >= 0; --i)
                     {
-                        if(stocks[i].Date < date)
+                        if (stocks[i].Date < date)
                         {
                             stockIndex = i;
                             break;
@@ -177,7 +179,7 @@ namespace GimmeMillions.Domain.Features
 
                 return Result.Success(stocksVector);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Result.Failure<double[]>(ex.Message);
             }
@@ -185,7 +187,7 @@ namespace GimmeMillions.Domain.Features
 
         public Result<FeatureVector> GetFeatureVector(string symbol, DateTime date)
         {
-            var stocks = _stockRepository.GetStocks(symbol, FrequencyTimeframe.Daily).ToList();
+            var stocks = _stockRepository.GetStocks(symbol, Period).ToList();
             if (!stocks.Any())
             {
                 return Result.Failure<FeatureVector>(
@@ -195,26 +197,25 @@ namespace GimmeMillions.Domain.Features
             return GetData(symbol, date, stocks);
         }
 
-        public Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(
+        public IEnumerable<(FeatureVector Input, StockData Output)> GetTrainingData(
             string symbol,
-            IStockFilter filter = null, 
-            bool updateStocks = false)
+            IStockFilter filter = null,
+            bool updateStocks = false, int historyLimit = 0)
         {
             var stocks = updateStocks ?
-                   _stockRepository.UpdateStocks(symbol, FrequencyTimeframe.Daily).ToList() :
-                   _stockRepository.GetStocks(symbol, FrequencyTimeframe.Daily).ToList();
+                   _stockRepository.UpdateStocks(symbol, Period, historyLimit).ToList() :
+                   _stockRepository.GetStocks(symbol, Period, historyLimit).ToList();
             if (!stocks.Any())
             {
-                return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(
-                    $"No stocks found for symbol '{symbol}'");
+                return new List<(FeatureVector Input, StockData Output)>();
             }
 
-         
-            return GetTrainingData(symbol, stocks, filter);
+
+            return GetTrainingData(symbol, filter == null ? stocks : stocks.Where(x => filter.Pass(x)).ToList(), filter);
 
         }
 
-        private Result<IEnumerable<(FeatureVector Input, StockData Output)>> GetTrainingData(string symbol,
+        private IEnumerable<(FeatureVector Input, StockData Output)> GetTrainingData(string symbol,
             List<StockData> stocks,
             IStockFilter filter = null)
         {
@@ -271,7 +272,7 @@ namespace GimmeMillions.Domain.Features
                         signalStep *= -1.0;
                         signal = 1.0;
                     }
-                    while(j < inflectionIndex[i].Index)
+                    while (j < inflectionIndex[i].Index)
                     {
                         var sample = stocks[j];
                         if (filter.Pass(sample))
@@ -281,9 +282,9 @@ namespace GimmeMillions.Domain.Features
                             {
                                 decimal high = 0.0m;
                                 decimal low = decimal.MaxValue;
-                                for(int l = j; l < inflectionIndex[i].Index; ++l)
+                                for (int l = j; l < inflectionIndex[i].Index; ++l)
                                 {
-                                    if(stocks[l].High > high)
+                                    if (stocks[l].High > high)
                                     {
                                         high = stocks[l].High;
                                     }
@@ -295,7 +296,7 @@ namespace GimmeMillions.Domain.Features
 
                                 var output = new StockData(symbol, sample.Date, sample.Open, high, low,
                                     stocks[inflectionIndex[i].Index - 1].Close,
-                                    stocks[inflectionIndex[i].Index - 1].AdjustedClose, 
+                                    stocks[inflectionIndex[i].Index - 1].AdjustedClose,
                                     sample.Volume, sample.PreviousClose);
                                 output.Signal = (decimal)signal;
                                 trainingData.Add((data.Value, output));
@@ -307,47 +308,16 @@ namespace GimmeMillions.Domain.Features
                     }
                 }
 
-                //var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
-                //for (int i = 1; i < inflectionIndex.Count; ++i)
-                //{
-                //    var data = GetData(symbol, stocks[inflectionIndex[i - 1].Index].Date, stocks);
-                //    if (data.IsFailure)
-                //        continue;
-
-                //    var start = stocks[inflectionIndex[i - 1].Index];
-                //    var end = stocks[inflectionIndex[i].Index];
-                //    decimal high = 0.0m;
-                //    decimal low = decimal.MaxValue;
-                //    decimal volume = 0.0m;
-                //    for (int j = inflectionIndex[i - 1].Index; j < inflectionIndex[i].Index; ++j)
-                //    {
-                //        if (stocks[j].Low < low)
-                //        {
-                //            low = stocks[j].Low;
-                //        }
-                //        if (stocks[j].High > high)
-                //        {
-                //            high = stocks[j].High;
-                //        }
-                //        volume += stocks[j].Volume;
-                //    }
-
-                //    var output = new StockData(symbol, start.Date, start.Open, high, low, end.Close, end.AdjustedClose, volume, start.PreviousClose);
-                //    if (filter.Pass(output))
-                //        trainingData.Add((data.Value, output));
-                //}
-
                 if (!trainingData.Any())
                 {
-                    return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(
-                        $"No training data found for symbol '{symbol}' between specified dates");
+                    return new List<(FeatureVector Input, StockData Output)>();
                 }
 
-                return Result.Success<IEnumerable<(FeatureVector Input, StockData Output)>>(trainingData.OrderBy(x => x.Output.Date));
+                return trainingData.OrderBy(x => x.Output.Date);
             }
-            catch(Exception ex)
+            catch (Exception)
             {
-                return Result.Failure<IEnumerable<(FeatureVector Input, StockData Output)>>(ex.Message);
+                return new List<(FeatureVector Input, StockData Output)>();
             }
         }
 
@@ -386,14 +356,14 @@ namespace GimmeMillions.Domain.Features
 
         public IEnumerable<FeatureVector> GetFeatures(string symbol)
         {
-            var stocks = _stockRepository.GetStocks(symbol, FrequencyTimeframe.Daily).ToList();
+            var stocks = _stockRepository.GetStocks(symbol, Period).ToList();
             var features = new List<FeatureVector>();
             if (!stocks.Any())
             {
                 return features;
             }
 
-            foreach(var date in stocks)
+            foreach (var date in stocks)
             {
                 var f = GetStockFeatureVector(date.Date, stocks, _numStockDailySamples);
                 if (f.IsFailure)

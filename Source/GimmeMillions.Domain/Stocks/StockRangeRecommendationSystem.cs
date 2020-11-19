@@ -46,11 +46,6 @@ namespace GimmeMillions.Domain.Stocks
         {
             var recommendations = new ConcurrentBag<StockRecommendation>();
 
-            if (updateStockHistory)
-            {
-                _featureDatasetService.StockAccess.UpdateFutures();
-            }
-
             var stockSymbols = _featureDatasetService.StockAccess.GetSymbols();
 
             var saveLock = new object();
@@ -59,18 +54,18 @@ namespace GimmeMillions.Domain.Stocks
             {
                 List<StockData> stockData;
                 if (updateStockHistory)
-                    stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol).ToList();
+                    stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol, _featureDatasetService.Period).ToList();
                 else
-                    stockData = _featureDatasetService.StockAccess.GetStocks(symbol).ToList();
+                    stockData = _featureDatasetService.StockAccess.GetStocks(symbol, _featureDatasetService.Period).ToList();
 
-                if(!stockData.Any())
+                if (!stockData.Any())
                 {
                     //continue;
                     return;
                 }
 
                 stockData.Reverse();
-                if(filter != null && !filter.Pass(StockData.Combine(stockData.Take(_filterLength))))
+                if (filter != null && !filter.Pass(StockData.Combine(stockData.Take(_filterLength))))
                 {
                     //continue;
                     return;
@@ -87,7 +82,7 @@ namespace GimmeMillions.Domain.Stocks
                 var rec = new StockRecommendation(_systemId, date, symbol,
                     (decimal)result.PredictedHigh, (decimal)result.PredictedLow, (decimal)result.Sentiment, lastStock.Close);
                 recommendations.Add(rec);
-                lock(saveLock)
+                lock (saveLock)
                 {
                     _stockRecommendationRepository.AddRecommendation(rec);
                 }
@@ -111,8 +106,6 @@ namespace GimmeMillions.Domain.Stocks
         public IEnumerable<StockRecommendation> GetRecommendationsFor(IEnumerable<string> symbols, DateTime date, IStockFilter filter = null, bool updateStockHistory = false)
         {
             var recommendations = new ConcurrentBag<StockRecommendation>();
-            if (updateStockHistory)
-                _featureDatasetService.StockAccess.UpdateFutures();
 
             var saveLock = new object();
             Parallel.ForEach(symbols, symbol =>
@@ -120,9 +113,9 @@ namespace GimmeMillions.Domain.Stocks
             {
                 List<StockData> stockData;
                 if (updateStockHistory)
-                    stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol).ToList();
+                    stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol, _featureDatasetService.Period).ToList();
                 else
-                    stockData = _featureDatasetService.StockAccess.GetStocks(symbol).ToList();
+                    stockData = _featureDatasetService.StockAccess.GetStocks(symbol, _featureDatasetService.Period).ToList();
 
                 if (!stockData.Any())
                 {
@@ -154,7 +147,7 @@ namespace GimmeMillions.Domain.Stocks
                 {
                     _stockRecommendationRepository.AddRecommendation(rec);
                 }
-            //}
+                //}
             });
 
             return recommendations.ToList().OrderByDescending(x => x.Sentiment);

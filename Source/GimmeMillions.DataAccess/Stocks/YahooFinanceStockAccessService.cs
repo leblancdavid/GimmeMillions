@@ -18,25 +18,20 @@ namespace GimmeMillions.DataAccess.Stocks
             _stockHistoryRepository = stockRepository.StockHistoryRepository;
         }
 
-        public IEnumerable<StockData> GetStocks(string symbol, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily)
+        public IEnumerable<StockData> GetStocks(string symbol, StockDataPeriod period, int limit = -1)
         {
-            return _stockRepository.GetStocks(symbol, frequencyTimeframe);
+            return _stockRepository.GetStocks(symbol, period);
         }
 
-        public IEnumerable<StockData> GetStocks(FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily)
+        public IEnumerable<StockData> GetStocks(StockDataPeriod period, int limit = -1)
         {
             var symbols = GetSymbols();
             var stocks = new List<StockData>();
-            foreach(var symbol in symbols)
+            foreach (var symbol in symbols)
             {
-                stocks.AddRange(GetStocks(symbol, frequencyTimeframe));
+                stocks.AddRange(GetStocks(symbol, period));
             }
             return stocks;
-        }
-
-        public IEnumerable<StockData> GetStocks(string symbol, int timePeriod)
-        {
-            return _stockRepository.GetStocks(symbol, timePeriod);
         }
 
         public IEnumerable<string> GetSymbols()
@@ -44,34 +39,16 @@ namespace GimmeMillions.DataAccess.Stocks
             return _stockRepository.GetSymbols();
         }
 
-        private readonly string DOW_INDEX_SYMBOL = "^DJI";
-        private readonly string SNP_INDEX_SYMBOL = "^GSPC";
-        private readonly string NASDAQ_INDEX_SYMBOL = "^IXIC";
-        private readonly string DOW_FUTURE_SYMBOL = "DIA";
-        private readonly string SNP_FUTURE_SYMBOL = "SPY";
-        private readonly string NASDAQ_FUTURE_SYMBOL = "QQQ";
-        private readonly string RUSSEL_FUTURE_SYMBOL = "^RUT";
 
-        public void UpdateFutures()
-        {
-            UpdateStocks(DOW_INDEX_SYMBOL);
-            UpdateStocks(SNP_INDEX_SYMBOL);
-            UpdateStocks(NASDAQ_INDEX_SYMBOL);
-            UpdateStocks(DOW_FUTURE_SYMBOL);
-            UpdateStocks(SNP_FUTURE_SYMBOL);
-            UpdateStocks(NASDAQ_FUTURE_SYMBOL);
-            UpdateStocks(RUSSEL_FUTURE_SYMBOL);
-        }
-
-        public IEnumerable<StockData> UpdateStocks(string symbol, FrequencyTimeframe frequencyTimeframe = FrequencyTimeframe.Daily)
+        public IEnumerable<StockData> UpdateStocks(string symbol, StockDataPeriod period, int limit = -1)
         {
             try
             {
-                //var lastUpdated = _stockHistoryRepository.GetLastUpdated(symbol);
-                //if(lastUpdated.Date == DateTime.Today)
-                //{
-                //    return _stockRepository.GetStocks(symbol, frequencyTimeframe);
-                //}
+                var lastUpdated = _stockHistoryRepository.GetLastUpdated(symbol);
+                if (lastUpdated.Date == DateTime.Today)
+                {
+                    return _stockRepository.GetStocks(symbol, period);
+                }
                 //F?period1=76204800&period2=1584316800&interval=1d&events=history
                 WebClient webClient = new WebClient();
                 DateTime startDate = new DateTime(2000, 1, 1);
@@ -80,7 +57,7 @@ namespace GimmeMillions.DataAccess.Stocks
                 string url = $"{_yahooHistoryBaseURL}{symbol}?period1={period1}&period2={period2}&interval=1d&events=history";
 
                 string data = webClient.DownloadString(url);
-                _stockHistoryRepository.AddOrUpdateStock(new StockHistory(symbol, data));
+                _stockHistoryRepository.AddOrUpdateStock(new StockHistory(symbol, data, StockDataPeriod.Day));
 
                 //webClient.DownloadFile(url, $"{_pathToStocks}/{symbol}");
                 //File.WriteAllText($"{_pathToStocks}/{symbol}", data);
@@ -88,10 +65,10 @@ namespace GimmeMillions.DataAccess.Stocks
             catch (Exception ex)
             {
                 Console.WriteLine($"Error retrieving stock {symbol}: {ex.Message}");
-                return _stockRepository.GetStocks(symbol, frequencyTimeframe);
+                return _stockRepository.GetStocks(symbol, period);
             }
 
-            return _stockRepository.GetStocks(symbol, frequencyTimeframe);
+            return _stockRepository.GetStocks(symbol, period);
         }
     }
 }

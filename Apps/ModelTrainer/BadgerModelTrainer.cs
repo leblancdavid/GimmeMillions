@@ -6,17 +6,18 @@ using GimmeMillions.Domain.Stocks.Filters;
 using GimmeMillions.SQLDataAccess;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DNNTrainer
 {
     public class BadgerModelTrainer
     {
+        string _pathToArticles = "../../../../Repository/Articles";
+        string _pathToDictionary = "../../../../Repository/Dictionaries";
+        string _pathToLanguage = "../../../../Repository/Languages";
+        string _pathToStocks = "../../../../Repository/Stocks";
+        string _pathToCache = "../../../../Repository/Cache";
         string _pathToModels = "../../../../Repository/Models";
+        string _pathToKeys = "../../../../Repository/Keys";
 
         public void Train()
         {
@@ -79,7 +80,7 @@ namespace DNNTrainer
             //var indictatorsExtractor = new NormalizedVolumePriceActionFeatureExtractor(numStockSamples);
 
             return new CandlestickStockWithFuturesFeatureDatasetService(indictatorsExtractor, stocksRepo,
-                numStockSamples, stockOutputPeriod);
+                StockDataPeriod.Day, numStockSamples);
         }
     }
 }
