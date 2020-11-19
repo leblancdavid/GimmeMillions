@@ -30,6 +30,10 @@ namespace GimmeMillions.Database
                 .Property<string>("DataStr");
 
             modelBuilder.Entity<StockHistory>().Ignore(x => x.HistoricalData);
+
+            modelBuilder.Entity<StockRecommendation>()
+                .Ignore(x => x.PredictedPriceTarget)
+                .Ignore(x => x.PredictedLowTarget);
         }
 
 

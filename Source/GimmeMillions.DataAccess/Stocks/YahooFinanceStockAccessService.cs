@@ -45,10 +45,7 @@ namespace GimmeMillions.DataAccess.Stocks
             try
             {
                 var lastUpdated = _stockHistoryRepository.GetLastUpdated(symbol);
-                if (lastUpdated.Date == DateTime.Today)
-                {
-                    return _stockRepository.GetStocks(symbol, period);
-                }
+              
                 //F?period1=76204800&period2=1584316800&interval=1d&events=history
                 WebClient webClient = new WebClient();
                 DateTime startDate = new DateTime(2000, 1, 1);
