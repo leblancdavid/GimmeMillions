@@ -1,4 +1,5 @@
-﻿using GimmeMillions.Domain.Features;
+﻿using GimmeMillions.Domain.Authentication;
+using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,7 @@ namespace GimmeMillions.Database
         public DbSet<FeatureVector> FeatureVectors { get; set; }
         public DbSet<StockHistory> StockHistories { get; set; }
         public DbSet<StockRecommendation> StockRecommendations { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public GimmeMillionsContext(DbContextOptions options)
             : base(options)
