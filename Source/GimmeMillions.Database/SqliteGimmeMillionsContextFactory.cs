@@ -1,15 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace GimmeMillions.Database
 {
-    public class SqliteContextFactory : IDesignTimeDbContextFactory<GimmeMillionsContext>
+    public class SqliteGimmeMillionsContextFactory : IDesignTimeDbContextFactory<GimmeMillionsContext>
     {
+        private string _connectionString = "DataSource=default.db";
+        public SqliteGimmeMillionsContextFactory() { }
+        public SqliteGimmeMillionsContextFactory(string connectionString) 
+        {
+            _connectionString = connectionString;
+        }
+
         public GimmeMillionsContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<GimmeMillionsContext>();
