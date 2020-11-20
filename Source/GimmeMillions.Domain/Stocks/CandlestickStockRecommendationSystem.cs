@@ -168,5 +168,20 @@ namespace GimmeMillions.Domain.Stocks
 
             return Result.Success();
         }
+
+        public IEnumerable<StockRecommendation> GetRecommendationsForToday(int keep)
+        {
+            return GetRecommendations(DateTime.Today, keep);
+        }
+
+        public IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keep)
+        {
+            return _stockRecommendationRepository.GetStockRecommendations(_systemId, date).Take(keep);
+        }
+
+        public Result<StockRecommendation> GetRecommendation(DateTime date, string symbol)
+        {
+            return _stockRecommendationRepository.GetStockRecommendation(_systemId, symbol, date);
+        }
     }
 }

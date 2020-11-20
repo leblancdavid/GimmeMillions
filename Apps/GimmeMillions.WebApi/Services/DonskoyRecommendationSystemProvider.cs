@@ -32,7 +32,7 @@ namespace GimmeMillions.WebApi.Services
             return RecommendationSystemFactory.GetDonskoyRecommendationSystem(
                 _stockRepository,
                 _stockRecommendationRepository,
-                "Resources\\Models\\Stocks");
+                "Resources\\Models\\Futures");
         }
 
         public IStockRecommendationSystem<FeatureVector> GetStocksRecommendations()

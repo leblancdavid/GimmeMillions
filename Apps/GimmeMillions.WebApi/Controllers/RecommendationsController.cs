@@ -1,6 +1,7 @@
 ﻿using GimmeMillions.Domain.Stocks;
 using GimmeMillions.WebApi.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,10 +31,24 @@ namespace GimmeMillions.WebApi.Controllers
         public IEnumerable<StockRecommendation> GetFutures()
         {
             var system = _provider.GetFuturesRecommendations();
-            var recommendations = system.RecommendationRepository.GetStockRecommendations("cat", "DIA").ToList();
-            recommendations.AddRange(system.RecommendationRepository.GetStockRecommendations("cat", "SPY"));
-            recommendations.AddRange(system.RecommendationRepository.GetStockRecommendations("cat", "QQQ"));
+            var recommendations = new List<StockRecommendation>();
+            recommendations.Add(system.GetRecommendation(DateTime.Today, "DIA").Value);
+            recommendations.Add(system.GetRecommendation(DateTime.Today, "QQQ").Value);
+            recommendations.Add(system.GetRecommendation(DateTime.Today, "SPY").Value);
             return recommendations;
+        }
+
+        [HttpPut("futures")]
+        public IActionResult UpdateFutures()
+        {
+            var system = _provider.GetFuturesRecommendations();
+            var recommendations = new List<StockRecommendation>(); 
+            var stockList = new List<string>()
+            {
+                "DIA", "QQQ", "SPY"
+            };
+            recommendations.AddRange(system.RunRecommendationsFor(stockList, DateTime.Today, null));
+            return Ok(recommendations);
         }
     }
 }

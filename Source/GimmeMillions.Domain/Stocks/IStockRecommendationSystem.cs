@@ -21,5 +21,9 @@ namespace GimmeMillions.Domain.Stocks
         IEnumerable<StockRecommendation> RunAllRecommendations(DateTime date, IStockFilter filter = null);
         IEnumerable<StockRecommendation> RunRecommendationsFor(IEnumerable<string> symbols, DateTime date, 
             IStockFilter filter = null);
+
+        IEnumerable<StockRecommendation> GetRecommendationsForToday(int keep = 10);
+        IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keep = 10);
+        Result<StockRecommendation> GetRecommendation(DateTime date, string symbol);
     }
 }
