@@ -41,7 +41,7 @@ namespace DNNTrainer
             var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
             var extractor = new RawCandlesStockFeatureExtractor();
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
-                numStockSamples, kernelSize);
+                StockDataPeriod.Day, numStockSamples, kernelSize);
         }
 
         private IFeatureDatasetService<FeatureVector> GetRawFeaturesBuySellSignalDatasetService(
@@ -53,7 +53,7 @@ namespace DNNTrainer
             //var extractor = new RawPriceStockFeatureExtractor();
 
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
-                numStockSamples, kernelSize);
+                StockDataPeriod.Day, numStockSamples, kernelSize);
         }
     }
 }

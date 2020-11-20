@@ -25,7 +25,7 @@ namespace DNNTrainer
             var model = new MLStockRangePredictorModel();
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            trainingData.AddRange(datasetService.GetTrainingData("BTC-USD", null, true).Value);
+            trainingData.AddRange(datasetService.GetTrainingData("BTC-USD", null, true));
             //trainingData.AddRange(datasetService.GetTrainingData("ETH-USD", null, true).Value);
             //trainingData.AddRange(datasetService.GetTrainingData("USDT-USD", null, true).Value);
             //trainingData.AddRange(datasetService.GetTrainingData("XRP-USD", null, true).Value);
@@ -42,7 +42,7 @@ namespace DNNTrainer
             var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
             var extractor = new RawCandlesStockFeatureExtractor();
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
-                numStockSamples, kernelSize);
+                StockDataPeriod.Day, numStockSamples, kernelSize);
         }
 
         private IFeatureDatasetService<FeatureVector> GetRawFeaturesBuySellSignalDatasetService(
@@ -54,7 +54,7 @@ namespace DNNTrainer
             //var extractor = new RawPriceStockFeatureExtractor();
 
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
-                numStockSamples, kernelSize);
+                StockDataPeriod.Day, numStockSamples, kernelSize);
         }
     }
 }

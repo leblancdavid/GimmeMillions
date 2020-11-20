@@ -16,9 +16,9 @@ namespace GimmeMillions.Domain.Stocks
             StockHistoryRepository = stockHistoryRepository;
         }
 
-        public Result<StockData> GetStock(string symbol, DateTime date, FrequencyTimeframe timeframe = FrequencyTimeframe.Daily)
+        public Result<StockData> GetStock(string symbol, DateTime date, StockDataPeriod period)
         {
-            var stockFound = GetStocks(symbol, date, date, timeframe);
+            var stockFound = GetStocks(symbol, date, date, period);
             if (!stockFound.Any())
             {
                 return Result.Failure<StockData>($"Unable to retrieve stock {symbol} for date {date.ToString("MM/dd/yyyy")}");
@@ -26,23 +26,26 @@ namespace GimmeMillions.Domain.Stocks
             return Result.Success(stockFound.First());
         }
 
-        public IEnumerable<StockData> GetStocks(string symbol, FrequencyTimeframe timeframe = FrequencyTimeframe.Daily)
+        public IEnumerable<StockData> GetStocks(string symbol, StockDataPeriod period)
         {
-            if (timeframe == FrequencyTimeframe.Daily)
+            if (period == StockDataPeriod.Day)
             {
                 return GetDailyStocks(symbol);
             }
-            else
+            else if (period == StockDataPeriod.Week)
             {
                 return GetWeeklyStocks(symbol);
             }
+
+            //For now just support 1 or 5 days, todo update!
+            return new List<StockData>();
         }
 
         private IEnumerable<StockData> GetDailyStocks(string symbol)
         {
             var stocks = new List<StockData>();
             var stockHistory = StockHistoryRepository.GetStock(symbol);
-            if(stockHistory.IsFailure)
+            if (stockHistory.IsFailure)
             {
                 return stocks;
             }
@@ -98,9 +101,9 @@ namespace GimmeMillions.Domain.Stocks
             return weeklyStocks;
         }
 
-        public IEnumerable<StockData> GetStocks(string symbol, DateTime start, DateTime end, FrequencyTimeframe timeframe = FrequencyTimeframe.Daily)
+        public IEnumerable<StockData> GetStocks(string symbol, DateTime start, DateTime end, StockDataPeriod period)
         {
-            return GetStocks(symbol, timeframe).Where(x => x.Date >= start && x.Date <= end);
+            return GetStocks(symbol, period).Where(x => x.Date >= start && x.Date <= end);
         }
 
         public IEnumerable<string> GetSymbols()

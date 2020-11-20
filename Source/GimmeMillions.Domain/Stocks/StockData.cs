@@ -4,18 +4,29 @@ using System.Linq;
 
 namespace GimmeMillions.Domain.Stocks
 {
+    public enum StockDataPeriod
+    {
+        Week,
+        Day,
+        Hour,
+        FifteenMinute,
+        FiveMinute,
+        Minute
+    };
+
     public class StockData
     {
         public int Id { get; set; }
         public string Symbol { get; set; }
         public DateTime Date { get; set; }
+        public StockDataPeriod Period { get; set; }
         public decimal Open { get; set; }
         public decimal High { get; set; }
         public decimal Low { get; set; }
         public decimal Close { get; set; }
         public decimal AdjustedClose { get; set; }
         public decimal Volume { get; set; }
-        public decimal PercentDayChange
+        public decimal PercentPeriodChange
         {
             get
             {
@@ -25,7 +36,7 @@ namespace GimmeMillions.Domain.Stocks
             }
         }
 
-        public decimal PercentDayRange
+        public decimal PercentPeriodRange
         {
             get
             {
@@ -36,7 +47,7 @@ namespace GimmeMillions.Domain.Stocks
             }
         }
 
-        public decimal AveragePercentDayRange { get; set; }
+        public decimal AveragePercentPeriodRange { get; set; }
 
         public decimal PercentChangeHighToOpen
         {
@@ -128,7 +139,7 @@ namespace GimmeMillions.Domain.Stocks
                     return 0.0m;
                 }
 
-                if (PercentDayChange > 0.0m)
+                if (PercentPeriodChange > 0.0m)
                 {
                     return 100.0m * (High - Close) / Open;
                 }
@@ -143,12 +154,12 @@ namespace GimmeMillions.Domain.Stocks
         {
             get
             {
-                if(Open == 0.0m)
+                if (Open == 0.0m)
                 {
                     return 0.0m;
                 }
 
-                if (PercentDayChange > 0.0m)
+                if (PercentPeriodChange > 0.0m)
                 {
                     return 100.0m * (Open - Low) / Open;
                 }
@@ -163,7 +174,7 @@ namespace GimmeMillions.Domain.Stocks
         {
             get
             {
-                if(High == Low)
+                if (High == Low)
                 {
                     return 0.0m;
                 }
@@ -173,11 +184,12 @@ namespace GimmeMillions.Domain.Stocks
 
         public decimal Signal { get; set; }
 
-        public StockData(string symbol, DateTime date, 
+        public StockData(string symbol, DateTime date, StockDataPeriod period,
             decimal open, decimal high, decimal low, decimal close, decimal adjClose, decimal volume)
         {
             Symbol = symbol;
             Date = date;
+            Period = period;
             Open = open;
             High = high;
             Low = low;
@@ -185,7 +197,7 @@ namespace GimmeMillions.Domain.Stocks
             AdjustedClose = adjClose;
             PreviousClose = open;
             Volume = volume;
-            AveragePercentDayRange = PercentDayRange;
+            AveragePercentPeriodRange = PercentPeriodRange;
         }
 
         public StockData(string symbol, DateTime date,
@@ -201,7 +213,8 @@ namespace GimmeMillions.Domain.Stocks
             AdjustedClose = adjClose;
             PreviousClose = previousClose;
             Volume = volume;
-            AveragePercentDayRange = PercentDayRange;
+            AveragePercentPeriodRange = PercentPeriodRange;
+            Period = StockDataPeriod.Day;
         }
 
         public StockData(int id, string symbol, DateTime date,
@@ -218,7 +231,8 @@ namespace GimmeMillions.Domain.Stocks
             AdjustedClose = adjClose;
             PreviousClose = previousClose;
             Volume = volume;
-            AveragePercentDayRange = PercentDayRange;
+            AveragePercentPeriodRange = PercentPeriodRange;
+            Period = StockDataPeriod.Day;
         }
 
         private StockData() { } //default constructor

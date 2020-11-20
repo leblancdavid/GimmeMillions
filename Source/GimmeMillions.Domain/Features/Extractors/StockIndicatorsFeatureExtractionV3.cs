@@ -117,13 +117,13 @@ namespace GimmeMillions.Domain.Features
 
         public double[] GetVolatility(List<(StockData Data, float Weight)> data, int length)
         {
-            double averageDayRange = data.Average(x => (double)x.Data.PercentDayRange);
-            double averageBody = data.Average(x => (double)Math.Abs(x.Data.PercentDayChange));
+            double averageDayRange = data.Average(x => (double)x.Data.PercentPeriodRange);
+            double averageBody = data.Average(x => (double)Math.Abs(x.Data.PercentPeriodChange));
             double averageBottom = data.Average(x => (double)x.Data.BottomWickPercent);
             double averageTop = data.Average(x => (double)Math.Abs(x.Data.TopWickPercent));
             var subData = data.Take(length).ToList();
-            double range = subData.Average(x => (double)x.Data.PercentDayRange);
-            double bodyRange = subData.Average(x => (double)Math.Abs(x.Data.PercentDayChange));
+            double range = subData.Average(x => (double)x.Data.PercentPeriodRange);
+            double bodyRange = subData.Average(x => (double)Math.Abs(x.Data.PercentPeriodChange));
             double botRange = subData.Average(x => (double)x.Data.BottomWickPercent);
             double topRange = subData.Average(x => (double)Math.Abs(x.Data.TopWickPercent));
 

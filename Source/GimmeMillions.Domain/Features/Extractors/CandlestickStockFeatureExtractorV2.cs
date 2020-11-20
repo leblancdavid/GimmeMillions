@@ -34,7 +34,7 @@ namespace GimmeMillions.Domain.Features
             int index = 0;
             foreach(var stock in ordered)
             {
-                feature[index * 4] = (double)(stock.Data.PercentDayChange);
+                feature[index * 4] = (double)(stock.Data.PercentPeriodChange);
                 feature[index * 4 + 1] = (double)(stock.Data.TopWickPercent);
                 feature[index * 4 + 2] = (double)(stock.Data.BottomWickPercent);
                 feature[index * 4 + 3] = (double)(stock.Data.Volume / (averageVolume + 1.0m));

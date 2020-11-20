@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using GimmeMillions.DataAccess.Stocks;
+using GimmeMillions.Database;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.Domain.Stocks.Filters;

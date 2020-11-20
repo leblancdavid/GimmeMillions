@@ -1,4 +1,5 @@
 ﻿using GimmeMillions.DataAccess.Stocks;
+using GimmeMillions.Database;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;
@@ -6,18 +7,12 @@ using GimmeMillions.Domain.Stocks.Filters;
 using GimmeMillions.SQLDataAccess;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DNNTrainer
 {
     public class BadgerModelTrainer
     {
         string _pathToModels = "../../../../Repository/Models";
-
         public void Train()
         {
             //var datasetService = GetCandlestickFeatureDatasetService(60, 5, true);
@@ -79,7 +74,7 @@ namespace DNNTrainer
             //var indictatorsExtractor = new NormalizedVolumePriceActionFeatureExtractor(numStockSamples);
 
             return new CandlestickStockWithFuturesFeatureDatasetService(indictatorsExtractor, stocksRepo,
-                numStockSamples, stockOutputPeriod);
+                StockDataPeriod.Day, numStockSamples);
         }
     }
 }

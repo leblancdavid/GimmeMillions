@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GimmeMillions.SQLDataAccess
+namespace GimmeMillions.Database
 {
     public class SQLStockRecommendationRepository : IStockRecommendationRepository
     {

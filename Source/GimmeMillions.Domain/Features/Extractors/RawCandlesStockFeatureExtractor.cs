@@ -20,7 +20,7 @@ namespace GimmeMillions.Domain.Features
         {
             var ordered = data.OrderByDescending(x => x.Data.Date).ToList();
             double averageVolume = ordered.Average(x => (double)x.Data.Volume); 
-            double averageBody = data.Average(x => (double)Math.Abs(x.Data.PercentDayChange));
+            double averageBody = data.Average(x => (double)Math.Abs(x.Data.PercentPeriodChange));
             double averageGap = data.Average(x => (double)Math.Abs(x.Data.PercentChangeOpenToPreviousClose));
             double averageBottom = data.Average(x => (double)x.Data.BottomWickPercent);
             double averageTop = data.Average(x => (double)x.Data.TopWickPercent);
@@ -28,7 +28,7 @@ namespace GimmeMillions.Domain.Features
              var feature = new List<double>();
             foreach(var bar in ordered)
             {
-                feature.Add((double)bar.Data.PercentDayChange / averageBody);
+                feature.Add((double)bar.Data.PercentPeriodChange / averageBody);
                 feature.Add((double)bar.Data.PercentChangeOpenToPreviousClose / averageGap);
                 feature.Add((double)bar.Data.BottomWickPercent / averageBottom);
                 feature.Add((double)bar.Data.TopWickPercent / averageTop);

@@ -48,11 +48,6 @@ namespace GimmeMillions.Domain.Stocks
         {
             var recommendations = new ConcurrentBag<StockRecommendation>();
 
-            if(updateStockHistory)
-            {
-                _featureDatasetService.StockAccess.UpdateFutures();
-            }
-
             var stockSymbols = _featureDatasetService.StockAccess.GetSymbols();
 
             Parallel.ForEach(stockSymbols, symbol =>
@@ -60,9 +55,9 @@ namespace GimmeMillions.Domain.Stocks
             {
                 List<StockData> stockData;
                 if (updateStockHistory)
-                    stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol).ToList();
+                    stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol, _featureDatasetService.Period).ToList();
                 else
-                    stockData = _featureDatasetService.StockAccess.GetStocks(symbol).ToList();
+                    stockData = _featureDatasetService.StockAccess.GetStocks(symbol, _featureDatasetService.Period).ToList();
 
                 var lastStock = stockData.Where(x => x.Date < date).Last();
 
@@ -77,7 +72,7 @@ namespace GimmeMillions.Domain.Stocks
                     (decimal)result.Probability, lastStock.Close);
                 recommendations.Add(rec);
                 _stockRecommendationRepository.AddRecommendation(rec);
-            //}
+                //}
             });
 
             return recommendations.ToList().OrderByDescending(x => x.Prediction);
@@ -97,20 +92,18 @@ namespace GimmeMillions.Domain.Stocks
         public IEnumerable<StockRecommendation> GetRecommendationsFor(IEnumerable<string> symbols, DateTime date, IStockFilter filter = null, bool updateStockHistory = false)
         {
             var recommendations = new ConcurrentBag<StockRecommendation>();
-            if (updateStockHistory)
-                _featureDatasetService.StockAccess.UpdateFutures();
 
             Parallel.ForEach(symbols, symbol =>
             //foreach(var symbol in symbols)
             {
                 List<StockData> stockData;
                 if (updateStockHistory)
-                    stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol).ToList();
+                    stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol, _featureDatasetService.Period).ToList();
                 else
-                    stockData = _featureDatasetService.StockAccess.GetStocks(symbol).ToList();
+                    stockData = _featureDatasetService.StockAccess.GetStocks(symbol, _featureDatasetService.Period).ToList();
 
                 var lastStock = stockData.Where(x => x.Date < date).LastOrDefault();
-                if(lastStock == null)
+                if (lastStock == null)
                 {
                     //continue;
                     return;
@@ -127,7 +120,7 @@ namespace GimmeMillions.Domain.Stocks
                     (decimal)result.Probability, lastStock.Close);
                 recommendations.Add(rec);
                 _stockRecommendationRepository.AddRecommendation(rec);
-            //}
+                //}
             });
 
             return recommendations.ToList().OrderByDescending(x => x.Prediction);
@@ -144,7 +137,17 @@ namespace GimmeMillions.Domain.Stocks
             {
                 return Result.Failure($"Model configuration named {configurationFile} could not be found");
             }
-            
+            var json = File.ReadAllText(configurationFile);
+            _systemConfiguration = JsonConvert.DeserializeObject<StockRecommendationSystemConfiguration>(json);
+
+            var modelInfo = _systemConfiguration.Models.FirstOrDefault();
+            model = (MLStockFastForestCandlestickModel)Activator.CreateInstance(modelInfo.ModelType);
+            var loadResult = model.Load(modelInfo.PathToModel);
+            if (loadResult.IsSuccess)
+            {
+                return Result.Failure($"Model could not be loaded");
+            }
+
             return Result.Success();
         }
 

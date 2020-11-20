@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GimmeMillions.SQLDataAccess
+namespace GimmeMillions.Database
 {
     public class SQLStockHistoryRepository : IStockHistoryRepository
     {
