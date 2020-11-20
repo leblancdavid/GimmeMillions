@@ -10,7 +10,7 @@ namespace GimmeMillions.Database
         public DbSet<StockHistory> StockHistories { get; set; }
         public DbSet<StockRecommendation> StockRecommendations { get; set; }
 
-        public GimmeMillionsContext(DbContextOptions<GimmeMillionsContext> options)
+        public GimmeMillionsContext(DbContextOptions options)
             : base(options)
         { }
 

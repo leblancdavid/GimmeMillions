@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>96d25bcc-391e-4c76-bc4c-fb97f2c3b328</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\GimmeMillions.DataAccess\GimmeMillions.DataAccess.csproj" />
+    <ProjectReference Include="..\..\Source\GimmeMillions.Database\GimmeMillions.Database.csproj" />
+    <ProjectReference Include="..\..\Source\GimmeMillions.Domain\GimmeMillions.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\Models\Futures-HighModel.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Models\Futures-LowModel.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Models\Futures-SentimentModel.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+
+</Project>

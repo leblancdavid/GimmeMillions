@@ -10,14 +10,20 @@ namespace GimmeMillions.Domain.Stocks
     public interface IStockRecommendationSystem<TFeature>
         where TFeature : FeatureVector
     {
+        IStockRecommendationRepository RecommendationRepository { get; }
+        string SystemId { get; }
         Result LoadConfiguration(string configurationFile);
         Result SaveConfiguration(string configurationFile);
-        IEnumerable<StockRecommendation> GetRecommendationsForToday(IStockFilter filter = null,
+        IEnumerable<StockRecommendation> RunRecommendationsForToday(IStockFilter filter = null,
             int keepTop = 10, bool updateStockHistory = false);
-        IEnumerable<StockRecommendation> GetRecommendations(DateTime date, IStockFilter filter = null, int keepTop = 10, bool updateStockHistory = false);
-        IEnumerable<StockRecommendation> GetAllRecommendationsForToday(IStockFilter filter = null, bool updateStockHistory = false);
-        IEnumerable<StockRecommendation> GetAllRecommendations(DateTime date, IStockFilter filter = null, bool updateStockHistory = false);
-        IEnumerable<StockRecommendation> GetRecommendationsFor(IEnumerable<string> symbols, DateTime date, 
-            IStockFilter filter = null, bool updateStockHistory = false);
+        IEnumerable<StockRecommendation> RunRecommendations(DateTime date, IStockFilter filter = null, int keepTop = 10);
+        IEnumerable<StockRecommendation> RunAllRecommendationsForToday(IStockFilter filter = null);
+        IEnumerable<StockRecommendation> RunAllRecommendations(DateTime date, IStockFilter filter = null);
+        IEnumerable<StockRecommendation> RunRecommendationsFor(IEnumerable<string> symbols, DateTime date, 
+            IStockFilter filter = null);
+
+        IEnumerable<StockRecommendation> GetRecommendationsForToday(int keep = 10);
+        IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keep = 10);
+        Result<StockRecommendation> GetRecommendation(DateTime date, string symbol);
     }
 }

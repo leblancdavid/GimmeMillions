@@ -96,7 +96,7 @@ namespace RecommendationMaker
                 "LINK-USD",
             };
 
-            recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, null, true)
+            recommendations = recommendationSystem.RunRecommendationsFor(stockList, date, null)
                 .OrderByDescending(x => x.Sentiment).ToList();
 
             using (System.IO.StreamWriter file =
@@ -133,7 +133,7 @@ namespace RecommendationMaker
                 "DIA", "QQQ", "SPY"
             };
 
-            recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, null, true);
+            recommendations = recommendationSystem.RunRecommendationsFor(stockList, date, null);
 
             using (System.IO.StreamWriter file =
             new System.IO.StreamWriter($"C:\\Stocks\\{model}-futures-{date.ToString("yyyy-MM-dd")}"))
@@ -169,11 +169,11 @@ namespace RecommendationMaker
             var filter = new DefaultStockFilter(minVolume: 500000m, maxPercentHigh: 20.0m, maxPercentLow: 20.0m);
             if (stockList.Any())
             {
-                recommendations = recommendationSystem.GetRecommendationsFor(stockList, date, filter, true);
+                recommendations = recommendationSystem.RunRecommendationsFor(stockList, date, filter);
             }
             else
             {
-                recommendations = recommendationSystem.GetAllRecommendations(date, filter, true);
+                recommendations = recommendationSystem.RunAllRecommendations(date, filter);
             }
 
             recommendations = recommendations.OrderByDescending(x => x.Sentiment).ToList();
