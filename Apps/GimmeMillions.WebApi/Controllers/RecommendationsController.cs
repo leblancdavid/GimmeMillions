@@ -1,4 +1,5 @@
 ﻿using GimmeMillions.Domain.Stocks;
+using GimmeMillions.WebApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,16 +10,18 @@ namespace GimmeMillions.WebApi.Controllers
     [ApiController]
     public class RecommendationsController : ControllerBase
     {
-        private IStockRecommendationRepository _stockRecommendationRepository;
-        public RecommendationsController(IStockRecommendationRepository stockRecommendationRepository)
+        private IRecommendationSystemProvider _provider;
+        public RecommendationsController(IRecommendationSystemProvider provider)
         {
-            _stockRecommendationRepository = stockRecommendationRepository;
+            _provider = provider;
         }
 
         [HttpGet]
         public IEnumerable<StockRecommendation> Get()
         {
-            var recommendations = _stockRecommendationRepository.GetStockRecommendations("cat", "DIA");
+            var system = _provider.GetStocksRecommendations();
+
+            var recommendations = system.RecommendationRepository.GetStockRecommendations(system.SystemId, "DIA");
 
             return recommendations;
         }
@@ -26,9 +29,10 @@ namespace GimmeMillions.WebApi.Controllers
         [HttpGet("futures")]
         public IEnumerable<StockRecommendation> GetFutures()
         {
-            var recommendations = _stockRecommendationRepository.GetStockRecommendations("cat", "DIA").ToList();
-            recommendations.AddRange(_stockRecommendationRepository.GetStockRecommendations("cat", "SPY"));
-            recommendations.AddRange(_stockRecommendationRepository.GetStockRecommendations("cat", "QQQ"));
+            var system = _provider.GetFuturesRecommendations();
+            var recommendations = system.RecommendationRepository.GetStockRecommendations("cat", "DIA").ToList();
+            recommendations.AddRange(system.RecommendationRepository.GetStockRecommendations("cat", "SPY"));
+            recommendations.AddRange(system.RecommendationRepository.GetStockRecommendations("cat", "QQQ"));
             return recommendations;
         }
     }

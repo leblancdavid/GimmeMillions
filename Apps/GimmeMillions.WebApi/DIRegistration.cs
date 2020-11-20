@@ -1,6 +1,9 @@
-﻿using GimmeMillions.Database;
+﻿using GimmeMillions.DataAccess.Stocks;
+using GimmeMillions.Database;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.WebApi.Services;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace GimmeMillions.WebApi
 {
@@ -9,6 +12,10 @@ namespace GimmeMillions.WebApi
         public static void RegisterServices(IServiceCollection services)
         {
             services.AddScoped<IStockRecommendationRepository, SQLStockRecommendationRepository>();
+            services.AddScoped<IStockHistoryRepository, SQLStockHistoryRepository>();
+            services.AddScoped<IStockRepository, DefaultStockRepository>();
+            services.AddScoped<IRecommendationSystemProvider, DonskoyRecommendationSystemProvider>();
+
         }
     }
 }
