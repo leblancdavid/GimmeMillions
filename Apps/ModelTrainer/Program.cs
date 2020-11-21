@@ -19,7 +19,9 @@ namespace DNNTrainer
             var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
             var trainer = new DonskoyModelTrainer(new DefaultStockRepository(stockSqlDb));
-            trainer.Train("C:\\Stocks\\Models\\Donskoy");
+            //trainer.Train("C:\\Stocks\\Models\\Donskoy");
+            trainer.TrainCrypto("C:\\Stocks\\Models\\Donskoy", StockDataPeriod.FiveMinute);
+
 
             //var trainer = new MarketFuturesTrainer(new DefaultStockRepository(stockSqlDb));
             //trainer.Train("C:\\Recommendations\\App\\RecommendationMaker\\Models\\MarketFutures");
