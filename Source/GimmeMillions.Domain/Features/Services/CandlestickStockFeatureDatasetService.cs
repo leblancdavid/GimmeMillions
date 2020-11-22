@@ -217,7 +217,7 @@ namespace GimmeMillions.Domain.Features
             return Result.Success(stocksVector);
         }
 
-        public Result<FeatureVector> GetFeatureVector(string symbol, DateTime date)
+        public Result<FeatureVector> GetFeatureVector(string symbol, DateTime date, int historyLimit = 0)
         {
             var stocks = _stockRepository.GetStocks(symbol, StockDataPeriod.Day).ToList();
             if (!stocks.Any())

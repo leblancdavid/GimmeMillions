@@ -126,12 +126,13 @@ namespace GimmeMillions.Domain.Features
             }
 
             var stocksVector = GetStockFeatureVector(date, stocks, _numStockDailySamples);
+            
             if (stocksVector.IsFailure)
             {
                 return Result.Failure<FeatureVector>(stocksVector.Error);
             }
 
-            var compositeVector = new FeatureVector(stocksVector.Value, date, _encodingKey);
+            var compositeVector = new FeatureVector(stocksVector.Value, stocks.Last().Date, _encodingKey);
             return Result.Success(compositeVector);
         }
 
@@ -185,9 +186,9 @@ namespace GimmeMillions.Domain.Features
             }
         }
 
-        public Result<FeatureVector> GetFeatureVector(string symbol, DateTime date)
+        public Result<FeatureVector> GetFeatureVector(string symbol, DateTime date, int historyLimit = 0)
         {
-            var stocks = _stockRepository.GetStocks(symbol, Period).ToList();
+            var stocks = _stockRepository.GetStocks(symbol, Period, historyLimit).ToList();
             if (!stocks.Any())
             {
                 return Result.Failure<FeatureVector>(
