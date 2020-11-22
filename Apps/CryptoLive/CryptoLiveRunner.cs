@@ -1,11 +1,9 @@
-﻿using Colorful;
-using GimmeMillions.Domain.Features;
+﻿using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 
 namespace CryptoLive
 {
@@ -21,6 +19,18 @@ namespace CryptoLive
             "LTC-USD",
             "XRP-USD",
             "BCH-USD",
+            "EOS-USD",
+            "DASH-USD",
+            "OXT-USD",
+            "MKR-USD",
+            "XLM-USD",
+            "LINK-USD",
+            "ATOM-USD",
+            "ETC-USD",
+            "XTZ-USD",
+            "REP-USD",
+            "DAI-USD",
+            "KNC-USD",
         };
 
         public CryptoLiveRunner(MLStockRangePredictorModel model, IFeatureDatasetService<FeatureVector> dataset)
@@ -31,7 +41,7 @@ namespace CryptoLive
             foreach (var crypto in _supportedCryptos)
             {
                 _signalTable[crypto] = new Queue<(double Signal, DateTime Time)>();
-                _signalTable[crypto].Enqueue((50.0, DateTime.UtcNow));
+                _signalTable[crypto].Enqueue((50.0, new DateTime()));
             }
 
             PrintTable();
@@ -62,26 +72,37 @@ namespace CryptoLive
 
         private void PrintTable()
         {
-            Colorful.Console.Clear();
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ResetColor();
             foreach (var crypto in _supportedCryptos)
             {
-                Colorful.Console.Write($"{crypto}");
-                foreach(var signal in _signalTable[crypto])
+                string line = $"{crypto.Replace("-USD", "")}";
+                var color = GetColorFromSignal(_signalTable[crypto].Last().Signal);
+                foreach(var signal in _signalTable[crypto].Reverse())
                 {
-                    Colorful.Console.Write($"\t{signal.Signal}%", GetColorFromSignal(signal.Signal));
+                    string s = String.Format("{0:F2}", signal.Signal);
+                    line += $"\t{s}%";
                 }
-                Colorful.Console.Write("\n");
+                Console.ForegroundColor = color;
+                Console.WriteLine(line);
             }
         }
 
-        private Color GetColorFromSignal(double signal)
+        private ConsoleColor GetColorFromSignal(double signal)
         {
-            if(signal > 50.0)
-            {
-                return Color.FromArgb((int)((signal - 50.0) * 4.0), 200, 50);
-            }
-
-            return Color.FromArgb(200, (int)((signal) * 4.0), 50);
+            if (signal > 85.0)
+                return ConsoleColor.DarkGreen;
+            if (signal > 70.0)
+                return ConsoleColor.Green;
+            if (signal > 60.0)
+                return ConsoleColor.Yellow;
+            if (signal > 30.0)
+                return ConsoleColor.DarkYellow;
+            if (signal > 15.0)
+                return ConsoleColor.Red;
+            return ConsoleColor.DarkRed;
         }
     }
 }
