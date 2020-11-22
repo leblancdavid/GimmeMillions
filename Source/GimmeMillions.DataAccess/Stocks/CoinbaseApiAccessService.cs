@@ -1,10 +1,14 @@
 ﻿using GimmeMillions.Domain.Stocks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 
 namespace GimmeMillions.DataAccess.Stocks
 {
@@ -44,16 +48,39 @@ namespace GimmeMillions.DataAccess.Stocks
 
         public IEnumerable<StockData> GetStocks(string symbol, StockDataPeriod period, int limit = -1)
         {
+            int days = limit;
+            if(days <= 0)
+            {
+                days = 30; //default to 30 days worth of data
+            }
+
+            var end = DateTime.UtcNow;
+            var start = end.AddDays(-1.0); 
             var stocks = new List<StockData>();
+            for (int i = 0; i < days; ++i)
+            {
+                stocks.AddRange(GetStocks(symbol, period, start, end));
+                end = start;
+                start = end.AddDays(-1.0);
+            }
+
+            if (!stocks.Any())
+                return stocks;
+            stocks = stocks.OrderBy(x => x.Date).ToList();
+            decimal previousClose = stocks.First().Close;
+            foreach(var stock in stocks)
+            {
+                stock.PreviousClose = previousClose;
+                previousClose = stock.Close;
+            }
+
+            return stocks;
+        }
+
+        private IEnumerable<StockData> GetStocks(string symbol, StockDataPeriod period, DateTime start, DateTime end)
+        {
             try
             {
-                var end = DateTime.UtcNow;
-                var start = end.AddDays(-30.0);
-                if (limit > 0)
-                {
-                    start = end.AddDays(-1.0 * limit);
-                }
-
                 string requestUrl = $"/products/{symbol}/candles?start={start.ToString("o")}&end={end.ToString("o")}&granularity={(int)period}";
                 string timestamp, signing;
                 GetRequestSigning(requestUrl, "GET", out signing, out timestamp);
@@ -62,21 +89,34 @@ namespace GimmeMillions.DataAccess.Stocks
                 _client.DefaultRequestHeaders.Remove("CB-ACCESS-TIMESTAMP");
                 _client.DefaultRequestHeaders.Add("CB-ACCESS-TIMESTAMP", timestamp);
 
+                //need to throttle the requests by 1 sec
+                Thread.Sleep(1000);
                 var response = _client.GetAsync(requestUrl).Result;
-                var content = response.Content.ReadAsStringAsync().Result;  //Make sure to add a reference to System.Net.Http.Formatting.dll
-               
+                return ParseResponseContent(response.Content.ReadAsStringAsync().Result, symbol, period);  //Make sure to add a reference to System.Net.Http.Formatting.dll
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-
+                return new List<StockData>();
             }
 
-            return stocks;
         }
 
-        public IEnumerable<StockData> GetStocks(StockDataPeriod period, int limit = -1)
+        private IEnumerable<StockData> ParseResponseContent(string content, string symbol, StockDataPeriod period)
         {
-            throw new NotImplementedException();
+            var stocks = new List<StockData>();
+            var contentArray = JsonConvert.DeserializeObject<JArray[]>(content);
+            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            foreach (var sample in contentArray)
+            {
+                var date = origin.AddSeconds((long)sample[0]);
+                stocks.Add(new StockData(symbol, date,
+                    (decimal)(double)sample[3], (decimal)(double)sample[1],
+                    (decimal)(double)sample[2], (decimal)(double)sample[4],
+                    (decimal)(double)sample[4], (decimal)(double)sample[5],
+                    (decimal)(double)sample[4]));
+            }
+            return stocks;
         }
 
         public IEnumerable<string> GetSymbols()

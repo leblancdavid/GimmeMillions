@@ -20,6 +20,7 @@ namespace DNNTrainer
 
             var trainer = new DonskoyModelTrainer(new DefaultStockRepository(stockSqlDb));
             //trainer.Train("C:\\Stocks\\Models\\Donskoy");
+            //trainer.TrainCrypto("C:\\Stocks\\Models\\Donskoy", StockDataPeriod.Minute);
             trainer.TrainCrypto("C:\\Stocks\\Models\\Donskoy", StockDataPeriod.FiveMinute);
 
 

@@ -58,10 +58,10 @@ namespace DNNTrainer
 
         public void TrainCrypto(string pathToModels, StockDataPeriod period)
         {
-            var datasetService = GetCoinbaseIndicatorFeaturesBuySellSignalDatasetService(period, 100, 9);
+            var datasetService = GetCoinbaseIndicatorFeaturesBuySellSignalDatasetService(period, 100, 15);
             var model = new MLStockRangePredictorModel();
 
-            int numSamples = 2;
+            int numSamples = 200;
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(datasetService.GetTrainingData("BTC-USD", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("ETH-USD", null, true, numSamples));
@@ -69,7 +69,7 @@ namespace DNNTrainer
             trainingData.AddRange(datasetService.GetTrainingData("XRP-USD", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("BCH-USD", null, true, numSamples));
 
-            model.Train(trainingData, 0.1, new SignalOutputMapper());
+            model.Train(trainingData, 0.0, new SignalOutputMapper());
             model.Save(pathToModels + $"\\Crypto{period.ToString()}");
         }
 

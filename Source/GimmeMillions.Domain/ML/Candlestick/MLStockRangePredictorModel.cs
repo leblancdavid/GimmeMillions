@@ -136,7 +136,7 @@ namespace GimmeMillions.Domain.ML
             //TRAIN THE LOW RANGE PREDICTOR
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
 
-            var rangeEstimator = _mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: trainingCount / 150);
+            var rangeEstimator = _mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: 3000);
 
             var trainLowData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Take(trainingCount).Select(x =>
