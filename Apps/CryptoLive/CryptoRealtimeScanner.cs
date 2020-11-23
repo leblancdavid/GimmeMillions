@@ -1,5 +1,6 @@
 ﻿using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
+using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -7,7 +8,7 @@ using System.Linq;
 
 namespace CryptoLive
 {
-    public class CryptoLiveRunner
+    public class CryptoRealtimeScanner : ICryptoRealtimeScanner
     {
         private MLStockRangePredictorModel _model;
         private IFeatureDatasetService<FeatureVector> _dataset;
@@ -32,11 +33,18 @@ namespace CryptoLive
             "DAI-USD",
             "KNC-USD",
         };
+        private double SELL_SIGNAL_THRESHOLD = 10.0;
+        private double BUY_SIGNAL_THRESHOLD = 90.0;
+        private ICryptoEventNotifier _notifier;
+        public ICryptoEventNotifier Notifier => _notifier;
 
-        public CryptoLiveRunner(MLStockRangePredictorModel model, IFeatureDatasetService<FeatureVector> dataset)
+        public CryptoRealtimeScanner(MLStockRangePredictorModel model, 
+            IFeatureDatasetService<FeatureVector> dataset,
+            ICryptoEventNotifier notifier)
         {
             _model = model;
             _dataset = dataset;
+            _notifier = notifier;
             _signalTable = new Dictionary<string, Queue<(double Signal, DateTime Time)>>();
             foreach (var crypto in _supportedCryptos)
             {
@@ -47,27 +55,45 @@ namespace CryptoLive
             PrintTable();
         }
 
-        public void Refresh(int maxLength = 5)
+        public IEnumerable<CryptoEventNotification> Scan()
         {
+            int length = 5;
+            var results = new List<CryptoEventNotification>();
             foreach(var crypto in _supportedCryptos)
             {
-                UpdateTableFor(crypto, maxLength);
+                var result = UpdateTableFor(crypto, length);
+                if (result == null)
+                    continue;
+
+                results.Add(result);
+                if (_notifier != null && result.IsBuySignal(BUY_SIGNAL_THRESHOLD))
+                    _notifier.Notify(result);
+                if (_notifier != null && result.IsSellSignal(SELL_SIGNAL_THRESHOLD))
+                    _notifier.Notify(result);
             }
             PrintTable();
+            return results;
         }
 
-        private void UpdateTableFor(string symbol, int maxLength = 5)
+        private CryptoEventNotification UpdateTableFor(string symbol, int maxLength = 5)
         {
-            var feature = _dataset.GetFeatureVector(symbol, DateTime.UtcNow, 1);
+            StockData last = null;
+            var feature = _dataset.GetFeatureVector(symbol, out last, 1);
             if (feature.IsSuccess && feature.Value.Date >= _signalTable[symbol].Last().Time)
             {
                 var prediction = _model.Predict(feature.Value);
                 _signalTable[symbol].Enqueue((prediction.Sentiment, feature.Value.Date));
-                if(_signalTable[symbol].Count > maxLength)
+                if (_signalTable[symbol].Count > maxLength)
                 {
                     _signalTable[symbol].Dequeue();
                 }
+
+                var signal = (_signalTable[symbol].ElementAt(0).Signal + _signalTable[symbol].ElementAt(1).Signal) / 2.0;
+                return new CryptoEventNotification(last, signal);
             }
+
+            return null;
+
         }
 
         private void PrintTable()
@@ -104,5 +130,6 @@ namespace CryptoLive
                 return ConsoleColor.Red;
             return ConsoleColor.DarkRed;
         }
+
     }
 }

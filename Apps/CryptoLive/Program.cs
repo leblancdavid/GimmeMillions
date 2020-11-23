@@ -41,11 +41,11 @@ namespace CryptoLive
             var model = new MLStockRangePredictorModel();
             model.Load($"{pathToModels}\\Donskoy\\Crypto{period}");
 
-            var runner = new CryptoLiveRunner(model, datasetService);
+            var runner = new CryptoRealtimeScanner(model, datasetService, null);
 
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            runner.Refresh();
+            runner.Scan();
 
             while (true)
             {
@@ -56,7 +56,7 @@ namespace CryptoLive
 
                 if(stopWatch.Elapsed > TimeSpan.FromSeconds(30))
                 {
-                    runner.Refresh();
+                    runner.Scan();
                     stopWatch.Restart();
                 }
             }
