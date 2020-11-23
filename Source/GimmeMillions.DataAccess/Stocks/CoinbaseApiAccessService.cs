@@ -29,21 +29,10 @@ namespace GimmeMillions.DataAccess.Stocks
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _client.DefaultRequestHeaders.Add("CB-ACCESS-KEY", _key);
             _client.DefaultRequestHeaders.Add("CB-ACCESS-PASSPHRASE", _passphrase);
-
-            _hmac = new HMACSHA256(System.Convert.FromBase64String(_secret));
-
-        }
-
-        //For now keys are hardcoded
-        public CoinbaseApiAccessService()
-        {
-            _client.BaseAddress = new Uri("https://api.pro.coinbase.com/");
-            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            _client.DefaultRequestHeaders.Add("CB-ACCESS-KEY", _key);
-            _client.DefaultRequestHeaders.Add("CB-ACCESS-PASSPHRASE", _passphrase); 
             _client.DefaultRequestHeaders.Add("User-Agent", "CoinbaseApiAccessService");
 
             _hmac = new HMACSHA256(System.Convert.FromBase64String(_secret));
+
         }
 
         public IEnumerable<StockData> GetStocks(string symbol, StockDataPeriod period, int limit = -1)

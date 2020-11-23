@@ -1,11 +1,12 @@
-﻿using GimmeMillions.Database;
+﻿using GimmeMillions.DataAccess.Stocks;
+using GimmeMillions.Database;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.Domain.Stocks.Filters;
 using GimmeMillions.SQLDataAccess;
 using Microsoft.EntityFrameworkCore;
 
-namespace DNNTrainer
+namespace ModelTrainer
 {
     class Program
     {
@@ -21,7 +22,10 @@ namespace DNNTrainer
             var trainer = new DonskoyModelTrainer(new DefaultStockRepository(stockSqlDb));
             //trainer.Train("C:\\Stocks\\Models\\Donskoy");
             //trainer.TrainCrypto("C:\\Stocks\\Models\\Donskoy", StockDataPeriod.Minute);
-            trainer.TrainCrypto("C:\\Stocks\\Models\\Donskoy", StockDataPeriod.FiveMinute);
+            var service = new CoinbaseApiAccessService("Fafav1z7cSnlulnPwdAl2pv1B6CMkM6b4If0WenT8hdgR9+ZlsowruJBxiUJv9SMmHvKWy6X4OQdBN2YaZGdyQ==",
+                "059dd44fa67976e9743836fd0a3a5624",
+                "23ferghfa21abb");
+            trainer.TrainCrypto("C:\\Stocks\\Models\\Donskoy", StockDataPeriod.FiveMinute, service);
 
 
             //var trainer = new MarketFuturesTrainer(new DefaultStockRepository(stockSqlDb));

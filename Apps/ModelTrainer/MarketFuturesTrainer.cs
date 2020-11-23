@@ -4,7 +4,7 @@ using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.Stocks;
 using System.Collections.Generic;
 
-namespace DNNTrainer
+namespace ModelTrainer
 {
 
     public class MarketFuturesTrainer

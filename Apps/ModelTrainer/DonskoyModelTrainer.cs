@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DNNTrainer
+namespace ModelTrainer
 {
     public class DonskoyModelTrainer
     {
@@ -56,9 +56,9 @@ namespace DNNTrainer
             model.Save(pathToModels + "\\Stocks");
         }
 
-        public void TrainCrypto(string pathToModels, StockDataPeriod period)
+        public void TrainCrypto(string pathToModels, StockDataPeriod period, IStockAccessService stockAccessService)
         {
-            var datasetService = GetCoinbaseIndicatorFeaturesBuySellSignalDatasetService(period, 100, 15);
+            var datasetService = GetCoinbaseIndicatorFeaturesBuySellSignalDatasetService(stockAccessService, period, 100, 15);
             var model = new MLStockRangePredictorModel();
 
             int numSamples = 200;
@@ -74,11 +74,11 @@ namespace DNNTrainer
         }
 
         private IFeatureDatasetService<FeatureVector> GetCoinbaseIndicatorFeaturesBuySellSignalDatasetService(
+            IStockAccessService stockAccessService,
            StockDataPeriod period,
            int numStockSamples = 40,
            int kernelSize = 9)
         {
-            var stocksRepo = new CoinbaseApiAccessService();
             //var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
             //var extractor = new RawCandlesStockFeatureExtractor();
             var extractor = new StockIndicatorsFeatureExtractionV2(10,
@@ -88,7 +88,7 @@ namespace DNNTrainer
                 (int)(numStockSamples * 0.8), 5,
                 (int)(numStockSamples * 0.8), 5,
                 false);
-            return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+            return new BuySellSignalFeatureDatasetService(extractor, stockAccessService,
                 period, numStockSamples, kernelSize);
         }
 

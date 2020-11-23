@@ -110,12 +110,13 @@ namespace GimmeMillions.DataAccess.Stocks
 
         public static IStockRecommendationSystem<FeatureVector> GetDonskoyCryptoRecommendationSystem(
             IStockRecommendationRepository stockRecommendationRepository,
-            string pathToModel)
+            string pathToModel,
+            string secret, string key, string passphrase)
         {
             var period = StockDataPeriod.Day;
             var numStockSamples = 100;
             var kernelSize = 9;
-            var stocksRepo = new CoinbaseApiAccessService();
+            var stocksRepo = new CoinbaseApiAccessService(secret, key, passphrase);
             //var extractor = new RawCandlesStockFeatureExtractor();
             var extractor = new StockIndicatorsFeatureExtractionV2(10,
                 numStockSamples,

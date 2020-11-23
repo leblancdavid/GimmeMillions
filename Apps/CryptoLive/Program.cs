@@ -12,7 +12,10 @@ namespace CryptoLive
         static void Main(string[] args)
         {
             var period = StockDataPeriod.FiveMinute;
-            var datasetService = GetCoinbaseIndicatorFeaturesBuySellSignalDatasetService(period, 100, 15);
+            var service = new CoinbaseApiAccessService("Fafav1z7cSnlulnPwdAl2pv1B6CMkM6b4If0WenT8hdgR9+ZlsowruJBxiUJv9SMmHvKWy6X4OQdBN2YaZGdyQ==",
+                "059dd44fa67976e9743836fd0a3a5624",
+                "23ferghfa21abb");
+            var datasetService = GetCoinbaseIndicatorFeaturesBuySellSignalDatasetService(service, period, 100, 15);
             var model = new MLStockRangePredictorModel();
             model.Load($"C:\\Stocks\\Models\\Donskoy\\Crypto{period}");
 
@@ -39,11 +42,11 @@ namespace CryptoLive
 
 
         private static IFeatureDatasetService<FeatureVector> GetCoinbaseIndicatorFeaturesBuySellSignalDatasetService(
+            IStockAccessService accessService,
           StockDataPeriod period,
           int numStockSamples = 40,
           int kernelSize = 9)
         {
-            var stocksRepo = new CoinbaseApiAccessService();
             var extractor = new StockIndicatorsFeatureExtractionV2(10,
                 numStockSamples,
                 (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
@@ -51,7 +54,7 @@ namespace CryptoLive
                 (int)(numStockSamples * 0.8), 5,
                 (int)(numStockSamples * 0.8), 5,
                 false);
-            return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+            return new BuySellSignalFeatureDatasetService(extractor, accessService,
                 period, numStockSamples, kernelSize);
         }
     }
