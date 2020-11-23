@@ -8,7 +8,7 @@ using GimmeMillions.SQLDataAccess;
 using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace DNNTrainer
+namespace ModelTrainer
 {
     public class BadgerModelTrainer
     {

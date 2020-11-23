@@ -8,7 +8,6 @@ namespace GimmeMillions.Domain.Stocks
     {
         IEnumerable<StockData> UpdateStocks(string symbol, StockDataPeriod period, int limit = -1);
         IEnumerable<StockData> GetStocks(string symbol, StockDataPeriod period, int limit = -1);
-        IEnumerable<StockData> GetStocks(StockDataPeriod period, int limit = -1);
         IEnumerable<string> GetSymbols();
     }
 }

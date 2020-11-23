@@ -11,7 +11,7 @@ namespace GimmeMillions.Domain.Stocks
 
         public int Id { get; set; }
         public string Symbol { get; set; }
-        public StockDataPeriod Period { get; set; }
+        public StockDataPeriod StockPeriod { get; set; }
         private List<StockData> _historicalData = new List<StockData>();
         public IEnumerable<StockData> HistoricalData => _historicalData;
 
@@ -24,7 +24,7 @@ namespace GimmeMillions.Domain.Stocks
             }
             set
             {
-                _historicalData = Parse(Symbol, value, Period).ToList();
+                _historicalData = Parse(Symbol, value, StockPeriod).ToList();
                 _historicalDataStr = Stringify(_historicalData);
             }
         }
@@ -43,7 +43,7 @@ namespace GimmeMillions.Domain.Stocks
         public StockHistory(string symbol, string dataStr, StockDataPeriod period)
         {
             Symbol = symbol;
-            Period = period;
+            StockPeriod = period;
             _historicalDataStr = dataStr;
             _historicalData = Parse(symbol, dataStr, period).ToList();
             LastUpdated = DateTime.Now;
@@ -51,7 +51,7 @@ namespace GimmeMillions.Domain.Stocks
 
         public void LoadData()
         {
-            _historicalData = Parse(Symbol, _historicalDataStr, Period).ToList();
+            _historicalData = Parse(Symbol, _historicalDataStr, StockPeriod).ToList();
         }
 
         public static string Stringify(IEnumerable<StockData> historicalData)

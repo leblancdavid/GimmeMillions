@@ -23,7 +23,7 @@ namespace GimmeMillions.Domain.Features
             bool updateStocks = false,
             int historyLimit = 0);
         Result<(TFeature Input, StockData Output)> GetData(string symbol, DateTime date);
-        Result<TFeature> GetFeatureVector(string symbol, DateTime date);
+        Result<TFeature> GetFeatureVector(string symbol, DateTime date, int historyLimit = 0);
         IEnumerable<TFeature> GetFeatures(string symbol);
     }
 }

@@ -6,12 +6,13 @@ namespace GimmeMillions.Domain.Stocks
 {
     public enum StockDataPeriod
     {
-        Week,
-        Day,
-        Hour,
-        FifteenMinute,
-        FiveMinute,
-        Minute
+        Week = 432000,
+        Day = 86400,
+        SixHour = 21600,
+        Hour = 3600,
+        FifteenMinute = 900,
+        FiveMinute = 300,
+        Minute = 60
     };
 
     public class StockData

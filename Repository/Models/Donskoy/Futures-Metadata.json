@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.0,
+    "Accuracy": 0.0,
+    "PositivePrecision": 0.0,
+    "PositiveRecall": 0.0,
+    "NegativePrecision": 0.0,
+    "NegativeRecall": 0.0,
+    "F1Score": 0.0,
+    "AreaUnderPrecisionRecallCurve": 0.0,
+    "Error": 0.0
+  },
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "Indicators-Boll(100)MACD(80,40,30,5)VWAP(80,5)RSI(80,5)CMF(80,5),nFalse-v2_100d-9k",
+  "ModelId": null
+}

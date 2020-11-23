@@ -6,19 +6,19 @@ namespace GimmeMillions.SQLDataAccess.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "Period",
-                table: "StockHistories",
-                type: "INTEGER",
-                nullable: false,
-                defaultValue: 0);
+            //migrationBuilder.AddColumn<int>(
+            //    name: "Period",
+            //    table: "StockHistories",
+            //    type: "INTEGER",
+            //    nullable: false,
+            //    defaultValue: 0);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Period",
-                table: "StockHistories");
+            //migrationBuilder.DropColumn(
+            //    name: "Period",
+            //    table: "StockHistories");
         }
     }
 }
