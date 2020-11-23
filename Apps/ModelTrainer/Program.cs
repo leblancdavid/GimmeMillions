@@ -1,4 +1,5 @@
-﻿using GimmeMillions.DataAccess.Stocks;
+﻿using CommandLine;
+using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Database;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
@@ -10,8 +11,31 @@ namespace ModelTrainer
 {
     class Program
     {
+        public class Options
+        {
+
+            [Option('p', "pathToModel", Required = true, HelpText = "The path to the model file")]
+            public string PathToModel { get; set; }
+            [Option('s', "secret", Required = true, HelpText = "The secret for the Coinbase API")]
+            public string ApiSecret { get; set; }
+            [Option('k', "key", Required = true, HelpText = "The Key for the Coinbase API")]
+            public string ApiKey { get; set; }
+
+            [Option('x', "passphrase", Required = true, HelpText = "The Passphrase for the Coinbase API")]
+            public string ApiPassphrase { get; set; }
+        }
         static void Main(string[] args)
         {
+            string pathToModels = "", secret = "", key = "", passphrase = "";
+            Parser.Default.ParseArguments<Options>(args)
+                  .WithParsed<Options>(o =>
+                  {
+                      pathToModels = o.PathToModel;
+                      secret = o.ApiSecret;
+                      key = o.ApiKey;
+                      passphrase = o.ApiPassphrase;
+                  });
+
             var optionsBuilder = new DbContextOptionsBuilder<GimmeMillionsContext>();
             optionsBuilder.UseSqlite($"Data Source=C:\\Stocks\\gm.db");
             var context = new GimmeMillionsContext(optionsBuilder.Options);
@@ -22,10 +46,8 @@ namespace ModelTrainer
             var trainer = new DonskoyModelTrainer(new DefaultStockRepository(stockSqlDb));
             //trainer.Train("C:\\Stocks\\Models\\Donskoy");
             //trainer.TrainCrypto("C:\\Stocks\\Models\\Donskoy", StockDataPeriod.Minute);
-            var service = new CoinbaseApiAccessService("Fafav1z7cSnlulnPwdAl2pv1B6CMkM6b4If0WenT8hdgR9+ZlsowruJBxiUJv9SMmHvKWy6X4OQdBN2YaZGdyQ==",
-                "059dd44fa67976e9743836fd0a3a5624",
-                "23ferghfa21abb");
-            trainer.TrainCrypto("C:\\Stocks\\Models\\Donskoy", StockDataPeriod.FiveMinute, service);
+            var service = new CoinbaseApiAccessService(secret, key, passphrase);
+            trainer.TrainCrypto($"{pathToModels}\\Donskoy", StockDataPeriod.FiveMinute, service);
 
 
             //var trainer = new MarketFuturesTrainer(new DefaultStockRepository(stockSqlDb));
