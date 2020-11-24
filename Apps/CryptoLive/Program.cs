@@ -1,10 +1,12 @@
 ﻿using CommandLine;
 using CryptoLive.Accounts;
+using CryptoLive.Notification;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.Stocks;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -53,7 +55,13 @@ namespace CryptoLive
             else
                 simulation.LoadAccount(simulationAccount);
 
-            var runner = new CryptoRealtimeScanner(model, datasetService, null);
+            var notifiers = new MultiCryptoEventNotifier(new List<ICryptoEventNotifier>()
+            {
+                simulation,
+                new LoggingCryptoEventNotifier("buy_sell_signal.log")
+            });
+
+            var runner = new CryptoRealtimeScanner(model, datasetService, notifiers);
 
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
