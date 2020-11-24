@@ -33,7 +33,7 @@ namespace CryptoLive.Accounts
         public void LoadAccount(string accountFile)
         {
             _accountFile = accountFile;
-            _account = JsonConvert.DeserializeObject<SimulatedCryptoAccount>(_accountFile);
+            _account = JsonConvert.DeserializeObject<SimulatedCryptoAccount>(File.ReadAllText(_accountFile));
         }
 
         public void Notify(CryptoEventNotification notification)
