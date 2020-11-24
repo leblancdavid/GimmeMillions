@@ -64,7 +64,7 @@ namespace CryptoLive.Accounts
             var existingPosition = _account.CurrentPositions.FirstOrDefault(x => x.Symbol == notification.CryptoSymbol);
             if (existingPosition != null)
             {
-                if(existingPosition.PositionValue < maxAmount)
+                if(existingPosition.PositionValue < maxAmount * (1.0m - _fees * 2))
                 {
                     buyAmount = maxAmount - existingPosition.PositionValue;
                     if(buyAmount > _account.AvailableFunds)
