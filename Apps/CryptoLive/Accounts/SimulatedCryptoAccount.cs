@@ -64,12 +64,12 @@ namespace CryptoLive.Accounts
             }
         }
 
-        public void Sell(string symbol, decimal price, decimal quantity)
+        public void Sell(string symbol, decimal price, decimal quantity, decimal fees)
         {
             var position = _currentPositions.FirstOrDefault(x => x.Symbol == symbol);
             if (position != null)
             {
-                AvailableFunds += position.Drop(price, quantity);
+                AvailableFunds += (1.0m - fees) * position.Drop(price, quantity);
                 if(position.PositionSize <= 0.0m)
                 {
                     _currentPositions.Remove(position);
