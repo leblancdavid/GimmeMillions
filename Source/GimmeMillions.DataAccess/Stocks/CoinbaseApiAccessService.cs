@@ -81,14 +81,15 @@ namespace GimmeMillions.DataAccess.Stocks
                 //need to throttle the requests by 1 sec
                 Thread.Sleep(1000);
                 var response = _client.GetAsync(requestUrl).Result;
-                return ParseResponseContent(response.Content.ReadAsStringAsync().Result, symbol, period);  //Make sure to add a reference to System.Net.Http.Formatting.dll
+                if(response.IsSuccessStatusCode)
+                    return ParseResponseContent(response.Content.ReadAsStringAsync().Result, symbol, period);  //Make sure to add a reference to System.Net.Http.Formatting.dll
 
             }
             catch (Exception ex)
             {
-                return new List<StockData>();
+                
             }
-
+            return new List<StockData>();
         }
 
         private IEnumerable<StockData> ParseResponseContent(string content, string symbol, StockDataPeriod period)

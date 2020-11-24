@@ -47,7 +47,7 @@ namespace ModelTrainer
             //trainer.Train("C:\\Stocks\\Models\\Donskoy");
             //trainer.TrainCrypto("C:\\Stocks\\Models\\Donskoy", StockDataPeriod.Minute);
             var service = new CoinbaseApiAccessService(secret, key, passphrase);
-            trainer.TrainCrypto($"{pathToModels}\\Donskoy", StockDataPeriod.FiveMinute, service);
+            trainer.TrainCrypto($"{pathToModels}\\Donskoy", StockDataPeriod.Hour, service);
 
 
             //var trainer = new MarketFuturesTrainer(new DefaultStockRepository(stockSqlDb));

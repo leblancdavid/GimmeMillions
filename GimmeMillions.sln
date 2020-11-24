@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecommandationMaker", "Apps
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GimmeMillions.WebApi", "Apps\GimmeMillions.WebApi\GimmeMillions.WebApi.csproj", "{ECD1A502-AA44-4A3E-91C1-D51CB92CE12B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoLive", "Apps\CryptoLive\CryptoLive.csproj", "{EC63A578-5BB9-4530-80D0-2150D3297DBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoLive", "Apps\CryptoLive\CryptoLive.csproj", "{EC63A578-5BB9-4530-80D0-2150D3297DBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoLive.Tests", "Tests\CryptoLive.Tests\CryptoLive.Tests.csproj", "{C4A17F67-A0C2-4E3D-ADD3-F6F4DD751723}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,14 @@ Global
 		{EC63A578-5BB9-4530-80D0-2150D3297DBE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EC63A578-5BB9-4530-80D0-2150D3297DBE}.Release|x64.ActiveCfg = Release|Any CPU
 		{EC63A578-5BB9-4530-80D0-2150D3297DBE}.Release|x64.Build.0 = Release|Any CPU
+		{C4A17F67-A0C2-4E3D-ADD3-F6F4DD751723}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4A17F67-A0C2-4E3D-ADD3-F6F4DD751723}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4A17F67-A0C2-4E3D-ADD3-F6F4DD751723}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C4A17F67-A0C2-4E3D-ADD3-F6F4DD751723}.Debug|x64.Build.0 = Debug|Any CPU
+		{C4A17F67-A0C2-4E3D-ADD3-F6F4DD751723}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4A17F67-A0C2-4E3D-ADD3-F6F4DD751723}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4A17F67-A0C2-4E3D-ADD3-F6F4DD751723}.Release|x64.ActiveCfg = Release|Any CPU
+		{C4A17F67-A0C2-4E3D-ADD3-F6F4DD751723}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +109,7 @@ Global
 		{1CAF9D5D-7F28-43D2-9E5B-37D85DB3DEC2} = {0EBDE5AA-DB44-4830-9234-5DAA16386E4A}
 		{ECD1A502-AA44-4A3E-91C1-D51CB92CE12B} = {0EBDE5AA-DB44-4830-9234-5DAA16386E4A}
 		{EC63A578-5BB9-4530-80D0-2150D3297DBE} = {0EBDE5AA-DB44-4830-9234-5DAA16386E4A}
+		{C4A17F67-A0C2-4E3D-ADD3-F6F4DD751723} = {B0E16F1D-5F27-4C13-9117-2D625BB588F6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1AC6AAE2-C385-494A-B0BB-CE2501C90DB9}

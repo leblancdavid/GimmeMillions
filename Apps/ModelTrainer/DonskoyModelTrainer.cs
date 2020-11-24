@@ -62,15 +62,39 @@ namespace ModelTrainer
             var model = new MLStockRangePredictorModel();
 
             int numSamples = 200;
+
+            string modelName = pathToModels + $"\\Crypto{period.ToString()}";
+
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(datasetService.GetTrainingData("BTC-USD", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("ETH-USD", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("LTC-USD", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("XRP-USD", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("BCH-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("EOS-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("DASH-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("OXT-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("MKR-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("XLM-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("LINK-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("ATOM-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("ETC-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("XTZ-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("REP-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("DAI-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("KNC-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("OMG-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("ZRX-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("ALGO-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("BAND-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("LRC-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("YFI-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("UNI-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("REN-USD", null, true, numSamples));
+            trainingData.AddRange(datasetService.GetTrainingData("BAL-USD", null, true, numSamples));
 
             model.Train(trainingData, 0.0, new SignalOutputMapper());
-            model.Save(pathToModels + $"\\Crypto{period.ToString()}");
+            model.Save(modelName);
         }
 
         private IFeatureDatasetService<FeatureVector> GetCoinbaseIndicatorFeaturesBuySellSignalDatasetService(

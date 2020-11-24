@@ -1,10 +1,14 @@
 ﻿using CommandLine;
+using CryptoLive.Accounts;
+using CryptoLive.Notification;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.Stocks;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 
 namespace CryptoLive
 {
@@ -22,11 +26,14 @@ namespace CryptoLive
 
             [Option('x', "passphrase", Required = true, HelpText = "The Passphrase for the Coinbase API")]
             public string ApiPassphrase { get; set; }
+            [Option('a', "simulationAccount", Required = true, HelpText = "Simulated account file")]
+            public string SimulatedAccountFile { get; set; }
+
         }
 
         static void Main(string[] args)
         {
-            string pathToModels = "", secret = "", key = "", passphrase = "";
+            string pathToModels = "", secret = "", key = "", passphrase = "", simulationAccount = "";
             Parser.Default.ParseArguments<Options>(args)
                   .WithParsed<Options>(o =>
                   {
@@ -34,6 +41,7 @@ namespace CryptoLive
                       secret = o.ApiSecret;
                       key = o.ApiKey;
                       passphrase = o.ApiPassphrase;
+                      simulationAccount = o.SimulatedAccountFile;
                   });
             var period = StockDataPeriod.FiveMinute;
             var service = new CoinbaseApiAccessService(secret, key, passphrase);
@@ -41,11 +49,23 @@ namespace CryptoLive
             var model = new MLStockRangePredictorModel();
             model.Load($"{pathToModels}\\Donskoy\\Crypto{period}");
 
-            var runner = new CryptoLiveRunner(model, datasetService);
+            var simulation = new SimulationCryptoAccountManager();
+            if (!File.Exists(simulationAccount))
+                simulation.SaveAccount(simulationAccount);
+            else
+                simulation.LoadAccount(simulationAccount);
+
+            var notifiers = new MultiCryptoEventNotifier(new List<ICryptoEventNotifier>()
+            {
+                simulation,
+                new LoggingCryptoEventNotifier("buy_sell_signal.log")
+            });
+
+            var runner = new CryptoRealtimeScanner(model, datasetService, notifiers);
 
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
-            runner.Refresh();
+            runner.Scan();
 
             while (true)
             {
@@ -56,7 +76,7 @@ namespace CryptoLive
 
                 if(stopWatch.Elapsed > TimeSpan.FromSeconds(30))
                 {
-                    runner.Refresh();
+                    runner.Scan();
                     stopWatch.Restart();
                 }
             }
