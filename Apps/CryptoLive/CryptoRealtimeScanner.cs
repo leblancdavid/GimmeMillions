@@ -37,6 +37,11 @@ namespace CryptoLive
             "ZRX-USD",
             "ALGO-USD",
             "BAND-USD",
+            "LRC-USD",
+            "YFI-USD",
+            "UNI-USD",
+            "REN-USD",
+            "BAL-USD",
         };
         private double SELL_SIGNAL_THRESHOLD = 10.0;
         private double BUY_SIGNAL_THRESHOLD = 90.0;
@@ -45,11 +50,14 @@ namespace CryptoLive
 
         public CryptoRealtimeScanner(MLStockRangePredictorModel model, 
             IFeatureDatasetService<FeatureVector> dataset,
-            ICryptoEventNotifier notifier)
+            ICryptoEventNotifier notifier,
+            double buyThreshold = 90.0, double sellThreshold = 10.0)
         {
             _model = model;
             _dataset = dataset;
             _notifier = notifier;
+            BUY_SIGNAL_THRESHOLD = buyThreshold;
+            SELL_SIGNAL_THRESHOLD = sellThreshold;
             _signalTable = new Dictionary<string, Queue<(double Signal, DateTime Time)>>();
             foreach (var crypto in _supportedCryptos)
             {
