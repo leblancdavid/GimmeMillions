@@ -1,7 +1,7 @@
 ﻿using GimmeMillions.Domain.Stocks;
 using System;
 
-namespace CryptoLive
+namespace CryptoLive.Notification
 {
     public class CryptoEventNotification
     {

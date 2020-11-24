@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CryptoLive
+namespace CryptoLive.Notification
 {
     public interface ICryptoEventNotifier
     {
