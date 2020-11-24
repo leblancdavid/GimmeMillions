@@ -95,14 +95,17 @@ namespace CryptoLive
             if (feature.IsSuccess && feature.Value.Date >= _signalTable[symbol].Last().Time)
             {
                 var prediction = _model.Predict(feature.Value);
-                _signalTable[symbol].Enqueue((prediction.Sentiment, feature.Value.Date));
-                if (_signalTable[symbol].Count > maxLength)
+                if(prediction.Sentiment != _signalTable[symbol].Last().Signal)
                 {
-                    _signalTable[symbol].Dequeue();
+                    _signalTable[symbol].Enqueue((prediction.Sentiment, feature.Value.Date));
+                    if (_signalTable[symbol].Count > maxLength)
+                    {
+                        _signalTable[symbol].Dequeue();
+                    }
                 }
 
                 if(_signalTable[symbol].Count < maxLength)
-                    return new CryptoEventNotification(last, _signalTable[symbol].Last().Signal);
+                    return null;
 
                 var signal = (_signalTable[symbol].ElementAt(maxLength - 1).Signal + _signalTable[symbol].ElementAt(maxLength - 2).Signal) / 2.0;
                 return new CryptoEventNotification(last, signal);

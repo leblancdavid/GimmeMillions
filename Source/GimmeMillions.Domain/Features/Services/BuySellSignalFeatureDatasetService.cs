@@ -379,7 +379,8 @@ namespace GimmeMillions.Domain.Features
         public Result<FeatureVector> GetFeatureVector(string symbol, out StockData last, int historyLimit = 0)
         {
             var stocks = _stockRepository.GetStocks(symbol, Period, historyLimit).ToList();
-            
+            //remove the last candle because it hasn't been completely formed yet.
+            stocks.RemoveAt(stocks.Count - 1);
             var date = DateTime.UtcNow;
             if (!stocks.Any())
             {
