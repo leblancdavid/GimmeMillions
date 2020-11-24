@@ -379,14 +379,16 @@ namespace GimmeMillions.Domain.Features
         public Result<FeatureVector> GetFeatureVector(string symbol, out StockData last, int historyLimit = 0)
         {
             var stocks = _stockRepository.GetStocks(symbol, Period, historyLimit).ToList();
-            last = stocks.Last();
+            
             var date = DateTime.UtcNow;
             if (!stocks.Any())
             {
+                last = null;
                 return Result.Failure<FeatureVector>(
                     $"No stock found for symbol '{symbol}' on {date.ToString("yyyy/MM/dd")}");
             }
 
+            last = stocks.Last();
             return GetData(symbol, date, stocks);
         }
     }
