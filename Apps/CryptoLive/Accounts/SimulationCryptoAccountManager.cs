@@ -27,7 +27,7 @@ namespace CryptoLive.Accounts
         public void SaveAccount(string accountFile)
         {
             _accountFile = accountFile;
-            File.WriteAllText(_accountFile, JsonConvert.SerializeObject(_account));
+            File.WriteAllText(_accountFile, JsonConvert.SerializeObject(_account, Formatting.Indented));
         }
 
         public void LoadAccount(string accountFile)
