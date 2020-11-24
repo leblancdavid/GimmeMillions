@@ -62,6 +62,9 @@ namespace ModelTrainer
             var model = new MLStockRangePredictorModel();
 
             int numSamples = 200;
+
+            string modelName = pathToModels + $"\\Crypto{period.ToString()}";
+
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(datasetService.GetTrainingData("BTC-USD", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("ETH-USD", null, true, numSamples));
@@ -91,7 +94,7 @@ namespace ModelTrainer
             trainingData.AddRange(datasetService.GetTrainingData("BAL-USD", null, true, numSamples));
 
             model.Train(trainingData, 0.0, new SignalOutputMapper());
-            model.Save(pathToModels + $"\\Crypto{period.ToString()}");
+            model.Save(modelName);
         }
 
         private IFeatureDatasetService<FeatureVector> GetCoinbaseIndicatorFeaturesBuySellSignalDatasetService(

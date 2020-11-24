@@ -31,7 +31,7 @@ namespace CryptoLive
             "ETC-USD",
             "XTZ-USD",
             "REP-USD",
-            "DAI-USD",
+            //"DAI-USD",
             "KNC-USD",
             "OMG-USD",
             "ZRX-USD",
