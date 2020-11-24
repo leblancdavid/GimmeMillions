@@ -15,8 +15,8 @@ namespace CryptoLive.Accounts
 
         private string _accountFile;
         private decimal _maxPositionRatio;
-        private decimal _fees = 0.5m;
-        public SimulationCryptoAccountManager(decimal maxPositionRatio = 0.20m, decimal fees = 0.5m)
+        private decimal _fees = 0.01m;
+        public SimulationCryptoAccountManager(decimal maxPositionRatio = 0.20m, decimal fees = 0.01m)
         {
             _account = new SimulatedCryptoAccount();
             _accountFile = "SimulatedAccount.json";
@@ -42,12 +42,15 @@ namespace CryptoLive.Accounts
             {
                 var amount = DetermineShareBuyCount(notification);
                 if(amount > 0.0m)
+                {
                     _account.Buy(notification.CryptoSymbol, notification.LastBar.Close, amount);
+                    _account.AvailableFunds -= _fees * (notification.LastBar.Close * amount);
+                }
             }
             else if(notification.IsSellSignal())
             {
                 //Always sell the whole package
-                _account.Sell(notification.CryptoSymbol, notification.LastBar.Close, decimal.MaxValue, _fees);
+                _account.Sell(notification.CryptoSymbol, notification.LastBar.Close, decimal.MaxValue);
             }
 
             //Save progress

@@ -33,6 +33,10 @@ namespace CryptoLive
             "REP-USD",
             "DAI-USD",
             "KNC-USD",
+            "OMG-USD",
+            "ZRX-USD",
+            "ALGO-USD",
+            "BAND-USD",
         };
         private double SELL_SIGNAL_THRESHOLD = 10.0;
         private double BUY_SIGNAL_THRESHOLD = 90.0;

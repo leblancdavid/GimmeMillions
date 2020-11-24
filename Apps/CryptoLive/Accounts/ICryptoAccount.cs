@@ -14,6 +14,6 @@ namespace CryptoLive.Accounts
         decimal CurrentValue { get; }
         decimal PercentChange { get; }
         void Buy(string symbol, decimal price, decimal quantity);
-        void Sell(string symbol, decimal price, decimal quantity, decimal fees);
+        void Sell(string symbol, decimal price, decimal quantity);
     }
 }

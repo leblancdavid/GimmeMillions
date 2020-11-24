@@ -11,7 +11,7 @@ namespace CryptoLive.Accounts
         public IEnumerable<CryptoPosition> CurrentPositions => _currentPositions;
 
         public decimal StartingFunds { get; private set; }
-        public decimal AvailableFunds { get; private set; }
+        public decimal AvailableFunds { get; set; }
         public DateTime DateCreated { get; private set; }
         public decimal CurrentValue
         {
@@ -62,14 +62,15 @@ namespace CryptoLive.Accounts
             {
                 _currentPositions.Add(new CryptoPosition(symbol, price, quantity));
             }
+            AvailableFunds -= price * quantity;
         }
 
-        public void Sell(string symbol, decimal price, decimal quantity, decimal fees)
+        public void Sell(string symbol, decimal price, decimal quantity)
         {
             var position = _currentPositions.FirstOrDefault(x => x.Symbol == symbol);
             if (position != null)
             {
-                AvailableFunds += (1.0m - fees) * position.Drop(price, quantity);
+                AvailableFunds += position.Drop(price, quantity);
                 if(position.PositionSize <= 0.0m)
                 {
                     _currentPositions.Remove(position);
