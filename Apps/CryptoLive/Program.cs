@@ -61,7 +61,7 @@ namespace CryptoLive
                 new LoggingCryptoEventNotifier("buy_sell_signal.log")
             });
 
-            var scanner = new CryptoRealtimeScanner(model, datasetService, notifiers, 90.0, 15.0);
+            var scanner = new CryptoRealtimeScanner(model, datasetService, notifiers, 85.0, 15.0);
 
             scanner.Scan();
 
@@ -81,7 +81,7 @@ namespace CryptoLive
                 var currentTime = DateTime.Now;
                 if (currentTime.Minute % 5 == 0 && 
                     lastDigit != currentTime.Minute && 
-                    currentTime.Second > 5) // Add a 5 second delay just to give it enough room
+                    currentTime.Second > 30) // Add a 30 second delay just to give it enough room
                 {
                     scanner.Scan();
                     lastDigit = currentTime.Minute;
