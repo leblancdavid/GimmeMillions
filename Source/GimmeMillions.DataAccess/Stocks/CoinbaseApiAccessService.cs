@@ -14,9 +14,9 @@ namespace GimmeMillions.DataAccess.Stocks
 {
     public class CoinbaseApiAccessService : IStockAccessService
     {
-        private string _secret = "Fafav1z7cSnlulnPwdAl2pv1B6CMkM6b4If0WenT8hdgR9+ZlsowruJBxiUJv9SMmHvKWy6X4OQdBN2YaZGdyQ==";
-        private string _key = "059dd44fa67976e9743836fd0a3a5624";
-        private string _passphrase = "23ferghfa21abb";
+        private string _secret;
+        private string _key;
+        private string _passphrase;
         private HMACSHA256 _hmac;
         private HttpClient _client = new HttpClient();
         public CoinbaseApiAccessService(string secret, string key, string passphrase)
