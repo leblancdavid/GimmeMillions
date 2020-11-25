@@ -59,6 +59,10 @@ namespace CryptoLive.Accounts
 
         private decimal DetermineShareBuyCount(CryptoEventNotification notification)
         {
+            if(_account.AvailableFunds < 1.0m)
+            {
+                return 0.0m;
+            }
             var maxAmount = _maxPositionRatio * _account.CurrentValue;
             decimal buyAmount;
             var existingPosition = _account.CurrentPositions.FirstOrDefault(x => x.Symbol == notification.CryptoSymbol);
@@ -72,6 +76,9 @@ namespace CryptoLive.Accounts
                         buyAmount = _account.AvailableFunds;
                     }
 
+                    if (buyAmount < 1.0m)
+                        return 0.0m;
+
                     return buyAmount * (1.0m - _fees) / notification.LastBar.Close;
                 }
                 return 0.0m;
@@ -82,6 +89,9 @@ namespace CryptoLive.Accounts
             {
                 buyAmount = _account.AvailableFunds;
             }
+
+            if (buyAmount < 1.0m)
+                return 0.0m;
 
             return buyAmount * (1.0m - _fees) / notification.LastBar.Close;
         }

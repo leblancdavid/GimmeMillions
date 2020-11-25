@@ -102,13 +102,8 @@ namespace CryptoLive
                     {
                         _signalTable[symbol].Dequeue();
                     }
+                    return new CryptoEventNotification(last, prediction.Sentiment);
                 }
-
-                if(_signalTable[symbol].Count < maxLength)
-                    return null;
-
-                var signal = (_signalTable[symbol].ElementAt(maxLength - 1).Signal + _signalTable[symbol].ElementAt(maxLength - 2).Signal) / 2.0;
-                return new CryptoEventNotification(last, signal);
             }
 
             return null;

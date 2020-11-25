@@ -380,7 +380,6 @@ namespace GimmeMillions.Domain.Features
         {
             var stocks = _stockRepository.GetStocks(symbol, Period, historyLimit).ToList();
             //remove the last candle because it hasn't been completely formed yet.
-            stocks.RemoveAt(stocks.Count - 1);
             var date = DateTime.UtcNow;
             if (!stocks.Any())
             {
@@ -389,6 +388,7 @@ namespace GimmeMillions.Domain.Features
                     $"No stock found for symbol '{symbol}' on {date.ToString("yyyy/MM/dd")}");
             }
 
+            stocks.RemoveAt(stocks.Count - 1);
             last = stocks.Last();
             return GetData(symbol, date, stocks);
         }

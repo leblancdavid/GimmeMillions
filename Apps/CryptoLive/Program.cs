@@ -61,12 +61,16 @@ namespace CryptoLive
                 new LoggingCryptoEventNotifier("buy_sell_signal.log")
             });
 
-            var runner = new CryptoRealtimeScanner(model, datasetService, notifiers);
+            var scanner = new CryptoRealtimeScanner(model, datasetService, notifiers, 90.0, 15.0);
 
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            runner.Scan();
+            scanner.Scan();
 
+            Run5mScan(scanner);
+        }
+
+        private static void Run5mScan(ICryptoRealtimeScanner scanner)
+        {
+            var lastDigit = (DateTime.Now.Minute / 5) * 5;
             while (true)
             {
                 if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape)
@@ -74,15 +78,17 @@ namespace CryptoLive
                     break;
                 }
 
-                if(stopWatch.Elapsed > TimeSpan.FromSeconds(30))
+                var currentTime = DateTime.Now;
+                if (currentTime.Minute % 5 == 0 && 
+                    lastDigit != currentTime.Minute && 
+                    currentTime.Second > 5) // Add a 5 second delay just to give it enough room
                 {
-                    runner.Scan();
-                    stopWatch.Restart();
+                    scanner.Scan();
+                    lastDigit = currentTime.Minute;
                 }
             }
+
         }
-
-
         private static IFeatureDatasetService<FeatureVector> GetCoinbaseIndicatorFeaturesBuySellSignalDatasetService(
             IStockAccessService accessService,
           StockDataPeriod period,
