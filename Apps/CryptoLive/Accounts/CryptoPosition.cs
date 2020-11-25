@@ -20,12 +20,12 @@ namespace CryptoLive.Accounts
 
         public CryptoPosition()
         {
-            TransactionDate = DateTime.UtcNow;
+            TransactionDate = DateTime.Now;
         }
 
         public CryptoPosition(string symbol, decimal price, decimal size)
         {
-            TransactionDate = DateTime.UtcNow;
+            TransactionDate = DateTime.Now;
             Symbol = symbol;
             PricePaid = price;
             PositionSize = size;
