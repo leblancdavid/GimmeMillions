@@ -87,7 +87,7 @@ namespace GimmeMillions.Domain.Features
             return trainingData.OrderBy(x => x.Output.Date);
         }
 
-        public Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date)
+        public Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date, int historyLimit = 0)
         {
 
             var stocks = _stockRepository.GetStocks(symbol, Period).ToList();
@@ -126,12 +126,13 @@ namespace GimmeMillions.Domain.Features
             }
 
             var stocksVector = GetStockFeatureVector(date, stocks, _numStockDailySamples);
+            
             if (stocksVector.IsFailure)
             {
                 return Result.Failure<FeatureVector>(stocksVector.Error);
             }
 
-            var compositeVector = new FeatureVector(stocksVector.Value, date, _encodingKey);
+            var compositeVector = new FeatureVector(stocksVector.Value, stocks.Last().Date, _encodingKey);
             return Result.Success(compositeVector);
         }
 
@@ -185,9 +186,9 @@ namespace GimmeMillions.Domain.Features
             }
         }
 
-        public Result<FeatureVector> GetFeatureVector(string symbol, DateTime date)
+        public Result<FeatureVector> GetFeatureVector(string symbol, DateTime date, int historyLimit = 0)
         {
-            var stocks = _stockRepository.GetStocks(symbol, Period).ToList();
+            var stocks = _stockRepository.GetStocks(symbol, Period, historyLimit).ToList();
             if (!stocks.Any())
             {
                 return Result.Failure<FeatureVector>(
@@ -373,6 +374,23 @@ namespace GimmeMillions.Domain.Features
             }
 
             return features;
+        }
+
+        public Result<FeatureVector> GetFeatureVector(string symbol, out StockData last, int historyLimit = 0)
+        {
+            var stocks = _stockRepository.GetStocks(symbol, Period, historyLimit).ToList();
+            //remove the last candle because it hasn't been completely formed yet.
+            var date = DateTime.UtcNow;
+            if (!stocks.Any())
+            {
+                last = null;
+                return Result.Failure<FeatureVector>(
+                    $"No stock found for symbol '{symbol}' on {date.ToString("yyyy/MM/dd")}");
+            }
+
+            stocks.RemoveAt(stocks.Count - 1);
+            last = stocks.Last();
+            return GetData(symbol, date, stocks);
         }
     }
 }

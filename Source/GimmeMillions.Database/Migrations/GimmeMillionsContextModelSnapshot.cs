@@ -48,7 +48,7 @@ namespace GimmeMillions.SQLDataAccess.Migrations
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Period")
+                    b.Property<int>("StockPeriod")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Symbol")

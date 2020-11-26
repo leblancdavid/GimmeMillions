@@ -102,7 +102,7 @@ namespace GimmeMillions.Domain.Features
             return trainingData.OrderBy(x => x.Output.Date);
         }
 
-        public Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date)
+        public Result<(FeatureVector Input, StockData Output)> GetData(string symbol, DateTime date, int historyLimit = 0)
         {
 
             var stocks = _stockRepository.GetStocks(symbol, StockDataPeriod.Day).ToList();
@@ -217,7 +217,7 @@ namespace GimmeMillions.Domain.Features
             return Result.Success(stocksVector);
         }
 
-        public Result<FeatureVector> GetFeatureVector(string symbol, DateTime date)
+        public Result<FeatureVector> GetFeatureVector(string symbol, DateTime date, int historyLimit = 0)
         {
             var stocks = _stockRepository.GetStocks(symbol, StockDataPeriod.Day).ToList();
             if (!stocks.Any())
@@ -315,6 +315,11 @@ namespace GimmeMillions.Domain.Features
         }
 
         public IEnumerable<FeatureVector> GetFeatures(string symbol)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Result<FeatureVector> GetFeatureVector(string symbol, out StockData last, int historyLimit = 0)
         {
             throw new NotImplementedException();
         }

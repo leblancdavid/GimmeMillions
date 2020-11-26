@@ -1,16 +1,41 @@
-﻿using GimmeMillions.Database;
+﻿using CommandLine;
+using GimmeMillions.DataAccess.Stocks;
+using GimmeMillions.Database;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.Domain.Stocks.Filters;
 using GimmeMillions.SQLDataAccess;
 using Microsoft.EntityFrameworkCore;
 
-namespace DNNTrainer
+namespace ModelTrainer
 {
     class Program
     {
+        public class Options
+        {
+
+            [Option('p', "pathToModel", Required = true, HelpText = "The path to the model file")]
+            public string PathToModel { get; set; }
+            [Option('s', "secret", Required = true, HelpText = "The secret for the Coinbase API")]
+            public string ApiSecret { get; set; }
+            [Option('k', "key", Required = true, HelpText = "The Key for the Coinbase API")]
+            public string ApiKey { get; set; }
+
+            [Option('x', "passphrase", Required = true, HelpText = "The Passphrase for the Coinbase API")]
+            public string ApiPassphrase { get; set; }
+        }
         static void Main(string[] args)
         {
+            string pathToModels = "", secret = "", key = "", passphrase = "";
+            Parser.Default.ParseArguments<Options>(args)
+                  .WithParsed<Options>(o =>
+                  {
+                      pathToModels = o.PathToModel;
+                      secret = o.ApiSecret;
+                      key = o.ApiKey;
+                      passphrase = o.ApiPassphrase;
+                  });
+
             var optionsBuilder = new DbContextOptionsBuilder<GimmeMillionsContext>();
             optionsBuilder.UseSqlite($"Data Source=C:\\Stocks\\gm.db");
             var context = new GimmeMillionsContext(optionsBuilder.Options);
@@ -19,7 +44,11 @@ namespace DNNTrainer
             var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
             var trainer = new DonskoyModelTrainer(new DefaultStockRepository(stockSqlDb));
-            trainer.Train("C:\\Stocks\\Models\\Donskoy");
+            //trainer.Train("C:\\Stocks\\Models\\Donskoy");
+            //trainer.TrainCrypto("C:\\Stocks\\Models\\Donskoy", StockDataPeriod.Minute);
+            var service = new CoinbaseApiAccessService(secret, key, passphrase);
+            trainer.TrainCrypto($"{pathToModels}\\Donskoy", StockDataPeriod.Hour, service);
+
 
             //var trainer = new MarketFuturesTrainer(new DefaultStockRepository(stockSqlDb));
             //trainer.Train("C:\\Recommendations\\App\\RecommendationMaker\\Models\\MarketFutures");
