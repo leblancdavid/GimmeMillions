@@ -61,7 +61,7 @@ namespace CryptoLive
                 new LoggingCryptoEventNotifier("buy_sell_signal.log")
             });
 
-            var scanner = new CryptoRealtimeScanner(model, datasetService, notifiers, 85.0, 15.0);
+            var scanner = new CryptoRealtimeScanner(model, datasetService, notifiers, 90.0, 15.0);
 
             scanner.Scan();
 
