@@ -17,6 +17,33 @@ namespace GimmeMillions.WebApi.Controllers
             _userService = userService;
         }
 
+        [HttpGet]
+        public IActionResult GetUsers()
+        {
+            return Ok(_userService.GetUsers());
+        }
+
+        [HttpGet]
+        [Route("api/[controller]/{username}")]
+        public IActionResult GetUser(string username)
+        {
+            var user = _userService.GetUser(username);
+            if (user.IsFailure)
+                return NotFound(username);
+
+            return Ok(user.Value.WithoutPassword());
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/[controller]/check/{username}")]
+        public IActionResult UserExist(string username)
+        {
+            if (!_userService.UserExists(username))
+                return NotFound(username);
+
+            return Ok();
+        }
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
