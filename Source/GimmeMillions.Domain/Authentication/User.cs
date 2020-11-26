@@ -19,7 +19,7 @@
             HashPassword(password);
             FirstName = firstName;
             LastName = lastName;
-            Username = userName;
+            Username = userName.ToLower();
             Role = role;
         }
 

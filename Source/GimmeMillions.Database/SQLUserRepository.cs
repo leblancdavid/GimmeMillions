@@ -2,6 +2,7 @@
 using GimmeMillions.Domain.Authentication;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GimmeMillions.Database
@@ -60,7 +61,14 @@ namespace GimmeMillions.Database
             if (existingUser == null)
                 return Result.Failure<User>("Invalid username");
 
-            return Result.Success(existingUser);
+            return Result.Success(existingUser.WithoutPassword());
+        }
+
+        public IEnumerable<User> GetUsers()
+        {
+            var context = new GimmeMillionsContext(_dbContextOptions);
+            return context.Users.Where(x => x.Role != UserRole.SuperUser)
+                .Select(x => x.WithoutPassword());
         }
 
         public void RemoveUser(string username)

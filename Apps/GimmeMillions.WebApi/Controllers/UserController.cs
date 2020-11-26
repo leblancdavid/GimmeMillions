@@ -32,7 +32,7 @@ namespace GimmeMillions.WebApi.Controllers
 
         [AllowAnonymous]
         [HttpPut("reset")]
-        public IActionResult Reset([FromBody]PasswordResetDto model)
+        public IActionResult ResetPassword([FromBody]PasswordResetDto model)
         {
             var result = _userService.UpdatePassword(model.Username, model.OldPassword, model.NewPassword);
 
@@ -41,6 +41,38 @@ namespace GimmeMillions.WebApi.Controllers
 
             return Ok();
         }
+
+        [AllowAnonymous]
+        [HttpPost()]
+        public IActionResult AddUser([FromBody]AddUserDto model)
+        {
+            var superuserAuth = _userService.Authenticate(model.Superuser, model.SuperuserPassword);
+
+            if (superuserAuth.IsFailure)
+                return BadRequest(new { message = superuserAuth.Error });
+
+            var result = _userService.AddOrUpdateUser(new User(model.FirstName, model.LastName, model.Username, model.Password, UserRole.Default));
+
+            if (result.IsFailure)
+                return BadRequest(new { message = result.Error });
+
+            return Created($"api/user/{result.Value.Id}", result.Value.WithoutPassword());
+        }
+
+        [AllowAnonymous]
+        [HttpDelete("")]
+        public IActionResult DeleteUser([FromBody]DeleteUserDto model)
+        {
+            var superuserAuth = _userService.Authenticate(model.Superuser, model.SuperuserPassword);
+
+            if (superuserAuth.IsFailure)
+                return BadRequest(new { message = superuserAuth.Error });
+
+            _userService.RemoveUser(model.Username);
+
+            return Ok();
+        }
+
 
 
     }
