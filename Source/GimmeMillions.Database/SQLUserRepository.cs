@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace GimmeMillions.Database
 {
-    public class SQLUserRepository : IAuthenticationService
+    public class SQLUserRepository : IUserService
     {
         private readonly DbContextOptions<GimmeMillionsContext> _dbContextOptions;
         private object _saveLock = new object();

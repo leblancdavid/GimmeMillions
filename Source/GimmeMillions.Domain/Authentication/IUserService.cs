@@ -2,7 +2,7 @@
 
 namespace GimmeMillions.Domain.Authentication
 {
-    public interface IAuthenticationService
+    public interface IUserService
     {
         Result<User> Authenticate(string username, string password);
         Result<User> AddOrUpdateUser(User user);
