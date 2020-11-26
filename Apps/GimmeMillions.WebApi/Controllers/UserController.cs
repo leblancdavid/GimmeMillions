@@ -23,8 +23,7 @@ namespace GimmeMillions.WebApi.Controllers
             return Ok(_userService.GetUsers());
         }
 
-        [HttpGet]
-        [Route("api/[controller]/{username}")]
+        [HttpGet("{username}")]
         public IActionResult GetUser(string username)
         {
             var user = _userService.GetUser(username);
@@ -34,9 +33,8 @@ namespace GimmeMillions.WebApi.Controllers
             return Ok(user.Value.WithoutPassword());
         }
 
-        [HttpGet]
+        [HttpGet("{username}/check")]
         [AllowAnonymous]
-        [Route("api/[controller]/check/{username}")]
         public IActionResult UserExist(string username)
         {
             if (!_userService.UserExists(username))

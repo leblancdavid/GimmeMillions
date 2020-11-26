@@ -25,11 +25,13 @@ namespace GimmeMillions.Database
                 if (existingUser == null)
                 {
                     context.Users.Add(user);
-                    
                 }
-                existingUser.PasswordHash = user.PasswordHash;
-                existingUser.FirstName = user.FirstName;
-                existingUser.LastName = user.LastName;
+                else
+                {
+                    existingUser.PasswordHash = user.PasswordHash;
+                    existingUser.FirstName = user.FirstName;
+                    existingUser.LastName = user.LastName;
+                }
 
                 lock (_saveLock)
                 {

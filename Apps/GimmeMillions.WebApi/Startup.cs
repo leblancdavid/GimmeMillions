@@ -22,8 +22,11 @@ namespace GimmeMillions.WebApi
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services, IServiceProvider provider)
+        public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+            services.AddControllers();
+
             var connectionString = Configuration["DbConnectionString"];
             services.AddDbContext<GimmeMillionsContext>(opt =>
             {
@@ -32,12 +35,14 @@ namespace GimmeMillions.WebApi
                 context.Database.Migrate();
             });
 
-            // configure basic authentication 
-            services.AddAuthentication("BasicAuthentication")
-                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
-
             DIRegistration.RegisterServices(services);
 
+            // configure basic authentication 
+            services.AddAuthentication("BasicAuthentication")
+                .AddScheme<AuthenticationSchemeOptions, 
+                BasicAuthenticationHandler>("BasicAuthentication", null);
+
+            var provider = services.BuildServiceProvider();
             //Setup default super user
             var userService = provider.GetService<IUserService>();
             if (!userService.UserExists("gm_superuser"))
@@ -51,7 +56,6 @@ namespace GimmeMillions.WebApi
             }
 
 
-            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,10 +66,16 @@ namespace GimmeMillions.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseRouting();
             app.UseHttpsRedirection();
 
-            app.UseRouting();
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
