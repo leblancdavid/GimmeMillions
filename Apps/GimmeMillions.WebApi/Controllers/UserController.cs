@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using GimmeMillions.Domain.Authentication;
-using GimmeMillions.WebApi.Controllers.Dtos;
+﻿using GimmeMillions.Domain.Authentication;
+using GimmeMillions.WebApi.Controllers.Dtos.Users;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GimmeMillions.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -24,7 +20,7 @@ namespace GimmeMillions.WebApi.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]AuthenticateModel model)
+        public IActionResult Authenticate([FromBody]AuthenticateDto model)
         {
             var user = _userService.Authenticate(model.Username, model.Password);
 
@@ -33,5 +29,19 @@ namespace GimmeMillions.WebApi.Controllers
 
             return Ok(user.Value.WithoutPassword());
         }
+
+        [AllowAnonymous]
+        [HttpPut("reset")]
+        public IActionResult Reset([FromBody]PasswordResetDto model)
+        {
+            var result = _userService.UpdatePassword(model.Username, model.OldPassword, model.NewPassword);
+
+            if (result.IsFailure)
+                return BadRequest(new { message = result.Error });
+
+            return Ok();
+        }
+
+
     }
 }

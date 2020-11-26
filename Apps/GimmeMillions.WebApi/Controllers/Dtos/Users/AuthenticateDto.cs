@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GimmeMillions.WebApi.Controllers.Dtos
+namespace GimmeMillions.WebApi.Controllers.Dtos.Users
 {
-    public class AuthenticateModel
+    public class AuthenticateDto
     {
         [Required]
         public string Username { get; set; }
