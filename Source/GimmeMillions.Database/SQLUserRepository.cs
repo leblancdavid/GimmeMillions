@@ -124,11 +124,10 @@ namespace GimmeMillions.Database
             {
                 var context = new GimmeMillionsContext(_dbContextOptions);
 
-                var existingUser = context.Users.FirstOrDefault(x => x.Username == username && x.VerifyPassword(oldPassword));
-                if (existingUser == null)
+                var existingUser = context.Users.FirstOrDefault(x => x.Username == username);
+                if (existingUser == null || !existingUser.VerifyPassword(oldPassword))
                 {
                     return Result.Failure("Invalid username or password");
-
                 }
                 existingUser.HashPassword(newPassword);
                 lock (_saveLock)

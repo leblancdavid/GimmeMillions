@@ -37,10 +37,7 @@ namespace GimmeMillions.WebApi.Controllers
         [AllowAnonymous]
         public IActionResult UserExist(string username)
         {
-            if (!_userService.UserExists(username))
-                return NotFound(username);
-
-            return Ok();
+            return Ok(_userService.UserExists(username));
         }
 
         [AllowAnonymous]
