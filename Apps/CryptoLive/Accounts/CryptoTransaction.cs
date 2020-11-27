@@ -11,7 +11,7 @@ namespace CryptoLive.Accounts
     };
     public class CryptoTransaction : CryptoPosition
     {
-        public CryptoTransactionStatus Status { get; private set; }
+        public CryptoTransactionStatus Status { get; set; }
         public decimal ClosePrice { set; get; }
         public DateTime DateClosed { get; set; }
         public decimal CloseValue

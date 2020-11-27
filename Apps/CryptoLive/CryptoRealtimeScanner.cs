@@ -91,7 +91,12 @@ namespace CryptoLive
         private CryptoEventNotification UpdateTableFor(string symbol, int maxLength = 5)
         {
             StockData last = null;
-            var feature = _dataset.GetFeatureVector(symbol, out last, 1);
+            int historyLength = 1;
+            if(_dataset.Period == StockDataPeriod.Hour)
+            {
+                historyLength = 5;
+            }
+            var feature = _dataset.GetFeatureVector(symbol, out last, historyLength);
             if (feature.IsSuccess && feature.Value.Date >= _signalTable[symbol].Last().Time)
             {
                 var prediction = _model.Predict(feature.Value);

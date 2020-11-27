@@ -43,15 +43,24 @@ namespace GimmeMillions.DataAccess.Stocks
                 days = 30; //default to 30 days worth of data
             }
 
-            var end = DateTime.UtcNow;
-            var start = end.AddDays(-1.0); 
             var stocks = new List<StockData>();
-            for (int i = 0; i < days; ++i)
+            var end = DateTime.UtcNow;
+            var start = end.AddDays(-1.0);
+            if (period > StockDataPeriod.Hour)
             {
+                start = end.AddDays(days);
                 stocks.AddRange(GetStocks(symbol, period, start, end));
-                end = start;
-                start = end.AddDays(-1.0);
             }
+            else
+            {
+                for (int i = 0; i < days; ++i)
+                {
+                    stocks.AddRange(GetStocks(symbol, period, start, end));
+                    end = start;
+                    start = end.AddDays(-1.0);
+                }
+            }
+            
 
             if (!stocks.Any())
                 return stocks;
