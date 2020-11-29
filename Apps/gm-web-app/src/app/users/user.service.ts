@@ -16,14 +16,6 @@ export class UserService {
 
   public loggedInUser?: User;
 
-  public authenticate(username: string, password: string) {
-    return this.http.post(this.url + '/authenticate',
-      {
-        username: username,
-        password: password
-      })
-  }
-
   public getUsers() {
 
   }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
@@ -35,6 +36,12 @@ namespace GimmeMillions.WebApi.Services
             if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
                 return AuthenticateResult.NoResult();
 
+            bool requireSuperuser = false;
+            if (endpoint?.Metadata?.GetMetadata<SuperuserOnlyAuthAttribute>() != null)
+            {
+                requireSuperuser = true;
+            }
+            
             if (!Request.Headers.ContainsKey("Authorization"))
                 return AuthenticateResult.Fail("Missing Authorization Header");
 
@@ -47,6 +54,8 @@ namespace GimmeMillions.WebApi.Services
                 var username = credentials[0];
                 var password = credentials[1];
                 user = _userService.Authenticate(username, password);
+
+                
             }
             catch
             {
@@ -55,6 +64,11 @@ namespace GimmeMillions.WebApi.Services
 
             if (user.IsFailure)
                 return AuthenticateResult.Fail("Invalid Username or Password");
+
+            if (requireSuperuser && user.Value.Role != UserRole.SuperUser)
+            {
+                return AuthenticateResult.Fail("Only a super user can perform this request");
+            }
 
             var claims = new[] {
                 new Claim(ClaimTypes.NameIdentifier, user.Value.Id.ToString()),

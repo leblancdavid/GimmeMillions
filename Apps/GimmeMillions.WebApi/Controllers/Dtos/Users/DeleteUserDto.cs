@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.WebApi.Controllers.Dtos.Users
 {
-    public class DeleteUserDto : SuperuserAuthDto
+    public class DeleteUserDto
     {
         [Required]
         public string Username { get; set; }

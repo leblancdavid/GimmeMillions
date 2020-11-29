@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.WebApi.Controllers.Dtos.Users
 {
-    public class AddUserDto : SuperuserAuthDto
+    public class AddUserDto
     {
         [Required]
         public string Username { get; set; }

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserService } from '../user.service';
-
+import { AuthenticationService } from '../authentication.service';
 @Component({
   selector: 'gm-login',
   templateUrl: './login.component.html',
@@ -13,7 +12,7 @@ export class LoginComponent implements OnInit {
   usernameControl = new FormControl('', [Validators.required]);
   passwordControl = new FormControl('', [Validators.required]);
 
-  constructor(private userService: UserService,
+  constructor(private userService: AuthenticationService,
     private router: Router) { }
   ngOnInit(): void {
   }
@@ -32,7 +31,7 @@ export class LoginComponent implements OnInit {
   }
 
   authenticate() {
-    this.userService.authenticate(this.usernameControl.value, this.passwordControl.value).subscribe(x => {
+    this.userService.login(this.usernameControl.value, this.passwordControl.value).subscribe(x => {
       //login success
       this.router.navigate(['/main']);
     },

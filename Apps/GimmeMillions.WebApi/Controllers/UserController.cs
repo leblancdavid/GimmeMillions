@@ -1,5 +1,6 @@
 ﻿using GimmeMillions.Domain.Authentication;
 using GimmeMillions.WebApi.Controllers.Dtos.Users;
+using GimmeMillions.WebApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,7 +53,6 @@ namespace GimmeMillions.WebApi.Controllers
             return Ok(user.Value.WithoutPassword());
         }
 
-        [AllowAnonymous]
         [HttpPut("reset")]
         public IActionResult ResetPassword([FromBody]PasswordResetDto model)
         {
@@ -64,15 +64,10 @@ namespace GimmeMillions.WebApi.Controllers
             return Ok();
         }
 
-        [AllowAnonymous]
+        [SuperuserOnlyAuth]
         [HttpPost()]
         public IActionResult AddUser([FromBody]AddUserDto model)
         {
-            var superuserAuth = _userService.Authenticate(model.Superuser, model.SuperuserPassword);
-
-            if (superuserAuth.IsFailure)
-                return BadRequest(new { message = superuserAuth.Error });
-
             var result = _userService.AddOrUpdateUser(new User(model.FirstName, model.LastName, model.Username, model.Password, UserRole.Default));
 
             if (result.IsFailure)
@@ -81,15 +76,10 @@ namespace GimmeMillions.WebApi.Controllers
             return Created($"api/user/{result.Value.Id}", result.Value.WithoutPassword());
         }
 
-        [AllowAnonymous]
+        [SuperuserOnlyAuth]
         [HttpDelete("")]
         public IActionResult DeleteUser([FromBody]DeleteUserDto model)
         {
-            var superuserAuth = _userService.Authenticate(model.Superuser, model.SuperuserPassword);
-
-            if (superuserAuth.IsFailure)
-                return BadRequest(new { message = superuserAuth.Error });
-
             _userService.RemoveUser(model.Username);
 
             return Ok();
