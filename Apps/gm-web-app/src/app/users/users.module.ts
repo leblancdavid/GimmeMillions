@@ -7,10 +7,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../material/material.module';
 import { LoginComponent } from './login/login.component';
 import { UserService } from './user.service';
+import { UserManagementComponent } from './user-management/user-management.component';
+import { AuthenticationService } from './authentication.service';
 
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [LoginComponent, UserManagementComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -20,6 +22,6 @@ import { UserService } from './user.service';
     ReactiveFormsModule,
     MaterialModule
   ],
-  providers: [ UserService ]
+  providers: [ UserService, AuthenticationService ]
 })
 export class UsersModule { }

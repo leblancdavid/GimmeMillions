@@ -47,7 +47,7 @@ namespace GimmeMillions.WebApi.Controllers
             var user = _userService.Authenticate(model.Username, model.Password);
 
             if (user.IsFailure)
-                return BadRequest(new { message = user.Error });
+                return Unauthorized(new { message = user.Error });
 
             return Ok(user.Value.WithoutPassword());
         }

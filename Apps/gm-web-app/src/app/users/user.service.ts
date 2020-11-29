@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { User } from './user';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +14,17 @@ export class UserService {
 
   private url = environment.apiUrl + '/user';
 
+  public loggedInUser?: User;
+
   public authenticate(username: string, password: string) {
     return this.http.post(this.url + '/authenticate',
       {
         username: username,
         password: password
       })
+  }
+
+  public getUsers() {
+
   }
 }
