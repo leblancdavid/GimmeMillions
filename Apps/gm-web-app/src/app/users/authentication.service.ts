@@ -28,7 +28,7 @@ export class AuthenticationService {
   }
 
   login(username: string, password: string) {
-    return this.http.post<any>(`${environment.apiUrl}/user/authenticate`, { username, password })
+    return this.http.post<User>(environment.apiUrl + '/user/authenticate', { username: username, password: password })
       .pipe(map(user => {
         // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
         user.authdata = window.btoa(username + ':' + password);

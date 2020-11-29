@@ -18,5 +18,7 @@ export class MainComponent implements OnInit {
   logout() {
     this.router.navigate(['/login']);
   }
-
+  goToUserManagement() {
+    this.router.navigate(['/main/users']);
+  }
 }

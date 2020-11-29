@@ -16,7 +16,7 @@ export class UserService {
 
   public loggedInUser?: User;
 
-  public getUsers() {
-
+  public getUsers(): Observable<Array<User>> {
+    return this.http.get<Array<User>>(this.url);
   }
 }

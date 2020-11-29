@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { User } from '../user';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'gm-user-management',
@@ -12,20 +13,23 @@ import { User } from '../user';
 })
 export class UserManagementComponent implements AfterViewInit {
 
-  displayedColumns: string[] = ['id', 'name', 'progress', 'color'];
+  displayedColumns: string[] = ['id', 'username', 'name'];
   dataSource: MatTableDataSource<User>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor() {
+  constructor(private userService: UserService) {
     this.dataSource = new MatTableDataSource<User>();
 
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.userService.getUsers().subscribe(x => {
+      this.dataSource = new MatTableDataSource<User>(x);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
 
   applyFilter(event: Event) {

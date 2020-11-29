@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MainComponent } from './main.component';
 import { LoginComponent } from './users/login/login.component';
+import { UserManagementComponent } from './users/user-management/user-management.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -10,8 +11,8 @@ const routes: Routes = [
     component: MainComponent, // this is the component with the <router-outlet> in the template
     children: [
       {
-        path: 'child-a', // child route path
-        component: LoginComponent, // child route component that the router renders
+        path: 'users',
+        component: UserManagementComponent,
       },
       {
         path: 'child-b',
