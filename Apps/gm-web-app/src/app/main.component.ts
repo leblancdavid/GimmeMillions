@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { UserService } from './users/user.service';
 
 @Component({
   selector: 'gm-main',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  constructor() { }
+  constructor(public userService: UserService,
+    private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  logout() {
+    this.router.navigate(['/login']);
   }
 
 }

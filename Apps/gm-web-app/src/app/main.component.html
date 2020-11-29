@@ -1,1 +1,14 @@
-<p>main works!</p>
+<div class="main-layout">
+    <mat-toolbar color="primary">
+        <button mat-icon-button>
+            <mat-icon>menu</mat-icon>
+        </button>
+        <span>Gimmillion</span>
+        <span class="spacer"></span>
+        <button mat-icon-button (click)="logout()">
+            <mat-icon>login</mat-icon>
+        </button>
+    </mat-toolbar>
+
+    <router-outlet></router-outlet>
+</div>
