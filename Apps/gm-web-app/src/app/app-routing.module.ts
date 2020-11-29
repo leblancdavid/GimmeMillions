@@ -6,7 +6,7 @@ import { LoginComponent } from './users/login/login.component';
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
-    path: 'first-component',
+    path: 'main',
     component: MainComponent, // this is the component with the <router-outlet> in the template
     children: [
       {

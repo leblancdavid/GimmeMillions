@@ -6,6 +6,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../material/material.module';
 import { LoginComponent } from './login/login.component';
+import { UserService } from './user.service';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { LoginComponent } from './login/login.component';
     MatNativeDateModule,
     ReactiveFormsModule,
     MaterialModule
-  ]
+  ],
+  providers: [ UserService ]
 })
 export class UsersModule { }

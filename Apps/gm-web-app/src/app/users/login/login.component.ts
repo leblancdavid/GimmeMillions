@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'gm-login',
@@ -11,7 +13,8 @@ export class LoginComponent implements OnInit {
   usernameControl = new FormControl('', [Validators.required]);
   passwordControl = new FormControl('', [Validators.required]);
 
-  constructor() { }
+  constructor(private userService: UserService,
+    private router: Router) { }
   ngOnInit(): void {
   }
 
@@ -26,6 +29,17 @@ export class LoginComponent implements OnInit {
       return 'You must enter a value';
     }
     return '';
+  }
+
+  authenticate() {
+    this.userService.authenticate(this.usernameControl.value, this.passwordControl.value).subscribe(x => {
+      //login success
+      this.router.navigate(['/main']);
+    },
+    error => {
+      this.passwordControl.setValue('');
+      this.usernameControl.setErrors({ 'failed' : true });
+    })
   }
 
 }

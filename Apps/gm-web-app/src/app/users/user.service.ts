@@ -14,7 +14,7 @@ export class UserService {
   private url = environment.apiUrl + '/user';
 
   public authenticate(username: string, password: string) {
-    this.http.post(this.url + '/authenticate',
+    return this.http.post(this.url + '/authenticate',
       {
         username: username,
         password: password
