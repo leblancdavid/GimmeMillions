@@ -1,3 +1,4 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { unescapeIdentifier } from '@angular/compiler';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -13,8 +14,9 @@ import { UserService } from '../user.service';
 })
 export class UserManagementComponent implements AfterViewInit {
 
-  displayedColumns: string[] = ['id', 'username', 'name'];
+  displayedColumns: string[] = ['select', 'id', 'username', 'name'];
   dataSource: MatTableDataSource<User>;
+  selection = new SelectionModel<User>(true, []);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -38,6 +40,31 @@ export class UserManagementComponent implements AfterViewInit {
 
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
+    }
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.dataSource.data.forEach(row => this.selection.select(row));
+  }
+
+  deleteSelectedUsers() {
+    for (const user of this.selection.selected) {
+      this.userService.deleteUser(user.username).subscribe(x => {
+        const index: number = this.dataSource.data.findIndex(u => u.id == user.id);
+        if (index !== -1) {
+          this.dataSource.data.splice(index, 1);
+        }
+      });
     }
   }
 

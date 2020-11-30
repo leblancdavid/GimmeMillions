@@ -77,10 +77,10 @@ namespace GimmeMillions.WebApi.Controllers
         }
 
         [SuperuserOnlyAuth]
-        [HttpDelete("")]
-        public IActionResult DeleteUser([FromBody]DeleteUserDto model)
+        [HttpDelete("{username}")]
+        public IActionResult DeleteUser(string username)
         {
-            _userService.RemoveUser(model.Username);
+            _userService.RemoveUser(username);
 
             return Ok();
         }
