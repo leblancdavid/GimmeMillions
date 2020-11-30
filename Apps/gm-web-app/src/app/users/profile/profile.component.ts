@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '../authentication.service';
+import { User } from '../user';
 
 @Component({
   selector: 'gm-profile',
@@ -7,9 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
 
-  constructor() { }
+  private currentUser!: User;
+  constructor(public authenticationService: AuthenticationService) {
+
+   }
 
   ngOnInit(): void {
+    this.currentUser = this.authenticationService.currentUserValue;
   }
 
 }

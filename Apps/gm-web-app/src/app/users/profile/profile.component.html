@@ -1,1 +1,15 @@
-<p>profile works!</p>
+<mat-card *ngIf="currentUser">
+    <mat-card-header>
+        <div mat-card-avatar class="gimmillion-logo">
+            <mat-icon>person</mat-icon>
+        </div>
+        <mat-card-title>{{currentUser.firstName}} {{currentUser.lastName}}</mat-card-title>
+        <!--<mat-card-subtitle>Dog Breed</mat-card-subtitle>-->
+    </mat-card-header>
+    <mat-card-content>
+        <h3>Username: {{currentUser.username}}</h3>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button (click)="authenticate()">RESET PASSWORD</button>
+    </mat-card-actions>
+</mat-card>
