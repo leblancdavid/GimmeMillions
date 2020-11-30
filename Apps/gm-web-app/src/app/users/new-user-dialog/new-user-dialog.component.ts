@@ -26,13 +26,15 @@ export class NewUserDialogComponent implements OnInit {
 
   onUsernameKeypress(event: Event) {
     const username = (event.target as HTMLInputElement).value;
-    this.userService.usernameInUse(username).subscribe(x => {
-      if (x) {
-        this.usernameControl.setErrors({ 'inUse' : true });
-      } else {
-        this.usernameControl.setErrors(null);
-      }
-    })
+    if (username !== '') {
+      this.userService.usernameInUse(username).subscribe(x => {
+        if (x) {
+          this.usernameControl.setErrors({ 'inUse': true });
+        } else {
+          this.usernameControl.setErrors(null);
+        }
+      });
+    }
   }
 
   getUsernameErrorMessage() {
@@ -56,9 +58,9 @@ export class NewUserDialogComponent implements OnInit {
     this.userService.addUser(this.user).subscribe(x => {
       this.dialogRef.close();
     },
-    error => {
-      console.error(error);
-      this.dialogRef.close();
-    });
+      error => {
+        console.error(error);
+        this.dialogRef.close();
+      });
   }
 }

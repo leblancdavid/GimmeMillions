@@ -29,6 +29,10 @@ export class UserManagementComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.refreshUserList();
+  }
+
+  refreshUserList() {
     this.userService.getUsers().subscribe(x => {
       this.dataSource = new MatTableDataSource<User>(x);
       this.dataSource.paginator = this.paginator;
@@ -65,6 +69,7 @@ export class UserManagementComponent implements AfterViewInit {
         const index: number = this.dataSource.data.findIndex(u => u.id == user.id);
         if (index !== -1) {
           this.dataSource.data.splice(index, 1);
+          this.refreshUserList();
         }
       });
     }
@@ -74,6 +79,9 @@ export class UserManagementComponent implements AfterViewInit {
     const dialogRef = this.dialog.open(NewUserDialogComponent, {
       disableClose: true
     });
+    dialogRef.afterClosed().subscribe(x => {
+      this.refreshUserList();
+    })
   }
 
 }
