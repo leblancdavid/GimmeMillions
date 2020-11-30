@@ -21,4 +21,7 @@ export class MainComponent implements OnInit {
   goToUserManagement() {
     this.router.navigate(['/main/users']);
   }
+  goToProfile() {
+    this.router.navigate(['/main/profile']);
+  }
 }
