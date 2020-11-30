@@ -41,12 +41,24 @@ export class NewUserDialogComponent implements OnInit {
     }
     return this.usernameControl.hasError('inUse') ? 'User already exists' : '';
   }
+  getPasswordErrorMessage() {
+    if (this.passwordControl.hasError('required')) {
+      return 'You must enter a value';
+    }
+    return '';
+  }
 
   cancel() {
     this.dialogRef.close();
   }
 
   save() {
-    this.dialogRef.close();
+    this.userService.addUser(this.user).subscribe(x => {
+      this.dialogRef.close();
+    },
+    error => {
+      console.error(error);
+      this.dialogRef.close();
+    });
   }
 }

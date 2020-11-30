@@ -1,14 +1,26 @@
 <h1 mat-dialog-title>Add New User</h1>
 <div mat-dialog-content>
-  <mat-form-field>
-    <mat-label>Username</mat-label>
-    <input matInput [(ngModel)]="user.username" 
-    [formControl]="usernameControl" 
-    (keyup)="onUsernameKeypress($event)">
-    <mat-error *ngIf="usernameControl.invalid">{{getUsernameErrorMessage()}}</mat-error>
-  </mat-form-field>
+    <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input matInput [(ngModel)]="user.username" [formControl]="usernameControl"
+            (keyup)="onUsernameKeypress($event)">
+        <mat-error *ngIf="usernameControl.invalid">{{getUsernameErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput [(ngModel)]="user.password"  [formControl]="passwordControl" required type="password">
+        <mat-error *ngIf="passwordControl.invalid">{{getPasswordErrorMessage()}}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>First Name</mat-label>
+        <input matInput [(ngModel)]="user.firstName">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+        <mat-label>Last Name</mat-label>
+        <input matInput [(ngModel)]="user.lastName">
+    </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="cancel()">CANCEL</button>
-  <button mat-button (click)="save()">OK</button>
+    <button mat-button (click)="cancel()">CANCEL</button>
+    <button mat-button (click)="save()">OK</button>
 </div>

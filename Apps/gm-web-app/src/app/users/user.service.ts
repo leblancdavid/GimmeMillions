@@ -27,4 +27,8 @@ export class UserService {
   public deleteUser(username: string) {
     return this.http.delete(this.url + '/' + username);
   }
+
+  public addUser(user: User) {
+    return this.http.post(this.url, user);
+  }
 }

@@ -11,7 +11,7 @@
             <mat-error *ngIf="usernameControl.invalid">{{getUsernameErrorMessage()}}</mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
-            <mat-label>Username</mat-label>
+            <mat-label>Password</mat-label>
             <input matInput [formControl]="passwordControl" required type="password">
             <mat-error *ngIf="passwordControl.invalid">{{getPasswordErrorMessage()}}</mat-error>
         </mat-form-field>
