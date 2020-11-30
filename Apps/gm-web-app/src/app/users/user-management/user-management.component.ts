@@ -1,9 +1,11 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { unescapeIdentifier } from '@angular/compiler';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { NewUserDialogComponent } from '../new-user-dialog/new-user-dialog.component';
 import { User } from '../user';
 import { UserService } from '../user.service';
 
@@ -21,7 +23,7 @@ export class UserManagementComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, public dialog: MatDialog) {
     this.dataSource = new MatTableDataSource<User>();
 
   }
@@ -66,6 +68,12 @@ export class UserManagementComponent implements AfterViewInit {
         }
       });
     }
+  }
+
+  addNewUser() {
+    const dialogRef = this.dialog.open(NewUserDialogComponent, {
+      disableClose: true
+    });
   }
 
 }

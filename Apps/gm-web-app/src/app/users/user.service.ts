@@ -20,6 +20,10 @@ export class UserService {
     return this.http.get<Array<User>>(this.url);
   }
 
+  public usernameInUse(username: string) {
+    return this.http.get<boolean>(this.url + '/' + username + '/check');
+  }
+
   public deleteUser(username: string) {
     return this.http.delete(this.url + '/' + username);
   }
