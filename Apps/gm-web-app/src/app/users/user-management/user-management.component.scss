@@ -1,0 +1,34 @@
+:host {
+    flex: 1;
+}
+table {
+    width: 100%;
+}
+
+.mat-form-field {
+    font-size: 14px;
+    width: 100%;
+}
+
+td,
+th {
+    width: 25%;
+}
+
+.user-management-view {
+    padding: 16px;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.user-management-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    * {
+        margin: 0 16px;
+    }
+}
