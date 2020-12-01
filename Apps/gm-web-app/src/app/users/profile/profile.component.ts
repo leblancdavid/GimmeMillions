@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthenticationService } from '../authentication.service';
 import { User } from '../user';
+import { ResetPasswordDialogComponent } from './reset-password-dialog/reset-password-dialog.component';
 
 @Component({
   selector: 'gm-profile',
@@ -10,7 +11,7 @@ import { User } from '../user';
 })
 export class ProfileComponent implements OnInit {
 
-  private currentUser!: User;
+  public currentUser!: User;
   constructor(public authenticationService: AuthenticationService, public dialog: MatDialog) {
 
    }
@@ -20,6 +21,10 @@ export class ProfileComponent implements OnInit {
   }
 
   resetPassword() {
-
+    const dialogRef = this.dialog.open(ResetPasswordDialogComponent, {
+      disableClose: true
+    });
+    dialogRef.afterClosed().subscribe(x => {
+    });
   }
 }

@@ -41,6 +41,17 @@ export class ResetPasswordDialogComponent implements OnInit {
     return this.newPasswordControl.value !== this.newPasswordConfirmControl.value ? 'Passwords must match' : '';
   }
 
+  onConfirmPasswordKeypress(event: Event) {
+    const password = (event.target as HTMLInputElement).value;
+    if (password !== '') {
+      this.newPasswordConfirmControl.setErrors({ 'required': true });
+    } else if(password != this.newPasswordControl.value) {
+      this.newPasswordConfirmControl.setErrors({ 'mismatch': true });
+    } else {
+      this.newPasswordConfirmControl.setErrors(null);
+    }
+  }
+
   resetPassword() {
     //this.authenticationService.addUser(this.user).subscribe(x => {
     //  this.dialogRef.close();

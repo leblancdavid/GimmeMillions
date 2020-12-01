@@ -9,9 +9,9 @@ import { LoginComponent } from './login/login.component';
 import { UserService } from './user.service';
 import { UserManagementComponent } from './user-management/user-management.component';
 import { AuthenticationService } from './authentication.service';
-import { NewUserDialogComponent } from './new-user-dialog/new-user-dialog.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ResetPasswordDialogComponent } from './profile/reset-password-dialog/reset-password-dialog.component';
+import { NewUserDialogComponent } from './user-management/new-user-dialog/new-user-dialog.component';
 
 
 @NgModule({
