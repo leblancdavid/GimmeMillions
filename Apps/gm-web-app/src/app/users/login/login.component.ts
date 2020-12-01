@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
   authenticate() {
     this.userService.login(this.usernameControl.value, this.passwordControl.value).subscribe(x => {
       //login success
-      this.router.navigate(['/main']);
+      this.router.navigate(['/main/stocks']);
     },
     error => {
       this.passwordControl.setValue('');
