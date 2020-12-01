@@ -1,0 +1,9 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+handlers:
+- url: /
+  static_files: gm-web-app/index.html
+  upload: gm-web-app/index.html
+- url: /
+  static_dir: gm-web-app
