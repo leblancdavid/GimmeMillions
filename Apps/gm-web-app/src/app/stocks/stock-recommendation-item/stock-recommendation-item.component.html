@@ -1,0 +1,16 @@
+<div *ngIf="item" class="recommendation-item"
+    [style.border-color]="fontColor"
+    [style.background-color]="backgroundColor">
+    <div class="symbol-name"
+        [style.color]="fontColor">
+        {{item.symbol}}
+    </div>
+    <div class="sentiment-value"
+        [style.color]="fontColor">
+        {{item.sentiment}}%
+    </div>
+    <div class="targets">
+        <div class="high-target">{{item.prediction}}% - ${{item.predictedPriceTarget}}</div>
+        <div class="low-target">{{item.lowPrediction}}% - ${{item.predictedLowTarget}}</div>
+    </div>
+</div>

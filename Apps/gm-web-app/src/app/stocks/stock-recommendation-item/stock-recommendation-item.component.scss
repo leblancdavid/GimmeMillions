@@ -1,0 +1,36 @@
+.recommendation-item {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-style: solid;
+    border-width: 3px;
+    box-sizing: border-box;
+}
+
+.targets {
+    display: flex;
+    flex-direction: column;
+    .high-target {
+        font-size: 1.5em;
+        margin-bottom: 8px;
+        color: rgb(50, 150, 50);
+    }
+    .low-target {
+        font-size: 1.5em;
+        color: rgb(150, 50, 50);
+    }
+}
+
+.symbol-name {
+    font-size: 2em;
+    font-weight: bolder;
+}
+
+.sentiment-value {
+    font-size: 2.0em;
+    margin: 0 24px;
+    font-weight: bolder;
+}
