@@ -11,10 +11,11 @@ import { UserManagementComponent } from './user-management/user-management.compo
 import { AuthenticationService } from './authentication.service';
 import { NewUserDialogComponent } from './new-user-dialog/new-user-dialog.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ResetPasswordDialogComponent } from './profile/reset-password-dialog/reset-password-dialog.component';
 
 
 @NgModule({
-  declarations: [LoginComponent, UserManagementComponent, NewUserDialogComponent, ProfileComponent],
+  declarations: [LoginComponent, UserManagementComponent, NewUserDialogComponent, ProfileComponent, ResetPasswordDialogComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

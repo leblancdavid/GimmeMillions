@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { AuthenticationService } from '../authentication.service';
 import { User } from '../user';
 
@@ -10,7 +11,7 @@ import { User } from '../user';
 export class ProfileComponent implements OnInit {
 
   private currentUser!: User;
-  constructor(public authenticationService: AuthenticationService) {
+  constructor(public authenticationService: AuthenticationService, public dialog: MatDialog) {
 
    }
 
@@ -18,4 +19,7 @@ export class ProfileComponent implements OnInit {
     this.currentUser = this.authenticationService.currentUserValue;
   }
 
+  resetPassword() {
+
+  }
 }
