@@ -37,15 +37,28 @@ export class ResetPasswordDialogComponent implements OnInit {
   getNewPasswordErrorMessage() {
     if (this.newPasswordControl.hasError('required')) {
       return 'You must enter a value';
+    } else if(this.newPasswordControl.hasError('duplicate')) {
+      return 'Password must be different';
     }
     return this.newPasswordControl.value !== this.newPasswordConfirmControl.value ? 'Passwords must match' : '';
   }
 
+  onNewPasswordKeypress(event: Event) {
+    const password = (event.target as HTMLInputElement).value;
+    if (password === '') {
+      this.newPasswordControl.setErrors({ 'required': true });
+    } else if(password === this.oldPasswordControl.value) {
+      this.newPasswordControl.setErrors({ 'duplicate': true });
+    } else {
+      this.newPasswordControl.setErrors(null);
+    }
+  }
+
   onConfirmPasswordKeypress(event: Event) {
     const password = (event.target as HTMLInputElement).value;
-    if (password !== '') {
+    if (password === '') {
       this.newPasswordConfirmControl.setErrors({ 'required': true });
-    } else if(password != this.newPasswordControl.value) {
+    } else if(password !== this.newPasswordControl.value) {
       this.newPasswordConfirmControl.setErrors({ 'mismatch': true });
     } else {
       this.newPasswordConfirmControl.setErrors(null);
@@ -53,12 +66,13 @@ export class ResetPasswordDialogComponent implements OnInit {
   }
 
   resetPassword() {
-    //this.authenticationService.addUser(this.user).subscribe(x => {
-    //  this.dialogRef.close();
-    //},
-    //  error => {
-    //    console.error(error);
-    //    this.dialogRef.close();
-    //  });
+    this.authenticationService.resetPassword(this.oldPasswordControl.value, this.newPasswordControl.value).subscribe(x => {
+      this.dialogRef.close();
+      this.authenticationService.logout();
+    },
+      error => {
+       console.error(error);
+       this.oldPasswordControl.setErrors({ 'failed': true });
+      });
   }
 }

@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -13,7 +14,8 @@ export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+    private router: Router) {
     const currentUserStr = localStorage.getItem('currentUser');
     if(currentUserStr) {
       this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(currentUserStr));
@@ -42,6 +44,16 @@ export class AuthenticationService {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(new User(-1, '','','','',UserRole.Default));
+    this.router.navigate(['/login']);
+  }
+
+  resetPassword(oldPassword: string, newPassword: string) {
+    return this.http.put(environment.apiUrl + '/user/reset', 
+    {
+      username: this.currentUserSubject.value.username,
+      oldPassword: oldPassword,
+      newPassword: newPassword
+    });
   }
 
 }
