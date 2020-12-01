@@ -1,0 +1,114 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Gimmillions",
+		"_postman_id": "c68d8d01-6f17-c792-2655-17178c13e50d",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://localhost:44316/api/user/test",
+			"request": {
+				"url": "https://localhost:44316/api/user/test_user",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Z21fc3VwZXJ1c2VyOmdtX3N1cGVydXNlcg==",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "https://localhost:44316/api/user/authenticate",
+			"request": {
+				"url": "https://localhost:44316/api/user/authenticate",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"gm_superuser\",\r\n    \"password\": \"gm_superuser\"\r\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "https://localhost:44316/api/user",
+			"request": {
+				"url": "https://localhost:44316/api/user",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic Z21fc3VwZXJ1c2VyOmdtX3N1cGVydXNlcg==",
+						"description": "",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"superuser\": \"gm_superuser\",\n\t\"superuserPassword\": \"gm_superuser\",\n\t\"username\": \"test_user\",\n\t\"password\": \"test_user\",\n\t\"firstName\": \"test\",\n\t\"lastName\": \"user\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "https://localhost:44316/api/user",
+			"request": {
+				"url": "https://localhost:44316/api/user",
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"superuser\": \"gm_superuser\",\n\t\"superuserPassword\": \"gm_superuser\",\n\t\"username\": \"test_user\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "https://localhost:44316/api/user/reset",
+			"request": {
+				"url": "https://localhost:44316/api/user/reset",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"superuser\": \"gm_superuser\",\n\t\"superuserPassword\": \"gm_superuser\",\n\t\"username\": \"test_user\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

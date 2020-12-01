@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { MainComponent } from './main.component';
 import { LoginComponent } from './users/login/login.component';
+import { ProfileComponent } from './users/profile/profile.component';
 import { UserManagementComponent } from './users/user-management/user-management.component';
 
 const routes: Routes = [
@@ -15,8 +16,8 @@ const routes: Routes = [
         component: UserManagementComponent,
       },
       {
-        path: 'child-b',
-        component: LoginComponent, // another child route component that the router renders
+        path: 'profile',
+        component: ProfileComponent, // another child route component that the router renders
       },
     ],
   },

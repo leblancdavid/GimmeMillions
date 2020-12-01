@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { NewUserDialogComponent } from '../new-user-dialog/new-user-dialog.component';
+import { NewUserDialogComponent } from './new-user-dialog/new-user-dialog.component';
 import { User } from '../user';
 import { UserService } from '../user.service';
 
@@ -81,7 +81,7 @@ export class UserManagementComponent implements AfterViewInit {
     });
     dialogRef.afterClosed().subscribe(x => {
       this.refreshUserList();
-    })
+    });
   }
 
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { User, UserRole } from '../user';
-import { UserService } from '../user.service';
+import { User, UserRole } from '../../user';
+import { UserService } from '../../user.service';
 
 @Component({
   selector: 'gm-new-user-dialog',
@@ -43,6 +43,7 @@ export class NewUserDialogComponent implements OnInit {
     }
     return this.usernameControl.hasError('inUse') ? 'User already exists' : '';
   }
+  
   getPasswordErrorMessage() {
     if (this.passwordControl.hasError('required')) {
       return 'You must enter a value';

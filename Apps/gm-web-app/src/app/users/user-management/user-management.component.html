@@ -5,12 +5,12 @@
             <input matInput (keyup)="applyFilter($event)" #input>
         </mat-form-field>
         <button mat-fab color="primary" (click)="addNewUser()">
-            <mat-icon>add</mat-icon>
+            <mat-icon>person_add</mat-icon>
         </button>
         <button mat-fab color="accent" 
             [disabled]="this.selection.selected.length == 0"
             (click)="deleteSelectedUsers()">
-            <mat-icon>delete</mat-icon>
+            <mat-icon>person_remove</mat-icon>
         </button>
     </div>
     <div class="mat-elevation-z8">
