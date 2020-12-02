@@ -8,11 +8,12 @@ import { MaterialModule } from '../material/material.module';
 import { FuturesComponent } from './futures/futures.component';
 import { StocksComponent } from './stocks.component';
 import { StockRecommendationItemComponent } from './stock-recommendation-item/stock-recommendation-item.component';
+import { UserWatchlistComponent } from './user-watchlist/user-watchlist.component';
 
 
 
 @NgModule({
-  declarations: [StocksComponent, FuturesComponent, StockRecommendationItemComponent],
+  declarations: [StocksComponent, FuturesComponent, StockRecommendationItemComponent, UserWatchlistComponent],
   imports: [
     CommonModule,
     BrowserModule,
