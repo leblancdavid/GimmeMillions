@@ -1,11 +1,19 @@
 <div class="recommendation-list-view">
-    <div class="recommendation-list" *ngIf="*recommendations">
-        <div *ngFor="let r of recommendations"
-            class="recommendation-item"
-            [class.selected]="!selectedItem || (selectedItem && r.symbol == selectedItem.symbol)"
-            (click)="select(r)">
-            <gm-stock-recommendation-item [item]="r"></gm-stock-recommendation-item>
-        </div>
-    </div>
-</div>
+    <table matSort (matSortChange)="sortRecommendations($event)" style="width: 100%;">
+        <tr class="recommendations-sort-header">
+            <th mat-sort-header="symbol" style="flex: 2">Symbol</th>
+            <th mat-sort-header="sentiment" style="flex: 2">Sentiment</th>
+            <th mat-sort-header="prediction" style="flex: 1">High</th>
+            <th mat-sort-header="lowPrediction" style="flex: 1">Low</th>
+        </tr>
 
+        <tr *ngFor="let r of sortedRecommendations" 
+            class="recommendation-item"
+            [class.selected]="!selectedItem || (selectedItem && r.symbol == selectedItem.symbol)" 
+            (click)="select(r)">
+            <td colspan="4">
+                <gm-stock-recommendation-item [item]="r"></gm-stock-recommendation-item>
+            </td>
+        </tr>
+    </table>
+</div>

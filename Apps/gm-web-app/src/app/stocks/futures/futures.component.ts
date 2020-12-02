@@ -17,7 +17,10 @@ export class FuturesComponent implements OnInit {
 
   ngOnInit(): void {
     this.stockRecommendationService.getFutures().subscribe(x => {
-      this.recommendations = x;
+      for(let r of x) {
+        this.recommendations.push(r);
+      }
+      
       if(this.recommendations.length > 0) {
         this.selectedFuture = this.recommendations[0];
       }
