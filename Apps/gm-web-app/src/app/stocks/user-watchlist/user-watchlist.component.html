@@ -3,13 +3,8 @@
         <mat-spinner></mat-spinner>
         <h1>Retrieving Watchlist...</h1>
     </div>
-    <div class="watchlist-list" *ngIf="watchlist.length != 0">
-        <div *ngFor="let r of watchlist"
-            class="watchlist-item"
-            [class.selected]="!selectedItem || (selectedItem && r.symbol == selectedItem.symbol)"
-            (click)="select(r)">
-            <gm-stock-recommendation-item [item]="r"></gm-stock-recommendation-item>
-        </div>
+    <div class="watchlist-list">
+        <gm-recommendation-list [recommendations]="watchlist"></gm-recommendation-list>
     </div>
     <div class="watchlist-details" *ngIf="watchlist.length != 0">
         <h1 *ngIf="selectedItem">Additional details coming soon!</h1>

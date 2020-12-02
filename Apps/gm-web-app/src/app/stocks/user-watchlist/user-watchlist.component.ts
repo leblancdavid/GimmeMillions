@@ -17,7 +17,9 @@ export class UserWatchlistComponent implements OnInit {
 
   ngOnInit(): void {
     this.stockRecommendationService.getFutures().subscribe(x => {
-      this.watchlist = x;
+      for(let r of x) {
+        this.watchlist.push(r);
+      }
       if(this.watchlist.length > 0) {
         this.selectedItem = this.watchlist[0];
       }
