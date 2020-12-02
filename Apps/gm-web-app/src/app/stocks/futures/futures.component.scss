@@ -1,0 +1,9 @@
+.futures-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    .future-item {
+        margin: 2px;
+    }
+}

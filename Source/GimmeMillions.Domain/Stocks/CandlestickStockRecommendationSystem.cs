@@ -183,5 +183,10 @@ namespace GimmeMillions.Domain.Stocks
         {
             return _stockRecommendationRepository.GetStockRecommendation(_systemId, symbol, date);
         }
+
+        public Result<StockRecommendation> RunRecommendationsFor(string symbol, DateTime date)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

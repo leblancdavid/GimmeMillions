@@ -1,1 +1,5 @@
-<gm-stock-recommendation-item [item]="temporaryRecommendation"></gm-stock-recommendation-item>
+<div class="futures-list">
+    <div *ngFor="let r of recommendations" [value]="r" class="future-item">
+        <gm-stock-recommendation-item [item]="r"></gm-stock-recommendation-item>
+    </div>
+</div>
