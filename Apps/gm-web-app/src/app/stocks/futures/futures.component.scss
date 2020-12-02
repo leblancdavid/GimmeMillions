@@ -5,5 +5,9 @@
     
     .future-item {
         margin: 2px;
+        opacity: 0.5;
+        &.selected {
+            opacity: 1.0;
+        }
     }
 }

@@ -10,6 +10,7 @@ import { StockRecommendationService } from '../stock-recommendation.service';
 export class FuturesComponent implements OnInit {
 
   public recommendations: Array<StockRecommendation>;
+  public selectedFuture?: StockRecommendation;
   constructor(private stockRecommendationService: StockRecommendationService) {
     this.recommendations = new Array<StockRecommendation>();
    }
@@ -17,7 +18,17 @@ export class FuturesComponent implements OnInit {
   ngOnInit(): void {
     this.stockRecommendationService.getFutures().subscribe(x => {
       this.recommendations = x;
+      if(this.recommendations.length > 0) {
+        this.selectedFuture = this.recommendations[0];
+      }
     })
   }
 
+  selectFuture(r: StockRecommendation) {
+    if(this.selectedFuture && r.symbol == this.selectedFuture.symbol) {
+      this.selectedFuture = undefined;
+    } else {
+      this.selectedFuture = r;
+    }
+  }
 }
