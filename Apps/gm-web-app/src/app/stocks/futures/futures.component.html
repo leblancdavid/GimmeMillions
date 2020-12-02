@@ -1,16 +1,17 @@
 <div class="futures-view">
     <div class="wait-spinner" *ngIf="recommendations.length == 0">
         <mat-spinner></mat-spinner>
+        <h1>Retrieving Futures...</h1>
     </div>
     <div class="futures-list" *ngIf="recommendations.length != 0">
-        <div *ngFor="let r of recommendations" [value]="r" 
+        <div *ngFor="let r of recommendations"
             class="future-item"
             [class.selected]="!selectedFuture || (selectedFuture && r.symbol == selectedFuture.symbol)"
             (click)="selectFuture(r)">
             <gm-stock-recommendation-item [item]="r"></gm-stock-recommendation-item>
         </div>
     </div>
-    <div class="futures-details">
+    <div class="futures-details" *ngIf="recommendations.length != 0">
         <h1 *ngIf="selectedFuture">Additional details coming soon!</h1>
     </div>
 </div>
