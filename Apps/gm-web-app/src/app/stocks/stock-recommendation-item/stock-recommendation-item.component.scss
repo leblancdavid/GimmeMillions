@@ -11,9 +11,10 @@
 }
 
 .targets {
-    flex: 3;
+    flex: 2;
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
     .high-target {
         font-size: 1.5em;
         margin-bottom: 8px;
@@ -36,4 +37,6 @@
     font-size: 2.0em;
     margin: 0 24px;
     font-weight: bolder;
+    display: flex;
+    justify-content: center;
 }
