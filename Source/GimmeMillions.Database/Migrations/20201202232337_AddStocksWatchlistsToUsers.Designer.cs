@@ -3,14 +3,16 @@ using System;
 using GimmeMillions.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GimmeMillions.SQLDataAccess.Migrations
 {
     [DbContext(typeof(GimmeMillionsContext))]
-    partial class GimmeMillionsContextModelSnapshot : ModelSnapshot
+    [Migration("20201202232337_AddStocksWatchlistsToUsers")]
+    partial class AddStocksWatchlistsToUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
