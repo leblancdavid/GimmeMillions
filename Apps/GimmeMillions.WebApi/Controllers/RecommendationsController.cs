@@ -34,17 +34,34 @@ namespace GimmeMillions.WebApi.Controllers
         {
             var system = _provider.GetFuturesRecommendations();
             var recommendations = new List<StockRecommendation>();
-            var dia = system.GetRecommendation(DateTime.Today, "DIA");
+            var date = GetUpdatedDailyStockDate();
+            var dia = system.GetRecommendation(date, "DIA");
             if(dia.IsSuccess)
                 recommendations.Add(dia.Value);
-            var qqq = system.GetRecommendation(DateTime.Today, "QQQ");
+            var qqq = system.GetRecommendation(date, "QQQ");
             if (qqq.IsSuccess)
                 recommendations.Add(qqq.Value);
-            var spy = system.GetRecommendation(DateTime.Today, "SPY");
+            var spy = system.GetRecommendation(date, "SPY");
             if (spy.IsSuccess)
                 recommendations.Add(spy.Value);
 
             return recommendations;
+        }
+
+        private DateTime GetUpdatedDailyStockDate()
+        {
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time");
+            var newDateTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo);
+            if (newDateTime.Hour < 13)
+            {
+                return DateTime.Today;
+            }
+            else
+            {
+                //If the time is after the market close PST,
+                return DateTime.Today.AddDays(1.0);
+            }
+
         }
 
     }
