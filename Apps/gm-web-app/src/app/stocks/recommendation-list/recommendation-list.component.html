@@ -1,0 +1,11 @@
+<div class="recommendation-list-view">
+    <div class="recommendation-list" *ngIf="*recommendations">
+        <div *ngFor="let r of recommendations"
+            class="recommendation-item"
+            [class.selected]="!selectedItem || (selectedItem && r.symbol == selectedItem.symbol)"
+            (click)="select(r)">
+            <gm-stock-recommendation-item [item]="r"></gm-stock-recommendation-item>
+        </div>
+    </div>
+</div>
+

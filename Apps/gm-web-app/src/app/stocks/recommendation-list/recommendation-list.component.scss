@@ -1,0 +1,14 @@
+.recommendation-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex: 1;
+    
+    .recommendation-item {
+        margin: 2px;
+        opacity: 0.5;
+        &.selected {
+            opacity: 1.0;
+        }
+    }
+}
