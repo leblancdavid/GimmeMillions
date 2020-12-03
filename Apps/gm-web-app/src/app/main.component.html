@@ -1,5 +1,5 @@
 <div class="main-layout">
-    <mat-toolbar color="primary">
+    <mat-toolbar color="primary" class="main-toolbar">
         <button mat-icon-button>
             <mat-icon>menu</mat-icon>
         </button>
@@ -25,5 +25,7 @@
         </button>
     </mat-toolbar>
 
-    <router-outlet></router-outlet>
+    <div class="main-container">
+        <router-outlet></router-outlet>
+    </div>
 </div>

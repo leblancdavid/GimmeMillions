@@ -2,11 +2,7 @@
 
     
 
-    <div class="wait-spinner" *ngIf="isSearching">
-        <mat-spinner></mat-spinner>
-        <h1>Looking up...</h1>
-    </div>
-    <div class="stock-search-list" *ngIf="!isSearching">
+    <div class="stock-search-list">
         <div class="stock-search-filters">
             <mat-form-field>
                 <mat-label>Search</mat-label>
@@ -18,9 +14,11 @@
                 SEARCH
             </button>
         </div>
-
-        
-        <gm-recommendation-list *ngIf="stockList.recommendations.length > 0" [recommendations]="stockList"></gm-recommendation-list>
+        <gm-recommendation-list *ngIf="stockList.recommendations.length > 0 && !isSearching" [recommendations]="stockList"></gm-recommendation-list>
+        <div class="wait-spinner" *ngIf="isSearching">
+            <mat-spinner></mat-spinner>
+            <h1>Looking up {{searchControl.value}}...</h1>
+        </div>
     </div>
     <div class="stock-search-details">
         <h1 *ngIf="selectedItem">Additional details coming soon!</h1>

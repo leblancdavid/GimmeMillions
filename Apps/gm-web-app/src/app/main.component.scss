@@ -9,4 +9,17 @@
     display: flex;
     height: 100%;
     flex-direction: column;
+
+    .main-toolbar {
+        height: 48px !important;
+    }
+    .main-container {
+        flex: 1;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        padding-top: 48px;
+        box-sizing: border-box;
+    }
+    
 }

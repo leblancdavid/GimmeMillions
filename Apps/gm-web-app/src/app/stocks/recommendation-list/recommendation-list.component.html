@@ -4,8 +4,8 @@
         <tr class="recommendations-sort-header">
             <th mat-sort-header="symbol" style="flex: 2">Symbol</th>
             <th mat-sort-header="sentiment" style="flex: 2">Sentiment</th>
-            <th mat-sort-header="prediction" style="flex: 1">High</th>
-            <th mat-sort-header="lowPrediction" style="flex: 1">Low</th>
+            <th mat-sort-header="prediction" style="width: 80px;">High</th>
+            <th mat-sort-header="lowPrediction" style="width: 80px;">Low</th>
         </tr>
 
         <tr *ngFor="let r of recommendations.sorted" 
