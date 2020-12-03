@@ -25,4 +25,13 @@ export class StockRecommendationService {
       return mappedFutures;
     }));
   }
+
+  public getRecommendationFor(symbol: string): Observable<StockRecommendation> {
+    return this.http.get<StockRecommendation>(this.url + '/stocks/' + symbol)
+    .pipe(map(r => {
+      return new StockRecommendation(r.date, r.symbol, r.systemId,
+        r.sentiment, r.prediction, r.lowPrediction, r.previousClose,
+        r.predictedPriceTarget, r.predictedLowTarget);
+    }));
+  }
 }

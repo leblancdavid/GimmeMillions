@@ -30,6 +30,23 @@ export class RecommendationList {
         this._sorted = new Array<StockRecommendation>();
     }
 
+    public contains(symbol: string): boolean {
+      if(this._recommendations.find(x => x.symbol.toLowerCase() === symbol.toLowerCase())) {
+        return true;
+      }
+      return false;
+    }
+
+    public add(r: StockRecommendation) {
+      if(this._recommendations.find(x => x.symbol.toLowerCase() === r.symbol.toLowerCase())) {
+        return;
+      }
+
+      this._recommendations.push(r);
+      this._sorted.push(r);
+      this._filtered.push(r);
+    }
+
     private _symbolFilter: string;
     public applyFilter(symbol: string) {
         this._symbolFilter = symbol.toLocaleLowerCase(); 

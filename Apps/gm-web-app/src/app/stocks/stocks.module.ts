@@ -10,11 +10,12 @@ import { StocksComponent } from './stocks.component';
 import { StockRecommendationItemComponent } from './stock-recommendation-item/stock-recommendation-item.component';
 import { UserWatchlistComponent } from './user-watchlist/user-watchlist.component';
 import { RecommendationListComponent } from './recommendation-list/recommendation-list.component';
+import { StockSearchComponent } from './stock-search/stock-search.component';
 
 
 
 @NgModule({
-  declarations: [StocksComponent, FuturesComponent, StockRecommendationItemComponent, UserWatchlistComponent, RecommendationListComponent],
+  declarations: [StocksComponent, FuturesComponent, StockRecommendationItemComponent, UserWatchlistComponent, RecommendationListComponent, StockSearchComponent],
   imports: [
     CommonModule,
     BrowserModule,

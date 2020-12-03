@@ -48,10 +48,22 @@ namespace GimmeMillions.WebApi.Controllers
             return recommendations;
         }
 
+        [HttpGet("stocks/{symbol}")]
+        public IActionResult GetPrediction(string symbol)
+        {
+            var system = _provider.GetStocksRecommendations();
+            var date = GetUpdatedDailyStockDate();
+            var prediction = system.GetRecommendation(date, symbol.ToUpper());
+            if (prediction.IsFailure)
+                return BadRequest(prediction.Error);
+
+            return Ok(prediction.Value);
+        }
+
         private DateTime GetUpdatedDailyStockDate()
         {
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time");
-            var newDateTime = TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo);
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            var newDateTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, timeZoneInfo);
             if (newDateTime.Hour < 13)
             {
                 return DateTime.Today;
