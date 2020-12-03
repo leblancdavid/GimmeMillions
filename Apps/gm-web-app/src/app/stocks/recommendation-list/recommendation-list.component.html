@@ -1,9 +1,4 @@
 <div class="recommendation-list-view noselect">
-    <mat-form-field>
-        <mat-label>Lookup</mat-label>
-        <mat-icon matPrefix>search</mat-icon>
-        <input matInput type="text" [(ngModel)]="lookupFilter" (keyup)="onFilterKeyup($event)">
-    </mat-form-field>
 
     <table matSort (matSortChange)="sortRecommendations($event)" style="width: 100%;">
         <tr class="recommendations-sort-header">
@@ -13,7 +8,7 @@
             <th mat-sort-header="lowPrediction" style="flex: 1">Low</th>
         </tr>
 
-        <tr *ngFor="let r of sortedRecommendations" 
+        <tr *ngFor="let r of recommendations.sorted" 
             class="recommendation-item"
             [class.selected]="!selectedItem || (selectedItem && r.symbol == selectedItem.symbol)" 
             (click)="select(r)">

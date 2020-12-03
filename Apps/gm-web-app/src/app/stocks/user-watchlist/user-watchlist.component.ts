@@ -1,5 +1,6 @@
 import { newArray } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
+import { RecommendationList } from '../recommendation-list/recommendation-list';
 import { StockRecommendation } from '../stock-recommendation';
 import { StockRecommendationService } from '../stock-recommendation.service';
 
@@ -10,32 +11,30 @@ import { StockRecommendationService } from '../stock-recommendation.service';
 })
 export class UserWatchlistComponent implements OnInit {
 
-  public watchlist: Array<StockRecommendation>;
-  public selectedItem?: StockRecommendation;
-  public filteredWatchlist!: Array<StockRecommendation>;
-
+  public watchlist: RecommendationList;
+  public selectedFuture?: StockRecommendation;
   constructor(private stockRecommendationService: StockRecommendationService) {
-    this.watchlist = new Array<StockRecommendation>();
-    this.filteredWatchlist = new Array<StockRecommendation>();
+    this.watchlist = new RecommendationList();
    }
 
   ngOnInit(): void {
     this.stockRecommendationService.getFutures().subscribe(x => {
-      for(let r of x) {
-        this.watchlist.push(r);
-        this.filteredWatchlist.push(r);
-      }
-      if(this.watchlist.length > 0) {
-        this.selectedItem = this.watchlist[0];
+      this.watchlist.recommendations = x;
+      if(this.watchlist.recommendations.length > 0) {
+        this.selectedFuture = this.watchlist.recommendations[0];
       }
     })
   }
 
-  select(r: StockRecommendation) {
-    if(this.selectedItem && r.symbol == this.selectedItem.symbol) {
-      this.selectedItem = undefined;
+  onFilterKeyup(event: Event) {
+    this.watchlist.applyFilter((event.target as HTMLInputElement).value);
+  }
+
+  selectFuture(r: StockRecommendation) {
+    if(this.selectedFuture && r.symbol == this.selectedFuture.symbol) {
+      this.selectedFuture = undefined;
     } else {
-      this.selectedItem = r;
+      this.selectedFuture = r;
     }
   }
 }

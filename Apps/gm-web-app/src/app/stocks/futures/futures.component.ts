@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RecommendationList } from '../recommendation-list/recommendation-list';
 import { StockRecommendation } from '../stock-recommendation';
 import { StockRecommendationService } from '../stock-recommendation.service';
 
@@ -9,20 +10,17 @@ import { StockRecommendationService } from '../stock-recommendation.service';
 })
 export class FuturesComponent implements OnInit {
 
-  public recommendations: Array<StockRecommendation>;
+  public futures: RecommendationList;
   public selectedFuture?: StockRecommendation;
   constructor(private stockRecommendationService: StockRecommendationService) {
-    this.recommendations = new Array<StockRecommendation>();
+    this.futures = new RecommendationList();
    }
 
   ngOnInit(): void {
     this.stockRecommendationService.getFutures().subscribe(x => {
-      for(let r of x) {
-        this.recommendations.push(r);
-      }
-      
-      if(this.recommendations.length > 0) {
-        this.selectedFuture = this.recommendations[0];
+      this.futures.recommendations = x;
+      if(this.futures.recommendations.length > 0) {
+        this.selectedFuture = this.futures.recommendations[0];
       }
     })
   }
