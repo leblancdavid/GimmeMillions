@@ -26,9 +26,6 @@ export class RecommendationListComponent implements OnInit {
     }
   }
 
-  onFilterKeyup(event: Event) {
-    this.recommendations.applyFilter((event.target as HTMLInputElement).value);
-  }
 
   sortRecommendations(sort: Sort) {
     this.recommendations.applySort(sort);
