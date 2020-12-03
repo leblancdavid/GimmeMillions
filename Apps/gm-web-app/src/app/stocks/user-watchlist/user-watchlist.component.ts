@@ -12,7 +12,7 @@ import { StockRecommendationService } from '../stock-recommendation.service';
 export class UserWatchlistComponent implements OnInit {
 
   public watchlist: RecommendationList;
-  public selectedFuture?: StockRecommendation;
+  public selectedItem?: StockRecommendation;
   constructor(private stockRecommendationService: StockRecommendationService) {
     this.watchlist = new RecommendationList();
    }
@@ -21,7 +21,7 @@ export class UserWatchlistComponent implements OnInit {
     this.stockRecommendationService.getFutures().subscribe(x => {
       this.watchlist.recommendations = x;
       if(this.watchlist.recommendations.length > 0) {
-        this.selectedFuture = this.watchlist.recommendations[0];
+        this.selectedItem = this.watchlist.recommendations[0];
       }
     })
   }
@@ -31,10 +31,10 @@ export class UserWatchlistComponent implements OnInit {
   }
 
   selectFuture(r: StockRecommendation) {
-    if(this.selectedFuture && r.symbol == this.selectedFuture.symbol) {
-      this.selectedFuture = undefined;
+    if(this.selectedItem && r.symbol == this.selectedItem.symbol) {
+      this.selectedItem = undefined;
     } else {
-      this.selectedFuture = r;
+      this.selectedItem = r;
     }
   }
 }

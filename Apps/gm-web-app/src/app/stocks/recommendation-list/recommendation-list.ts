@@ -25,6 +25,9 @@ export class RecommendationList {
 
     constructor() {
         this._symbolFilter = '';
+        this._recommendations = new Array<StockRecommendation>();
+        this._filtered = new Array<StockRecommendation>();
+        this._sorted = new Array<StockRecommendation>();
     }
 
     private _symbolFilter: string;

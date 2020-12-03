@@ -1,4 +1,4 @@
-<div class="futures-view">
+<div class="futures-view" *ngIf="futures">
     <div class="wait-spinner" *ngIf="futures.recommendations.length == 0">
         <mat-spinner></mat-spinner>
         <h1>Retrieving Futures...</h1>
