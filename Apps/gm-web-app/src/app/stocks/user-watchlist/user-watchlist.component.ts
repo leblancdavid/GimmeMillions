@@ -13,17 +13,29 @@ export class UserWatchlistComponent implements OnInit {
 
   public watchlist: RecommendationList;
   public selectedItem?: StockRecommendation;
+  public isRefreshing: boolean;
   constructor(private stockRecommendationService: StockRecommendationService) {
     this.watchlist = new RecommendationList();
+    this.isRefreshing = false;
    }
 
   ngOnInit(): void {
+    this.refresh();
+  }
+
+  refresh() {
+    this.isRefreshing = true;
+    this.watchlist = new RecommendationList();
     this.stockRecommendationService.getFutures().subscribe(x => {
+      
+      this.isRefreshing = false;
       this.watchlist.recommendations = x;
       if(this.watchlist.recommendations.length > 0) {
         this.selectedItem = this.watchlist.recommendations[0];
       }
-    })
+    }, error => {
+      this.isRefreshing = false;
+    });
   }
 
   onFilterKeyup(event: Event) {

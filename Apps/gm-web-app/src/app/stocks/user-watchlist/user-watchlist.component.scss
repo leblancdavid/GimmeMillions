@@ -17,6 +17,13 @@
     height: 100%;
     flex: 1;
     
+    .watchlist-filters {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+    }
+
     .watchlist-item {
         margin: 2px;
         opacity: 0.5;

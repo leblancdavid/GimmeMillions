@@ -4,12 +4,17 @@
         <mat-spinner></mat-spinner>
         <h1>Retrieving Watchlist...</h1>
     </div>
-    <div class="watchlist-list">
-        <mat-form-field>
-            <mat-label>Lookup</mat-label>
-            <mat-icon matPrefix>search</mat-icon>
-            <input matInput type="text" (keyup)="onFilterKeyup($event)">
-        </mat-form-field>
+    <div class="watchlist-list" *ngIf="watchlist.recommendations.length != 0">
+        <div class="watchlist-filters">
+            <mat-form-field>
+                <mat-label>Lookup</mat-label>
+                <mat-icon matPrefix>search</mat-icon>
+                <input matInput type="text" (keyup)="onFilterKeyup($event)">
+            </mat-form-field>
+            <button mat-icon-button style="align-self: flex-end;" (click)="refresh()">
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </div>
         <gm-recommendation-list [recommendations]="watchlist"></gm-recommendation-list>
     </div>
     <div class="watchlist-details" *ngIf="watchlist.recommendations.length != 0">

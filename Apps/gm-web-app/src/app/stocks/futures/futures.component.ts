@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RouteConfigLoadEnd } from '@angular/router';
 import { RecommendationList } from '../recommendation-list/recommendation-list';
 import { StockRecommendation } from '../stock-recommendation';
 import { StockRecommendationService } from '../stock-recommendation.service';
@@ -17,12 +18,17 @@ export class FuturesComponent implements OnInit {
    }
 
   ngOnInit(): void {
+   this.refresh(); 
+  }
+
+  refresh() {
+    this.futures = new RecommendationList();
     this.stockRecommendationService.getFutures().subscribe(x => {
       this.futures.recommendations = x;
       if(this.futures.recommendations.length > 0) {
         this.selectedFuture = this.futures.recommendations[0];
       }
-    })
+    });
   }
 
   selectFuture(r: StockRecommendation) {
