@@ -1,3 +1,4 @@
+import { newArray } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
 import { StockRecommendation } from '../stock-recommendation';
 import { StockRecommendationService } from '../stock-recommendation.service';
@@ -11,14 +12,18 @@ export class UserWatchlistComponent implements OnInit {
 
   public watchlist: Array<StockRecommendation>;
   public selectedItem?: StockRecommendation;
+  public filteredWatchlist!: Array<StockRecommendation>;
+
   constructor(private stockRecommendationService: StockRecommendationService) {
     this.watchlist = new Array<StockRecommendation>();
+    this.filteredWatchlist = new Array<StockRecommendation>();
    }
 
   ngOnInit(): void {
     this.stockRecommendationService.getFutures().subscribe(x => {
       for(let r of x) {
         this.watchlist.push(r);
+        this.filteredWatchlist.push(r);
       }
       if(this.watchlist.length > 0) {
         this.selectedItem = this.watchlist[0];

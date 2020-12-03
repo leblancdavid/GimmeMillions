@@ -1,4 +1,10 @@
 <div class="recommendation-list-view noselect">
+    <mat-form-field>
+        <mat-label>Lookup</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput type="text" [(ngModel)]="lookupFilter" (keyup)="onFilterKeyup($event)">
+    </mat-form-field>
+
     <table matSort (matSortChange)="sortRecommendations($event)" style="width: 100%;">
         <tr class="recommendations-sort-header">
             <th mat-sort-header="symbol" style="flex: 2">Symbol</th>

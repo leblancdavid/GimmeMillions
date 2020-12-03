@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Sort } from '@angular/material/sort';
+import { debug } from 'console';
 import { StockRecommendation } from '../stock-recommendation';
 
 @Component({
@@ -12,12 +13,14 @@ export class RecommendationListComponent implements OnInit {
   @Input() recommendations!: Array<StockRecommendation>;
   public selectedItem?: StockRecommendation;
   public sortedRecommendations!: Array<StockRecommendation>;
-  public symbolFilter: string;
+  public filteredRecommendations!: Array<StockRecommendation>;
+  public lookupFilter!: string;
   constructor() {
-    this.symbolFilter = '';
+    this.lookupFilter = '';
   }
 
   ngOnInit(): void {
+    this.filteredRecommendations = this.recommendations;
     this.sortedRecommendations = this.recommendations;
   }
 
@@ -29,8 +32,18 @@ export class RecommendationListComponent implements OnInit {
     }
   }
 
+  onFilterKeyup(event: Event) {
+    const filter = (event.target as HTMLInputElement).value.toLocaleLowerCase();
+    if(this.lookupFilter !== '') {
+      this.filteredRecommendations = this.recommendations.filter(x => x.symbol.toLocaleLowerCase().includes(this.lookupFilter));
+    } else {
+      this.filteredRecommendations = this.recommendations;
+    }
+    this.sortedRecommendations = this.filteredRecommendations.slice();
+  }
+
   sortRecommendations(sort: Sort) {
-    const data = this.recommendations.slice();
+    const data = this.filteredRecommendations.slice();
     if (!sort.active || sort.direction === '') {
       this.sortedRecommendations = data;
       return;
@@ -50,8 +63,6 @@ export class RecommendationListComponent implements OnInit {
         return 0;
       }
     });
-
-    
   }
 
   private compare(a: number | string, b: number | string, isAsc: boolean) {
