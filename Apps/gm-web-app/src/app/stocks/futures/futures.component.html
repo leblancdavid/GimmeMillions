@@ -10,9 +10,9 @@
             </button>
         </div>
         
-        <gm-recommendation-list [recommendations]="futures"></gm-recommendation-list>
+        <gm-recommendation-list [recommendations]="futures" [(selectedItem)]="selectedFuture"></gm-recommendation-list>
     </div>
-    <div class="futures-details">
-        <h1 *ngIf="selectedFuture">Additional details coming soon!</h1>
+    <div class="futures-details" *ngIf="futures.recommendations.length != 0">
+        <gm-stock-details [data]="selectedFuture"></gm-stock-details>
     </div>
 </div>
