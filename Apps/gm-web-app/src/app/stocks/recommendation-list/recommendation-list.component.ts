@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { StockRecommendation } from '../stock-recommendation';
 import { RecommendationList } from './recommendation-list';
@@ -11,7 +11,9 @@ import { RecommendationList } from './recommendation-list';
 export class RecommendationListComponent implements OnInit {
 
   @Input() recommendations!: RecommendationList;
-  public selectedItem?: StockRecommendation;
+  @Input() selectedItem?: StockRecommendation;
+  @Output() selectedItemChange = new EventEmitter<StockRecommendation>();
+
   constructor() {
   }
 
@@ -24,6 +26,8 @@ export class RecommendationListComponent implements OnInit {
     } else {
       this.selectedItem = r;
     }
+    
+    this.selectedItemChange.emit(this.selectedItem);
   }
 
 
