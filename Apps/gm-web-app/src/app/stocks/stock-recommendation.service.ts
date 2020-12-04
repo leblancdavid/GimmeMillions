@@ -13,6 +13,19 @@ export class StockRecommendationService {
 
   private url = environment.apiUrl + '/recommendations';
 
+  public getDailyPicks(): Observable<Array<StockRecommendation>> {
+    return this.http.get<Array<StockRecommendation>>(this.url + '/stocks/daily')
+    .pipe(map(stocks => {
+      let mappedDailies = new Array<StockRecommendation>();
+      for(let f of stocks) {
+        mappedDailies.push(new StockRecommendation(f.date, f.symbol, f.systemId,
+          f.sentiment, f.prediction, f.lowPrediction, f.previousClose,
+          f.predictedPriceTarget, f.predictedLowTarget));
+      }
+      return mappedDailies;
+    }));
+  }
+
   public getFutures(): Observable<Array<StockRecommendation>> {
     return this.http.get<Array<StockRecommendation>>(this.url + '/futures')
     .pipe(map(futures => {

@@ -25,7 +25,7 @@ export class DailyPredictionsComponent implements OnInit {
   refresh() {
     this.isRefreshing = true;
     this.predictions = new RecommendationList();
-    this.stockRecommendationService.getFutures().subscribe(x => {
+    this.stockRecommendationService.getDailyPicks().subscribe(x => {
       
       this.isRefreshing = false;
       this.predictions.recommendations = x;

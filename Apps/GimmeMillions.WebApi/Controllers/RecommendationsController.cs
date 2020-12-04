@@ -52,7 +52,7 @@ namespace GimmeMillions.WebApi.Controllers
         public IEnumerable<StockRecommendation> GetDailyStocks()
         {
             var system = _provider.GetStocksRecommendations();
-            return system.GetRecommendationsForToday(0);
+            return system.GetRecommendationsForToday(0).OrderByDescending(x => x.Sentiment);
         }
 
         [HttpGet("stocks/{symbol}")]
