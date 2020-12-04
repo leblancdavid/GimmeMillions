@@ -12,11 +12,12 @@ import { UserWatchlistComponent } from './user-watchlist/user-watchlist.componen
 import { RecommendationListComponent } from './recommendation-list/recommendation-list.component';
 import { StockSearchComponent } from './stock-search/stock-search.component';
 import { StockDetailsComponent } from './stock-details/stock-details.component';
+import { DailyPredictionsComponent } from './daily-predictions/daily-predictions.component';
 
 
 
 @NgModule({
-  declarations: [StocksComponent, FuturesComponent, StockRecommendationItemComponent, UserWatchlistComponent, RecommendationListComponent, StockSearchComponent, StockDetailsComponent],
+  declarations: [StocksComponent, FuturesComponent, StockRecommendationItemComponent, UserWatchlistComponent, RecommendationListComponent, StockSearchComponent, StockDetailsComponent, DailyPredictionsComponent],
   imports: [
     CommonModule,
     BrowserModule,

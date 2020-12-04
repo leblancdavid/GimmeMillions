@@ -1,11 +1,11 @@
-<div class="watchlist-view">
+<div class="daily-predictions-view">
 
-    <div class="wait-spinner" *ngIf="watchlist.recommendations.length == 0">
+    <div class="wait-spinner" *ngIf="predictions.recommendations.length == 0">
         <mat-spinner></mat-spinner>
-        <h1>Retrieving Watchlist...</h1>
+        <h1>Retrieving Daily Predictions...</h1>
     </div>
-    <div class="watchlist-list" *ngIf="watchlist.recommendations.length != 0">
-        <div class="watchlist-filters">
+    <div class="daily-predictions-list" *ngIf="predictions.recommendations.length != 0">
+        <div class="daily-predictions-filters">
             <mat-form-field>
                 <mat-label>Lookup</mat-label>
                 <mat-icon matPrefix>search</mat-icon>
@@ -15,9 +15,9 @@
                 <span>REFRESH</span>
             </button>
         </div>
-        <gm-recommendation-list [recommendations]="watchlist" [(selectedItem)]="selectedItem"></gm-recommendation-list>
+        <gm-recommendation-list [recommendations]="predictions" [(selectedItem)]="selectedItem"></gm-recommendation-list>
     </div>
-    <div class="watchlist-details" *ngIf="watchlist.recommendations.length != 0">
+    <div class="daily-predictions-details" *ngIf="predictions.recommendations.length != 0">
         <gm-stock-details [data]="selectedItem"></gm-stock-details>
         <h1 *ngIf="selectedItem">Additional details coming soon!</h1>
     </div>

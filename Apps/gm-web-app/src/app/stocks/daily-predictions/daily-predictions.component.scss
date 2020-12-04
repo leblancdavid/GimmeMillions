@@ -2,7 +2,7 @@
     flex: 1;
 }
 
-.watchlist-view {
+.daily-predictions-view {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -11,13 +11,13 @@
     height: 100%;
 }
 
-.watchlist-list {
+.daily-predictions-list {
     display: flex;
     flex-direction: column;
     height: 100%;
     flex: 1;
 
-    .watchlist-filters {
+    .daily-predictions-filters {
         display: flex;
         flex-direction: row;
         width: 100%;
@@ -25,7 +25,7 @@
         height: 48px;
     }
 
-    .watchlist-item {
+    .daily-predictions-item {
         margin: 2px;
         opacity: 0.5;
         &.selected {
@@ -34,7 +34,7 @@
     }
 }
 
-.watchlist-details {
+.daily-predictions-details {
     flex: 1;
     display: flex;
     justify-content: center;

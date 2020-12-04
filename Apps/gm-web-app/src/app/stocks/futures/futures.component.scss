@@ -16,7 +16,13 @@
     flex-direction: column;
     height: 100%;
     flex: 1;
-    
+    .futures-filters {
+        display: flex;
+        flex-direction: row-reverse;
+        width: 100%;
+        justify-content: space-between;
+        height: 48px;
+    }
     .future-item {
         margin: 2px;
         opacity: 0.5;
