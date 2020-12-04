@@ -17,7 +17,7 @@ export class StockRecommendationItemComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.item) {
-      this.fontColor = this.item.getHsl(50);
+      this.fontColor = this.item.getHsl(25);
       this.backgroundColor = this.item.getHsl(90);
     }
   }

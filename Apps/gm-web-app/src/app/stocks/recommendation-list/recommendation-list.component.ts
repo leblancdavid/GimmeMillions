@@ -49,6 +49,7 @@ export class RecommendationListComponent implements OnInit {
     this.pageSize = event.pageSize;
     this.currentPageStartIndex = this.currentPageIndex * this.pageSize;
     this.currentPageEndIndex = this.currentPageStartIndex + this.pageSize;
+    this.selectedItem = undefined;
   }
 }
 
