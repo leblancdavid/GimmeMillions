@@ -48,6 +48,13 @@ namespace GimmeMillions.WebApi.Controllers
             return recommendations;
         }
 
+        [HttpGet("stocks/daily")]
+        public IEnumerable<StockRecommendation> GetDailyStocks()
+        {
+            var system = _provider.GetStocksRecommendations();
+            return system.GetRecommendationsForToday(0);
+        }
+
         [HttpGet("stocks/{symbol}")]
         public IActionResult GetPrediction(string symbol)
         {

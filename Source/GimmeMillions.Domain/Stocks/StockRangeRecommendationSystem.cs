@@ -202,6 +202,11 @@ namespace GimmeMillions.Domain.Stocks
 
         public IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keep)
         {
+            if(keep <= 0)
+            {
+                return _stockRecommendationRepository.GetStockRecommendations(_systemId, date);
+            }
+
             return _stockRecommendationRepository.GetStockRecommendations(_systemId, date).Take(keep);
         }
 
