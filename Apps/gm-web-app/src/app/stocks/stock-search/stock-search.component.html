@@ -17,7 +17,7 @@
         <gm-recommendation-list *ngIf="stockList.recommendations.length > 0 && !isSearching" [recommendations]="stockList"></gm-recommendation-list>
         <div class="wait-spinner" *ngIf="isSearching">
             <mat-spinner></mat-spinner>
-            <h1>Looking up {{searchControl.value}}...</h1>
+            <h1>Looking up {{searchControl.value.toUpperCase()}}...</h1>
         </div>
     </div>
     <div class="stock-search-details">

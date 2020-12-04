@@ -1,3 +1,7 @@
+:host {
+    flex: 1;
+    overflow: auto;
+}
 
 .recommendation-item {
     margin: 2px;
@@ -8,5 +12,5 @@
 }
 .recommendations-sort-header {
     display: flex;
-    margin: 0 16px;
+    margin: 0 8px;
 }
