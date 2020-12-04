@@ -8,10 +8,28 @@ import { StockRecommendation } from '../stock-recommendation';
 })
 export class StockDetailsComponent implements OnInit {
 
-  @Input() data: StockRecommendation | undefined;
+  private _data: StockRecommendation | undefined;
+  public fontColor!: string;
+  public backgroundColor!: string;
+
+  @Input() set data(value: StockRecommendation | undefined) {
+    this._data = value;
+    if (this._data) {
+      this.fontColor = this._data?.getHsl(25);
+    }
+  }
+
+  get data(): StockRecommendation | undefined {
+    return this._data;
+  }
+
   constructor() { }
 
   ngOnInit(): void {
+    if (this.data) {
+      this.fontColor = this.data.getHsl(25);
+
+    }
   }
 
 }

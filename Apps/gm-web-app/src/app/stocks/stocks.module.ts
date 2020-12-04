@@ -13,11 +13,12 @@ import { RecommendationListComponent } from './recommendation-list/recommendatio
 import { StockSearchComponent } from './stock-search/stock-search.component';
 import { StockDetailsComponent } from './stock-details/stock-details.component';
 import { DailyPredictionsComponent } from './daily-predictions/daily-predictions.component';
+import { TrendIconComponent } from './stock-recommendation-item/trend-icon/trend-icon.component';
 
 
 
 @NgModule({
-  declarations: [StocksComponent, FuturesComponent, StockRecommendationItemComponent, UserWatchlistComponent, RecommendationListComponent, StockSearchComponent, StockDetailsComponent, DailyPredictionsComponent],
+  declarations: [StocksComponent, FuturesComponent, StockRecommendationItemComponent, UserWatchlistComponent, RecommendationListComponent, StockSearchComponent, StockDetailsComponent, DailyPredictionsComponent, TrendIconComponent],
   imports: [
     CommonModule,
     BrowserModule,
