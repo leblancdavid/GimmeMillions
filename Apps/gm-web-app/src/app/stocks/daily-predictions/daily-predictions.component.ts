@@ -39,13 +39,8 @@ export class DailyPredictionsComponent implements OnInit {
 
   onFilterKeyup(event: Event) {
     this.predictions.applyFilter((event.target as HTMLInputElement).value);
-  }
-
-  selectFuture(r: StockRecommendation) {
-    if(this.selectedItem && r.symbol == this.selectedItem.symbol) {
-      this.selectedItem = undefined;
-    } else {
-      this.selectedItem = r;
+    if(this.predictions.sorted.length > 0) {
+      this.selectedItem = this.predictions.sorted[0];
     }
   }
 }

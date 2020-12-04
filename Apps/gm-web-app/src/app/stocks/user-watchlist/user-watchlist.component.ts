@@ -40,13 +40,8 @@ export class UserWatchlistComponent implements OnInit {
 
   onFilterKeyup(event: Event) {
     this.watchlist.applyFilter((event.target as HTMLInputElement).value);
-  }
-
-  selectFuture(r: StockRecommendation) {
-    if(this.selectedItem && r.symbol == this.selectedItem.symbol) {
-      this.selectedItem = undefined;
-    } else {
-      this.selectedItem = r;
+    if(this.watchlist.sorted.length > 0) {
+      this.selectedItem = this.watchlist.sorted[0];
     }
   }
 }

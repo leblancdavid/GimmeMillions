@@ -14,11 +14,23 @@ import { StockSearchComponent } from './stock-search/stock-search.component';
 import { StockDetailsComponent } from './stock-details/stock-details.component';
 import { DailyPredictionsComponent } from './daily-predictions/daily-predictions.component';
 import { TrendIconComponent } from './stock-recommendation-item/trend-icon/trend-icon.component';
+import { ConsensusPipe } from './stock-recommendation-item/consensus.pipe';
 
 
 
 @NgModule({
-  declarations: [StocksComponent, FuturesComponent, StockRecommendationItemComponent, UserWatchlistComponent, RecommendationListComponent, StockSearchComponent, StockDetailsComponent, DailyPredictionsComponent, TrendIconComponent],
+  declarations: [
+    StocksComponent, 
+    FuturesComponent, 
+    StockRecommendationItemComponent, 
+    UserWatchlistComponent, 
+    RecommendationListComponent, 
+    StockSearchComponent, 
+    StockDetailsComponent,
+    DailyPredictionsComponent, 
+    TrendIconComponent, 
+    ConsensusPipe
+  ],
   imports: [
     CommonModule,
     BrowserModule,

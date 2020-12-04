@@ -33,5 +33,13 @@ $gm-web-app-theme: mat-light-theme((
 @include angular-material-theme($gm-web-app-theme);
 
 /* You can add global styles to this file, and also import other style files */
+.buy-color {
+    color: rgb(50, 150, 50);
+}
+
+.sell-color {
+    color: rgb(150, 50, 50);
+}
+
 
 @import "_tabs";
