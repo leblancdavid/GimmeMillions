@@ -207,7 +207,44 @@ namespace GimmeMillions.Domain.Stocks
 
         public Result<StockRecommendation> GetRecommendation(DateTime date, string symbol)
         {
-            return _stockRecommendationRepository.GetStockRecommendation(_systemId, symbol, date);
+            var result = _stockRecommendationRepository.GetStockRecommendation(_systemId, symbol, date);
+            if(result.IsSuccess)
+            {
+                return result;
+            }
+
+            return RunRecommendationsFor(symbol, date);
+        }
+
+        public Result<StockRecommendation> RunRecommendationsFor(string symbol, DateTime date)
+        {
+            List<StockData> stockData;
+            stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol, _featureDatasetService.Period).ToList();
+
+            if (!stockData.Any())
+            {
+                return Result.Failure<StockRecommendation>($"No stock data found for {symbol}");
+            }
+
+            stockData.Reverse();
+            var lastStock = stockData.First();
+
+            var feature = _featureDatasetService.GetFeatureVector(symbol, date);
+            if (feature.IsFailure)
+            {
+                return Result.Failure<StockRecommendation>($"Unable to compute feature vector for {symbol}");
+            }
+            var result = model.Predict(feature.Value);
+            var rec = new StockRecommendation(_systemId, date, symbol,
+                (decimal)result.PredictedHigh, (decimal)result.PredictedLow,
+                (decimal)result.Sentiment, lastStock.Close);
+
+            var saveLock = new object();
+            lock (saveLock)
+            {
+                _stockRecommendationRepository.AddRecommendation(rec);
+            }
+            return Result.Success<StockRecommendation>(rec);
         }
     }
 }

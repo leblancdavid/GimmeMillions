@@ -1,0 +1,15 @@
+<div class="futures-view" *ngIf="futures">
+    <div class="wait-spinner" *ngIf="futures.recommendations.length == 0">
+        <mat-spinner></mat-spinner>
+        <h1>Retrieving Futures...</h1>
+    </div>
+    <div class="futures-list" *ngIf="futures.recommendations.length != 0">
+        <button mat-icon-button style="align-self: flex-end;" (click)="refresh()">
+            <mat-icon>refresh</mat-icon>
+        </button>
+        <gm-recommendation-list [recommendations]="futures"></gm-recommendation-list>
+    </div>
+    <div class="futures-details">
+        <h1 *ngIf="selectedFuture">Additional details coming soon!</h1>
+    </div>
+</div>

@@ -10,6 +10,8 @@ import { UsersModule } from './users/users.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BasicAuthInterceptor } from './users/basic-auth.interceptor';
 import { ErrorInterceptor } from './users/error.interceptor';
+import { StocksModule } from './stocks/stocks.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -17,11 +19,13 @@ import { ErrorInterceptor } from './users/error.interceptor';
     MainComponent
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    UsersModule
+    UsersModule,
+    StocksModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

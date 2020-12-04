@@ -1,9 +1,18 @@
 <div class="main-layout">
-    <mat-toolbar color="primary">
+    <mat-toolbar color="primary" class="main-toolbar">
         <button mat-icon-button>
             <mat-icon>menu</mat-icon>
         </button>
         <span>Gimmillion</span>
+        <span class="spacer"></span>
+        <button mat-button (click)="goToStocks()">
+            <mat-icon>show_chart</mat-icon>
+            <span>STOCKS</span>
+        </button>
+        <button mat-button (click)="goToCrypto()">
+            <mat-icon>attach_money</mat-icon>
+            <span>CRYPTOS</span>
+        </button>
         <span class="spacer"></span>
         <button mat-icon-button (click)="goToProfile()">
             <mat-icon>person</mat-icon>
@@ -16,5 +25,7 @@
         </button>
     </mat-toolbar>
 
-    <router-outlet></router-outlet>
+    <div class="main-container">
+        <router-outlet></router-outlet>
+    </div>
 </div>

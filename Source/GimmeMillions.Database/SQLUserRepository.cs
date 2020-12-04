@@ -31,6 +31,7 @@ namespace GimmeMillions.Database
                     existingUser.PasswordHash = user.PasswordHash;
                     existingUser.FirstName = user.FirstName;
                     existingUser.LastName = user.LastName;
+                    existingUser.StocksWatchlistString = user.StocksWatchlistString;
                 }
 
                 lock (_saveLock)

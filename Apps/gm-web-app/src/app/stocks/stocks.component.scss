@@ -1,0 +1,18 @@
+:host {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.stocks-tab-content {
+    padding: 16px;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+.stocks-tab-icon { 
+    margin-right: 8px;
+}

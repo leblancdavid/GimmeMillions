@@ -64,6 +64,36 @@ namespace GimmeMillions.WebApi.Controllers
             return Ok();
         }
 
+        [HttpPut("watchlist/add")]
+        public IActionResult AddToWatchlist([FromBody]UserWatchlistUpdateDto model)
+        {
+            var user = _userService.GetUser(model.Username);
+            if (user.IsFailure)
+                return NotFound(model.Username);
+
+            user.Value.AddStocksToWatchlist(model.Symbols);
+            var result = _userService.AddOrUpdateUser(user.Value);
+            if (result.IsFailure)
+                return BadRequest(new { message = result.Error });
+
+            return Ok();
+        }
+
+        [HttpPut("watchlist/remove")]
+        public IActionResult RemoveFromWatchlist([FromBody]UserWatchlistUpdateDto model)
+        {
+            var user = _userService.GetUser(model.Username);
+            if (user.IsFailure)
+                return NotFound(model.Username);
+
+            user.Value.RemoveStocksFromWatchlist(model.Symbols);
+            var result = _userService.AddOrUpdateUser(user.Value);
+            if (result.IsFailure)
+                return BadRequest(new { message = result.Error });
+
+            return Ok();
+        }
+
         [SuperuserOnlyAuth]
         [HttpPost()]
         public IActionResult AddUser([FromBody]AddUserDto model)

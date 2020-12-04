@@ -1,0 +1,16 @@
+:host {
+    flex: 1;
+    overflow: auto;
+}
+
+.recommendation-item {
+    margin: 2px;
+    opacity: 0.5;
+    &.selected {
+        opacity: 1.0;
+    }
+}
+.recommendations-sort-header {
+    display: flex;
+    margin: 0 8px;
+}

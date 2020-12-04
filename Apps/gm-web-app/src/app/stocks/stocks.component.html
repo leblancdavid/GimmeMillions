@@ -1,0 +1,40 @@
+<mat-tab-group backgroundColor="accent">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="stocks-tab-icon">stacked_line_chart</mat-icon>
+      Futures
+    </ng-template>
+    <div class="stocks-tab-content">
+      <gm-futures></gm-futures>
+    </div>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="stocks-tab-icon">online_prediction</mat-icon>
+      Daily Predictions
+    </ng-template>
+    <div class="stocks-tab-content">Content</div>
+  </mat-tab>
+
+  
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="stocks-tab-icon">playlist_add_check</mat-icon>
+      My Watchlist
+    </ng-template>
+    <div class="stocks-tab-content">
+      <gm-user-watchlist></gm-user-watchlist>
+    </div>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon class="stocks-tab-icon">search</mat-icon>
+      Search
+    </ng-template>
+    <div class="stocks-tab-content">
+      <gm-stock-search></gm-stock-search>
+    </div>
+  </mat-tab>
+</mat-tab-group>

@@ -14,8 +14,6 @@ export class UserService {
 
   private url = environment.apiUrl + '/user';
 
-  public loggedInUser?: User;
-
   public getUsers(): Observable<Array<User>> {
     return this.http.get<Array<User>>(this.url);
   }

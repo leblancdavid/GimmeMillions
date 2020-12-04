@@ -27,4 +27,10 @@ export class MainComponent implements OnInit {
   goToProfile() {
     this.router.navigate(['/main/profile']);
   }
+  goToStocks() {
+    this.router.navigate(['/main/stocks']);
+  }
+  goToCrypto() {
+    this.router.navigate(['/main/crypto']);
+  }
 }

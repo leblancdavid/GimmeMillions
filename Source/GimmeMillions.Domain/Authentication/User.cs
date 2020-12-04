@@ -1,4 +1,7 @@
-﻿namespace GimmeMillions.Domain.Authentication
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace GimmeMillions.Domain.Authentication
 {
     public class User
     {
@@ -8,6 +11,7 @@
         public string Username { get; set; }
         public string PasswordHash { get; set; }
         public UserRole Role { get; private set; }
+        public string StocksWatchlistString { get; set; }
 
         public User()
         {
@@ -23,6 +27,30 @@
             Role = role;
         }
 
+        public IEnumerable<string> GetWatchlist()
+        {
+            return StocksWatchlistString.Split(',').ToList();
+        }
+
+        public void SetWatchlist(IEnumerable<string> symbols)
+        {
+            StocksWatchlistString = string.Join(",", symbols);
+        }
+
+        public void AddStocksToWatchlist(params string[] symbols)
+        {
+            var currentList = GetWatchlist().ToList();
+            currentList.AddRange(symbols);
+            SetWatchlist(currentList);
+        }
+
+        public void RemoveStocksFromWatchlist(params string[] symbols)
+        {
+            var currentList = GetWatchlist().ToList();
+            currentList.RemoveAll(w => symbols.Contains(w)); 
+            SetWatchlist(currentList);
+        }
+
         public void HashPassword(string password)
         {
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(password);
@@ -35,13 +63,11 @@
 
         public static bool IsValidUsername(string username)
         {
-
             return true;
         }
 
         public static bool IsValidPassword(string password)
         {
-
             return true;
         }
 
