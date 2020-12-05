@@ -30,7 +30,7 @@
             <mat-grid-tile>
                 <div class="stock-detail-row">
                     <span>High Target Price</span>
-                    <span class="stock-detail-value buy-color">{{data.predictedPriceTarget | number : '1.2-2'}}%</span>
+                    <span class="stock-detail-value buy-color">${{data.predictedPriceTarget | number : '1.2-2'}}</span>
                 </div>
             </mat-grid-tile>
             <mat-grid-tile>
@@ -42,7 +42,7 @@
             <mat-grid-tile>
                 <div class="stock-detail-row">
                     <span>Low Price Target</span>
-                    <span class="stock-detail-value sell-color">{{data.predictedLowTarget | number : '1.2-2'}}%</span>
+                    <span class="stock-detail-value sell-color">${{data.predictedLowTarget | number : '1.2-2'}}</span>
                 </div>
             </mat-grid-tile>
         </mat-grid-list>
@@ -62,7 +62,7 @@
         </mat-accordion>
     </mat-card-content>
     <mat-card-actions>
-        <button mat-raised-button color="primary">WATCH</button>
-        <button mat-raised-button color="primary">UNWATCH</button>
+        <button mat-raised-button color="primary" *ngIf="!isWatching" (click)="watch()">WATCH</button>
+        <button mat-raised-button color="primary" *ngIf="isWatching" (click)="unwatch()">UNWATCH</button>
     </mat-card-actions>
 </mat-card>
