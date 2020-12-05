@@ -35,7 +35,6 @@ export class StockDetailsComponent implements OnInit {
     if (this.data) {
       this.fontColor = this.data.getHsl(25);
       const user = this.authenticationService.currentUserValue;
-      debugger;
       this.isWatching = user.watchlist.includes(this.data.symbol);
     }
   }
@@ -50,8 +49,8 @@ export class StockDetailsComponent implements OnInit {
 
   unwatch() {
     if(this.data) {
-      this.authenticationService.addToWatchlist(this.data.symbol).subscribe(x => {
-        this.isWatching = true;
+      this.authenticationService.removeFromWatchlist(this.data.symbol).subscribe(x => {
+        this.isWatching = false;
       });
     }
   }

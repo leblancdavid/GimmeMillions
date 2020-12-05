@@ -73,6 +73,18 @@ export class AuthenticationService {
     }));
   }
 
+  removeFromWatchlist(symbol: string) {
+    const user = this.currentUserValue;
+    return this.http.put(environment.apiUrl + '/user/watchlist/remove',
+    {
+      username: user.username,
+      symbols: [ symbol ]
+    }).pipe(map(x => {
+      user.removeFromWatchlist(symbol);
+      return user;
+    }));
+  }
+
 
 
 }
