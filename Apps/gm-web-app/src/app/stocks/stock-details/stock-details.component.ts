@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/users/authentication.service';
 import { User } from 'src/app/users/user';
 import { StockRecommendation } from '../stock-recommendation';
+import { UserWatchlistService } from '../user-watchlist/user-watchlist.service';
 
 @Component({
   selector: 'gm-stock-details',
@@ -26,32 +27,31 @@ export class StockDetailsComponent implements OnInit {
     return this._data;
   }
 
-  constructor(public authenticationService: AuthenticationService) {
-    const user = authenticationService.currentUserValue;
+  constructor(public watchlistService: UserWatchlistService) {
     this.isWatching = false;
+    this.watchlistService.watchlistUpdate.subscribe(() => {
+      if(this.data) {
+        this.isWatching = this.watchlistService.includes(this.data.symbol);
+      }
+    })
   }
 
   ngOnInit(): void {
     if (this.data) {
       this.fontColor = this.data.getHsl(25);
-      const user = this.authenticationService.currentUserValue;
-      this.isWatching = user.watchlist.includes(this.data.symbol);
+      this.isWatching = this.watchlistService.includes(this.data.symbol);
     }
   }
 
   watch() {
     if(this.data) {
-      this.authenticationService.addToWatchlist(this.data.symbol).subscribe(x => {
-        this.isWatching = true;
-      });
+      this.watchlistService.addToWatchlist(this.data);
     }
   }
 
   unwatch() {
     if(this.data) {
-      this.authenticationService.removeFromWatchlist(this.data.symbol).subscribe(x => {
-        this.isWatching = false;
-      });
+      this.watchlistService.removeFromWatchlist(this.data.symbol);
     }
   }
 

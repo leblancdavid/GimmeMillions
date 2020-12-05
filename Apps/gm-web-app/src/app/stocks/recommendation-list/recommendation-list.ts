@@ -47,6 +47,25 @@ export class RecommendationList {
       this._filtered.push(r);
     }
 
+    public remove(symbol: string) {
+      let index = this._recommendations.findIndex(x => x.symbol.toLowerCase() === symbol.toLowerCase());
+      if(index < 0) {
+        return;
+      }
+      this._recommendations.splice(index, 1);
+      index = this._sorted.findIndex(x => x.symbol.toLowerCase() === symbol.toLowerCase());
+      if(index < 0) {
+        return;
+      }
+      this._sorted.splice(index, 1);
+      
+      index = this._filtered.findIndex(x => x.symbol.toLowerCase() === symbol.toLowerCase());
+      if(index < 0) {
+        return;
+      }
+      this._filtered.splice(index, 1);
+    }
+
     private _symbolFilter: string;
     public applyFilter(symbol: string) {
         this._symbolFilter = symbol.toLocaleLowerCase(); 
