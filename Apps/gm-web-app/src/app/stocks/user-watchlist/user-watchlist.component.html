@@ -1,9 +1,14 @@
 <div class="watchlist-view">
 
-    <div class="wait-spinner" *ngIf="watchlist.recommendations.length == 0">
+    <div class="wait-spinner" *ngIf="isRefreshing">
         <mat-spinner></mat-spinner>
         <h1>Retrieving Watchlist...</h1>
     </div>
+
+    <div class="wait-spinner" *ngIf="!isRefreshing && watchlist.recommendations.length == 0">
+        <h1>No stocks in watchlist currently.</h1>
+    </div>
+
     <div class="watchlist-list" *ngIf="watchlist.recommendations.length != 0">
         <div class="watchlist-filters">
             <mat-form-field>

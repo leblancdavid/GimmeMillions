@@ -1,4 +1,5 @@
-﻿using GimmeMillions.Domain.Stocks;
+﻿using GimmeMillions.Domain.Authentication;
+using GimmeMillions.Domain.Stocks;
 using GimmeMillions.WebApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,9 +15,12 @@ namespace GimmeMillions.WebApi.Controllers
     public class RecommendationsController : ControllerBase
     {
         private IRecommendationSystemProvider _provider;
-        public RecommendationsController(IRecommendationSystemProvider provider)
+        private IUserService _userService;
+        public RecommendationsController(IRecommendationSystemProvider provider,
+            IUserService userService)
         {
             _provider = provider;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -46,6 +50,20 @@ namespace GimmeMillions.WebApi.Controllers
                 recommendations.Add(spy.Value);
 
             return recommendations;
+        }
+
+        [HttpGet("stocks/user/{username}")]
+        public IActionResult GetUserWatchlistStocks(string username)
+        {
+            var user = _userService.GetUser(username);
+            if(user.IsFailure)
+            {
+                return BadRequest(user.Error);
+            }
+
+            var system = _provider.GetStocksRecommendations();
+            return Ok(system.GetRecommendations(user.Value.GetWatchlist(), GetUpdatedDailyStockDate())
+                .OrderByDescending(x => x.Sentiment));
         }
 
         [HttpGet("stocks/daily")]

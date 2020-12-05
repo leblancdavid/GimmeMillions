@@ -251,5 +251,23 @@ namespace GimmeMillions.Domain.Stocks
             }
             return Result.Success<StockRecommendation>(rec);
         }
+
+        public IEnumerable<StockRecommendation> GetRecommendations(IEnumerable<string> symbols, DateTime date)
+        {
+            var recommendations = new ConcurrentBag<StockRecommendation>();
+
+            var saveLock = new object();
+            Parallel.ForEach(symbols, symbol =>
+            //foreach(var symbol in symbols)
+            {
+                var r = GetRecommendation(date, symbol);
+                if(r.IsSuccess)
+                {
+                    recommendations.Add(r.Value);
+                }
+            });
+
+            return recommendations.ToList().OrderByDescending(x => x.Sentiment);
+        }
     }
 }

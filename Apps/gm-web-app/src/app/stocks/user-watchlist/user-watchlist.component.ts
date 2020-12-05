@@ -26,7 +26,7 @@ export class UserWatchlistComponent implements OnInit {
   refresh() {
     this.isRefreshing = true;
     this.watchlist = new RecommendationList();
-    this.stockRecommendationService.getFutures().subscribe(x => {
+    this.stockRecommendationService.getUserWatchlistRecommendations().subscribe(x => {
       
       this.isRefreshing = false;
       this.watchlist.recommendations = x;
