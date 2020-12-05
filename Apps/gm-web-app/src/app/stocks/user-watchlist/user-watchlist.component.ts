@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { RecommendationList } from '../recommendation-list/recommendation-list';
 import { StockRecommendation } from '../stock-recommendation';
 import { StockRecommendationService } from '../stock-recommendation.service';
+import { UserWatchlistService } from './user-watchlist.service';
 
 @Component({
   selector: 'gm-user-watchlist',
@@ -11,11 +12,9 @@ import { StockRecommendationService } from '../stock-recommendation.service';
 })
 export class UserWatchlistComponent implements OnInit {
 
-  public watchlist: RecommendationList;
   public selectedItem?: StockRecommendation;
   public isRefreshing: boolean;
-  constructor(private stockRecommendationService: StockRecommendationService) {
-    this.watchlist = new RecommendationList();
+  constructor(private userWatchlistService: UserWatchlistService) {
     this.isRefreshing = false;
    }
 
@@ -25,23 +24,15 @@ export class UserWatchlistComponent implements OnInit {
 
   refresh() {
     this.isRefreshing = true;
-    this.watchlist = new RecommendationList();
-    this.stockRecommendationService.getUserWatchlistRecommendations().subscribe(x => {
-      
-      this.isRefreshing = false;
-      this.watchlist.recommendations = x;
-      if(this.watchlist.recommendations.length > 0) {
-        this.selectedItem = this.watchlist.recommendations[0];
-      }
-    }, error => {
+    this.userWatchlistService.refreshWatchlist().subscribe(x => {
       this.isRefreshing = false;
     });
   }
 
   onFilterKeyup(event: Event) {
-    this.watchlist.applyFilter((event.target as HTMLInputElement).value);
-    if(this.watchlist.sorted.length > 0) {
-      this.selectedItem = this.watchlist.sorted[0];
+    this.userWatchlistService.watchlist.applyFilter((event.target as HTMLInputElement).value);
+    if(this.userWatchlistService.watchlist.sorted.length > 0) {
+      this.selectedItem = this.userWatchlistService.watchlist.sorted[0];
     }
   }
 }

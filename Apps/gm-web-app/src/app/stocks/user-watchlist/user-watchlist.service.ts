@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { map } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/users/authentication.service';
 import { RecommendationList } from '../recommendation-list/recommendation-list';
 import { StockRecommendation } from '../stock-recommendation';
@@ -36,9 +37,11 @@ export class UserWatchlistService {
   }
 
   public refreshWatchlist() {
-    this.stockRecommendationService.getUserWatchlistRecommendations().subscribe(x => {
-      this._watchlist.recommendations = x;
-    });
+    this._watchlist.clear();
+    return this.stockRecommendationService.getUserWatchlistRecommendations()
+      .pipe(map(picks => {
+        this._watchlist.recommendations = picks;
+      }));
   }
 
   public includes(symbol: string): boolean {

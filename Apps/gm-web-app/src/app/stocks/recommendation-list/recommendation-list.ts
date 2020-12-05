@@ -9,8 +9,8 @@ export class RecommendationList {
     }
     set recommendations(value: Array<StockRecommendation>) {
         this._recommendations = value;
-        this._filtered = value;
-        this._sorted = value;
+        this._filtered = value.slice();
+        this._sorted = value.slice();
     }
 
     private _sorted!: Array<StockRecommendation>;
@@ -58,12 +58,18 @@ export class RecommendationList {
         return;
       }
       this._sorted.splice(index, 1);
-      
+
       index = this._filtered.findIndex(x => x.symbol.toLowerCase() === symbol.toLowerCase());
       if(index < 0) {
         return;
       }
       this._filtered.splice(index, 1);
+    }
+
+    public clear() {
+      this._recommendations = new Array<StockRecommendation>();
+      this._filtered = new Array<StockRecommendation>();
+      this._sorted = new Array<StockRecommendation>();
     }
 
     private _symbolFilter: string;
@@ -74,7 +80,7 @@ export class RecommendationList {
         } else {
           this._filtered = this.recommendations;
         }
-        this._sorted = this._filtered;
+        this._sorted = this._filtered.slice();
     }
 
     public applySort(sort: Sort) {

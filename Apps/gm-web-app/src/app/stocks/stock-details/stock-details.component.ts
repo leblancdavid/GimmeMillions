@@ -20,6 +20,7 @@ export class StockDetailsComponent implements OnInit {
     this._data = value;
     if (this._data) {
       this.fontColor = this._data?.getHsl(25);
+      this.isWatching = this.watchlistService.includes(this._data.symbol);
     }
   }
 

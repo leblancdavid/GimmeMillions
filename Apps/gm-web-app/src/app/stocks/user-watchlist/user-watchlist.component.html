@@ -5,11 +5,11 @@
         <h1>Retrieving Watchlist...</h1>
     </div>
 
-    <div class="wait-spinner" *ngIf="!isRefreshing && watchlist.recommendations.length == 0">
+    <div class="wait-spinner" *ngIf="!isRefreshing && userWatchlistService.watchlist.recommendations.length == 0">
         <h1>No stocks in watchlist currently.</h1>
     </div>
 
-    <div class="watchlist-list" *ngIf="watchlist.recommendations.length != 0">
+    <div class="watchlist-list" *ngIf="userWatchlistService.watchlist.recommendations.length != 0">
         <div class="watchlist-filters">
             <mat-form-field>
                 <mat-label>Lookup</mat-label>
@@ -20,9 +20,9 @@
                 <span>REFRESH</span>
             </button>
         </div>
-        <gm-recommendation-list [recommendations]="watchlist" [(selectedItem)]="selectedItem"></gm-recommendation-list>
+        <gm-recommendation-list [recommendations]="userWatchlistService.watchlist" [(selectedItem)]="selectedItem"></gm-recommendation-list>
     </div>
-    <div class="watchlist-details" *ngIf="watchlist.recommendations.length != 0">
+    <div class="watchlist-details" *ngIf="userWatchlistService.watchlist.recommendations.length != 0">
         <gm-stock-details [data]="selectedItem"></gm-stock-details>
     </div>
 </div>
