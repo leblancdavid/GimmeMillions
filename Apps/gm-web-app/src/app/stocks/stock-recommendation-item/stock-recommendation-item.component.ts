@@ -9,11 +9,13 @@ import { StockRecommendation } from '../stock-recommendation';
 export class StockRecommendationItemComponent implements OnInit {
 
   @Input() item: StockRecommendation | undefined;
-  
+  @Input() selected: boolean;
   public fontColor!: string;
   public backgroundColor!: string;
 
-  constructor() { }
+  constructor() { 
+    this.selected = false;
+  }
 
   ngOnInit(): void {
     if(this.item) {

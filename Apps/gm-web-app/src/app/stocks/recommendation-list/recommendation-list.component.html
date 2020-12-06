@@ -13,7 +13,7 @@
                 [class.selected]="!selectedItem || (selectedItem && r.symbol == selectedItem.symbol)" 
                 (click)="select(r)">
                 <td colspan="4">
-                    <gm-stock-recommendation-item [item]="r"></gm-stock-recommendation-item>
+                    <gm-stock-recommendation-item [item]="r" [selected]="selectedItem && selectedItem.symbol == r.symbol"></gm-stock-recommendation-item>
                 </td>
             </tr>
         </table>

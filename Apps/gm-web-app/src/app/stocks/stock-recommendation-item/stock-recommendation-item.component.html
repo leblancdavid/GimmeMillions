@@ -1,6 +1,7 @@
 <div *ngIf="item" class="recommendation-item"
     [style.border-color]="fontColor"
-    [style.background-color]="backgroundColor">
+    [style.background-color]="backgroundColor"
+    [class.primary-border-color]="selected">
     <gm-trend-icon [color]="fontColor" [signal]="item.sentiment"></gm-trend-icon>
     <div class="symbol-name"
         [style.color]="fontColor">

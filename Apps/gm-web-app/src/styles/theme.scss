@@ -27,6 +27,16 @@ $gm-web-app-theme: mat-light-theme((
   )
 ));
 
+.primary-border-color {
+  border-color: mat-color($gm-web-app-primary, default) !important;
+}
+.warn-border-color {
+  border-color: mat-color($gm-web-app-warn, default);
+}
+.accent-border-color {
+  border-color: mat-color($gm-web-app-accent, default);
+}
+
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.

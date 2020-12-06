@@ -10,7 +10,6 @@ import { StocksComponent } from './stocks.component';
 import { StockRecommendationItemComponent } from './stock-recommendation-item/stock-recommendation-item.component';
 import { UserWatchlistComponent } from './user-watchlist/user-watchlist.component';
 import { RecommendationListComponent } from './recommendation-list/recommendation-list.component';
-import { StockSearchComponent } from './stock-search/stock-search.component';
 import { StockDetailsComponent } from './stock-details/stock-details.component';
 import { DailyPredictionsComponent } from './daily-predictions/daily-predictions.component';
 import { TrendIconComponent } from './stock-recommendation-item/trend-icon/trend-icon.component';
@@ -24,8 +23,7 @@ import { ConsensusPipe } from './stock-recommendation-item/consensus.pipe';
     FuturesComponent, 
     StockRecommendationItemComponent, 
     UserWatchlistComponent, 
-    RecommendationListComponent, 
-    StockSearchComponent, 
+    RecommendationListComponent,
     StockDetailsComponent,
     DailyPredictionsComponent, 
     TrendIconComponent, 

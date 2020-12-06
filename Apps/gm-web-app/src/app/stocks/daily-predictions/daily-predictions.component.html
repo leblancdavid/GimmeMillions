@@ -7,7 +7,7 @@
     <div class="daily-predictions-list" *ngIf="predictions.recommendations.length != 0">
         <div class="daily-predictions-filters">
             <mat-form-field>
-                <mat-label>Lookup</mat-label>
+                <mat-label>Filter</mat-label>
                 <mat-icon matPrefix>search</mat-icon>
                 <input matInput type="text" (keyup)="onFilterKeyup($event)">
             </mat-form-field>
