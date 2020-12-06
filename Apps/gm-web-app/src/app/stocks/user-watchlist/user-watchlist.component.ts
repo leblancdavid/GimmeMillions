@@ -47,7 +47,11 @@ export class UserWatchlistComponent implements OnInit {
   }
 
   search() {
-    if(this.searchControl.value == '' || this.userWatchlistService.includes(this.searchControl.value)) {
+    if(this.searchControl.value == '') {
+      return;
+    }
+    if(this.userWatchlistService.includes(this.searchControl.value)) {
+      this.searchControl.setErrors({'duplicate': true});
       return;
     }
 
@@ -59,5 +63,14 @@ export class UserWatchlistComponent implements OnInit {
       this.searchControl.setErrors({'notFound': true});
       this.isSearching = false;
     });
+  }
+
+  getSearchResultErrorMessage() {
+    if (this.searchControl.hasError('notFound')) {
+      return 'Stock not found';
+    } else if(this.searchControl.hasError('duplicate')) {
+      return 'Stock is already in the watchlist';
+    }
+    return '';
   }
 }

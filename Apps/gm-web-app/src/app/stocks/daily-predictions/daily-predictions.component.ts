@@ -58,6 +58,11 @@ export class DailyPredictionsComponent implements OnInit {
       return;
     }
 
+    if(this.predictions.includes(this.searchControl.value)) {
+      this.searchControl.setErrors({'duplicate': true});
+      return;
+    }
+
     this.isSearching = true;
     this.stockRecommendationService.getRecommendationFor(this.searchControl.value).subscribe(x => {
       this.selectedItem = x;
@@ -66,5 +71,14 @@ export class DailyPredictionsComponent implements OnInit {
       this.searchControl.setErrors({'notFound': true});
       this.isSearching = false;
     });
+  }
+
+  getSearchResultErrorMessage() {
+    if (this.searchControl.hasError('notFound')) {
+      return 'Stock not found';
+    } else if(this.searchControl.hasError('duplicate')) {
+      return 'Stock is already in the watchlist';
+    }
+    return '';
   }
 }

@@ -45,6 +45,6 @@ export class UserWatchlistService {
   }
 
   public includes(symbol: string): boolean {
-    return this._watchlist.recommendations.findIndex(x => x.symbol.toLowerCase() === symbol.toLowerCase()) >= 0;
+    return this._watchlist.includes(symbol);
   }
 }
