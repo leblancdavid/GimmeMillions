@@ -40,9 +40,22 @@
 
 .daily-predictions-details {
     flex: 1;
+    height: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
+    .stock-search-filters {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: flex-end;
+        height: 48px;
+
+        * {
+            margin: 0 8px;
+        }
+    }
 }
 
 .wait-spinner {

@@ -35,7 +35,7 @@
             <mat-spinner></mat-spinner>
             <h1>Searching...</h1>
         </div>
-        <gm-stock-details [data]="selectedItem"></gm-stock-details>
+        <gm-stock-details [data]="selectedItem" *ngIf="!isSearching"></gm-stock-details>
         <h1 *ngIf="!selectedItem && !isSearching" class="wait-spinner">No stock selected</h1>
     </div>
 </div>
