@@ -51,7 +51,7 @@ export class UserWatchlistComponent implements OnInit {
       return;
     }
     if(this.userWatchlistService.includes(this.searchControl.value)) {
-      this.searchControl.setErrors({'duplicate': true});
+      this.selectedItem = this.userWatchlistService.watchlist.recommendations.find(x => x.symbol.toLowerCase() === this.searchControl.value.toLowerCase());
       return;
     }
 

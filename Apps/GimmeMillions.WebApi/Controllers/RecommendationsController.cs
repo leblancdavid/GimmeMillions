@@ -23,16 +23,6 @@ namespace GimmeMillions.WebApi.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
-        public IEnumerable<StockRecommendation> Get()
-        {
-            var system = _provider.GetStocksRecommendations();
-
-            var recommendations = system.RecommendationRepository.GetStockRecommendations(system.SystemId, "DIA");
-
-            return recommendations;
-        }
-
         [HttpGet("futures")]
         public IEnumerable<StockRecommendation> GetFutures()
         {
@@ -70,7 +60,7 @@ namespace GimmeMillions.WebApi.Controllers
         public IEnumerable<StockRecommendation> GetDailyStocks()
         {
             var system = _provider.GetStocksRecommendations();
-            return system.GetRecommendationsForToday(0).OrderByDescending(x => x.Sentiment);
+            return system.GetRecommendations(GetUpdatedDailyStockDate(1), 0).OrderByDescending(x => x.Sentiment);
         }
 
         [HttpGet("stocks/{symbol}")]
@@ -85,11 +75,11 @@ namespace GimmeMillions.WebApi.Controllers
             return Ok(prediction.Value);
         }
 
-        private DateTime GetUpdatedDailyStockDate()
+        private DateTime GetUpdatedDailyStockDate(int delayHours = 0)
         {
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             var newDateTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, timeZoneInfo);
-            if (newDateTime.Hour < 13)
+            if (newDateTime.Hour < 13 + delayHours)
             {
                 return DateTime.Today;
             }

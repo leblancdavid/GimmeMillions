@@ -59,7 +59,7 @@ export class DailyPredictionsComponent implements OnInit {
     }
 
     if(this.predictions.includes(this.searchControl.value)) {
-      this.searchControl.setErrors({'duplicate': true});
+      this.selectedItem = this.predictions.recommendations.find(x => x.symbol.toLowerCase() === this.searchControl.value.toLowerCase());
       return;
     }
 
@@ -77,7 +77,7 @@ export class DailyPredictionsComponent implements OnInit {
     if (this.searchControl.hasError('notFound')) {
       return 'Stock not found';
     } else if(this.searchControl.hasError('duplicate')) {
-      return 'Stock is already in the watchlist';
+      return 'Stock is already in the daily list';
     }
     return '';
   }
