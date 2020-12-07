@@ -6,7 +6,7 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     width: 100%;
     height: 100%;
 }
@@ -16,12 +16,17 @@
     flex-direction: column;
     height: 100%;
     flex: 1;
-    
+
     .watchlist-filters {
         display: flex;
         flex-direction: row;
         width: 100%;
-        justify-content: space-between;
+        justify-content: flex-end;
+        height: 48px;
+
+        * {
+            margin: 0 8px;
+        }
     }
 
     .watchlist-item {
@@ -35,9 +40,22 @@
 
 .watchlist-details {
     flex: 1;
+    height: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
+    .stock-search-filters {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: flex-end;
+        height: 48px;
+
+        * {
+            margin: 0 8px;
+        }
+    }
 }
 
 .wait-spinner {
@@ -46,6 +64,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    align-self: center;
     h1 {
         margin: 24px 0;
     }

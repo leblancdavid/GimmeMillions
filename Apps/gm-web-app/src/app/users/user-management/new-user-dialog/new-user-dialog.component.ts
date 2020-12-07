@@ -17,7 +17,7 @@ export class NewUserDialogComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<NewUserDialogComponent>,
     public userService: UserService) {
-    this.user = new User(0, '', '', '', '', UserRole.Default);
+    this.user = new User(0, '', '', '', '', UserRole.Default, '');
   }
 
   ngOnInit(): void {

@@ -188,5 +188,10 @@ namespace GimmeMillions.Domain.Stocks
         {
             throw new NotImplementedException();
         }
+
+        public IEnumerable<StockRecommendation> GetRecommendations(IEnumerable<string> symbols, DateTime date)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

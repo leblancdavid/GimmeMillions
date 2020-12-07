@@ -1,0 +1,68 @@
+<mat-card class="stock-details-card" *ngIf="data">
+    <mat-card-header>
+        <div mat-card-avatar>
+            <gm-trend-icon [color]="fontColor" [signal]="data.sentiment"></gm-trend-icon>
+        </div>
+        <mat-card-title [style.color]="fontColor">{{data.symbol}}</mat-card-title>
+        <mat-card-subtitle>{{data.date | date}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-grid-list cols="2" rowHeight="10:1">
+            <mat-grid-tile>
+                <div class="stock-detail-row">
+                    <span>Signal</span>
+                    <span class="stock-detail-value"
+                        [style.color]="fontColor">{{data.sentiment | number : '1.2-2'}}%</span>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <div class="stock-detail-row">
+                    <span>Consensus</span>
+                    <span class="stock-detail-value" [style.color]="fontColor">{{data.sentiment | consensus}}</span>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <div class="stock-detail-row">
+                    <span>Expected Gains</span>
+                    <span class="stock-detail-value buy-color">{{data.prediction | number : '1.2-2'}}%</span>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <div class="stock-detail-row">
+                    <span>High Target Price</span>
+                    <span class="stock-detail-value buy-color">${{data.predictedPriceTarget | number : '1.2-2'}}</span>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <div class="stock-detail-row">
+                    <span>Expected Loss</span>
+                    <span class="stock-detail-value sell-color">{{data.lowPrediction | number : '1.2-2'}}%</span>
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <div class="stock-detail-row">
+                    <span>Low Price Target</span>
+                    <span class="stock-detail-value sell-color">${{data.predictedLowTarget | number : '1.2-2'}}</span>
+                </div>
+            </mat-grid-tile>
+        </mat-grid-list>
+
+        <mat-accordion style="margin-top: 16px;">
+            <mat-expansion-panel hideToggle>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        More...
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        <!--This is a summary of the content-->
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <p>Under construction, more information coming here soon</p>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button color="primary" *ngIf="!isWatching" (click)="watch()">WATCH</button>
+        <button mat-raised-button color="primary" *ngIf="isWatching" (click)="unwatch()">UNWATCH</button>
+    </mat-card-actions>
+</mat-card>

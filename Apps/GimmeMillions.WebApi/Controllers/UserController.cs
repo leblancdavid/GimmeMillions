@@ -67,14 +67,9 @@ namespace GimmeMillions.WebApi.Controllers
         [HttpPut("watchlist/add")]
         public IActionResult AddToWatchlist([FromBody]UserWatchlistUpdateDto model)
         {
-            var user = _userService.GetUser(model.Username);
-            if (user.IsFailure)
-                return NotFound(model.Username);
-
-            user.Value.AddStocksToWatchlist(model.Symbols);
-            var result = _userService.AddOrUpdateUser(user.Value);
+            var result = _userService.AddToWatchlist(model.Username, model.Symbols);
             if (result.IsFailure)
-                return BadRequest(new { message = result.Error });
+                return NotFound(model.Username);
 
             return Ok();
         }
@@ -82,15 +77,7 @@ namespace GimmeMillions.WebApi.Controllers
         [HttpPut("watchlist/remove")]
         public IActionResult RemoveFromWatchlist([FromBody]UserWatchlistUpdateDto model)
         {
-            var user = _userService.GetUser(model.Username);
-            if (user.IsFailure)
-                return NotFound(model.Username);
-
-            user.Value.RemoveStocksFromWatchlist(model.Symbols);
-            var result = _userService.AddOrUpdateUser(user.Value);
-            if (result.IsFailure)
-                return BadRequest(new { message = result.Error });
-
+            _userService.RemoveFromWatchlist(model.Username, model.Symbols);
             return Ok();
         }
 

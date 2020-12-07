@@ -20,6 +20,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Resources\Models\CatSmallCaps-HighModel.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Models\CatSmallCaps-LowModel.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Models\CatSmallCaps-SentimentModel.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\Models\Futures-HighModel.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

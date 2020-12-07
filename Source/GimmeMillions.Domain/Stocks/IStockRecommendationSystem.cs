@@ -24,6 +24,7 @@ namespace GimmeMillions.Domain.Stocks
         Result<StockRecommendation> RunRecommendationsFor(string symbol, DateTime date);
         IEnumerable<StockRecommendation> GetRecommendationsForToday(int keep = 10);
         IEnumerable<StockRecommendation> GetRecommendations(DateTime date, int keep = 10);
+        IEnumerable<StockRecommendation> GetRecommendations(IEnumerable<string> symbols, DateTime date);
         Result<StockRecommendation> GetRecommendation(DateTime date, string symbol);
     }
 }

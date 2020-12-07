@@ -16,6 +16,7 @@ namespace GimmeMillions.Domain.Authentication
         public User()
         {
             Role = UserRole.Default;
+            StocksWatchlistString = "";
         }
 
         public User(string firstName, string lastName, string userName, string password, UserRole role)
@@ -25,10 +26,15 @@ namespace GimmeMillions.Domain.Authentication
             LastName = lastName;
             Username = userName.ToLower();
             Role = role;
+            StocksWatchlistString = "";
         }
 
         public IEnumerable<string> GetWatchlist()
         {
+            if(string.IsNullOrEmpty(StocksWatchlistString))
+            {
+                return new List<string>();
+            }
             return StocksWatchlistString.Split(',').ToList();
         }
 

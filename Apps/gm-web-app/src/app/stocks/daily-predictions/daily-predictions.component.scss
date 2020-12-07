@@ -1,0 +1,71 @@
+:host {
+    flex: 1;
+}
+
+.daily-predictions-view {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+}
+
+.daily-predictions-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    flex: 1;
+
+    .daily-predictions-filters {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: flex-end;
+        height: 48px;
+
+        * {
+            margin: 0 8px;
+        }
+    }
+
+    .daily-predictions-item {
+        margin: 2px;
+        opacity: 0.5;
+        &.selected {
+            opacity: 1.0;
+        }
+    }
+}
+
+.daily-predictions-details {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    .stock-search-filters {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: flex-end;
+        height: 48px;
+
+        * {
+            margin: 0 8px;
+        }
+    }
+}
+
+.wait-spinner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: center;
+    align-items: center;
+    h1 {
+        margin: 24px 0;
+    }
+}

@@ -1,0 +1,5 @@
+<mat-icon [style.color]="color" *ngIf="signal >= 90">arrow_circle_up</mat-icon>
+<mat-icon [style.color]="color" *ngIf="signal >= 65 && signal < 90">trending_up</mat-icon>
+<mat-icon [style.color]="color" *ngIf="signal >= 35 && signal < 65">trending_flat</mat-icon>
+<mat-icon [style.color]="color" *ngIf="signal > 10 && signal < 35">trending_down</mat-icon>
+<mat-icon [style.color]="color" *ngIf="signal < 10">arrow_circle_down</mat-icon>

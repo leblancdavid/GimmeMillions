@@ -33,10 +33,10 @@ namespace GimmeMillions.WebApi.Services
 
         public IStockRecommendationSystem<FeatureVector> GetStocksRecommendations()
         {
-            return RecommendationSystemFactory.GetDonskoyRecommendationSystem(
+            return RecommendationSystemFactory.GetCatRecommendationSystem(
                 _stockRepository,
                 _stockRecommendationRepository,
-                "Resources\\Models\\Futures");
+                "Resources\\Models\\CatSmallCaps");
         }
     }
 }

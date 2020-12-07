@@ -1,4 +1,5 @@
-﻿using GimmeMillions.Domain.Stocks;
+﻿using GimmeMillions.Domain.Authentication;
+using GimmeMillions.Domain.Stocks;
 using GimmeMillions.WebApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,19 +15,12 @@ namespace GimmeMillions.WebApi.Controllers
     public class RecommendationsController : ControllerBase
     {
         private IRecommendationSystemProvider _provider;
-        public RecommendationsController(IRecommendationSystemProvider provider)
+        private IUserService _userService;
+        public RecommendationsController(IRecommendationSystemProvider provider,
+            IUserService userService)
         {
             _provider = provider;
-        }
-
-        [HttpGet]
-        public IEnumerable<StockRecommendation> Get()
-        {
-            var system = _provider.GetStocksRecommendations();
-
-            var recommendations = system.RecommendationRepository.GetStockRecommendations(system.SystemId, "DIA");
-
-            return recommendations;
+            _userService = userService;
         }
 
         [HttpGet("futures")]
@@ -48,6 +42,27 @@ namespace GimmeMillions.WebApi.Controllers
             return recommendations;
         }
 
+        [HttpGet("stocks/user/{username}")]
+        public IActionResult GetUserWatchlistStocks(string username)
+        {
+            var user = _userService.GetUser(username);
+            if(user.IsFailure)
+            {
+                return BadRequest(user.Error);
+            }
+
+            var system = _provider.GetStocksRecommendations();
+            return Ok(system.GetRecommendations(user.Value.GetWatchlist(), GetUpdatedDailyStockDate())
+                .OrderByDescending(x => x.Sentiment));
+        }
+
+        [HttpGet("stocks/daily")]
+        public IEnumerable<StockRecommendation> GetDailyStocks()
+        {
+            var system = _provider.GetStocksRecommendations();
+            return system.GetRecommendations(GetUpdatedDailyStockDate(1), 0).OrderByDescending(x => x.Sentiment);
+        }
+
         [HttpGet("stocks/{symbol}")]
         public IActionResult GetPrediction(string symbol)
         {
@@ -60,11 +75,11 @@ namespace GimmeMillions.WebApi.Controllers
             return Ok(prediction.Value);
         }
 
-        private DateTime GetUpdatedDailyStockDate()
+        private DateTime GetUpdatedDailyStockDate(int delayHours = 0)
         {
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
             var newDateTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, timeZoneInfo);
-            if (newDateTime.Hour < 13)
+            if (newDateTime.Hour < 13 + delayHours)
             {
                 return DateTime.Today;
             }

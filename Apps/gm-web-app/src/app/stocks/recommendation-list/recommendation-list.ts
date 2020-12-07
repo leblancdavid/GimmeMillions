@@ -9,8 +9,8 @@ export class RecommendationList {
     }
     set recommendations(value: Array<StockRecommendation>) {
         this._recommendations = value;
-        this._filtered = value;
-        this._sorted = value;
+        this._filtered = value.slice();
+        this._sorted = value.slice();
     }
 
     private _sorted!: Array<StockRecommendation>;
@@ -47,6 +47,35 @@ export class RecommendationList {
       this._filtered.push(r);
     }
 
+    public remove(symbol: string) {
+      let index = this._recommendations.findIndex(x => x.symbol.toLowerCase() === symbol.toLowerCase());
+      if(index < 0) {
+        return;
+      }
+      this._recommendations.splice(index, 1);
+      index = this._sorted.findIndex(x => x.symbol.toLowerCase() === symbol.toLowerCase());
+      if(index < 0) {
+        return;
+      }
+      this._sorted.splice(index, 1);
+
+      index = this._filtered.findIndex(x => x.symbol.toLowerCase() === symbol.toLowerCase());
+      if(index < 0) {
+        return;
+      }
+      this._filtered.splice(index, 1);
+    }
+
+    public clear() {
+      this._recommendations = new Array<StockRecommendation>();
+      this._filtered = new Array<StockRecommendation>();
+      this._sorted = new Array<StockRecommendation>();
+    }
+
+    public includes(symbol: string): boolean {
+      return this._recommendations.findIndex(x => x.symbol.toLowerCase() === symbol.toLowerCase()) >= 0;
+    }
+
     private _symbolFilter: string;
     public applyFilter(symbol: string) {
         this._symbolFilter = symbol.toLocaleLowerCase(); 
@@ -55,7 +84,7 @@ export class RecommendationList {
         } else {
           this._filtered = this.recommendations;
         }
-        this._sorted = this._filtered;
+        this._sorted = this._filtered.slice();
     }
 
     public applySort(sort: Sort) {
@@ -84,4 +113,5 @@ export class RecommendationList {
     private compare(a: number | string, b: number | string, isAsc: boolean) {
         return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
     }
+
 }

@@ -18,9 +18,14 @@ export class AuthenticationService {
     private router: Router) {
     const currentUserStr = localStorage.getItem('currentUser');
     if(currentUserStr) {
-      this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(currentUserStr));
+      const userJson = JSON.parse(currentUserStr);
+      const user = new User(userJson.id, userJson.firstName, userJson.lastName, 
+        userJson.username, userJson.password, userJson.role,
+        userJson.stocksWatchlistString);
+      user.authdata = userJson.authdata;
+      this.currentUserSubject = new BehaviorSubject<User>(user);
     } else {
-      this.currentUserSubject = new BehaviorSubject<User>(new User(-1, '','','','',UserRole.Default));
+      this.currentUserSubject = new BehaviorSubject<User>(new User(-1, '','','','',UserRole.Default,''));
     }
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -43,7 +48,7 @@ export class AuthenticationService {
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(new User(-1, '','','','',UserRole.Default));
+    this.currentUserSubject.next(new User(-1, '','','','',UserRole.Default,''));
     this.router.navigate(['/login']);
   }
 
@@ -55,5 +60,31 @@ export class AuthenticationService {
       newPassword: newPassword
     });
   }
+
+  addToWatchlist(symbol: string) {
+    const user = this.currentUserValue;
+    return this.http.put(environment.apiUrl + '/user/watchlist/add',
+    {
+      username: user.username,
+      symbols: [ symbol ]
+    }).pipe(map(x => {
+      user.addToWatchlist(symbol);
+      return user;
+    }));
+  }
+
+  removeFromWatchlist(symbol: string) {
+    const user = this.currentUserValue;
+    return this.http.put(environment.apiUrl + '/user/watchlist/remove',
+    {
+      username: user.username,
+      symbols: [ symbol ]
+    }).pipe(map(x => {
+      user.removeFromWatchlist(symbol);
+      return user;
+    }));
+  }
+
+
 
 }

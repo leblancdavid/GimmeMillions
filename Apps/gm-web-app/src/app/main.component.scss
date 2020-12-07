@@ -15,11 +15,12 @@
     }
     .main-container {
         flex: 1;
+        overflow: hidden;
         height: 100%;
         width: 100%;
-        position: absolute;
-        padding-top: 48px;
-        box-sizing: border-box;
+        //position: absolute;
+        //padding-top: 48px;
+        //box-sizing: border-box;
     }
     
 }

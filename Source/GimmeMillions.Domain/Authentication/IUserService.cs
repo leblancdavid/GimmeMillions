@@ -13,6 +13,9 @@ namespace GimmeMillions.Domain.Authentication
         Result ResetPassword(string username, string newPassword);
         bool UserExists(string username);
         void RemoveUser(string username);
+        Result AddToWatchlist(string username, params string[] symbols);
+
+        void RemoveFromWatchlist(string username, params string[] symbols);
 
     }
 }

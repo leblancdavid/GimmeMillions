@@ -4,12 +4,15 @@
         <h1>Retrieving Futures...</h1>
     </div>
     <div class="futures-list" *ngIf="futures.recommendations.length != 0">
-        <button mat-icon-button style="align-self: flex-end;" (click)="refresh()">
-            <mat-icon>refresh</mat-icon>
-        </button>
-        <gm-recommendation-list [recommendations]="futures"></gm-recommendation-list>
+        <div class="futures-filters">
+            <button mat-raised-button style="align-self: flex-end;" color="primary" (click)="refresh()">
+                <span>REFRESH</span>
+            </button>
+        </div>
+        
+        <gm-recommendation-list [recommendations]="futures" [(selectedItem)]="selectedFuture"></gm-recommendation-list>
     </div>
-    <div class="futures-details">
-        <h1 *ngIf="selectedFuture">Additional details coming soon!</h1>
+    <div class="futures-details" *ngIf="futures.recommendations.length != 0">
+        <gm-stock-details [data]="selectedFuture"></gm-stock-details>
     </div>
 </div>

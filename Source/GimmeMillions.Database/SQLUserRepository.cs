@@ -47,6 +47,35 @@ namespace GimmeMillions.Database
             }
         }
 
+        public Result AddToWatchlist(string username, params string[] symbols)
+        {
+            try
+            {
+                var context = new GimmeMillionsContext(_dbContextOptions);
+
+                var existingUser = context.Users.FirstOrDefault(x => x.Username == username);
+                if (existingUser != null)
+                {
+                    existingUser.AddStocksToWatchlist(symbols);
+                }
+                else
+                {
+                    return Result.Failure($"User {username} not found");
+                }
+
+                lock (_saveLock)
+                {
+                    context.SaveChanges();
+                }
+                return Result.Success();
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Failure<User>(ex.Message);
+            }
+        }
+
         public Result<User> Authenticate(string username, string password)
         {
             var context = new GimmeMillionsContext(_dbContextOptions);
@@ -72,6 +101,29 @@ namespace GimmeMillions.Database
             var context = new GimmeMillionsContext(_dbContextOptions);
             return context.Users.Where(x => x.Role != UserRole.SuperUser)
                 .Select(x => x.WithoutPassword());
+        }
+
+        public void RemoveFromWatchlist(string username, params string[] symbols)
+        {
+            try
+            {
+                var context = new GimmeMillionsContext(_dbContextOptions);
+
+                var existingUser = context.Users.FirstOrDefault(x => x.Username == username);
+                if (existingUser != null)
+                {
+                    existingUser.RemoveStocksFromWatchlist(symbols);
+                }
+
+                lock (_saveLock)
+                {
+                    context.SaveChanges();
+                }
+
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         public void RemoveUser(string username)

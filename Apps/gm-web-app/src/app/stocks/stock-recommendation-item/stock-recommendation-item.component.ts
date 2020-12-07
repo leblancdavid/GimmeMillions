@@ -9,15 +9,17 @@ import { StockRecommendation } from '../stock-recommendation';
 export class StockRecommendationItemComponent implements OnInit {
 
   @Input() item: StockRecommendation | undefined;
-  
+  @Input() selected: boolean;
   public fontColor!: string;
   public backgroundColor!: string;
 
-  constructor() { }
+  constructor() { 
+    this.selected = false;
+  }
 
   ngOnInit(): void {
     if(this.item) {
-      this.fontColor = this.item.getHsl(50);
+      this.fontColor = this.item.getHsl(25);
       this.backgroundColor = this.item.getHsl(90);
     }
   }

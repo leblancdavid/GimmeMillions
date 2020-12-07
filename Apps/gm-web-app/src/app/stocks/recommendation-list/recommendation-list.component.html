@@ -1,20 +1,30 @@
 <div class="recommendation-list-view noselect">
-
-    <table matSort (matSortChange)="sortRecommendations($event)" style="width: 100%;">
-        <tr class="recommendations-sort-header">
-            <th mat-sort-header="symbol" style="width: 48px;">Symbol</th>
-            <th mat-sort-header="sentiment" style="flex: 1; justify-content: center; display: flex;">Sentiment</th>
-            <th mat-sort-header="prediction" style="width: 48px; justify-content: center; display: flex;">High</th>
-            <th mat-sort-header="lowPrediction" style="width: 48px; justify-content: center; display: flex;">Low</th>
-        </tr>
-
-        <tr *ngFor="let r of recommendations.sorted" 
-            class="recommendation-item"
-            [class.selected]="!selectedItem || (selectedItem && r.symbol == selectedItem.symbol)" 
-            (click)="select(r)">
-            <td colspan="4">
-                <gm-stock-recommendation-item [item]="r"></gm-stock-recommendation-item>
-            </td>
-        </tr>
-    </table>
+    <div class="recommendation-table">
+        <table matSort (matSortChange)="sortRecommendations($event)" style="width: 100%;">
+            <tr class="recommendations-sort-header">
+                <th mat-sort-header="symbol" style="width: 48px;">Symbol</th>
+                <th mat-sort-header="sentiment" style="flex: 1; justify-content: center; display: flex;">Signal</th>
+                <th mat-sort-header="prediction" style="width: 48px; justify-content: center; display: flex;">High</th>
+                <th mat-sort-header="lowPrediction" style="width: 48px; justify-content: center; display: flex;">Low</th>
+            </tr>
+    
+            <tr *ngFor="let r of recommendations.sorted.slice(currentPageStartIndex, currentPageEndIndex)" 
+                class="recommendation-item"
+                [class.selected]="!selectedItem || (selectedItem && r.symbol == selectedItem.symbol)" 
+                (click)="select(r)">
+                <td colspan="4">
+                    <gm-stock-recommendation-item [item]="r" [selected]="selectedItem != undefined && selectedItem.symbol == r.symbol"></gm-stock-recommendation-item>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <mat-paginator *ngIf="recommendations.sorted.length > pageSize" 
+        color="primary"
+        [pageSize]="pageSize" 
+        [length]="recommendations.sorted.length"
+        [pageIndex]="currentPageIndex"
+        (page)="onPageChange($event)"
+        showFirstLastButtons
+        style="width: 100%;"></mat-paginator>
 </div>
