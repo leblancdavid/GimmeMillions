@@ -1,28 +1,35 @@
 <div class="daily-predictions-view">
 
-    <div class="wait-spinner" *ngIf="predictions.recommendations.length == 0">
+    <div class="wait-spinner" *ngIf="isRefreshing">
         <mat-spinner></mat-spinner>
         <h1>Retrieving Daily Predictions...</h1>
     </div>
-    <div class="daily-predictions-list" *ngIf="predictions.recommendations.length != 0">
+    <div class="daily-predictions-list" *ngIf="!isRefreshing">
         <div class="daily-predictions-filters">
             <mat-form-field>
                 <mat-label>Filter</mat-label>
                 <mat-icon matPrefix>search</mat-icon>
                 <input matInput type="text" (keyup)="onFilterKeyup($event)">
             </mat-form-field>
-            <button mat-raised-button style="align-self: center;" color="primary" (click)="refresh()">
-                <span>REFRESH</span>
+            <button mat-icon-button style="align-self: center;" color="primary" (click)="refresh()">
+                <mat-icon>refresh</mat-icon>
             </button>
+            <a mat-icon-button color="primary" style="align-self: center;" [href]="exportFileUrl"
+                download="dailyPredictions.csv">
+                <mat-icon>archive</mat-icon>
+            </a>
+
         </div>
-        <gm-recommendation-list [recommendations]="predictions" [(selectedItem)]="selectedItem"></gm-recommendation-list>
+        <gm-recommendation-list [recommendations]="predictions" [(selectedItem)]="selectedItem">
+        </gm-recommendation-list>
     </div>
-    <div class="daily-predictions-details" *ngIf="predictions.recommendations.length != 0">
+    <div class="daily-predictions-details" *ngIf="!isRefreshing">
         <div class="stock-search-filters">
             <mat-form-field>
                 <mat-label>Search</mat-label>
                 <mat-icon matPrefix>search</mat-icon>
-                <input matInput type="text"  [formControl]="searchControl" (keyup)="onSearchKeyup($event)" (keyup.enter)="search()">
+                <input matInput type="text" [formControl]="searchControl" (keyup)="onSearchKeyup($event)"
+                    (keyup.enter)="search()">
                 <mat-error *ngIf="searchControl.invalid">{{getSearchResultErrorMessage()}}</mat-error>
             </mat-form-field>
             <button mat-raised-button color="primary" style="align-self: center; width: 108px;" (click)="search()">

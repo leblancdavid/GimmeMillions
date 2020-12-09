@@ -113,5 +113,29 @@ export class RecommendationList {
     private compare(a: number | string, b: number | string, isAsc: boolean) {
         return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
     }
+    
+    public export() : Blob {
+      let data = "";
+      for(let r of this._recommendations) {
+        data += r.symbol + ', ' + r.date + ', ' + r.sentiment + ', '  + r.prediction + ', ' + r.lowPrediction + '\n';
+      }
+      return new Blob([data], {type: 'application/octet-stream'});
+    }
+
+    public exportFiltered() : Blob {
+      let data = "";
+      for(let r of this._filtered) {
+        data += r.symbol + ', ' + r.date + ', ' + r.sentiment + ', '  + r.prediction + ', ' + r.lowPrediction + '\n';
+      }
+      return new Blob([data], {type: 'application/octet-stream'});
+    }
+
+    public exportSorted() : Blob {
+      let data = "";
+      for(let r of this._sorted) {
+        data += r.symbol + ', ' + r.date + ', ' + r.sentiment + ', '  + r.prediction + ', ' + r.lowPrediction + '\n';
+      }
+      return new Blob([data], {type: 'application/octet-stream'});
+    }
 
 }
