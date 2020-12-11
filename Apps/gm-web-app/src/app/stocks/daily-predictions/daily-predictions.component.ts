@@ -20,6 +20,9 @@ export class DailyPredictionsComponent implements OnInit {
   
   public exportFileUrl!: SafeResourceUrl;
 
+  signalSelection = new FormControl();
+  signalFilterList: string[] = ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'];
+
   constructor(private stockRecommendationService: StockRecommendationService,
     private sanitizer: DomSanitizer) {
     this.predictions = new RecommendationList();
@@ -52,6 +55,10 @@ export class DailyPredictionsComponent implements OnInit {
     if(this.predictions.sorted.length > 0) {
       this.selectedItem = this.predictions.sorted[0];
     }
+  }
+
+  filterBySignal() {
+    
   }
 
   onSearchKeyup(event: KeyboardEvent) {

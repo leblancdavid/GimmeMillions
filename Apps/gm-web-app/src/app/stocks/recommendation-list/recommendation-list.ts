@@ -1,6 +1,32 @@
 import { Sort } from '@angular/material/sort';
 import { StockRecommendation } from '../stock-recommendation';
+import { ConsensusPipe } from '../stock-recommendation-item/consensus.pipe';
 import { StockRecommendationService } from '../stock-recommendation.service';
+
+export class RecommendationFilterOptions {
+  constructor(public symbols: Array<string>, public signalTypes: Array<string>) {
+
+  }
+
+  private consensusPipe = new ConsensusPipe();
+
+  public pass(recommendation: StockRecommendation): boolean {
+    if(this.symbols.length == 0 && this.signalTypes.length == 0) {
+      return true;
+    }
+
+    if(this.symbols.some(x => x == recommendation.symbol)) {
+      return true;
+    }
+
+    if(this.signalTypes.some(x => x.toLowerCase() == this.consensusPipe.transform(recommendation.sentiment).toLowerCase())) {
+      return true;
+    }
+
+    return false;
+  }
+
+}
 
 export class RecommendationList {
     private _recommendations!: Array<StockRecommendation>;
@@ -24,7 +50,6 @@ export class RecommendationList {
     }
 
     constructor() {
-        this._symbolFilter = '';
         this._recommendations = new Array<StockRecommendation>();
         this._filtered = new Array<StockRecommendation>();
         this._sorted = new Array<StockRecommendation>();
@@ -76,14 +101,8 @@ export class RecommendationList {
       return this._recommendations.findIndex(x => x.symbol.toLowerCase() === symbol.toLowerCase()) >= 0;
     }
 
-    private _symbolFilter: string;
-    public applyFilter(symbol: string) {
-        this._symbolFilter = symbol.toLocaleLowerCase(); 
-        if(this._symbolFilter !== '') {
-          this._filtered = this.recommendations.filter(x => x.symbol.toLocaleLowerCase().includes(this._symbolFilter));
-        } else {
-          this._filtered = this.recommendations;
-        }
+    public applyFilter(filter: RecommendationFilterOptions) {
+        this._filtered = this.recommendations.filter(x => filter.pass(x));
         this._sorted = this._filtered.slice();
     }
 
