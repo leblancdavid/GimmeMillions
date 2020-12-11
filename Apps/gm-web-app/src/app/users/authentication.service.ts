@@ -16,16 +16,12 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient,
     private router: Router) {
+      
+    this.currentUserSubject = new BehaviorSubject<User>(new User(-1, '','','','',UserRole.Default,''));
     const currentUserStr = localStorage.getItem('currentUser');
     if(currentUserStr) {
       const userJson = JSON.parse(currentUserStr);
-      const user = new User(userJson.id, userJson.firstName, userJson.lastName, 
-        userJson.username, userJson.password, userJson.role,
-        userJson.stocksWatchlistString);
-      user.authdata = userJson.authdata;
-      this.currentUserSubject = new BehaviorSubject<User>(user);
-    } else {
-      this.currentUserSubject = new BehaviorSubject<User>(new User(-1, '','','','',UserRole.Default,''));
+      this.setCurrentUser(userJson);
     }
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -34,12 +30,23 @@ export class AuthenticationService {
     return this.currentUserSubject.value;
   }
 
+  private setCurrentUser(userJson: User): User {
+    const user = new User(userJson.id, userJson.firstName, userJson.lastName, 
+      userJson.username, userJson.password, userJson.role,
+      userJson.stocksWatchlistString);
+    user.authdata = userJson.authdata;
+    this.currentUserSubject = new BehaviorSubject<User>(user);
+    return user;
+  }
+
   login(username: string, password: string) {
     return this.http.post<User>(environment.apiUrl + '/user/authenticate', { username: username, password: password })
-      .pipe(map(user => {
+      .pipe(map(userJson => {
         // store user details and basic auth credentials in local storage to keep user logged in between page refreshes
-        user.authdata = window.btoa(username + ':' + password);
-        localStorage.setItem('currentUser', JSON.stringify(user));
+        userJson.authdata = window.btoa(username + ':' + password);
+        localStorage.setItem('currentUser', JSON.stringify(userJson));
+        
+        const user = this.setCurrentUser(userJson);
         this.currentUserSubject.next(user);
         return user;
       }));
