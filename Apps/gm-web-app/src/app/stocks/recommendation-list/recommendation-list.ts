@@ -15,7 +15,7 @@ export class RecommendationFilterOptions {
       return true;
     }
 
-    if(this.symbols.some(x => x == recommendation.symbol)) {
+    if(this.symbols.some(x => recommendation.symbol.toLowerCase().includes(x.toLowerCase()))) {
       return true;
     }
 

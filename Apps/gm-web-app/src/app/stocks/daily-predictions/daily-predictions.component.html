@@ -13,7 +13,7 @@
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Signal Type</mat-label>
-                <mat-select [formControl]="signalSelection" multiple>
+                <mat-select [formControl]="signalSelection" multiple (selectionChange)="filterBySignal()">
                   <mat-select-trigger>
                     {{signalSelection.value ? signalSelection.value[0] : ''}}
                     <span *ngIf="signalSelection.value?.length > 1" class="example-additional-selection">
