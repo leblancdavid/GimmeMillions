@@ -28,6 +28,7 @@ export class DailyPredictionsComponent implements OnInit {
     this.predictions = new RecommendationList();
     this.isRefreshing = false;
     this.isSearching = false;
+    this.signalSelection.setValue(new Array<string>());
    }
 
   ngOnInit(): void {
@@ -49,19 +50,16 @@ export class DailyPredictionsComponent implements OnInit {
     });
   }
 
-  onFilterKeyup(event: Event) {
-    
-    const filter = new RecommendationFilterOptions((event.target as HTMLInputElement).value.split(' ').filter(x => x !== ''), []);
+  filterRecommendations() {
+    const searchString = this.searchControl.value as string;
+    const signalFilters = this.signalSelection.value as Array<string>;
+    const filter = new RecommendationFilterOptions(searchString.split(' ').filter(x => x !== ''), signalFilters);
 
     this.predictions.applyFilter(filter);
     this.exportFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(this.predictions.exportSorted()));
     if(this.predictions.sorted.length > 0) {
       this.selectedItem = this.predictions.sorted[0];
     }
-  }
-
-  filterBySignal() {
-
   }
 
   onSearchKeyup(event: KeyboardEvent) {

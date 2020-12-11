@@ -11,19 +11,16 @@ export class RecommendationFilterOptions {
   private consensusPipe = new ConsensusPipe();
 
   public pass(recommendation: StockRecommendation): boolean {
-    if(this.symbols.length == 0 && this.signalTypes.length == 0) {
-      return true;
+    let passfilter = true;
+    if(this.symbols.length > 0) {
+      passfilter = passfilter && this.symbols.some(x => recommendation.symbol.toLowerCase().includes(x.toLowerCase()));
     }
 
-    if(this.symbols.some(x => recommendation.symbol.toLowerCase().includes(x.toLowerCase()))) {
-      return true;
+    if(this.signalTypes.length > 0) {
+      passfilter = passfilter && this.signalTypes.some(x => x.toLowerCase() == this.consensusPipe.transform(recommendation.sentiment).toLowerCase());
     }
 
-    if(this.signalTypes.some(x => x.toLowerCase() == this.consensusPipe.transform(recommendation.sentiment).toLowerCase())) {
-      return true;
-    }
-
-    return false;
+    return passfilter;
   }
 
 }
