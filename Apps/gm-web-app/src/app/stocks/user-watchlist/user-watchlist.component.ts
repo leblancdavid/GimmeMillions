@@ -1,6 +1,7 @@
 import { newArray } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { RecommendationList } from '../recommendation-list/recommendation-list';
 import { StockRecommendation } from '../stock-recommendation';
 import { StockRecommendationService } from '../stock-recommendation.service';
@@ -17,9 +18,12 @@ export class UserWatchlistComponent implements OnInit {
   public isRefreshing: boolean;
   public isSearching: boolean;
   public searchControl = new FormControl('', []);
+  
+  public exportFileUrl!: SafeResourceUrl;
 
   constructor(public userWatchlistService: UserWatchlistService,
-    private stockRecommendationService: StockRecommendationService) {
+    private stockRecommendationService: StockRecommendationService,
+    private sanitizer: DomSanitizer) {
     this.isRefreshing = false;
     this.isSearching = false;
    }
@@ -32,11 +36,13 @@ export class UserWatchlistComponent implements OnInit {
     this.isRefreshing = true;
     this.userWatchlistService.refreshWatchlist().subscribe(x => {
       this.isRefreshing = false;
+      this.exportFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(this.userWatchlistService.watchlist.exportSorted()));
     });
   }
 
   onFilterKeyup(event: Event) {
     this.userWatchlistService.watchlist.applyFilter((event.target as HTMLInputElement).value);
+    this.exportFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(this.userWatchlistService.watchlist.exportSorted()));
     if(this.userWatchlistService.watchlist.sorted.length > 0) {
       this.selectedItem = this.userWatchlistService.watchlist.sorted[0];
     }

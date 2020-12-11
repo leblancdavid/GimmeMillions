@@ -12,9 +12,13 @@
                 <mat-icon matPrefix>search</mat-icon>
                 <input matInput type="text" (keyup)="onFilterKeyup($event)">
             </mat-form-field>
-            <button mat-raised-button style="align-self: center; width: 108px;" color="primary" (click)="refresh()">
-                <span>REFRESH</span>
+            <button mat-icon-button style="align-self: center;" color="primary" (click)="refresh()">
+                <mat-icon>refresh</mat-icon>
             </button>
+            <a mat-icon-button color="primary" style="align-self: center;" [href]="exportFileUrl"
+                download="watchlist.csv">
+                <mat-icon>archive</mat-icon>
+            </a>
         </div>
         <gm-recommendation-list [recommendations]="userWatchlistService.watchlist" [(selectedItem)]="selectedItem"></gm-recommendation-list>
     </div>
