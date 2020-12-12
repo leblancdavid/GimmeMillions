@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { forkJoin, Observable } from 'rxjs';
 import { RecommendationFilterOptions, RecommendationList } from '../recommendation-list/recommendation-list';
 import { StockRecommendation } from '../stock-recommendation';
 import { StockRecommendationService } from '../stock-recommendation.service';
@@ -17,6 +18,7 @@ export class DailyPredictionsComponent implements OnInit {
   public isRefreshing: boolean; 
   public isSearching: boolean;
   public searchControl = new FormControl('', []);
+  public missingSymbols: string[] = [];
   
   public exportFileUrl!: SafeResourceUrl;
 
@@ -51,9 +53,16 @@ export class DailyPredictionsComponent implements OnInit {
   }
 
   filterRecommendations() {
-    const searchString = this.searchControl.value as string;
+    const searchString = (this.searchControl.value as string).split(' ').filter(x => x !== '');
+    this.missingSymbols = [];
+    for(let symbol of searchString) {
+      if(!this.predictions.includes(symbol)) {
+        this.missingSymbols.push(symbol);
+      }
+    }
+    
     const signalFilters = this.signalSelection.value as Array<string>;
-    const filter = new RecommendationFilterOptions(searchString.split(' ').filter(x => x !== ''), signalFilters);
+    const filter = new RecommendationFilterOptions(searchString, signalFilters);
 
     this.predictions.applyFilter(filter);
     this.exportFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(this.predictions.exportSorted()));
@@ -62,25 +71,23 @@ export class DailyPredictionsComponent implements OnInit {
     }
   }
 
-  onSearchKeyup(event: KeyboardEvent) {
-    this.searchControl.setErrors(null);
-  }
-
   search() {
-    if(this.searchControl.value == '') {
-      return;
-    }
 
-    if(this.predictions.includes(this.searchControl.value)) {
-      this.selectedItem = this.predictions.recommendations.find(x => x.symbol.toLowerCase() === this.searchControl.value.toLowerCase());
-      return;
-    }
-
+    this.signalSelection.setValue(new Array<string>());
     this.isSearching = true;
-    this.stockRecommendationService.getRecommendationFor(this.searchControl.value).subscribe(x => {
-      this.predictions.add(x);
-      this.selectedItem = x;
+    this.selectedItem = undefined;
+    let recommendationsSearch = new Array<Observable<StockRecommendation>>();
+    for(let symbol of this.missingSymbols) {
+      recommendationsSearch.push(this.stockRecommendationService.getRecommendationFor(symbol));
+    }
+
+    forkJoin(recommendationsSearch).subscribe(recommendations => {
+      for(const r of recommendations) {
+        this.predictions.add(r);
+      }
+      this.selectedItem = recommendations[0];
       this.isSearching = false;
+      this.missingSymbols = [];
     }, error => {
       this.searchControl.setErrors({'notFound': true});
       this.isSearching = false;
@@ -89,10 +96,14 @@ export class DailyPredictionsComponent implements OnInit {
 
   getSearchResultErrorMessage() {
     if (this.searchControl.hasError('notFound')) {
-      return 'Stock not found';
+      return "Couldn't find symbol(s): " + this.missingSymbols.join(', ').toUpperCase();
     } else if(this.searchControl.hasError('duplicate')) {
       return 'Stock is already in the daily list';
     }
     return '';
+  }
+
+  getSearchMessage() {
+    return 'Searching for ' + this.missingSymbols.join(', ').toUpperCase() + '...';
   }
 }

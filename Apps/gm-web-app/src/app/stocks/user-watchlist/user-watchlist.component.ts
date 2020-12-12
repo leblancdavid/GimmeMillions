@@ -2,7 +2,7 @@ import { newArray } from '@angular/compiler/src/util';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { RecommendationList } from '../recommendation-list/recommendation-list';
+import { RecommendationFilterOptions, RecommendationList } from '../recommendation-list/recommendation-list';
 import { StockRecommendation } from '../stock-recommendation';
 import { StockRecommendationService } from '../stock-recommendation.service';
 import { UserWatchlistService } from './user-watchlist.service';
@@ -20,7 +20,9 @@ export class UserWatchlistComponent implements OnInit {
   public searchControl = new FormControl('', []);
   
   public exportFileUrl!: SafeResourceUrl;
-
+  signalSelection = new FormControl();
+  signalFilterList: string[] = ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'];
+  
   constructor(public userWatchlistService: UserWatchlistService,
     private stockRecommendationService: StockRecommendationService,
     private sanitizer: DomSanitizer) {
@@ -40,8 +42,12 @@ export class UserWatchlistComponent implements OnInit {
     });
   }
 
-  onFilterKeyup(event: Event) {
-    this.userWatchlistService.watchlist.applyFilter((event.target as HTMLInputElement).value);
+  filterRecommendations() {
+    const searchString = this.searchControl.value as string;
+    const signalFilters = this.signalSelection.value as Array<string>;
+    const filter = new RecommendationFilterOptions(searchString.split(' ').filter(x => x !== ''), signalFilters);
+
+    this.userWatchlistService.watchlist.applyFilter(filter);
     this.exportFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(this.userWatchlistService.watchlist.exportSorted()));
     if(this.userWatchlistService.watchlist.sorted.length > 0) {
       this.selectedItem = this.userWatchlistService.watchlist.sorted[0];

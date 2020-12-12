@@ -10,8 +10,20 @@
             <mat-form-field>
                 <mat-label>Filter</mat-label>
                 <mat-icon matPrefix>search</mat-icon>
-                <input matInput type="text" (keyup)="onFilterKeyup($event)">
+                <input matInput type="text" (keyup)="filterRecommendations()" [formControl]="searchControl">
             </mat-form-field>
+            <mat-form-field appearance="fill">
+                <mat-label>Signal Type</mat-label>
+                <mat-select [formControl]="signalSelection" multiple (selectionChange)="filterRecommendations()">
+                  <mat-select-trigger>
+                    {{signalSelection.value ? signalSelection.value[0] : ''}}
+                    <span *ngIf="signalSelection.value?.length > 1" class="example-additional-selection">
+                      (+{{signalSelection.value.length - 1}} {{signalSelection.value?.length === 2 ? 'other' : 'others'}})
+                    </span>
+                  </mat-select-trigger>
+                  <mat-option *ngFor="let signal of signalFilterList" [value]="signal">{{signal}}</mat-option>
+                </mat-select>
+              </mat-form-field>
             <button mat-icon-button style="align-self: center;" color="primary" (click)="refresh()">
                 <mat-icon>refresh</mat-icon>
             </button>
@@ -23,18 +35,6 @@
         <gm-recommendation-list [recommendations]="userWatchlistService.watchlist" [(selectedItem)]="selectedItem"></gm-recommendation-list>
     </div>
     <div class="watchlist-details" *ngIf="!isRefreshing">
-        <div class="stock-search-filters">
-            <mat-form-field>
-                <mat-label>Search</mat-label>
-                <mat-icon matPrefix>search</mat-icon>
-                <input matInput type="text"  [formControl]="searchControl" (keyup)="onSearchKeyup($event)" (keyup.enter)="search()">
-                <mat-error *ngIf="searchControl.invalid">{{getSearchResultErrorMessage()}}</mat-error>
-            </mat-form-field>
-            <button mat-raised-button color="primary" style="align-self: center; width: 108px;" (click)="search()">
-                SEARCH
-            </button>
-        </div>
-
         <div class="wait-spinner" style="margin-top: 16px;" *ngIf="isSearching">
             <mat-spinner></mat-spinner>
             <h1>Searching...</h1>
