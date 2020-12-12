@@ -72,7 +72,10 @@ export class DailyPredictionsComponent implements OnInit {
   }
 
   search() {
-
+    if(this.missingSymbols.length == 0) {
+      return;
+    }
+    
     this.signalSelection.setValue(new Array<string>());
     this.isSearching = true;
     this.selectedItem = undefined;
