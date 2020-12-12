@@ -1,6 +1,29 @@
 import { Sort } from '@angular/material/sort';
 import { StockRecommendation } from '../stock-recommendation';
+import { ConsensusPipe } from '../stock-recommendation-item/consensus.pipe';
 import { StockRecommendationService } from '../stock-recommendation.service';
+
+export class RecommendationFilterOptions {
+  constructor(public symbols: Array<string>, public signalTypes: Array<string>) {
+
+  }
+
+  private consensusPipe = new ConsensusPipe();
+
+  public pass(recommendation: StockRecommendation): boolean {
+    let passfilter = true;
+    if(this.symbols.length > 0) {
+      passfilter = passfilter && this.symbols.some(x => recommendation.symbol.toLowerCase().includes(x.toLowerCase()));
+    }
+
+    if(this.signalTypes.length > 0) {
+      passfilter = passfilter && this.signalTypes.some(x => x.toLowerCase() == this.consensusPipe.transform(recommendation.sentiment).toLowerCase());
+    }
+
+    return passfilter;
+  }
+
+}
 
 export class RecommendationList {
     private _recommendations!: Array<StockRecommendation>;
@@ -24,7 +47,6 @@ export class RecommendationList {
     }
 
     constructor() {
-        this._symbolFilter = '';
         this._recommendations = new Array<StockRecommendation>();
         this._filtered = new Array<StockRecommendation>();
         this._sorted = new Array<StockRecommendation>();
@@ -76,14 +98,8 @@ export class RecommendationList {
       return this._recommendations.findIndex(x => x.symbol.toLowerCase() === symbol.toLowerCase()) >= 0;
     }
 
-    private _symbolFilter: string;
-    public applyFilter(symbol: string) {
-        this._symbolFilter = symbol.toLocaleLowerCase(); 
-        if(this._symbolFilter !== '') {
-          this._filtered = this.recommendations.filter(x => x.symbol.toLocaleLowerCase().includes(this._symbolFilter));
-        } else {
-          this._filtered = this.recommendations;
-        }
+    public applyFilter(filter: RecommendationFilterOptions) {
+        this._filtered = this.recommendations.filter(x => filter.pass(x));
         this._sorted = this._filtered.slice();
     }
 
@@ -112,6 +128,30 @@ export class RecommendationList {
 
     private compare(a: number | string, b: number | string, isAsc: boolean) {
         return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+    }
+    
+    public export() : Blob {
+      let data = "";
+      for(let r of this._recommendations) {
+        data += r.symbol + ', ' + r.date + ', ' + r.sentiment + ', '  + r.prediction + ', ' + r.lowPrediction + '\n';
+      }
+      return new Blob([data], {type: 'application/octet-stream'});
+    }
+
+    public exportFiltered() : Blob {
+      let data = "";
+      for(let r of this._filtered) {
+        data += r.symbol + ', ' + r.date + ', ' + r.sentiment + ', '  + r.prediction + ', ' + r.lowPrediction + '\n';
+      }
+      return new Blob([data], {type: 'application/octet-stream'});
+    }
+
+    public exportSorted() : Blob {
+      let data = "";
+      for(let r of this._sorted) {
+        data += r.symbol + ', ' + r.date + ', ' + r.sentiment + ', '  + r.prediction + ', ' + r.lowPrediction + '\n';
+      }
+      return new Blob([data], {type: 'application/octet-stream'});
     }
 
 }

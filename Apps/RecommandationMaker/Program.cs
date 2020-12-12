@@ -58,8 +58,8 @@ namespace RecommendationMaker
 
                        recommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(stocksRepo, recommendationRepo,
                             $"{o.PathToModel}\\CatSmallCaps\\CatSmallCaps");
-                       futuresRecommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(stocksRepo, recommendationRepo,
-                            $"{o.PathToModel}\\MarketFutures\\MarketFutures");
+                       futuresRecommendationSystem = RecommendationSystemFactory.GetDonskoyRecommendationSystem(stocksRepo, recommendationRepo,
+                            $"{o.PathToModel}\\Donskoy\\Futures");
                        model = "cat";
 
                        if (!string.IsNullOrEmpty(o.Date))

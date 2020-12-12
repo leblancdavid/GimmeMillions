@@ -1,38 +1,52 @@
 <div class="daily-predictions-view">
 
-    <div class="wait-spinner" *ngIf="predictions.recommendations.length == 0">
+    <div class="wait-spinner" *ngIf="isRefreshing">
         <mat-spinner></mat-spinner>
         <h1>Retrieving Daily Predictions...</h1>
     </div>
-    <div class="daily-predictions-list" *ngIf="predictions.recommendations.length != 0">
+    <div class="daily-predictions-list" *ngIf="!isRefreshing">
         <div class="daily-predictions-filters">
-            <mat-form-field>
-                <mat-label>Filter</mat-label>
-                <mat-icon matPrefix>search</mat-icon>
-                <input matInput type="text" (keyup)="onFilterKeyup($event)">
+            <mat-form-field appearance="fill">
+                <mat-label>Signal Type</mat-label>
+                <mat-select [formControl]="signalSelection" multiple (selectionChange)="filterRecommendations()">
+                    <mat-select-trigger>
+                        {{signalSelection.value ? signalSelection.value[0] : ''}}
+                        <span *ngIf="signalSelection.value?.length > 1" class="example-additional-selection">
+                            (+{{signalSelection.value.length - 1}}
+                            {{signalSelection.value?.length === 2 ? 'other' : 'others'}})
+                        </span>
+                    </mat-select-trigger>
+                    <mat-option *ngFor="let signal of signalFilterList" [value]="signal">{{signal}}</mat-option>
+                </mat-select>
             </mat-form-field>
-            <button mat-raised-button style="align-self: center;" color="primary" (click)="refresh()">
-                <span>REFRESH</span>
+
+            <button mat-icon-button style="align-self: center;" color="accent" (click)="search()" [disabled]="missingSymbols.length == 0 || isSearching">
+                <mat-icon>system_update_alt</mat-icon>
             </button>
-        </div>
-        <gm-recommendation-list [recommendations]="predictions" [(selectedItem)]="selectedItem"></gm-recommendation-list>
-    </div>
-    <div class="daily-predictions-details" *ngIf="predictions.recommendations.length != 0">
-        <div class="stock-search-filters">
+
             <mat-form-field>
                 <mat-label>Search</mat-label>
                 <mat-icon matPrefix>search</mat-icon>
-                <input matInput type="text"  [formControl]="searchControl" (keyup)="onSearchKeyup($event)" (keyup.enter)="search()">
+                <input matInput type="text" (keyup)="filterRecommendations()" (keyup.enter)="search()" [formControl]="searchControl">
                 <mat-error *ngIf="searchControl.invalid">{{getSearchResultErrorMessage()}}</mat-error>
             </mat-form-field>
-            <button mat-raised-button color="primary" style="align-self: center; width: 108px;" (click)="search()">
-                SEARCH
+            
+            <button mat-icon-button style="align-self: center;" color="primary" (click)="refresh()">
+                <mat-icon>refresh</mat-icon>
             </button>
-        </div>
+            <a mat-icon-button color="primary" style="align-self: center;" [href]="exportFileUrl"
+                download="dailyPredictions.csv">
+                <mat-icon>archive</mat-icon>
+            </a>
 
+        </div>
+        <gm-recommendation-list [recommendations]="predictions" [(selectedItem)]="selectedItem">
+        </gm-recommendation-list>
+    </div>
+    <div class="daily-predictions-details" *ngIf="!isRefreshing">
         <div class="wait-spinner" style="margin-top: 16px;" *ngIf="isSearching">
             <mat-spinner></mat-spinner>
-            <h1>Searching...</h1>
+            <h1>{{getSearchMessage()}}</h1>
         </div>
         <gm-stock-details [data]="selectedItem" *ngIf="!isSearching"></gm-stock-details>
         <h1 *ngIf="!selectedItem && !isSearching" class="wait-spinner">No stock selected</h1>
