@@ -22,8 +22,8 @@ export class UserWatchlistComponent implements OnInit {
   public missingSymbols: string[] = [];
 
   public exportFileUrl!: SafeResourceUrl;
-  signalSelection = new FormControl();
-  signalFilterList: string[] = ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'];
+  public signalSelection = new FormControl();
+  public signalFilterList: string[] = ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'];
   
   constructor(public userWatchlistService: UserWatchlistService,
     private stockRecommendationService: StockRecommendationService,
@@ -36,7 +36,7 @@ export class UserWatchlistComponent implements OnInit {
     this.refresh();
   }
 
-  refresh() {
+  public refresh() {
     this.isRefreshing = true;
     this.userWatchlistService.refreshWatchlist().subscribe(x => {
       this.isRefreshing = false;
@@ -44,7 +44,7 @@ export class UserWatchlistComponent implements OnInit {
     });
   }
 
-  filterRecommendations() {
+  public filterRecommendations() {
    const searchString = (this.searchControl.value as string).split(' ').filter(x => x !== '');
     this.missingSymbols = [];
     for(let symbol of searchString) {
@@ -64,11 +64,11 @@ export class UserWatchlistComponent implements OnInit {
     }
   }
 
-  onSearchKeyup(event: KeyboardEvent) {
+  public onSearchKeyup(event: KeyboardEvent) {
     this.searchControl.setErrors(null);
   }
 
-  search() {
+  public search() {
     if(this.missingSymbols.length == 0) {
       return;
     }
@@ -94,7 +94,7 @@ export class UserWatchlistComponent implements OnInit {
     });
   }
 
-  getSearchResultErrorMessage() {
+  public getSearchResultErrorMessage() {
     if (this.searchControl.hasError('notFound')) {
       return "Couldn't find symbol(s): " + this.missingSymbols.join(', ').toUpperCase();
     } else if(this.searchControl.hasError('duplicate')) {
@@ -103,7 +103,7 @@ export class UserWatchlistComponent implements OnInit {
     return '';
   }
 
-  getSearchMessage() {
+  public getSearchMessage() {
     return 'Searching for ' + this.missingSymbols.join(', ').toUpperCase() + '...';
   }
 }
