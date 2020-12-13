@@ -265,10 +265,10 @@ $altTheme: mat-dark-theme($theme-primary, $theme-accent, $theme-warn);
   border-color: mat-color($mat-primary, default) !important;
 }
 .warn-border-color {
-  border-color: mat-color($mat-warn, default);
+  border-color: mat-color($mat-warn, default) !important;
 }
 .accent-border-color {
-  border-color: mat-color($mat-accent, default);
+  border-color: mat-color($mat-accent, default) !important;
 }
 
 

@@ -1,7 +1,9 @@
 <mat-accordion *ngIf="item" >
     <mat-expansion-panel hideToggle [expanded]="selected" >
         <mat-expansion-panel-header [style.border-color]="fontColor" class="recommendation-item"
-        [style.background-color]="backgroundColor" [class.primary-border-color]="selected">
+        [style.background-color]="backgroundColor" 
+        [class.primary-border-color]="selected"
+        [class.selected]="selected">
             <gm-trend-icon [color]="fontColor" [signal]="item.sentiment"></gm-trend-icon>
             <div class="symbol-name" [style.color]="fontColor">
                 {{item.symbol}}
