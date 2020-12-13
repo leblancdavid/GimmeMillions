@@ -43,12 +43,4 @@
         <gm-recommendation-list [recommendations]="predictions" [(selectedItem)]="selectedItem">
         </gm-recommendation-list>
     </div>
-    <div class="daily-predictions-details" *ngIf="!isRefreshing">
-        <div class="wait-spinner" style="margin-top: 16px;" *ngIf="isSearching">
-            <mat-spinner></mat-spinner>
-            <h1>{{getSearchMessage()}}</h1>
-        </div>
-        <gm-stock-details [data]="selectedItem" *ngIf="!isSearching"></gm-stock-details>
-        <h1 *ngIf="!selectedItem && !isSearching" class="wait-spinner">No stock selected</h1>
-    </div>
 </div>

@@ -1,18 +1,21 @@
-<div *ngIf="item" class="recommendation-item"
-    [style.border-color]="fontColor"
-    [style.background-color]="backgroundColor"
-    [class.primary-border-color]="selected">
-    <gm-trend-icon [color]="fontColor" [signal]="item.sentiment"></gm-trend-icon>
-    <div class="symbol-name"
-        [style.color]="fontColor">
-        {{item.symbol}}
-    </div>
-    <div class="sentiment-value"
-        [style.color]="fontColor">
-        {{item.sentiment | number : '1.2-2'}}%
-    </div>
-    <div class="targets">
-        <div class="high-target buy-color">{{item.prediction | number : '1.2-2'}}% - ${{item.predictedPriceTarget | number : '1.2-2'}}</div>
-        <div class="low-target sell-color">{{item.lowPrediction | number : '1.2-2'}}% - ${{item.predictedLowTarget | number : '1.2-2'}}</div>
-    </div>
-</div>
+<mat-accordion *ngIf="item" >
+    <mat-expansion-panel hideToggle [expanded]="selected" >
+        <mat-expansion-panel-header [style.border-color]="fontColor" class="recommendation-item"
+        [style.background-color]="backgroundColor" [class.primary-border-color]="selected">
+            <gm-trend-icon [color]="fontColor" [signal]="item.sentiment"></gm-trend-icon>
+            <div class="symbol-name" [style.color]="fontColor">
+                {{item.symbol}}
+            </div>
+            <div class="sentiment-value" [style.color]="fontColor">
+                {{item.sentiment | number : '1.2-2'}}%
+            </div>
+            <div class="targets">
+                <div class="high-target buy-color">{{item.prediction | number : '1.2-2'}}% -
+                    ${{item.predictedPriceTarget | number : '1.2-2'}}</div>
+                <div class="low-target sell-color">{{item.lowPrediction | number : '1.2-2'}}% -
+                    ${{item.predictedLowTarget | number : '1.2-2'}}</div>
+            </div>
+        </mat-expansion-panel-header>
+        <p>Under construction, more information coming here soon</p>
+    </mat-expansion-panel>
+</mat-accordion>
