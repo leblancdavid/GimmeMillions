@@ -22,7 +22,7 @@
         flex-direction: row;
         width: 100%;
         justify-content: flex-end;
-        height: 48px;
+        flex-wrap: wrap;
 
         * {
             margin: 0 8px;
