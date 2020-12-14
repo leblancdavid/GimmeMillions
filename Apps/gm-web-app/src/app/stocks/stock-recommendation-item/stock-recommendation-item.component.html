@@ -56,9 +56,10 @@
                 </div>
             </mat-grid-tile>
         </mat-grid-list>
-        <div>
-            <button mat-raised-button color="primary" *ngIf="!isWatching" (click)="watch()">WATCH</button>
-            <button mat-raised-button color="primary" *ngIf="isWatching" (click)="unwatch()">UNWATCH</button>
+        <div class="stock-detail-actions">
+            <button mat-button color="accent" (click)="watch()" disabled>DETAILS</button>
+            <button mat-raised-button color="primary" *ngIf="!isWatching" (click)="watch($event)">WATCH</button>
+            <button mat-raised-button color="primary" *ngIf="isWatching" (click)="unwatch($event)">UNWATCH</button>
         </div>
     </mat-expansion-panel>
 </mat-accordion>

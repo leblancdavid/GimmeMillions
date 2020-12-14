@@ -44,13 +44,15 @@ export class StockRecommendationItemComponent implements OnInit {
     }
   }
 
-  watch() {
+  watch(event: MouseEvent) {
+    event.stopImmediatePropagation();
     if(this._item) {
       this.watchlistService.addToWatchlist(this._item);
     }
   }
 
-  unwatch() {
+  unwatch(event: MouseEvent) {
+    event.stopImmediatePropagation();
     if(this._item) {
       this.watchlistService.removeFromWatchlist(this._item.symbol);
     }
