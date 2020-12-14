@@ -12,7 +12,4 @@
         
         <gm-recommendation-list [recommendations]="futures" [(selectedItem)]="selectedFuture"></gm-recommendation-list>
     </div>
-    <div class="futures-details" *ngIf="futures.recommendations.length != 0">
-        <gm-stock-details [data]="selectedFuture"></gm-stock-details>
-    </div>
 </div>
