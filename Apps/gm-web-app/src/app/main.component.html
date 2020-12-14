@@ -1,8 +1,5 @@
 <div class="main-layout">
     <mat-toolbar color="primary" class="main-toolbar">
-        <button mat-icon-button>
-            <mat-icon>menu</mat-icon>
-        </button>
         <span>Gimmillion</span>
         <span class="spacer"></span>
         <button mat-button (click)="goToStocks()">
@@ -17,7 +14,7 @@
         <button mat-icon-button (click)="goToProfile()">
             <mat-icon>person</mat-icon>
         </button>
-        <button mat-icon-button (click)="goToUserManagement()">
+        <button mat-icon-button (click)="goToUserManagement()" *ngIf="authenticationService.currentUserValue.role == 0">
             <mat-icon>supervised_user_circle</mat-icon>
         </button>
         <button mat-icon-button (click)="logout()">

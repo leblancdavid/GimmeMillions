@@ -41,6 +41,7 @@ export class UserWatchlistService {
     return this.stockRecommendationService.getUserWatchlistRecommendations()
       .pipe(map(picks => {
         this._watchlist.recommendations = picks;
+        this.watchlistUpdate.emit();
       }));
   }
 

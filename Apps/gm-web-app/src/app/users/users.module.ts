@@ -12,7 +12,7 @@ import { AuthenticationService } from './authentication.service';
 import { ProfileComponent } from './profile/profile.component';
 import { ResetPasswordDialogComponent } from './profile/reset-password-dialog/reset-password-dialog.component';
 import { NewUserDialogComponent } from './user-management/new-user-dialog/new-user-dialog.component';
-
+import { CanActivateSuperUser } from './auth.guard';
 
 @NgModule({
   declarations: [LoginComponent, UserManagementComponent, NewUserDialogComponent, ProfileComponent, ResetPasswordDialogComponent],
@@ -25,6 +25,6 @@ import { NewUserDialogComponent } from './user-management/new-user-dialog/new-us
     ReactiveFormsModule,
     MaterialModule
   ],
-  providers: [ UserService, AuthenticationService ]
+  providers: [ UserService, AuthenticationService, CanActivateSuperUser ]
 })
 export class UsersModule { }

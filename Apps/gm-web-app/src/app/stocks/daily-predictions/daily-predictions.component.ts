@@ -22,8 +22,8 @@ export class DailyPredictionsComponent implements OnInit {
   
   public exportFileUrl!: SafeResourceUrl;
 
-  signalSelection = new FormControl();
-  signalFilterList: string[] = ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'];
+  public signalSelection = new FormControl();
+  public signalFilterList: string[] = ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'];
 
   constructor(private stockRecommendationService: StockRecommendationService,
     private sanitizer: DomSanitizer) {
@@ -37,7 +37,7 @@ export class DailyPredictionsComponent implements OnInit {
     this.refresh();
   }
 
-  refresh() {
+  public refresh() {
     this.isRefreshing = true;
     this.predictions = new RecommendationList();
     this.stockRecommendationService.getDailyPicks().subscribe(x => {
@@ -52,7 +52,7 @@ export class DailyPredictionsComponent implements OnInit {
     });
   }
 
-  filterRecommendations() {
+  public filterRecommendations() {
     const searchString = (this.searchControl.value as string).split(' ').filter(x => x !== '');
     this.missingSymbols = [];
     for(let symbol of searchString) {
@@ -61,7 +61,10 @@ export class DailyPredictionsComponent implements OnInit {
       }
     }
     
-    const signalFilters = this.signalSelection.value as Array<string>;
+    let signalFilters = this.signalSelection.value as Array<string>;
+    if(signalFilters == null) {
+      signalFilters = new Array<string>();
+    }
     const filter = new RecommendationFilterOptions(searchString, signalFilters);
 
     this.predictions.applyFilter(filter);
@@ -71,7 +74,7 @@ export class DailyPredictionsComponent implements OnInit {
     }
   }
 
-  search() {
+  public search() {
     if(this.missingSymbols.length == 0) {
       return;
     }
@@ -97,7 +100,7 @@ export class DailyPredictionsComponent implements OnInit {
     });
   }
 
-  getSearchResultErrorMessage() {
+  public getSearchResultErrorMessage() {
     if (this.searchControl.hasError('notFound')) {
       return "Couldn't find symbol(s): " + this.missingSymbols.join(', ').toUpperCase();
     } else if(this.searchControl.hasError('duplicate')) {
@@ -106,7 +109,7 @@ export class DailyPredictionsComponent implements OnInit {
     return '';
   }
 
-  getSearchMessage() {
+  public getSearchMessage() {
     return 'Searching for ' + this.missingSymbols.join(', ').toUpperCase() + '...';
   }
 }

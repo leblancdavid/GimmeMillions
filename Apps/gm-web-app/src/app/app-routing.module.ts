@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { CryptoComponent } from './crypto/crypto/crypto.component';
 import { MainComponent } from './main.component';
 import { StocksComponent } from './stocks/stocks.component';
+import { CanActivateSuperUser } from './users/auth.guard';
 import { LoginComponent } from './users/login/login.component';
 import { ProfileComponent } from './users/profile/profile.component';
 import { UserManagementComponent } from './users/user-management/user-management.component';
@@ -24,6 +25,7 @@ const routes: Routes = [
       {
         path: 'users',
         component: UserManagementComponent,
+        canActivate: [CanActivateSuperUser]
       },
       {
         path: 'profile',
@@ -34,6 +36,8 @@ const routes: Routes = [
   },
   { path: '',   redirectTo: '/login', pathMatch: 'full' }
 ];
+
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

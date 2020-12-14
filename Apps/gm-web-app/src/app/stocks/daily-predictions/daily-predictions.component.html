@@ -20,17 +20,19 @@
                 </mat-select>
             </mat-form-field>
 
-            <button mat-icon-button style="align-self: center;" color="accent" (click)="search()" [disabled]="missingSymbols.length == 0 || isSearching">
+            <button mat-icon-button style="align-self: center;" color="accent" (click)="search()"
+                [disabled]="missingSymbols.length == 0 || isSearching">
                 <mat-icon>system_update_alt</mat-icon>
             </button>
 
             <mat-form-field>
                 <mat-label>Search</mat-label>
                 <mat-icon matPrefix>search</mat-icon>
-                <input matInput type="text" (keyup)="filterRecommendations()" (keyup.enter)="search()" [formControl]="searchControl">
+                <input matInput type="text" (keyup)="filterRecommendations()" (keyup.enter)="search()"
+                    [formControl]="searchControl">
                 <mat-error *ngIf="searchControl.invalid">{{getSearchResultErrorMessage()}}</mat-error>
             </mat-form-field>
-            
+
             <button mat-icon-button style="align-self: center;" color="primary" (click)="refresh()">
                 <mat-icon>refresh</mat-icon>
             </button>
@@ -42,13 +44,10 @@
         </div>
         <gm-recommendation-list [recommendations]="predictions" [(selectedItem)]="selectedItem">
         </gm-recommendation-list>
-    </div>
-    <div class="daily-predictions-details" *ngIf="!isRefreshing">
-        <div class="wait-spinner" style="margin-top: 16px;" *ngIf="isSearching">
+
+        <div class="wait-spinner" *ngIf="!isRefreshing && isSearching">
             <mat-spinner></mat-spinner>
             <h1>{{getSearchMessage()}}</h1>
         </div>
-        <gm-stock-details [data]="selectedItem" *ngIf="!isSearching"></gm-stock-details>
-        <h1 *ngIf="!selectedItem && !isSearching" class="wait-spinner">No stock selected</h1>
     </div>
 </div>
