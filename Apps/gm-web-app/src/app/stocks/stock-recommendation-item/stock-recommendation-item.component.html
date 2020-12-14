@@ -56,5 +56,9 @@
                 </div>
             </mat-grid-tile>
         </mat-grid-list>
+        <div>
+            <button mat-raised-button color="primary" *ngIf="!isWatching" (click)="watch()">WATCH</button>
+            <button mat-raised-button color="primary" *ngIf="isWatching" (click)="unwatch()">UNWATCH</button>
+        </div>
     </mat-expansion-panel>
 </mat-accordion>

@@ -61,7 +61,10 @@ export class DailyPredictionsComponent implements OnInit {
       }
     }
     
-    const signalFilters = this.signalSelection.value as Array<string>;
+    let signalFilters = this.signalSelection.value as Array<string>;
+    if(signalFilters == null) {
+      signalFilters = new Array<string>();
+    }
     const filter = new RecommendationFilterOptions(searchString, signalFilters);
 
     this.predictions.applyFilter(filter);
