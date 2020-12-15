@@ -35,7 +35,7 @@ namespace GimmeMillions.WebApi
                 context.Database.Migrate();
             });
 
-            DIRegistration.RegisterServices(services);
+            DIRegistration.RegisterServices(services, Configuration);
 
             // configure basic authentication 
             services.AddAuthentication("BasicAuthentication")
