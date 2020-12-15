@@ -31,6 +31,7 @@ namespace GimmeMillions.DataAccess.Clients
                     _clientId = file.ReadLine().Split(' ')[1];
                     _redirectUri = file.ReadLine().Split(' ')[1];
                     _refreshToken = file.ReadLine().Split(' ')[1];
+                    _accessToken = file.ReadLine().Split(' ')[1];
 
                     return true;
                 }
@@ -50,6 +51,7 @@ namespace GimmeMillions.DataAccess.Clients
                     file.WriteLine($"client_id {_clientId}");
                     file.WriteLine($"redirect_uri {_redirectUri}");
                     file.WriteLine($"refresh_token {_refreshToken}");
+                    file.WriteLine($"access_token {_accessToken}");
 
                     return true;
                 }
