@@ -86,7 +86,7 @@ export class UserWatchlistComponent implements OnInit {
 
     forkJoin(recommendationsSearch).subscribe(recommendations => {
       for(const r of recommendations) {
-        this.userWatchlistService.watchlist.add(r);
+        this.userWatchlistService.addToWatchlist(r);
       }
       this.selectedItem = recommendations[0];
       this.isSearching = false;
