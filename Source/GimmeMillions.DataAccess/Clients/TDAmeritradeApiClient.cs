@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -80,7 +81,7 @@ namespace GimmeMillions.DataAccess.Clients
             public string redirect_uri;
         }
 
-        public bool RefreshAuthentication()
+        public HttpResponseMessage RefreshAuthentication()
         {
             try
             {
@@ -97,7 +98,7 @@ namespace GimmeMillions.DataAccess.Clients
                 var response = Task.Run(async () => await _client.PostAsync(url, body.ToFormData())).Result;
                 if (!response.IsSuccessStatusCode)
                 {
-                    return false;
+                    return response;
                 }
 
                 var responseJson = JsonConvert.DeserializeObject<JObject>(response.Content.ReadAsStringAsync().Result);
@@ -106,15 +107,17 @@ namespace GimmeMillions.DataAccess.Clients
 
                 if (string.IsNullOrEmpty(_accessToken) || string.IsNullOrEmpty(_refreshToken) || !TryUpdateAccessFile(_accessFile))
                 {
-                    return false;
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 }
-                return true;
+                return response;
 
             }
             catch (Exception)
             {
-                return false;
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
         }
+
+
     }
 }

@@ -21,7 +21,7 @@ namespace GimmeMillions.WebApi
             services.AddScoped<IUserService, SQLUserRepository>();
 
             var ameritradeClient = new TDAmeritradeApiClient(configuration["TdAccessFile"]);
-            if(!ameritradeClient.RefreshAuthentication())
+            if(!ameritradeClient.RefreshAuthentication().IsSuccessStatusCode)
             {
                 throw new Exception("Could not authenticate into the TD Ameritrade API");
             }
