@@ -118,6 +118,64 @@ namespace GimmeMillions.DataAccess.Clients
             }
         }
 
+        public class PriceHistoryRequest
+        {
+            public string symbol;
+            public string periodType = "ytd";
+            public int period = 0;
+            public string frequencyType ;
+            public int frequency = 1;
+            public DateTime endDate;
+            public DateTime startDate;
 
+            public string GetRequestUrl()
+            {
+                var url = $"https://api.tdameritrade.com/v1/{symbol}/pricehistory?" +
+                    "periodType=" + periodType +
+                    "&period" + period +
+                    "&frequencyType;
+          
+                return url;
+            }
+
+
+        }
+
+        public HttpResponseMessage GetPriceHistory(PriceHistoryRequest requestData)
+        {
+            try
+            {
+                var body = new AuthenticationPostBody()
+                {
+                    grant_type = "refresh_token",
+                    refresh_token = _refreshToken,
+                    access_type = "offline",
+                    client_id = _clientId,
+                    redirect_uri = _redirectUri
+                };
+
+                var url = "https://api.tdameritrade.com/v1/oauth2/token";
+                var response = Task.Run(async () => await _client.PostAsync(url, body.ToFormData())).Result;
+                if (!response.IsSuccessStatusCode)
+                {
+                    return response;
+                }
+
+                var responseJson = JsonConvert.DeserializeObject<JObject>(response.Content.ReadAsStringAsync().Result);
+                _accessToken = (string)responseJson["access_token"];
+                _refreshToken = (string)responseJson["refresh_token"];
+
+                if (string.IsNullOrEmpty(_accessToken) || string.IsNullOrEmpty(_refreshToken) || !TryUpdateAccessFile(_accessFile))
+                {
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                }
+                return response;
+
+            }
+            catch (Exception)
+            {
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            }
+        }
     }
 }
