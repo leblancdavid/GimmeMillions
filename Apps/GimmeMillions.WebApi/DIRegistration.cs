@@ -1,5 +1,4 @@
-﻿using GimmeMillions.DataAccess.Clients;
-using GimmeMillions.DataAccess.Stocks;
+﻿using GimmeMillions.DataAccess.Clients.TDAmeritrade;
 using GimmeMillions.Database;
 using GimmeMillions.Domain.Authentication;
 using GimmeMillions.Domain.Stocks;

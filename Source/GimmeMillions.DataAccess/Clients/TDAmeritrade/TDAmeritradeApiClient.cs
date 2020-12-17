@@ -7,8 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace GimmeMillions.DataAccess.Clients
+namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
 {
+    
+
     public class TDAmeritradeApiClient
     {
         private readonly string _accessFile;
@@ -118,28 +120,7 @@ namespace GimmeMillions.DataAccess.Clients
             }
         }
 
-        public class PriceHistoryRequest
-        {
-            public string symbol;
-            public string periodType = "ytd";
-            public int period = 0;
-            public string frequencyType ;
-            public int frequency = 1;
-            public DateTime endDate;
-            public DateTime startDate;
-
-            public string GetRequestUrl()
-            {
-                var url = $"https://api.tdameritrade.com/v1/{symbol}/pricehistory?" +
-                    "periodType=" + periodType +
-                    "&period" + period +
-                    "&frequencyType;
-          
-                return url;
-            }
-
-
-        }
+        
 
         public HttpResponseMessage GetPriceHistory(PriceHistoryRequest requestData)
         {
