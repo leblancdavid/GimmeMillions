@@ -14,14 +14,14 @@ namespace ModelTrainer
         public class Options
         {
 
-            [Option('p', "pathToModel", Required = true, HelpText = "The path to the model file")]
+            [Option('p', "pathToModel", Required = false, HelpText = "The path to the model file")]
             public string PathToModel { get; set; }
-            [Option('s', "secret", Required = true, HelpText = "The secret for the Coinbase API")]
+            [Option('s', "secret", Required = false, HelpText = "The secret for the Coinbase API")]
             public string ApiSecret { get; set; }
-            [Option('k', "key", Required = true, HelpText = "The Key for the Coinbase API")]
+            [Option('k', "key", Required = false, HelpText = "The Key for the Coinbase API")]
             public string ApiKey { get; set; }
 
-            [Option('x', "passphrase", Required = true, HelpText = "The Passphrase for the Coinbase API")]
+            [Option('x', "passphrase", Required = false, HelpText = "The Passphrase for the Coinbase API")]
             public string ApiPassphrase { get; set; }
         }
         static void Main(string[] args)
@@ -43,11 +43,14 @@ namespace ModelTrainer
 
             var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
-            var trainer = new DonskoyModelTrainer(new DefaultStockRepository(stockSqlDb));
+            var trainer = new EgyptianMauModelTrainer(new DefaultStockRepository(stockSqlDb), "C:\\Stocks\\td_access");
+            trainer.Train("C:\\Stocks\\Models\\EgyptianMau");
+
+            //var trainer = new DonskoyModelTrainer(new DefaultStockRepository(stockSqlDb));
             //trainer.Train("C:\\Stocks\\Models\\Donskoy");
             //trainer.TrainCrypto("C:\\Stocks\\Models\\Donskoy", StockDataPeriod.Minute);
-            var service = new CoinbaseApiAccessService(secret, key, passphrase);
-            trainer.TrainCrypto($"{pathToModels}\\Donskoy", StockDataPeriod.Hour, service);
+            //var service = new CoinbaseApiAccessService(secret, key, passphrase);
+            //trainer.TrainCrypto($"{pathToModels}\\Donskoy", StockDataPeriod.Hour, service);
 
 
             //var trainer = new MarketFuturesTrainer(new DefaultStockRepository(stockSqlDb));

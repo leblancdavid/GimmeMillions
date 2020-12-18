@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -98,6 +99,7 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
 
                 var url = "https://api.tdameritrade.com/v1/oauth2/token";
                 var response = Task.Run(async () => await _client.PostAsync(url, body.ToFormData())).Result;
+               
                 if (!response.IsSuccessStatusCode)
                 {
                     return response;
@@ -111,6 +113,8 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
                 {
                     return new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 }
+
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
                 return response;
 
             }
@@ -126,30 +130,24 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
         {
             try
             {
-                var body = new AuthenticationPostBody()
+                var url = requestData.GetRequestUrl();
+                var response = Task.Run(async () => await _client.GetAsync(url)).Result;
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    grant_type = "refresh_token",
-                    refresh_token = _refreshToken,
-                    access_type = "offline",
-                    client_id = _clientId,
-                    redirect_uri = _redirectUri
-                };
+                    //Re-authenticate and retry the call
+                    var authResponse = RefreshAuthentication();
+                    if (!authResponse.IsSuccessStatusCode) //if auth fails then something is wrong
+                        return response;
 
-                var url = "https://api.tdameritrade.com/v1/oauth2/token";
-                var response = Task.Run(async () => await _client.PostAsync(url, body.ToFormData())).Result;
+                    //Retry the call
+                    response = Task.Run(async () => await _client.GetAsync(url)).Result;
+                }
+
                 if (!response.IsSuccessStatusCode)
                 {
                     return response;
                 }
 
-                var responseJson = JsonConvert.DeserializeObject<JObject>(response.Content.ReadAsStringAsync().Result);
-                _accessToken = (string)responseJson["access_token"];
-                _refreshToken = (string)responseJson["refresh_token"];
-
-                if (string.IsNullOrEmpty(_accessToken) || string.IsNullOrEmpty(_refreshToken) || !TryUpdateAccessFile(_accessFile))
-                {
-                    return new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                }
                 return response;
 
             }

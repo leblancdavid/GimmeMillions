@@ -6,20 +6,24 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
 {
     public class PriceHistoryRequest
     {
-        public string symbol;
-        public string periodType = "ytd";
-        public int period = 0;
-        public string frequencyType;
-        public int frequency = 1;
-        public DateTime endDate;
-        public DateTime startDate;
+        public string Symbol { get; set; }
+        public string FrequencyType { get; set; }
+        public int Frequency { get; set; } = 1;
+        public DateTime EndDate { get; set; }
+        public DateTime StartDate { get; set; }
+
+        public PriceHistoryRequest(string symbol)
+        {
+            Symbol = symbol;
+        }
 
         public string GetRequestUrl()
         {
-            var url = $"https://api.tdameritrade.com/v1/{symbol}/pricehistory?" +
-                "periodType=" + periodType +
-                "&period" + period +
-                "&frequencyType";
+            var url = $"https://api.tdameritrade.com/v1/marketdata/{Symbol}/pricehistory?periodType=year" +
+                "&frequencyType=" + FrequencyType +
+                "&frequency=" + Frequency +
+                "&endDate=" + new DateTimeOffset(EndDate).ToUnixTimeMilliseconds() +
+                "&startDate=" + new DateTimeOffset(StartDate).ToUnixTimeMilliseconds();
 
             return url;
         }
