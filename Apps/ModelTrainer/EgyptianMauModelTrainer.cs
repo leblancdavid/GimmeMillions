@@ -22,7 +22,7 @@ namespace ModelTrainer
         public void Train(string pathToModels)
         {
             //var datasetService = GetRawFeaturesBuySellSignalDatasetService(20, 9);
-            var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(StockDataPeriod.Day, 100, 9);
+            var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(StockDataPeriod.Day, 12, 80, 9);
             var model = new MLStockRangePredictorModel();
 
             int numSamples = 20000;
@@ -95,12 +95,13 @@ namespace ModelTrainer
         private IFeatureDatasetService<FeatureVector> GetCoinbaseIndicatorFeaturesBuySellSignalDatasetService(
             IStockAccessService stockAccessService,
            StockDataPeriod period,
+           int timeSampling = 10,
            int numStockSamples = 40,
            int kernelSize = 9)
         {
             //var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
             //var extractor = new RawCandlesStockFeatureExtractor();
-            var extractor = new StockIndicatorsFeatureExtractionV2(10,
+            var extractor = new StockIndicatorsFeatureExtractionV2(timeSampling,
                 numStockSamples,
                 (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
                 (int)(numStockSamples * 0.8), 5,
@@ -112,12 +113,13 @@ namespace ModelTrainer
         }
 
         private IFeatureDatasetService<FeatureVector> GetIndicatorFeaturesBuySellSignalDatasetService(
-           StockDataPeriod period,
+           StockDataPeriod period, 
+           int timeSampling = 10,
            int numStockSamples = 40,
            int kernelSize = 9)
         {
             var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(_tdAccessFile));
-            var extractor = new StockIndicatorsFeatureExtractionV2(10,
+            var extractor = new StockIndicatorsFeatureExtractionV2(timeSampling,
                 numStockSamples,
                 (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
                 (int)(numStockSamples * 0.8), 5,
@@ -127,6 +129,18 @@ namespace ModelTrainer
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                 period, numStockSamples, kernelSize);
         }
-    
+
+        private IFeatureDatasetService<FeatureVector> GetRawFeaturesBuySellSignalDatasetService(
+          int numStockSamples = 40,
+          int kernelSize = 9)
+        {
+            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(_tdAccessFile));
+            var extractor = new RawCandlesStockFeatureExtractor();
+            //var extractor = new RawPriceStockFeatureExtractor();
+
+            return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+                StockDataPeriod.Day, numStockSamples, kernelSize);
+        }
+
     }
 }

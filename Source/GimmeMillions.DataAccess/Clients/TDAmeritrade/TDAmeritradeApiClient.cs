@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -20,6 +21,7 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
         private string _accessToken;
         private string _refreshToken;
         private readonly HttpClient _client = new HttpClient();
+        private object _throttleLock = new object();
         public TDAmeritradeApiClient(string accessFile)
         {
             _accessFile = accessFile;
@@ -130,26 +132,32 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
         {
             try
             {
-                var url = requestData.GetRequestUrl();
-                var response = Task.Run(async () => await _client.GetAsync(url)).Result;
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                lock(_throttleLock)
                 {
-                    //Re-authenticate and retry the call
-                    var authResponse = RefreshAuthentication();
-                    if (!authResponse.IsSuccessStatusCode) //if auth fails then something is wrong
+                    var url = requestData.GetRequestUrl();
+                    var response = Task.Run(async () => await _client.GetAsync(url)).Result;
+
+                    //Throttle calls
+                    Thread.Sleep(500);
+
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        //Re-authenticate and retry the call
+                        var authResponse = RefreshAuthentication();
+                        if (!authResponse.IsSuccessStatusCode) //if auth fails then something is wrong
+                            return response;
+
+                        //Retry the call
+                        response = Task.Run(async () => await _client.GetAsync(url)).Result;
+                    }
+
+                    if (!response.IsSuccessStatusCode)
+                    {
                         return response;
+                    }
 
-                    //Retry the call
-                    response = Task.Run(async () => await _client.GetAsync(url)).Result;
-                }
-
-                if (!response.IsSuccessStatusCode)
-                {
                     return response;
                 }
-
-                return response;
-
             }
             catch (Exception)
             {
