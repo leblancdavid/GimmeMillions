@@ -94,7 +94,7 @@ namespace GimmeMillions.DataAccess.Stocks
                     return ParseResponseContent(response.Content.ReadAsStringAsync().Result, symbol, period);  //Make sure to add a reference to System.Net.Http.Formatting.dll
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 
             }

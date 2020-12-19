@@ -108,6 +108,35 @@ namespace GimmeMillions.DataAccess.Stocks
             return recommendationSystem;
         }
 
+        public static IStockRecommendationSystem<FeatureVector> GetEgyptianMauRecommendationSystem(
+            IStockAccessService stocksRepo,
+            IStockRecommendationRepository stockRecommendationRepository,
+            string pathToModel)
+        {
+            var period = StockDataPeriod.Day;
+            var numStockSamples = 80;
+            var kernelSize = 9;
+            //var extractor = new RawCandlesStockFeatureExtractor();
+            var extractor = new StockIndicatorsFeatureExtractionV2(12,
+                numStockSamples,
+                (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
+                (int)(numStockSamples * 0.8), 5,
+                (int)(numStockSamples * 0.8), 5,
+                (int)(numStockSamples * 0.8), 5,
+                false);
+            var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+                period, numStockSamples, kernelSize);
+            var model = new MLStockRangePredictorModel();
+            int filterLength = 3;
+            var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
+                pathToModel, "egyptianMau", filterLength);
+
+            model.Load(pathToModel);
+            recommendationSystem.AddModel(model);
+
+            return recommendationSystem;
+        }
+
         public static IStockRecommendationSystem<FeatureVector> GetDonskoyCryptoRecommendationSystem(
             IStockRecommendationRepository stockRecommendationRepository,
             string pathToModel,

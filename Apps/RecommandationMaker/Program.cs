@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using GimmeMillions.DataAccess.Clients.TDAmeritrade;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Database;
 using GimmeMillions.Domain.Features;
@@ -29,6 +30,8 @@ namespace RecommendationMaker
 
             [Option('f', "database", Required = true, HelpText = "The database file to use")]
             public string DatabaseLocation { get; set; }
+            [Option('a', "td-access", Required = true, HelpText = "The ameritrade access file to use")]
+            public string TdAccessFile { get; set; }
         }
 
         static void Main(string[] args)
@@ -48,7 +51,6 @@ namespace RecommendationMaker
                        var context = new GimmeMillionsContext(optionsBuilder.Options);
                        context.Database.Migrate();
                        var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
-                       var stocksRepo = new DefaultStockRepository(stockSqlDb);
                        var recommendationRepo = new SQLStockRecommendationRepository(optionsBuilder.Options);
 
                        if (!string.IsNullOrEmpty(o.WatchlistFile))
@@ -56,11 +58,12 @@ namespace RecommendationMaker
                            stockList = GetStockSymbolsFromWatchlistFile(o.WatchlistFile);
                        }
 
-                       recommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(stocksRepo, recommendationRepo,
+                       var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdAccessFile));
+                       recommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(new DefaultStockRepository(stockSqlDb), recommendationRepo,
                             $"{o.PathToModel}\\CatSmallCaps\\CatSmallCaps");
-                       futuresRecommendationSystem = RecommendationSystemFactory.GetDonskoyRecommendationSystem(stocksRepo, recommendationRepo,
-                            $"{o.PathToModel}\\Donskoy\\Futures");
                        model = "cat";
+                       futuresRecommendationSystem = RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(stockAccess, recommendationRepo,
+                            $"{o.PathToModel}\\EgyptianMau\\Futures");
 
                        if (!string.IsNullOrEmpty(o.Date))
                        {
@@ -78,9 +81,9 @@ namespace RecommendationMaker
 
                    });
 
-            RunFuturesRecommendations(futuresRecommendationSystem, model, date);
-            RunCryptoRecommendations(recommendationSystem, model, date);
-            RunDailyRecommendations(recommendationSystem, stockList, model, date);
+            RunFuturesRecommendations(futuresRecommendationSystem, "egyptianMau", date);
+            RunCryptoRecommendations(recommendationSystem, "cat", date);
+            RunDailyRecommendations(recommendationSystem, stockList, "cat", date);
 
         }
 

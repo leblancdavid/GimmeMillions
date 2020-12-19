@@ -17,7 +17,7 @@
                     ${{item.predictedLowTarget | number : '1.2-2'}}</div>
             </div>
         </mat-expansion-panel-header>
-        <mat-grid-list cols="2" rowHeight="10:1">
+        <mat-grid-list cols="2" rowHeight="32px">
             <mat-grid-tile>
                 <div class="stock-detail-row">
                     <span>Signal</span>
@@ -57,7 +57,7 @@
             </mat-grid-tile>
         </mat-grid-list>
         <div class="stock-detail-actions">
-            <button mat-button color="accent" (click)="watch()" disabled>DETAILS</button>
+            <button mat-button disabled>DETAILS</button>
             <button mat-raised-button color="primary" *ngIf="!isWatching" (click)="watch($event)">WATCH</button>
             <button mat-raised-button color="primary" *ngIf="isWatching" (click)="unwatch($event)">UNWATCH</button>
         </div>
