@@ -1,4 +1,5 @@
 ﻿using GimmeMillions.DataAccess.Clients.TDAmeritrade;
+using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Database;
 using GimmeMillions.Domain.Authentication;
 using GimmeMillions.Domain.Stocks;
@@ -16,7 +17,7 @@ namespace GimmeMillions.WebApi
             services.AddScoped<IStockRecommendationRepository, SQLStockRecommendationRepository>();
             services.AddScoped<IStockHistoryRepository, SQLStockHistoryRepository>();
             services.AddScoped<IStockRepository, DefaultStockRepository>();
-            services.AddScoped<IRecommendationSystemProvider, DonskoyRecommendationSystemProvider>();
+            services.AddScoped<IRecommendationSystemProvider, EgyptianMauRecommendationSystemProvider>();
             services.AddScoped<IUserService, SQLUserRepository>();
 
             var ameritradeClient = new TDAmeritradeApiClient(configuration["TdAccessFile"]);
@@ -24,6 +25,8 @@ namespace GimmeMillions.WebApi
             {
                 throw new Exception("Could not authenticate into the TD Ameritrade API");
             }
+            services.AddSingleton(ameritradeClient);
+            services.AddScoped<IStockAccessService, TDAmeritradeStockAccessService>();
 
         }
     }
