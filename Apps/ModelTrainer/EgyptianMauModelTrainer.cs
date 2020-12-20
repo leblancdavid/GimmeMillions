@@ -39,16 +39,16 @@ namespace ModelTrainer
             model.Train(trainingData, 0.0, new SignalOutputMapper());
             model.Save(pathToModels + "\\Futures");
 
-            //trainingData.Clear();
-            //var stockFilter = new DefaultStockFilter(
-            //        maxPercentHigh: 50.0m,
-            //    maxPercentLow: 50.0m,
-            //    minPrice: 2.0m,
-            //    maxPrice: 50.0m,
-            //    minVolume: 1000.0m);
-            //trainingData.AddRange(datasetService.GetAllTrainingData(stockFilter, true, numSamples));
-            //model.Train(trainingData, 0.0, new SignalOutputMapper());
-            //model.Save(pathToModels + "\\Stocks");
+            trainingData.Clear();
+            var stockFilter = new DefaultStockFilter(
+                    maxPercentHigh: 50.0m,
+                maxPercentLow: 50.0m,
+                minPrice: 1.0m,
+                maxPrice: decimal.MaxValue,
+                minVolume: 10000.0m);
+            trainingData.AddRange(datasetService.GetAllTrainingData(stockFilter, true, numSamples));
+            model.Train(trainingData, 0.0, new SignalOutputMapper());
+            model.Save(pathToModels + "\\Stocks");
         }
 
         public void TrainCrypto(string pathToModels, StockDataPeriod period, IStockAccessService stockAccessService)

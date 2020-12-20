@@ -10,9 +10,11 @@ namespace GimmeMillions.DataAccess.Stocks
     public class TDAmeritradeStockAccessService : IStockAccessService
     {
         private readonly TDAmeritradeApiClient _client;
-        public TDAmeritradeStockAccessService(TDAmeritradeApiClient client)
+        private readonly IStockSymbolsRepository _stockSymbolsRepository;
+        public TDAmeritradeStockAccessService(TDAmeritradeApiClient client, IStockSymbolsRepository stockSymbolsRepository)
         {
             _client = client;
+            _stockSymbolsRepository = stockSymbolsRepository;
         }
 
         public IEnumerable<StockData> GetStocks(string symbol, StockDataPeriod period, int limit = -1)
@@ -110,7 +112,7 @@ namespace GimmeMillions.DataAccess.Stocks
 
         public IEnumerable<string> GetSymbols()
         {
-            throw new System.NotImplementedException();
+            return _stockSymbolsRepository.GetStockSymbols();
         }
 
         public IEnumerable<StockData> UpdateStocks(string symbol, StockDataPeriod period, int limit = -1)
