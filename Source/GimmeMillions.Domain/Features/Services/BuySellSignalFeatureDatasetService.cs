@@ -64,12 +64,9 @@ namespace GimmeMillions.Domain.Features
             //foreach (var stock in stocks)
             {
                 List<StockData> stocks = null;
-                lock (updateLock)
-                {
-                    stocks = updateStocks ?
+                stocks = updateStocks ?
                       _stockRepository.UpdateStocks(symbol, Period).ToList() :
                       _stockRepository.GetStocks(symbol, Period).ToList();
-                }
 
                 if (!stocks.Any())
                 {
