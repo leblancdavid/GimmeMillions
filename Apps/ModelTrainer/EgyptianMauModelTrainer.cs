@@ -13,9 +13,13 @@ namespace ModelTrainer
     class EgyptianMauModelTrainer
     {
         private IStockRepository _stockRepository;
+        private IStockSymbolsRepository _stockSymbolsRepository;
         private string _tdAccessFile;
-        public EgyptianMauModelTrainer(IStockRepository stockRepository, string tdAccessFile)
+        public EgyptianMauModelTrainer(IStockRepository stockRepository, 
+            IStockSymbolsRepository stockSymbolsRepository, 
+            string tdAccessFile)
         {
+            _stockSymbolsRepository = stockSymbolsRepository;
             _stockRepository = stockRepository;
             _tdAccessFile = tdAccessFile;
         }
@@ -118,7 +122,7 @@ namespace ModelTrainer
            int numStockSamples = 40,
            int kernelSize = 9)
         {
-            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(_tdAccessFile));
+            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(_tdAccessFile), _stockSymbolsRepository);
             var extractor = new StockIndicatorsFeatureExtractionV2(timeSampling,
                 numStockSamples,
                 (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
@@ -134,7 +138,7 @@ namespace ModelTrainer
           int numStockSamples = 40,
           int kernelSize = 9)
         {
-            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(_tdAccessFile));
+            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(_tdAccessFile), _stockSymbolsRepository);
             var extractor = new RawCandlesStockFeatureExtractor();
             //var extractor = new RawPriceStockFeatureExtractor();
 

@@ -42,7 +42,9 @@ namespace ModelTrainer
 
             var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
-            var trainer = new EgyptianMauModelTrainer(new DefaultStockRepository(stockSqlDb), "C:\\Stocks\\td_access");
+            var trainer = new EgyptianMauModelTrainer(new DefaultStockRepository(stockSqlDb), 
+                new StockSymbolsFile("nasdaq_screener.csv"),
+                "C:\\Stocks\\td_access");
             trainer.Train("C:\\Stocks\\Models\\EgyptianMau");
 
             //var trainer = new DonskoyModelTrainer(new DefaultStockRepository(stockSqlDb));

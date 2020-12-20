@@ -52,12 +52,8 @@ namespace RecommendationMaker
                        var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
                        var recommendationRepo = new SQLStockRecommendationRepository(optionsBuilder.Options);
 
-                       if (!string.IsNullOrEmpty(o.WatchlistFile))
-                       {
-                           stockList = GetStockSymbolsFromWatchlistFile(o.WatchlistFile);
-                       }
-
-                       var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdAccessFile));
+                       var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdAccessFile), 
+                           new StockSymbolsFile(o.WatchlistFile));
                        recommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(new DefaultStockRepository(stockSqlDb), recommendationRepo,
                             $"{o.PathToModel}\\CatSmallCaps\\CatSmallCaps");
                        model = "cat";
