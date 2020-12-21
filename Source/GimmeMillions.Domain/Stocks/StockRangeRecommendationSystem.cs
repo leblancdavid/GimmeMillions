@@ -108,44 +108,51 @@ namespace GimmeMillions.Domain.Stocks
             var recommendations = new ConcurrentBag<StockRecommendation>();
 
             var saveLock = new object();
-            Parallel.ForEach(symbols, symbol =>
-            //foreach(var symbol in symbols)
+            try
             {
-                List<StockData> stockData;
-                stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol, _featureDatasetService.Period).ToList();
-
-                if (!stockData.Any())
+                Parallel.ForEach(symbols, new ParallelOptions() { MaxDegreeOfParallelism = 2 }, symbol =>
+                //foreach(var symbol in symbols)
                 {
-                    //continue;
-                    return;
-                }
+                    List<StockData> stockData;
+                    stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol, _featureDatasetService.Period).ToList();
 
-                stockData.Reverse();
-                if (filter != null && !filter.Pass(StockData.Combine(stockData.Take(_filterLength))))
-                {
-                    //continue;
-                    return;
-                }
-                var lastStock = stockData.First();
+                    if (!stockData.Any())
+                    {
+                        //continue;
+                        return;
+                    }
 
-                var feature = _featureDatasetService.GetFeatureVector(symbol, date);
-                if (feature.IsFailure)
-                {
-                    //continue;
-                    return;
-                }
-                var result = model.Predict(feature.Value);
-                var rec = new StockRecommendation(_systemId, date, symbol,
-                    (decimal)result.PredictedHigh, (decimal)result.PredictedLow,
-                    (decimal)result.Sentiment, lastStock.Close);
-                recommendations.Add(rec);
+                    stockData.Reverse();
+                    if (filter != null && !filter.Pass(StockData.Combine(stockData.Take(_filterLength))))
+                    {
+                        //continue;
+                        return;
+                    }
+                    var lastStock = stockData.First();
 
-                lock (saveLock)
-                {
-                    _stockRecommendationRepository.AddRecommendation(rec);
-                }
+                    var feature = _featureDatasetService.GetFeatureVector(symbol, date);
+                    if (feature.IsFailure)
+                    {
+                        //continue;
+                        return;
+                    }
+                    var result = model.Predict(feature.Value);
+                    var rec = new StockRecommendation(_systemId, date, symbol,
+                        (decimal)result.PredictedHigh, (decimal)result.PredictedLow,
+                        (decimal)result.Sentiment, lastStock.Close);
+                    recommendations.Add(rec);
+
+                    lock (saveLock)
+                    {
+                        _stockRecommendationRepository.AddRecommendation(rec);
+                    }
                 //}
-            });
+                });
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
 
             return recommendations.ToList().OrderByDescending(x => x.Sentiment);
         }

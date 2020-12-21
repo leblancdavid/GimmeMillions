@@ -15,4 +15,10 @@
     <ProjectReference Include="..\..\Source\GimmeMillions.Database\GimmeMillions.Database.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="nasdaq_screener.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -101,7 +101,7 @@ namespace GimmeMillions.DataAccess.Stocks
                 }
             }
 
-            return new PriceHistoryRequest(symbol)
+            return new PriceHistoryRequest(_client.ApiKey, symbol)
             {
                 EndDate = endDate,
                 StartDate = startDate,

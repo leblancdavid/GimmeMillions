@@ -28,6 +28,14 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
             TryReadAccessFile(accessFile);
         }
 
+        public string ApiKey
+        {
+            get
+            {
+                return _clientId;
+            }
+        }
+
         private bool TryReadAccessFile(string accessFile)
         {
             try
@@ -135,8 +143,13 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
                 var url = requestData.GetRequestUrl();
                 var response = Task.Run(async () => await _client.GetAsync(url)).Result;
 
-                //Throttle calls
+                CancellationTokenSource source = new CancellationTokenSource();
+
                 Thread.Sleep(500);
+                //Task.Run(async delegate
+                //{
+                //    await Task.Delay(500, source.Token);
+                //}).Wait();
 
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
