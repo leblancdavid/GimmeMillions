@@ -6,14 +6,12 @@ namespace GimmeMillions.WebApi.Services
 {
     public class EgyptianMauRecommendationSystemProvider : IRecommendationSystemProvider
     {
-        private IStockRepository _stockRepository;
         private IStockAccessService _stockAccessService;
         private IStockRecommendationRepository _stockRecommendationRepository;
-        public EgyptianMauRecommendationSystemProvider(IStockRepository stockRepository,
+        public EgyptianMauRecommendationSystemProvider(
             IStockAccessService stockAccessService,
             IStockRecommendationRepository stockRecommendationRepository)
         {
-            _stockRepository = stockRepository;
             _stockAccessService = stockAccessService;
             _stockRecommendationRepository = stockRecommendationRepository;
         }
@@ -36,10 +34,10 @@ namespace GimmeMillions.WebApi.Services
 
         public IStockRecommendationSystem<FeatureVector> GetStocksRecommendations()
         {
-            return RecommendationSystemFactory.GetCatRecommendationSystem(
-                _stockRepository,
+            return RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(
+                _stockAccessService,
                 _stockRecommendationRepository,
-                "Resources\\Models\\CatSmallCaps");
+                "Resources\\Models\\Stocks");
         }
     }
 }
