@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace GimmeMillions.SQLDataAccess.Migrations
+namespace GimmeMillions.Database.Migrations
 {
     [DbContext(typeof(GimmeMillionsContext))]
     partial class GimmeMillionsContextModelSnapshot : ModelSnapshot

@@ -4,7 +4,6 @@ using GimmeMillions.Database;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.Domain.Stocks.Filters;
-using GimmeMillions.SQLDataAccess;
 using Microsoft.EntityFrameworkCore;
 
 namespace ModelTrainer
@@ -37,14 +36,16 @@ namespace ModelTrainer
                   });
 
             var optionsBuilder = new DbContextOptionsBuilder<GimmeMillionsContext>();
-            optionsBuilder.UseSqlite($"Data Source=C:\\Stocks\\gm.db");
+            optionsBuilder.UseSqlite($"Data Source=C:\\Gimmillions\\Server\\gm.db");
             var context = new GimmeMillionsContext(optionsBuilder.Options);
             context.Database.Migrate();
 
             var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
-            var trainer = new EgyptianMauModelTrainer(new DefaultStockRepository(stockSqlDb), "C:\\Stocks\\td_access");
-            trainer.Train("C:\\Stocks\\Models\\EgyptianMau");
+            var trainer = new EgyptianMauModelTrainer(new DefaultStockRepository(stockSqlDb), 
+                new StockSymbolsFile("nasdaq_screener.csv"),
+                "C:\\Gimmillions\\Server\\td_access");
+            trainer.Train("C:\\Gimmillions\\Server\\Resources\\Models\\EgyptianMau");
 
             //var trainer = new DonskoyModelTrainer(new DefaultStockRepository(stockSqlDb));
             //trainer.Train("C:\\Stocks\\Models\\Donskoy");

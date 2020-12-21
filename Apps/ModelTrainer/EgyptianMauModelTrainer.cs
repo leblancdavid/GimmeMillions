@@ -13,9 +13,13 @@ namespace ModelTrainer
     class EgyptianMauModelTrainer
     {
         private IStockRepository _stockRepository;
+        private IStockSymbolsRepository _stockSymbolsRepository;
         private string _tdAccessFile;
-        public EgyptianMauModelTrainer(IStockRepository stockRepository, string tdAccessFile)
+        public EgyptianMauModelTrainer(IStockRepository stockRepository, 
+            IStockSymbolsRepository stockSymbolsRepository, 
+            string tdAccessFile)
         {
+            _stockSymbolsRepository = stockSymbolsRepository;
             _stockRepository = stockRepository;
             _tdAccessFile = tdAccessFile;
         }
@@ -39,16 +43,16 @@ namespace ModelTrainer
             model.Train(trainingData, 0.0, new SignalOutputMapper());
             model.Save(pathToModels + "\\Futures");
 
-            //trainingData.Clear();
-            //var stockFilter = new DefaultStockFilter(
-            //        maxPercentHigh: 50.0m,
-            //    maxPercentLow: 50.0m,
-            //    minPrice: 2.0m,
-            //    maxPrice: 50.0m,
-            //    minVolume: 1000.0m);
-            //trainingData.AddRange(datasetService.GetAllTrainingData(stockFilter, true, numSamples));
-            //model.Train(trainingData, 0.0, new SignalOutputMapper());
-            //model.Save(pathToModels + "\\Stocks");
+            trainingData.Clear();
+            var stockFilter = new DefaultStockFilter(
+                    maxPercentHigh: 50.0m,
+                maxPercentLow: 50.0m,
+                minPrice: 1.0m,
+                maxPrice: decimal.MaxValue,
+                minVolume: 10000.0m);
+            trainingData.AddRange(datasetService.GetAllTrainingData(stockFilter, true, numSamples));
+            model.Train(trainingData, 0.0, new SignalOutputMapper());
+            model.Save(pathToModels + "\\Stocks");
         }
 
         public void TrainCrypto(string pathToModels, StockDataPeriod period, IStockAccessService stockAccessService)
@@ -118,7 +122,7 @@ namespace ModelTrainer
            int numStockSamples = 40,
            int kernelSize = 9)
         {
-            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(_tdAccessFile));
+            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(_tdAccessFile), _stockSymbolsRepository);
             var extractor = new StockIndicatorsFeatureExtractionV2(timeSampling,
                 numStockSamples,
                 (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
@@ -134,7 +138,7 @@ namespace ModelTrainer
           int numStockSamples = 40,
           int kernelSize = 9)
         {
-            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(_tdAccessFile));
+            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(_tdAccessFile), _stockSymbolsRepository);
             var extractor = new RawCandlesStockFeatureExtractor();
             //var extractor = new RawPriceStockFeatureExtractor();
 

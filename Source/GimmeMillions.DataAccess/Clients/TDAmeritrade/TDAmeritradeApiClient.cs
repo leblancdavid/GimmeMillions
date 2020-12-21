@@ -28,6 +28,14 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
             TryReadAccessFile(accessFile);
         }
 
+        public string ApiKey
+        {
+            get
+            {
+                return _clientId;
+            }
+        }
+
         private bool TryReadAccessFile(string accessFile)
         {
             try
@@ -132,32 +140,34 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
         {
             try
             {
-                lock(_throttleLock)
+                var url = requestData.GetRequestUrl();
+                var response = Task.Run(async () => await _client.GetAsync(url)).Result;
+
+                CancellationTokenSource source = new CancellationTokenSource();
+
+                Thread.Sleep(500);
+                //Task.Run(async delegate
+                //{
+                //    await Task.Delay(500, source.Token);
+                //}).Wait();
+
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    var url = requestData.GetRequestUrl();
-                    var response = Task.Run(async () => await _client.GetAsync(url)).Result;
-
-                    //Throttle calls
-                    Thread.Sleep(500);
-
-                    if (response.StatusCode == HttpStatusCode.Unauthorized)
-                    {
-                        //Re-authenticate and retry the call
-                        var authResponse = RefreshAuthentication();
-                        if (!authResponse.IsSuccessStatusCode) //if auth fails then something is wrong
-                            return response;
-
-                        //Retry the call
-                        response = Task.Run(async () => await _client.GetAsync(url)).Result;
-                    }
-
-                    if (!response.IsSuccessStatusCode)
-                    {
+                    //Re-authenticate and retry the call
+                    var authResponse = RefreshAuthentication();
+                    if (!authResponse.IsSuccessStatusCode) //if auth fails then something is wrong
                         return response;
-                    }
 
+                    //Retry the call
+                    response = Task.Run(async () => await _client.GetAsync(url)).Result;
+                }
+
+                if (!response.IsSuccessStatusCode)
+                {
                     return response;
                 }
+
+                return response;
             }
             catch (Exception)
             {

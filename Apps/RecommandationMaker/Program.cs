@@ -5,7 +5,6 @@ using GimmeMillions.Database;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.Domain.Stocks.Filters;
-using GimmeMillions.SQLDataAccess;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -38,12 +37,12 @@ namespace RecommendationMaker
         {
             Console.WriteLine($"Running recommendations... args: {string.Join(" ", args)}");
             var optionsBuilder = new DbContextOptionsBuilder<GimmeMillionsContext>();
-
-            var stockList = new List<string>();
+            
+            var stockList = new StockSymbolsFile("nasdaq_screener.csv").GetStockSymbols();
             IStockRecommendationSystem<FeatureVector> recommendationSystem = null;
             IStockRecommendationSystem<FeatureVector> futuresRecommendationSystem = null;
             var date = DateTime.Today;
-            string model = "cat";
+            string model = "EgyptianMau";
             Parser.Default.ParseArguments<Options>(args)
                    .WithParsed<Options>(o =>
                    {
@@ -53,15 +52,10 @@ namespace RecommendationMaker
                        var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
                        var recommendationRepo = new SQLStockRecommendationRepository(optionsBuilder.Options);
 
-                       if (!string.IsNullOrEmpty(o.WatchlistFile))
-                       {
-                           stockList = GetStockSymbolsFromWatchlistFile(o.WatchlistFile);
-                       }
-
-                       var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdAccessFile));
-                       recommendationSystem = RecommendationSystemFactory.GetCatRecommendationSystem(new DefaultStockRepository(stockSqlDb), recommendationRepo,
-                            $"{o.PathToModel}\\CatSmallCaps\\CatSmallCaps");
-                       model = "cat";
+                       var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdAccessFile), 
+                           new StockSymbolsFile(o.WatchlistFile));
+                       recommendationSystem = RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(stockAccess, recommendationRepo,
+                            $"{o.PathToModel}\\EgyptianMau\\Stocks");
                        futuresRecommendationSystem = RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(stockAccess, recommendationRepo,
                             $"{o.PathToModel}\\EgyptianMau\\Futures");
 
@@ -81,9 +75,9 @@ namespace RecommendationMaker
 
                    });
 
-            RunFuturesRecommendations(futuresRecommendationSystem, "egyptianMau", date);
-            RunCryptoRecommendations(recommendationSystem, "cat", date);
-            RunDailyRecommendations(recommendationSystem, stockList, "cat", date);
+            RunFuturesRecommendations(futuresRecommendationSystem, model, date);
+            RunCryptoRecommendations(recommendationSystem, model, date);
+            RunDailyRecommendations(recommendationSystem, stockList, model, date);
 
         }
 
