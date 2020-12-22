@@ -52,31 +52,31 @@ namespace GimmeMillions.Domain.Stocks
             var stockSymbols = _featureDatasetService.StockAccess.GetSymbols();
 
             var saveLock = new object();
-            Parallel.ForEach(stockSymbols, symbol =>
-            //foreach(var symbol in stockSymbols)
+            //Parallel.ForEach(stockSymbols, symbol =>
+            foreach(var symbol in stockSymbols)
             {
                 List<StockData> stockData;
                 stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol, _featureDatasetService.Period).ToList();
 
                 if (!stockData.Any())
                 {
-                    //continue;
-                    return;
+                    continue;
+                    //return;
                 }
 
                 stockData.Reverse();
                 if (filter != null && !filter.Pass(StockData.Combine(stockData.Take(_filterLength))))
                 {
-                    //continue;
-                    return;
+                    continue;
+                    //return;
                 }
                 var lastStock = stockData.First();
 
                 var feature = _featureDatasetService.GetFeatureVector(symbol, date);
                 if (feature.IsFailure)
                 {
-                    //continue;
-                    return;
+                    continue;
+                    //return;
                 }
                 var result = model.Predict(feature.Value);
                 var rec = new StockRecommendation(_systemId, date, symbol,
@@ -86,8 +86,8 @@ namespace GimmeMillions.Domain.Stocks
                 {
                     _stockRecommendationRepository.AddRecommendation(rec);
                 }
-                //}
-            });
+            }
+            //});
 
             return recommendations.ToList().OrderByDescending(x => x.Sentiment);
         }
@@ -110,31 +110,31 @@ namespace GimmeMillions.Domain.Stocks
             var saveLock = new object();
             try
             {
-                Parallel.ForEach(symbols, new ParallelOptions() { MaxDegreeOfParallelism = 2 }, symbol =>
-                //foreach(var symbol in symbols)
+                //Parallel.ForEach(symbols, new ParallelOptions() { MaxDegreeOfParallelism = 2 }, symbol =>
+                foreach(var symbol in symbols)
                 {
                     List<StockData> stockData;
                     stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol, _featureDatasetService.Period).ToList();
 
                     if (!stockData.Any())
                     {
-                        //continue;
-                        return;
+                        continue;
+                        //return;
                     }
 
                     stockData.Reverse();
                     if (filter != null && !filter.Pass(StockData.Combine(stockData.Take(_filterLength))))
                     {
-                        //continue;
-                        return;
+                        continue;
+                        //return;
                     }
                     var lastStock = stockData.First();
 
                     var feature = _featureDatasetService.GetFeatureVector(symbol, date);
                     if (feature.IsFailure)
                     {
-                        //continue;
-                        return;
+                        continue;
+                        //return;
                     }
                     var result = model.Predict(feature.Value);
                     var rec = new StockRecommendation(_systemId, date, symbol,
@@ -146,8 +146,8 @@ namespace GimmeMillions.Domain.Stocks
                     {
                         _stockRecommendationRepository.AddRecommendation(rec);
                     }
-                //}
-                });
+                }
+                //});
             }
             catch(Exception ex)
             {
@@ -264,15 +264,16 @@ namespace GimmeMillions.Domain.Stocks
             var recommendations = new ConcurrentBag<StockRecommendation>();
 
             var saveLock = new object();
-            Parallel.ForEach(symbols, symbol =>
-            //foreach(var symbol in symbols)
+            //Parallel.ForEach(symbols, symbol =>
+            foreach (var symbol in symbols)
             {
                 var r = GetRecommendation(date, symbol);
-                if(r.IsSuccess)
+                if (r.IsSuccess)
                 {
                     recommendations.Add(r.Value);
                 }
-            });
+            }
+            //});
 
             return recommendations.ToList().OrderByDescending(x => x.Sentiment);
         }
