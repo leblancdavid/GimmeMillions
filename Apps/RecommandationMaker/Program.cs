@@ -29,8 +29,8 @@ namespace RecommendationMaker
 
             [Option('f', "database", Required = true, HelpText = "The database file to use")]
             public string DatabaseLocation { get; set; }
-            [Option('a', "td-access", Required = true, HelpText = "The ameritrade access file to use")]
-            public string TdAccessFile { get; set; }
+            [Option('a', "td-access", Required = true, HelpText = "The ameritrade access api key")]
+            public string TdApiKey { get; set; }
         }
 
         static void Main(string[] args)
@@ -52,7 +52,7 @@ namespace RecommendationMaker
                        var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
                        var recommendationRepo = new SQLStockRecommendationRepository(optionsBuilder.Options);
 
-                       var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdAccessFile), 
+                       var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdApiKey), 
                            new StockSymbolsFile(o.WatchlistFile));
                        recommendationSystem = RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(stockAccess, recommendationRepo,
                             $"{o.PathToModel}\\EgyptianMau\\Stocks");
