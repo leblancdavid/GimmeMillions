@@ -166,11 +166,11 @@ namespace RecommendationMaker
             var filter = new DefaultStockFilter(minVolume: 500000m, maxPercentHigh: 20.0m, maxPercentLow: 20.0m);
             if (stockList.Any())
             {
-                recommendations = recommendationSystem.RunRecommendationsFor(stockList, date, filter);
+                recommendations = recommendationSystem.RunRecommendationsFor(stockList, date, null);
             }
             else
             {
-                recommendations = recommendationSystem.RunAllRecommendations(date, filter);
+                recommendations = recommendationSystem.RunAllRecommendations(date, null);
             }
 
             recommendations = recommendations.OrderByDescending(x => x.Sentiment).ToList();
