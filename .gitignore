@@ -323,3 +323,4 @@ Repository/Recommendations/
 Repository/Stocks/
 
 dist/
+Apps/GimmeMillions.WebApi/gm.db
