@@ -36,7 +36,7 @@ namespace ModelTrainer
                   });
 
             var optionsBuilder = new DbContextOptionsBuilder<GimmeMillionsContext>();
-            optionsBuilder.UseSqlite($"Data Source=C:\\Gimmillions\\Server\\gm.db");
+            optionsBuilder.UseSqlite($"Data Source=gm.db");
             var context = new GimmeMillionsContext(optionsBuilder.Options);
             context.Database.Migrate();
 
@@ -44,8 +44,8 @@ namespace ModelTrainer
 
             var trainer = new EgyptianMauModelTrainer(new DefaultStockRepository(stockSqlDb), 
                 new StockSymbolsFile("nasdaq_screener.csv"),
-                "C:\\Gimmillions\\Server\\td_access");
-            trainer.Train("C:\\Gimmillions\\Server\\Resources\\Models\\EgyptianMau");
+                "");
+            trainer.Train("Resources/Models/EgyptianMau");
 
             //var trainer = new DonskoyModelTrainer(new DefaultStockRepository(stockSqlDb));
             //trainer.Train("C:\\Stocks\\Models\\Donskoy");

@@ -42,7 +42,7 @@ namespace ModelTrainer
             trainingData.AddRange(datasetService.GetTrainingData("^NDX", null, true));
 
             model.Train(trainingData, 0.0, new SignalOutputMapper());
-            model.Save(pathToModels + "\\Futures");
+            model.Save(pathToModels + "/Futures");
 
             trainingData.Clear();
             var stockFilter = new DefaultStockFilter(
@@ -53,7 +53,7 @@ namespace ModelTrainer
                 minVolume: 1000.0m);
             trainingData.AddRange(datasetService.GetAllTrainingData(stockFilter, true, numSamples));
             model.Train(trainingData, 0.0, new SignalOutputMapper());
-            model.Save(pathToModels + "\\Stocks");
+            model.Save(pathToModels + "/Stocks");
         }
 
         public void TrainCrypto(string pathToModels, StockDataPeriod period, IStockAccessService stockAccessService)
@@ -63,7 +63,7 @@ namespace ModelTrainer
 
             int numSamples = 200;
 
-            string modelName = pathToModels + $"\\Crypto{period.ToString()}";
+            string modelName = pathToModels + $"/Crypto{period.ToString()}";
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(datasetService.GetTrainingData("BTC-USD", null, true, numSamples));

@@ -21,7 +21,7 @@ namespace GimmeMillions.WebApi.Services
             return RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(
                 _stockAccessService,
                 _stockRecommendationRepository,
-                "Resources\\Models\\Futures");
+                "Resources/Models/Futures");
         }
 
         public IStockRecommendationSystem<FeatureVector> GetFuturesRecommendations()
@@ -29,7 +29,7 @@ namespace GimmeMillions.WebApi.Services
             return RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(
                 _stockAccessService,
                 _stockRecommendationRepository,
-                "Resources\\Models\\Futures");
+                "Resources/Models/Futures");
         }
 
         public IStockRecommendationSystem<FeatureVector> GetStocksRecommendations()
@@ -37,7 +37,7 @@ namespace GimmeMillions.WebApi.Services
             return RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(
                 _stockAccessService,
                 _stockRecommendationRepository,
-                "Resources\\Models\\Stocks");
+                "Resources/Models/Stocks");
         }
     }
 }

@@ -55,9 +55,9 @@ namespace RecommendationMaker
                        var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdApiKey), 
                            new StockSymbolsFile(o.WatchlistFile));
                        recommendationSystem = RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(stockAccess, recommendationRepo,
-                            $"{o.PathToModel}\\EgyptianMau\\Stocks");
+                            $"{o.PathToModel}/EgyptianMau/Stocks");
                        futuresRecommendationSystem = RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(stockAccess, recommendationRepo,
-                            $"{o.PathToModel}\\EgyptianMau\\Futures");
+                            $"{o.PathToModel}/EgyptianMau/Futures");
 
                        if (!string.IsNullOrEmpty(o.Date))
                        {
@@ -97,7 +97,7 @@ namespace RecommendationMaker
                 .OrderByDescending(x => x.Sentiment).ToList();
 
             using (System.IO.StreamWriter file =
-            new System.IO.StreamWriter($"C:\\Stocks\\{model}-crypto-{date.ToString("yyyy-MM-dd")}"))
+            new System.IO.StreamWriter($"{model}-crypto-{date.ToString("yyyy-MM-dd")}"))
             {
                 string text = $"Stock recommendation for {date.ToString("MM/dd/yyyy")}:";
                 Console.WriteLine(text);
@@ -133,7 +133,7 @@ namespace RecommendationMaker
             recommendations = recommendationSystem.RunRecommendationsFor(stockList, date, null);
 
             using (System.IO.StreamWriter file =
-            new System.IO.StreamWriter($"C:\\Stocks\\{model}-futures-{date.ToString("yyyy-MM-dd")}"))
+            new System.IO.StreamWriter($"{model}-futures-{date.ToString("yyyy-MM-dd")}"))
             {
                 string text = $"Stock recommendation for {date.ToString("MM/dd/yyyy")}:";
                 Console.WriteLine(text);
@@ -175,7 +175,7 @@ namespace RecommendationMaker
 
             recommendations = recommendations.OrderByDescending(x => x.Sentiment).ToList();
             using (System.IO.StreamWriter file =
-            new System.IO.StreamWriter($"C:\\Stocks\\{model}-long-{date.ToString("yyyy-MM-dd")}"))
+            new System.IO.StreamWriter($"{model}-long-{date.ToString("yyyy-MM-dd")}"))
             {
                 string text = $"Stock recommendation for {date.ToString("MM/dd/yyyy")}:";
                 Console.WriteLine(text);
@@ -200,7 +200,7 @@ namespace RecommendationMaker
 
             recommendations = recommendations.OrderBy(x => x.Sentiment).ToList();
             using (System.IO.StreamWriter file =
-            new System.IO.StreamWriter($"C:\\Stocks\\{model}-short-{date.ToString("yyyy-MM-dd")}"))
+            new System.IO.StreamWriter($"{model}-short-{date.ToString("yyyy-MM-dd")}"))
             {
                 string text = $"Stock recommendation for {date.ToString("MM/dd/yyyy")}:";
                 Console.WriteLine(text);

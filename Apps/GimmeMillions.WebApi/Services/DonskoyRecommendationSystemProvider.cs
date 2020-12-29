@@ -20,7 +20,7 @@ namespace GimmeMillions.WebApi.Services
             return RecommendationSystemFactory.GetDonskoyRecommendationSystem(
                 _stockRepository,
                 _stockRecommendationRepository,
-                "Resources\\Models\\Futures");
+                "Resources/Models/Futures");
         }
 
         public IStockRecommendationSystem<FeatureVector> GetFuturesRecommendations()
@@ -28,7 +28,7 @@ namespace GimmeMillions.WebApi.Services
             return RecommendationSystemFactory.GetDonskoyRecommendationSystem(
                 _stockRepository,
                 _stockRecommendationRepository,
-                "Resources\\Models\\Futures");
+                "Resources/Models/Futures");
         }
 
         public IStockRecommendationSystem<FeatureVector> GetStocksRecommendations()
@@ -36,7 +36,7 @@ namespace GimmeMillions.WebApi.Services
             return RecommendationSystemFactory.GetCatRecommendationSystem(
                 _stockRepository,
                 _stockRecommendationRepository,
-                "Resources\\Models\\CatSmallCaps");
+                "Resources/Models/CatSmallCaps");
         }
     }
 }

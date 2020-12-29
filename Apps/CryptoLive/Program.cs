@@ -53,7 +53,7 @@ namespace CryptoLive
             var service = new CoinbaseApiAccessService(secret, key, passphrase);
             var datasetService = GetCoinbaseIndicatorFeaturesBuySellSignalDatasetService(service, period, 100, 15);
             var model = new MLStockRangePredictorModel();
-            model.Load($"{pathToModels}\\Donskoy\\Crypto{period}");
+            model.Load($"{pathToModels}/Donskoy/Crypto{period}");
 
             var simulation = new SimulationCryptoAccountManager();
             if (!File.Exists(simulationAccount))
