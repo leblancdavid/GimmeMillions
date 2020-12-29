@@ -19,6 +19,7 @@ namespace GimmeMillions.WebApi
             services.AddScoped<IStockRepository, DefaultStockRepository>();
             services.AddScoped<IRecommendationSystemProvider, EgyptianMauRecommendationSystemProvider>();
             services.AddScoped<IUserService, SQLUserRepository>();
+            services.AddSingleton<IStockSymbolsRepository>(new StockSymbolsFile("Resources/nasdaq_screener.csv"));
 
             var ameritradeClient = new TDAmeritradeApiClient(configuration["TdApiKey"]);
             services.AddSingleton(ameritradeClient);
