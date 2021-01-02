@@ -114,28 +114,36 @@ namespace GimmeMillions.DataAccess.Stocks
             IStockRecommendationRepository stockRecommendationRepository,
             string pathToModel, ILogger logger)
         {
-            var period = StockDataPeriod.Day;
-            var numStockSamples = 80;
-            var kernelSize = 9;
-            //var extractor = new RawCandlesStockFeatureExtractor();
-            var extractor = new StockIndicatorsFeatureExtractionV2(12,
-                numStockSamples,
-                (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
-                (int)(numStockSamples * 0.8), 5,
-                (int)(numStockSamples * 0.8), 5,
-                (int)(numStockSamples * 0.8), 5,
-                false);
-            var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
-                period, numStockSamples, kernelSize);
-            var model = new MLStockRangePredictorModel();
-            int filterLength = 3;
-            var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
-                pathToModel, "egyptianMau", filterLength, logger);
+            try
+            {
+                var period = StockDataPeriod.Day;
+                var numStockSamples = 80;
+                var kernelSize = 9;
+                //var extractor = new RawCandlesStockFeatureExtractor();
+                var extractor = new StockIndicatorsFeatureExtractionV2(12,
+                    numStockSamples,
+                    (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
+                    (int)(numStockSamples * 0.8), 5,
+                    (int)(numStockSamples * 0.8), 5,
+                    (int)(numStockSamples * 0.8), 5,
+                    false);
+                var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+                    period, numStockSamples, kernelSize);
+                var model = new MLStockRangePredictorModel();
+                int filterLength = 3;
+                var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
+                    pathToModel, "egyptianMau", filterLength, logger);
 
-            model.Load(pathToModel);
-            recommendationSystem.AddModel(model);
+                model.Load(pathToModel);
+                recommendationSystem.AddModel(model);
 
-            return recommendationSystem;
+                return recommendationSystem;
+            }
+            catch(Exception ex)
+            {
+                logger?.LogError(ex.Message);
+                throw ex;
+            }
         }
 
         public static IStockRecommendationSystem<FeatureVector> GetDonskoyCryptoRecommendationSystem(
