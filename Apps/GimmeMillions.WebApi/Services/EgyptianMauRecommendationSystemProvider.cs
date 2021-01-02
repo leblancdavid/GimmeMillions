@@ -1,6 +1,7 @@
 ﻿using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.DataAccess.Stocks;
+using Microsoft.Extensions.Logging;
 
 namespace GimmeMillions.WebApi.Services
 {
@@ -8,12 +9,15 @@ namespace GimmeMillions.WebApi.Services
     {
         private IStockAccessService _stockAccessService;
         private IStockRecommendationRepository _stockRecommendationRepository;
+        private ILogger _logger;
         public EgyptianMauRecommendationSystemProvider(
             IStockAccessService stockAccessService,
-            IStockRecommendationRepository stockRecommendationRepository)
+            IStockRecommendationRepository stockRecommendationRepository,
+            ILogger logger)
         {
             _stockAccessService = stockAccessService;
             _stockRecommendationRepository = stockRecommendationRepository;
+            _logger = logger;
         }
 
         public IStockRecommendationSystem<FeatureVector> GetCryptoRecommendations()
@@ -21,7 +25,7 @@ namespace GimmeMillions.WebApi.Services
             return RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(
                 _stockAccessService,
                 _stockRecommendationRepository,
-                "Resources/Models/Futures");
+                "Resources/Models/Futures", _logger);
         }
 
         public IStockRecommendationSystem<FeatureVector> GetFuturesRecommendations()
@@ -29,7 +33,7 @@ namespace GimmeMillions.WebApi.Services
             return RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(
                 _stockAccessService,
                 _stockRecommendationRepository,
-                "Resources/Models/Futures");
+                "Resources/Models/Futures", _logger);
         }
 
         public IStockRecommendationSystem<FeatureVector> GetStocksRecommendations()
@@ -37,7 +41,7 @@ namespace GimmeMillions.WebApi.Services
             return RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(
                 _stockAccessService,
                 _stockRecommendationRepository,
-                "Resources/Models/Stocks");
+                "Resources/Models/Stocks", _logger);
         }
     }
 }
