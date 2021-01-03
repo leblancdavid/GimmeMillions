@@ -6,6 +6,7 @@ using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.Domain.Stocks.Filters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,6 +44,7 @@ namespace RecommendationMaker
             IStockRecommendationSystem<FeatureVector> futuresRecommendationSystem = null;
             var date = DateTime.Today;
             string model = "EgyptianMau";
+            var logger = LoggerFactory.Create(x => x.AddConsole()).CreateLogger<Program>();
             Parser.Default.ParseArguments<Options>(args)
                    .WithParsed<Options>(o =>
                    {
@@ -55,9 +57,18 @@ namespace RecommendationMaker
                        var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdApiKey), 
                            new StockSymbolsFile(o.WatchlistFile));
                        recommendationSystem = RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(stockAccess, recommendationRepo,
-                            $"{o.PathToModel}/Stocks", null);
+                            $"{o.PathToModel}/Stocks", logger);
+                       if (recommendationSystem == null)
+                       {
+                           Console.WriteLine($"Unable to retrieve stocks model at {o.PathToModel}/Stocks");
+                       }
+
                        futuresRecommendationSystem = RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(stockAccess, recommendationRepo,
-                            $"{o.PathToModel}/Futures", null);
+                            $"{o.PathToModel}/Futures", logger);
+                       if (futuresRecommendationSystem == null)
+                       {
+                           Console.WriteLine($"Unable to retrieve futures model at {o.PathToModel}/Futures");
+                       }
 
                        if (!string.IsNullOrEmpty(o.Date))
                        {
@@ -74,6 +85,11 @@ namespace RecommendationMaker
 
 
                    });
+
+            if (recommendationSystem == null || futuresRecommendationSystem == null)
+            {
+                return;
+            }
 
             RunFuturesRecommendations(futuresRecommendationSystem, model, date);
             RunCryptoRecommendations(recommendationSystem, model, date);
