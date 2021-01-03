@@ -2,6 +2,7 @@
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.Stocks.Filters;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
@@ -22,12 +23,14 @@ namespace GimmeMillions.Domain.Stocks
         private string _pathToModels;
         private string _systemId;
         private int _filterLength = 3;
+        private ILogger _logger;
 
         public StockRangeRecommendationSystem(IFeatureDatasetService<FeatureVector> featureDatasetService,
             IStockRecommendationRepository stockRecommendationRepository,
             string pathToModels,
             string systemId,
-            int filterLength)
+            int filterLength,
+            ILogger logger)
         {
             _featureDatasetService = featureDatasetService;
             _stockRecommendationRepository = stockRecommendationRepository;
@@ -35,6 +38,7 @@ namespace GimmeMillions.Domain.Stocks
             _pathToModels = pathToModels;
             _systemId = systemId;
             _filterLength = filterLength;
+            _logger = logger;
         }
 
         public IStockRecommendationRepository RecommendationRepository => _stockRecommendationRepository;
@@ -51,6 +55,7 @@ namespace GimmeMillions.Domain.Stocks
 
             var stockSymbols = _featureDatasetService.StockAccess.GetSymbols();
 
+            _logger.LogInformation($"Running all recommendations for {date.ToString()}");
             var saveLock = new object();
             Parallel.ForEach(stockSymbols, symbol =>
             //foreach(var symbol in stockSymbols)
@@ -81,6 +86,14 @@ namespace GimmeMillions.Domain.Stocks
                 var result = model.Predict(feature.Value);
                 var rec = new StockRecommendation(_systemId, date, symbol,
                     (decimal)result.PredictedHigh, (decimal)result.PredictedLow, (decimal)result.Sentiment, lastStock.Close);
+
+                var text = $"{rec.Symbol}, " +
+                        $"({Math.Round(rec.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
+                       $"gain: {Math.Round(rec.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                       $"high: {Math.Round(rec.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                       $"loss: {Math.Round(rec.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                       $"low: {Math.Round(rec.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                _logger.LogInformation($"Updating {symbol}: {text}");
                 recommendations.Add(rec);
                 lock (saveLock)
                 {
@@ -107,6 +120,7 @@ namespace GimmeMillions.Domain.Stocks
         {
             var recommendations = new ConcurrentBag<StockRecommendation>();
 
+            _logger?.LogInformation($"Running recommendations for {date.ToString()}");
             var saveLock = new object();
             try
             {
@@ -140,6 +154,15 @@ namespace GimmeMillions.Domain.Stocks
                     var rec = new StockRecommendation(_systemId, date, symbol,
                         (decimal)result.PredictedHigh, (decimal)result.PredictedLow,
                         (decimal)result.Sentiment, lastStock.Close);
+                    
+                    var text = $"{rec.Symbol}, " +
+                        $"({Math.Round(rec.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
+                       $"gain: {Math.Round(rec.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                       $"high: {Math.Round(rec.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                       $"loss: {Math.Round(rec.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                       $"low: {Math.Round(rec.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                    _logger?.LogInformation($"Updating {symbol}: {text}");
+
                     recommendations.Add(rec);
 
                     lock (saveLock)
@@ -151,6 +174,7 @@ namespace GimmeMillions.Domain.Stocks
             }
             catch(Exception ex)
             {
+                _logger?.LogError(ex.Message);
                 throw new Exception(ex.Message);
             }
 

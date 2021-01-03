@@ -24,7 +24,7 @@ namespace GimmeMillions.WebApi.Controllers
         }
 
         [HttpGet("futures")]
-        public IEnumerable<StockRecommendation> GetFutures()
+        public IActionResult GetFutures()
         {
             var system = _provider.GetFuturesRecommendations();
             var recommendations = new List<StockRecommendation>();
@@ -39,7 +39,7 @@ namespace GimmeMillions.WebApi.Controllers
             if (spy.IsSuccess)
                 recommendations.Add(spy.Value);
 
-            return recommendations;
+            return Ok(recommendations);
         }
 
         [HttpGet("stocks/user/{username}")]

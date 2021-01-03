@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace GimmeMillions.WebApi
@@ -56,7 +57,8 @@ namespace GimmeMillions.WebApi
                     UserRole.SuperUser));
             }
 
-
+            var logger = provider.GetService<ILogger<object>>();
+            services.AddSingleton(typeof(ILogger), logger);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

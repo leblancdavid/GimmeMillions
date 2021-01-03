@@ -55,9 +55,9 @@ namespace RecommendationMaker
                        var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdApiKey), 
                            new StockSymbolsFile(o.WatchlistFile));
                        recommendationSystem = RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(stockAccess, recommendationRepo,
-                            $"{o.PathToModel}/EgyptianMau/Stocks");
+                            $"{o.PathToModel}/EgyptianMau/Stocks", null);
                        futuresRecommendationSystem = RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(stockAccess, recommendationRepo,
-                            $"{o.PathToModel}/EgyptianMau/Futures");
+                            $"{o.PathToModel}/EgyptianMau/Futures", null);
 
                        if (!string.IsNullOrEmpty(o.Date))
                        {
