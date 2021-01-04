@@ -324,3 +324,7 @@ Repository/Stocks/
 
 dist/
 Apps/GimmeMillions.WebApi/gm.db
+
+Apps/GimmeMillions.WebApi/gm.db-shm
+
+Apps/GimmeMillions.WebApi/gm.db-wal

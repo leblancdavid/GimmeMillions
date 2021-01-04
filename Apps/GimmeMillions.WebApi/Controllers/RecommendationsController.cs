@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TimeZoneConverter;
 
 namespace GimmeMillions.WebApi.Controllers
 {
@@ -77,7 +78,7 @@ namespace GimmeMillions.WebApi.Controllers
 
         private DateTime GetUpdatedDailyStockDate(int delayHours = 0)
         {
-            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            var timeZoneInfo = TZConvert.GetTimeZoneInfo("Pacific Standard Time");
             var newDateTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, timeZoneInfo);
             if (newDateTime.Hour < 13 + delayHours)
             {
