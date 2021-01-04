@@ -14,6 +14,7 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
     public class TDAmeritradeApiClient
     {
         private readonly HttpClient _client = new HttpClient();
+        private object _throttleLock = new object();
         public TDAmeritradeApiClient(string apiKey)
         {
             ApiKey = apiKey;
@@ -23,16 +24,20 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
 
         public HttpResponseMessage GetPriceHistory(PriceHistoryRequest requestData)
         {
-            try
+            lock(_throttleLock)
             {
-                Thread.Sleep(500);
-                var url = requestData.GetRequestUrl();
-                return Task.Run(async () => await _client.GetAsync(url)).Result;
+                try
+                {
+                    Thread.Sleep(500);
+                    var url = requestData.GetRequestUrl();
+                    return Task.Run(async () => await _client.GetAsync(url)).Result;
+                }
+                catch (Exception)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                }
             }
-            catch (Exception)
-            {
-                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
-            }
+            
         }
     }
 }
