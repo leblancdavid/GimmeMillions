@@ -12,11 +12,13 @@ import { BasicAuthInterceptor } from './users/basic-auth.interceptor';
 import { ErrorInterceptor } from './users/error.interceptor';
 import { StocksModule } from './stocks/stocks.module';
 import { CommonModule } from '@angular/common';
+import { MediaDirective } from './media.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MainComponent
+    MainComponent,
+    MediaDirective
   ],
   imports: [
     CommonModule,
