@@ -12,7 +12,7 @@
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon class="stocks-tab-icon">online_prediction</mat-icon>
-      Daily Predictions
+      <span *gmMedia="'(min-width: 512px)'">Daily Predictions</span>
     </ng-template>
     <div class="stocks-tab-content">
       <gm-daily-predictions></gm-daily-predictions>
@@ -23,7 +23,8 @@
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon class="stocks-tab-icon">playlist_add_check</mat-icon>
-      My Watchlist
+      <span *gmMedia="'(min-width: 512px)'">My Watchlist</span>
+      
     </ng-template>
     <div class="stocks-tab-content">
       <gm-user-watchlist></gm-user-watchlist>
