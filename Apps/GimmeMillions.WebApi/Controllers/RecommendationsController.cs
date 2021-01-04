@@ -77,7 +77,8 @@ namespace GimmeMillions.WebApi.Controllers
 
         private DateTime GetUpdatedDailyStockDate(int delayHours = 0)
         {
-            var newDateTime = DateTime.Now;
+            var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+            var newDateTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, timeZoneInfo);
             if (newDateTime.Hour < 13 + delayHours)
             {
                 return DateTime.Today;
