@@ -10,12 +10,6 @@
             <div class="sentiment-value" [style.color]="fontColor">
                 {{item.sentiment | number : '1.2-2'}}%
             </div>
-            <div class="targets">
-                <div class="high-target buy-color">{{item.prediction | number : '1.2-2'}}% -
-                    ${{item.predictedPriceTarget | number : '1.2-2'}}</div>
-                <div class="low-target sell-color">{{item.lowPrediction | number : '1.2-2'}}% -
-                    ${{item.predictedLowTarget | number : '1.2-2'}}</div>
-            </div>
         </mat-expansion-panel-header>
         <mat-grid-list cols="2" rowHeight="32px">
             <mat-grid-tile>
@@ -33,25 +27,25 @@
             </mat-grid-tile>
             <mat-grid-tile>
                 <div class="stock-detail-row">
-                    <span>Expected Gains</span>
+                    <span>Gains</span>
                     <span class="stock-detail-value buy-color">{{item.prediction | number : '1.2-2'}}%</span>
                 </div>
             </mat-grid-tile>
             <mat-grid-tile>
                 <div class="stock-detail-row">
-                    <span>High Target Price</span>
+                    <span>High</span>
                     <span class="stock-detail-value buy-color">${{item.predictedPriceTarget | number : '1.2-2'}}</span>
                 </div>
             </mat-grid-tile>
             <mat-grid-tile>
                 <div class="stock-detail-row">
-                    <span>Expected Loss</span>
+                    <span>Loss</span>
                     <span class="stock-detail-value sell-color">{{item.lowPrediction | number : '1.2-2'}}%</span>
                 </div>
             </mat-grid-tile>
             <mat-grid-tile>
                 <div class="stock-detail-row">
-                    <span>Low Price Target</span>
+                    <span>Low</span>
                     <span class="stock-detail-value sell-color">${{item.predictedLowTarget | number : '1.2-2'}}</span>
                 </div>
             </mat-grid-tile>

@@ -2,10 +2,8 @@
     <div class="recommendation-table">
         <table matSort (matSortChange)="sortRecommendations($event)" style="width: 100%;">
             <tr class="recommendations-sort-header">
-                <th mat-sort-header="symbol" style="width: 48px;">Symbol</th>
-                <th mat-sort-header="sentiment" style="flex: 1; justify-content: center; display: flex;">Signal</th>
-                <th mat-sort-header="prediction" style="width: 48px; justify-content: center; display: flex;">High</th>
-                <th mat-sort-header="lowPrediction" style="width: 48px; justify-content: center; display: flex;">Low</th>
+                <th mat-sort-header="symbol">Symbol</th>
+                <th mat-sort-header="sentiment">Signal</th>
             </tr>
     
             <tr *ngFor="let r of recommendations.sorted.slice(currentPageStartIndex, currentPageEndIndex)" 
