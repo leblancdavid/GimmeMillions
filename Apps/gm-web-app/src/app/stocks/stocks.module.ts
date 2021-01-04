@@ -14,7 +14,7 @@ import { StockDetailsComponent } from './stock-details/stock-details.component';
 import { DailyPredictionsComponent } from './daily-predictions/daily-predictions.component';
 import { TrendIconComponent } from './stock-recommendation-item/trend-icon/trend-icon.component';
 import { ConsensusPipe } from './stock-recommendation-item/consensus.pipe';
-
+import { ResourcesModule } from '../resources/resources.module';
 
 
 @NgModule({
@@ -36,7 +36,8 @@ import { ConsensusPipe } from './stock-recommendation-item/consensus.pipe';
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    MaterialModule
+    MaterialModule,
+    ResourcesModule
   ]
 })
 export class StocksModule { }

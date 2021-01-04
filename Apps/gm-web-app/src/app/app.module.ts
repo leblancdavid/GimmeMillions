@@ -12,13 +12,12 @@ import { BasicAuthInterceptor } from './users/basic-auth.interceptor';
 import { ErrorInterceptor } from './users/error.interceptor';
 import { StocksModule } from './stocks/stocks.module';
 import { CommonModule } from '@angular/common';
-import { MediaDirective } from './media.directive';
+import { ResourcesModule } from './resources/resources.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
-    MediaDirective
   ],
   imports: [
     CommonModule,
@@ -27,7 +26,8 @@ import { MediaDirective } from './media.directive';
     BrowserAnimationsModule,
     MaterialModule,
     UsersModule,
-    StocksModule
+    StocksModule,
+    ResourcesModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
