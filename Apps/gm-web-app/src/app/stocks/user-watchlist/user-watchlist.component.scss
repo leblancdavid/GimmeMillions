@@ -27,7 +27,7 @@
         align-self: center;
 
         .search-form {
-            width: 148px;
+            flex: 1;
         }
     }
 
@@ -72,4 +72,8 @@
     h1 {
         margin: 24px 0;
     }
+}
+
+.filter-selection-checkbox-label {
+    display: flex;
 }
