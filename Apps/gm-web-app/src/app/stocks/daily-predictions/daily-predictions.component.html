@@ -15,14 +15,19 @@
                     <mat-icon>refresh</mat-icon>
                     <span>Refresh</span>
                 </button>
-                <button mat-menu-item>
-                    <a mat-icon-button color="primary" style="align-self: center;" [href]="exportFileUrl"
-                        download="dailyPredictions.csv">
-                        <mat-icon>archive</mat-icon>
-                    </a>
+                <button mat-menu-item [matMenuTriggerFor]="dailyExportMenu">
+                    <mat-icon>archive</mat-icon>
+                    <span>Export</span>
                 </button>
             </mat-menu>
 
+            <mat-menu #dailyExportMenu="matMenu">
+                <a mat-menu-item style="align-self: center;" [href]="exportFileUrl"
+                    download="dailyPredictions.csv">
+                    <mat-icon>file_copy</mat-icon>
+                    <span>.csv</span>
+                </a>
+            </mat-menu>
             <mat-form-field class="search-form">
                 <mat-label>Search</mat-label>
                 <mat-icon matPrefix>search</mat-icon>

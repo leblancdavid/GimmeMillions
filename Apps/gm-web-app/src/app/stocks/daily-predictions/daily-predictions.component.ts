@@ -50,7 +50,7 @@ export class DailyPredictionsComponent implements OnInit {
     });
   }
 
-  public toggleFilter(event: Event, filter: string) {
+  public toggleFilter(checked: boolean, filter: string) {
     const index = this.signalFilterList.indexOf(filter);
     if(index > -1) {
       this.signalFilterList = this.signalFilterList.splice(index, 1);
