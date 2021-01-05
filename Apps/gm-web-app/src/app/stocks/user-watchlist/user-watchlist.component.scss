@@ -21,13 +21,13 @@
         display: flex;
         flex-direction: row;
         width: 100%;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        height: 64px;
-        align-items: center;
+        justify-content: space-between;
+        align-items: baseline;
+        max-width: 512px;
+        align-self: center;
 
-        * {
-            margin: 0 8px;
+        .search-form {
+            flex: 1;
         }
     }
 
@@ -72,4 +72,8 @@
     h1 {
         margin: 24px 0;
     }
+}
+
+.filter-selection-checkbox-label {
+    display: flex;
 }

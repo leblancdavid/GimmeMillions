@@ -41,6 +41,7 @@ export class RecommendationListComponent implements OnInit {
   }
 
   sortRecommendations(sort: Sort) {
+    this.selectedItem = undefined;
     this.recommendations.applySort(sort);
   }
 

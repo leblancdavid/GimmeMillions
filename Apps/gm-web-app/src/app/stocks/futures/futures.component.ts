@@ -23,11 +23,9 @@ export class FuturesComponent implements OnInit {
 
   refresh() {
     this.futures = new RecommendationList();
+    this.selectedFuture = undefined;
     this.stockRecommendationService.getFutures().subscribe(x => {
       this.futures.recommendations = x;
-      if(this.futures.recommendations.length > 0) {
-        this.selectedFuture = this.futures.recommendations[0];
-      }
     });
   }
 

@@ -22,8 +22,7 @@ export class UserWatchlistComponent implements OnInit {
   public missingSymbols: string[] = [];
 
   public exportFileUrl!: SafeResourceUrl;
-  public signalSelection = new FormControl();
-  public signalFilterList: string[] = ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'];
+  public signalFilterList: string[] = [];
   
   constructor(public userWatchlistService: UserWatchlistService,
     private stockRecommendationService: StockRecommendationService,
@@ -38,10 +37,22 @@ export class UserWatchlistComponent implements OnInit {
 
   public refresh() {
     this.isRefreshing = true;
+    this.selectedItem = undefined;
     this.userWatchlistService.refreshWatchlist().subscribe(x => {
       this.isRefreshing = false;
       this.exportFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(this.userWatchlistService.watchlist.exportSorted()));
     });
+  }
+
+  public toggleFilter(event: MouseEvent, filter: string) {
+    event.stopImmediatePropagation();
+    const index = this.signalFilterList.indexOf(filter);
+    if(index > -1) {
+      this.signalFilterList.splice(index, 1);
+    } else {
+      this.signalFilterList.push(filter);
+    }
+    this.filterRecommendations();
   }
 
   public filterRecommendations() {
@@ -53,18 +64,15 @@ export class UserWatchlistComponent implements OnInit {
       }
     }
     
-    let signalFilters = this.signalSelection.value as Array<string>;
+    let signalFilters = this.signalFilterList;
     if(signalFilters == null) {
       signalFilters = new Array<string>();
     }
     const filter = new RecommendationFilterOptions(searchString, signalFilters);
 
-
+    this.selectedItem = undefined;
     this.userWatchlistService.watchlist.applyFilter(filter);
     this.exportFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(this.userWatchlistService.watchlist.exportSorted()));
-    if(this.userWatchlistService.watchlist.sorted.length > 0) {
-      this.selectedItem = this.userWatchlistService.watchlist.sorted[0];
-    }
   }
 
   public onSearchKeyup(event: KeyboardEvent) {
@@ -76,7 +84,7 @@ export class UserWatchlistComponent implements OnInit {
       return;
     }
     
-    this.signalSelection.setValue(new Array<string>());
+    this.signalFilterList = [];
     this.isSearching = true;
     this.selectedItem = undefined;
     let recommendationsSearch = new Array<Observable<StockRecommendation>>();
@@ -88,7 +96,6 @@ export class UserWatchlistComponent implements OnInit {
       for(const r of recommendations) {
         this.userWatchlistService.addToWatchlist(r);
       }
-      this.selectedItem = recommendations[0];
       this.isSearching = false;
       this.missingSymbols = [];
     }, error => {
