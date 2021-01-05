@@ -6,26 +6,24 @@
     </div>
     <div class="daily-predictions-list" *ngIf="!isRefreshing">
         <div class="daily-predictions-filters">
-            <mat-form-field appearance="fill">
-                <mat-label>Signal Type</mat-label>
-                <mat-select [formControl]="signalSelection" multiple (selectionChange)="filterRecommendations()">
-                    <mat-select-trigger>
-                        {{signalSelection.value ? signalSelection.value[0] : ''}}
-                        <span *ngIf="signalSelection.value?.length > 1" class="example-additional-selection">
-                            (+{{signalSelection.value.length - 1}}
-                            {{signalSelection.value?.length === 2 ? 'other' : 'others'}})
-                        </span>
-                    </mat-select-trigger>
-                    <mat-option *ngFor="let signal of signalFilterList" [value]="signal">{{signal}}</mat-option>
-                </mat-select>
-            </mat-form-field>
 
-            <button mat-icon-button style="align-self: center;" color="accent" (click)="search()"
-                [disabled]="missingSymbols.length == 0 || isSearching">
-                <mat-icon>system_update_alt</mat-icon>
+            <button mat-icon-button [matMenuTriggerFor]="dailyOptionsMenu">
+                <mat-icon>more_vert</mat-icon>
             </button>
+            <mat-menu #dailyOptionsMenu="matMenu">
+                <button mat-menu-item (click)="refresh()">
+                    <mat-icon>refresh</mat-icon>
+                    <span>Refresh</span>
+                </button>
+                <button mat-menu-item>
+                    <a mat-icon-button color="primary" style="align-self: center;" [href]="exportFileUrl"
+                        download="dailyPredictions.csv">
+                        <mat-icon>archive</mat-icon>
+                    </a>
+                </button>
+            </mat-menu>
 
-            <mat-form-field>
+            <mat-form-field class="search-form">
                 <mat-label>Search</mat-label>
                 <mat-icon matPrefix>search</mat-icon>
                 <input matInput type="text" (keyup)="filterRecommendations()" (keyup.enter)="search()"
@@ -33,13 +31,56 @@
                 <mat-error *ngIf="searchControl.invalid">{{getSearchResultErrorMessage()}}</mat-error>
             </mat-form-field>
 
-            <button mat-icon-button style="align-self: center;" color="primary" (click)="refresh()">
-                <mat-icon>refresh</mat-icon>
+            <button mat-icon-button [matMenuTriggerFor]="dailyFilterMenu">
+                <mat-icon>filter_alt</mat-icon>
             </button>
-            <a mat-icon-button color="primary" style="align-self: center;" [href]="exportFileUrl"
-                download="dailyPredictions.csv">
-                <mat-icon>archive</mat-icon>
-            </a>
+            <mat-menu #dailyFilterMenu="matMenu">
+                <button mat-menu-item>
+                    <mat-checkbox [checked]="signalFilterList.indexOf('Strong Buy') > -1"
+                        (change)="toggleFilter($event.checked, 'Strong Buy')">
+                        <div class="filter-selection-checkbox-label">
+                            <span style="margin-right: 8px;">Strong Buy</span>
+                            <gm-trend-icon [signal]="100"></gm-trend-icon>
+                        </div>
+                    </mat-checkbox>
+                </button>
+                <button mat-menu-item>
+                    <mat-checkbox>
+                        <div class="filter-selection-checkbox-label">
+                            <span style="margin-right: 8px;">Buy</span>
+                            <gm-trend-icon [signal]="80"></gm-trend-icon>
+                        </div>
+                    </mat-checkbox>
+                </button>
+                <button mat-menu-item>
+                    <mat-checkbox>
+                        <div class="filter-selection-checkbox-label">
+                            <span style="margin-right: 8px;">Hold</span>
+                            <gm-trend-icon [signal]="50"></gm-trend-icon>
+                        </div>
+                    </mat-checkbox>
+                </button>
+                <button mat-menu-item>
+                    <mat-checkbox>
+                        <div class="filter-selection-checkbox-label">
+                            <span style="margin-right: 8px;">Sell</span>
+                            <gm-trend-icon [signal]="20"></gm-trend-icon>
+                        </div>
+                    </mat-checkbox>
+                </button>
+                <button mat-menu-item>
+                    <mat-checkbox>
+                        <div class="filter-selection-checkbox-label">
+                            <span style="margin-right: 8px;">Strong Sell</span>
+                            <gm-trend-icon [signal]="0"></gm-trend-icon>
+                        </div>
+                    </mat-checkbox>
+                </button>
+            </mat-menu>
+
+
+
+
 
         </div>
         <gm-recommendation-list [recommendations]="predictions" [(selectedItem)]="selectedItem">
