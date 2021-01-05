@@ -38,22 +38,21 @@ export class DailyPredictionsComponent implements OnInit {
   public refresh() {
     this.isRefreshing = true;
     this.predictions = new RecommendationList();
+    this.selectedItem = undefined;
     this.stockRecommendationService.getDailyPicks().subscribe(x => {
       this.isRefreshing = false;
       this.predictions.recommendations = x;
       this.exportFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(this.predictions.exportSorted()));
-      if(this.predictions.recommendations.length > 0) {
-        this.selectedItem = this.predictions.recommendations[0];
-      }
     }, error => {
       this.isRefreshing = false;
     });
   }
 
-  public toggleFilter(checked: boolean, filter: string) {
+  public toggleFilter(event: MouseEvent, filter: string) {
+    event.stopImmediatePropagation();
     const index = this.signalFilterList.indexOf(filter);
     if(index > -1) {
-      this.signalFilterList = this.signalFilterList.splice(index, 1);
+      this.signalFilterList.splice(index, 1);
     } else {
       this.signalFilterList.push(filter);
     }
@@ -69,17 +68,10 @@ export class DailyPredictionsComponent implements OnInit {
       }
     }
     
-    let signalFilters = this.signalFilterList;
-    if(signalFilters == null) {
-      signalFilters = new Array<string>();
-    }
-    const filter = new RecommendationFilterOptions(searchString, signalFilters);
-
+    this.selectedItem = undefined;
+    const filter = new RecommendationFilterOptions(searchString, this.signalFilterList);
     this.predictions.applyFilter(filter);
     this.exportFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(this.predictions.exportSorted()));
-    if(this.predictions.sorted.length > 0) {
-      this.selectedItem = this.predictions.sorted[0];
-    }
   }
 
   public search() {
@@ -119,5 +111,13 @@ export class DailyPredictionsComponent implements OnInit {
 
   public getSearchMessage() {
     return 'Searching for ' + this.missingSymbols.join(', ').toUpperCase() + '...';
+  }
+
+  public isFilterChecked(filter: string) {
+    const index = this.signalFilterList.indexOf(filter);
+    if(index > -1) {
+      return true;
+    }
+    return false;
   }
 }
