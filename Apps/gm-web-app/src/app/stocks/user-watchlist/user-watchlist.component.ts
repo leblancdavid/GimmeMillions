@@ -22,8 +22,7 @@ export class UserWatchlistComponent implements OnInit {
   public missingSymbols: string[] = [];
 
   public exportFileUrl!: SafeResourceUrl;
-  public signalSelection = new FormControl();
-  public signalFilterList: string[] = ['Strong Buy', 'Buy', 'Hold', 'Sell', 'Strong Sell'];
+  public signalFilterList: string[] = [];
   
   constructor(public userWatchlistService: UserWatchlistService,
     private stockRecommendationService: StockRecommendationService,
@@ -44,6 +43,16 @@ export class UserWatchlistComponent implements OnInit {
     });
   }
 
+  public toggleFilter(checked: boolean, filter: string) {
+    const index = this.signalFilterList.indexOf(filter);
+    if(index > -1) {
+      this.signalFilterList = this.signalFilterList.splice(index, 1);
+    } else {
+      this.signalFilterList.push(filter);
+    }
+    this.filterRecommendations();
+  }
+
   public filterRecommendations() {
    const searchString = (this.searchControl.value as string).split(' ').filter(x => x !== '');
     this.missingSymbols = [];
@@ -53,7 +62,7 @@ export class UserWatchlistComponent implements OnInit {
       }
     }
     
-    let signalFilters = this.signalSelection.value as Array<string>;
+    let signalFilters = this.signalFilterList;
     if(signalFilters == null) {
       signalFilters = new Array<string>();
     }
@@ -76,7 +85,7 @@ export class UserWatchlistComponent implements OnInit {
       return;
     }
     
-    this.signalSelection.setValue(new Array<string>());
+    this.signalFilterList = [];
     this.isSearching = true;
     this.selectedItem = undefined;
     let recommendationsSearch = new Array<Observable<StockRecommendation>>();

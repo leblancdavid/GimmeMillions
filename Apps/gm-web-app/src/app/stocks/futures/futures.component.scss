@@ -21,7 +21,8 @@
         flex-direction: row;
         width: 100%;
         justify-content: space-between;
-        height: 48px;
+        max-width: 512px;
+        align-self: center;
     }
     .future-item {
         margin: 2px;
