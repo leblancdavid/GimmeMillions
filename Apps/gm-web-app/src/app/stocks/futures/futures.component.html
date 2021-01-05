@@ -5,9 +5,15 @@
     </div>
     <div class="futures-list" *ngIf="futures.recommendations.length != 0">
         <div class="futures-filters">
-            <button mat-icon-button style="align-self: center;" color="primary" (click)="refresh()">
-                <mat-icon>refresh</mat-icon>
+            <button mat-icon-button [matMenuTriggerFor]="futuresOptionsMenu">
+                <mat-icon>more_vert</mat-icon>
             </button>
+            <mat-menu #futuresOptionsMenu="matMenu">
+                <button mat-menu-item (click)="refresh()">
+                    <mat-icon>refresh</mat-icon>
+                    <span>Refresh</span>
+                </button>
+            </mat-menu>
         </div>
         
         <gm-recommendation-list [recommendations]="futures" [(selectedItem)]="selectedFuture"></gm-recommendation-list>
