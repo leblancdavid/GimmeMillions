@@ -42,8 +42,8 @@
             </button>
             <mat-menu #watchlistFilterMenu="matMenu">
                 <button mat-menu-item>
-                    <mat-checkbox [checked]="signalFilterList.indexOf('Strong Buy') > -1"
-                        (change)="toggleFilter($event.checked, 'Strong Buy')">
+                    <mat-checkbox
+                        (click)="toggleFilter($event, 'Strong Buy')">
                         <div class="filter-selection-checkbox-label">
                             <span style="margin-right: 8px;">Strong Buy</span>
                             <gm-trend-icon [signal]="100"></gm-trend-icon>
@@ -51,7 +51,8 @@
                     </mat-checkbox>
                 </button>
                 <button mat-menu-item>
-                    <mat-checkbox>
+                    <mat-checkbox
+                        (click)="toggleFilter($event, 'Buy')">
                         <div class="filter-selection-checkbox-label">
                             <span style="margin-right: 8px;">Buy</span>
                             <gm-trend-icon [signal]="80"></gm-trend-icon>
@@ -59,7 +60,8 @@
                     </mat-checkbox>
                 </button>
                 <button mat-menu-item>
-                    <mat-checkbox>
+                    <mat-checkbox
+                        (click)="toggleFilter($event, 'Hold')">
                         <div class="filter-selection-checkbox-label">
                             <span style="margin-right: 8px;">Hold</span>
                             <gm-trend-icon [signal]="50"></gm-trend-icon>
@@ -67,7 +69,8 @@
                     </mat-checkbox>
                 </button>
                 <button mat-menu-item>
-                    <mat-checkbox>
+                    <mat-checkbox
+                        (click)="toggleFilter($event, 'Sell')">
                         <div class="filter-selection-checkbox-label">
                             <span style="margin-right: 8px;">Sell</span>
                             <gm-trend-icon [signal]="20"></gm-trend-icon>
@@ -75,7 +78,8 @@
                     </mat-checkbox>
                 </button>
                 <button mat-menu-item>
-                    <mat-checkbox>
+                    <mat-checkbox
+                        (click)="toggleFilter($event, 'Strong Sell')">
                         <div class="filter-selection-checkbox-label">
                             <span style="margin-right: 8px;">Strong Sell</span>
                             <gm-trend-icon [signal]="0"></gm-trend-icon>
@@ -84,7 +88,7 @@
                 </button>
             </mat-menu>
         </div>
-        
+
         <gm-recommendation-list [recommendations]="userWatchlistService.watchlist" [(selectedItem)]="selectedItem">
         </gm-recommendation-list>
 

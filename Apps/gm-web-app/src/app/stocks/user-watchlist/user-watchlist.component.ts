@@ -37,16 +37,18 @@ export class UserWatchlistComponent implements OnInit {
 
   public refresh() {
     this.isRefreshing = true;
+    this.selectedItem = undefined;
     this.userWatchlistService.refreshWatchlist().subscribe(x => {
       this.isRefreshing = false;
       this.exportFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(this.userWatchlistService.watchlist.exportSorted()));
     });
   }
 
-  public toggleFilter(checked: boolean, filter: string) {
+  public toggleFilter(event: MouseEvent, filter: string) {
+    event.stopImmediatePropagation();
     const index = this.signalFilterList.indexOf(filter);
     if(index > -1) {
-      this.signalFilterList = this.signalFilterList.splice(index, 1);
+      this.signalFilterList.splice(index, 1);
     } else {
       this.signalFilterList.push(filter);
     }
@@ -68,12 +70,9 @@ export class UserWatchlistComponent implements OnInit {
     }
     const filter = new RecommendationFilterOptions(searchString, signalFilters);
 
-
+    this.selectedItem = undefined;
     this.userWatchlistService.watchlist.applyFilter(filter);
     this.exportFileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(window.URL.createObjectURL(this.userWatchlistService.watchlist.exportSorted()));
-    if(this.userWatchlistService.watchlist.sorted.length > 0) {
-      this.selectedItem = this.userWatchlistService.watchlist.sorted[0];
-    }
   }
 
   public onSearchKeyup(event: KeyboardEvent) {
@@ -97,7 +96,6 @@ export class UserWatchlistComponent implements OnInit {
       for(const r of recommendations) {
         this.userWatchlistService.addToWatchlist(r);
       }
-      this.selectedItem = recommendations[0];
       this.isSearching = false;
       this.missingSymbols = [];
     }, error => {

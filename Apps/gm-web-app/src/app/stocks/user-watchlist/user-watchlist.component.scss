@@ -25,6 +25,10 @@
         align-items: baseline;
         max-width: 512px;
         align-self: center;
+
+        .search-form {
+            width: 148px;
+        }
     }
 
     .watchlist-item {
