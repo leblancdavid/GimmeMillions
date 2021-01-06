@@ -97,7 +97,7 @@ namespace GimmeMillions.Domain.Stocks
                 recommendations.Add(rec);
                 lock (saveLock)
                 {
-                    var addResult = _stockRecommendationRepository.AddRecommendation(rec);
+                    var addResult = _stockRecommendationRepository.AddOrUpdateRecommendation(rec);
                     if (addResult.IsFailure)
                     {
                         _logger?.LogError($"Unable to add recommendation: '{addResult.Error}'");
@@ -171,7 +171,7 @@ namespace GimmeMillions.Domain.Stocks
 
                     lock (saveLock)
                     {
-                        var addResult = _stockRecommendationRepository.AddRecommendation(rec);
+                        var addResult = _stockRecommendationRepository.AddOrUpdateRecommendation(rec);
                         if (addResult.IsFailure)
                         {
                             _logger?.LogError($"Unable to add recommendation: '{addResult.Error}'");
@@ -287,7 +287,7 @@ namespace GimmeMillions.Domain.Stocks
             var saveLock = new object();
             lock (saveLock)
             {
-                var addResult = _stockRecommendationRepository.AddRecommendation(rec);
+                var addResult = _stockRecommendationRepository.AddOrUpdateRecommendation(rec);
                 if(addResult.IsFailure)
                 {
                     _logger?.LogError($"Unable to add recommendation: '{addResult.Error}'");

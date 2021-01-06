@@ -72,7 +72,7 @@ namespace GimmeMillions.Domain.Stocks
                 var rec = new StockRecommendation(_systemId, date, symbol,
                     (decimal)result.Probability, lastStock.Close);
                 recommendations.Add(rec);
-                _stockRecommendationRepository.AddRecommendation(rec);
+                _stockRecommendationRepository.AddOrUpdateRecommendation(rec);
                 //}
             });
 
@@ -117,7 +117,7 @@ namespace GimmeMillions.Domain.Stocks
                 var rec = new StockRecommendation(_systemId, date, symbol,
                     (decimal)result.Probability, lastStock.Close);
                 recommendations.Add(rec);
-                _stockRecommendationRepository.AddRecommendation(rec);
+                _stockRecommendationRepository.AddOrUpdateRecommendation(rec);
                 //}
             });
 

@@ -16,24 +16,26 @@ namespace GimmeMillions.Database
             _dbContextOptions = dbContextOptions;
         }
 
-        public Result AddRecommendation(StockRecommendation recommendation)
+        public Result AddOrUpdateRecommendation(StockRecommendation recommendation)
         {
             try
             {
                 var context = new GimmeMillionsContext(_dbContextOptions);
 
-                var stock = context.StockRecommendations.FirstOrDefault(x => x.Symbol == recommendation.Symbol &&
-                    x.Date == recommendation.Date && 
+                var stocks = context.StockRecommendations.Where(x => x.Symbol == recommendation.Symbol &&
+                    x.Date.Date == recommendation.Date.Date && 
                     x.SystemId == recommendation.SystemId);
-                if (stock == null)
+                if (stocks != null && stocks.Count() > 0)
                 {
-                    context.StockRecommendations.Add(recommendation);
-                    lock(_saveLock)
-                    {
-                        context.SaveChanges();
-                    }
+                    context.StockRecommendations.RemoveRange(stocks);
                 }
 
+                context.StockRecommendations.Add(recommendation);
+
+                lock (_saveLock)
+                {
+                    context.SaveChanges();
+                }
                 return Result.Success();
             }
             catch (Exception ex)
@@ -91,6 +93,12 @@ namespace GimmeMillions.Database
             return context.StockRecommendations.Where(x =>
                     x.Date.Date == dateTime.Date &&
                     x.SystemId == systemId);
+        }
+
+        public void RemoveAll()
+        {
+            var context = new GimmeMillionsContext(_dbContextOptions);
+            context.StockRecommendations.RemoveRange(context.StockRecommendations);
         }
     }
 }

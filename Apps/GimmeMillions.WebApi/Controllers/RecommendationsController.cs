@@ -90,6 +90,14 @@ namespace GimmeMillions.WebApi.Controllers
             return Ok(prediction.Value);
         }
 
+        [HttpDelete()]
+        public IActionResult WipeAll()
+        {
+            var system = _provider.GetStocksRecommendations();
+            system.RecommendationRepository.RemoveAll();
+            return Ok();
+        }
+
         private DateTime GetUpdatedDailyStockDate(int delayHours = 0)
         {
             //get current date in PST
