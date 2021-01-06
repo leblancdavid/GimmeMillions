@@ -78,16 +78,16 @@ namespace GimmeMillions.WebApi.Controllers
 
         private DateTime GetUpdatedDailyStockDate(int delayHours = 0)
         {
-            var timeZoneInfo = TZConvert.GetTimeZoneInfo("Pacific Standard Time");
-            var newDateTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, timeZoneInfo);
-            if (newDateTime.Hour < 13 + delayHours)
+            //get current date in PST
+            var currentDate = DateTime.UtcNow.AddHours(-8.0);
+            if (currentDate.Hour < 13 + delayHours)
             {
-                return DateTime.Today;
+                return currentDate;
             }
             else
             {
                 //If the time is after the market close PST,
-                return DateTime.Today.AddDays(1.0);
+                return currentDate.AddDays(1.0);
             }
 
         }
