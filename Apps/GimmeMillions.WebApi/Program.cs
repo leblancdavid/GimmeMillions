@@ -26,6 +26,7 @@ namespace GimmeMillions.WebApi
                     logging.AddConsole();
                     logging.AddDebug();
                     logging.AddFile("log.log");
+                    logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Error);
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
