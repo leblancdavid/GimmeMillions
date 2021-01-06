@@ -97,7 +97,11 @@ namespace GimmeMillions.Domain.Stocks
                 recommendations.Add(rec);
                 lock (saveLock)
                 {
-                    _stockRecommendationRepository.AddRecommendation(rec);
+                    var addResult = _stockRecommendationRepository.AddRecommendation(rec);
+                    if (addResult.IsFailure)
+                    {
+                        _logger?.LogError($"Unable to add recommendation: '{addResult.Error}'");
+                    }
                 }
             }
             //});
@@ -167,7 +171,11 @@ namespace GimmeMillions.Domain.Stocks
 
                     lock (saveLock)
                     {
-                        _stockRecommendationRepository.AddRecommendation(rec);
+                        var addResult = _stockRecommendationRepository.AddRecommendation(rec);
+                        if (addResult.IsFailure)
+                        {
+                            _logger?.LogError($"Unable to add recommendation: '{addResult.Error}'");
+                        }
                     }
                 }
                 //});
@@ -278,7 +286,11 @@ namespace GimmeMillions.Domain.Stocks
             var saveLock = new object();
             lock (saveLock)
             {
-                _stockRecommendationRepository.AddRecommendation(rec);
+                var addResult = _stockRecommendationRepository.AddRecommendation(rec);
+                if(addResult.IsFailure)
+                {
+                    _logger?.LogError($"Unable to add recommendation: '{addResult.Error}'");
+                }
             }
             return Result.Success<StockRecommendation>(rec);
         }
