@@ -67,7 +67,7 @@ namespace GimmeMillions.Database
             var context = new GimmeMillionsContext(_dbContextOptions);
 
             var stock = context.StockRecommendations.FirstOrDefault(x => x.Symbol == symbol &&
-                    x.Date == dateTime &&
+                    x.Date.Date == dateTime.Date &&
                     x.SystemId == systemId);
             if(stock == null)
             {
@@ -89,7 +89,7 @@ namespace GimmeMillions.Database
             var context = new GimmeMillionsContext(_dbContextOptions);
 
             return context.StockRecommendations.Where(x =>
-                    x.Date == dateTime &&
+                    x.Date.Date == dateTime.Date &&
                     x.SystemId == systemId);
         }
     }
