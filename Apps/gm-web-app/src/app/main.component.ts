@@ -33,4 +33,10 @@ export class MainComponent implements OnInit {
   goToCrypto() {
     this.router.navigate(['/main/crypto']);
   }
+  goToTutorials() {
+    this.router.navigate(['/main/tutorials']);
+  }
+  goToDisclaimer() {
+    this.router.navigate(['/main/disclaimer']);
+  }
 }
