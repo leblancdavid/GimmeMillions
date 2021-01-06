@@ -262,6 +262,7 @@ namespace GimmeMillions.Domain.Stocks
 
         public Result<StockRecommendation> RunRecommendationsFor(string symbol, DateTime date)
         {
+            _logger.LogInformation($"Running recommendation for {symbol} on {date.ToString()}");
             List<StockData> stockData;
             stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol, _featureDatasetService.Period).ToList();
 
