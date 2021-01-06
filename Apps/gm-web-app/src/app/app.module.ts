@@ -13,6 +13,7 @@ import { ErrorInterceptor } from './users/error.interceptor';
 import { StocksModule } from './stocks/stocks.module';
 import { CommonModule } from '@angular/common';
 import { ResourcesModule } from './resources/resources.module';
+import { SupportModule } from './support/support.module';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { ResourcesModule } from './resources/resources.module';
     MaterialModule,
     UsersModule,
     StocksModule,
-    ResourcesModule
+    ResourcesModule,
+    SupportModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

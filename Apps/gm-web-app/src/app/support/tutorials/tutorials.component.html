@@ -1,1 +1,66 @@
-<p>tutorials works!</p>
+<div class="tutorial-content">
+    <h1>How to Use</h1>
+    <p>
+        Before using <i><b>Gimmillions</b></i>, please make sure you read through the
+        <a routerLink="/main/disclaimer" routerLinkActive="active">disclaimer</a>.
+    </p>
+
+    <h2>Algorithm Overview</h2>
+    <p>
+        The <i><b>Gimmillions</b></i> algorithm uses machine learning and artificial intelligence to generate
+        predictions daily
+        predictions on many stock symbols. The machine learning model has been trained using years of historical data.
+        Various
+        <a href="https://www.investopedia.com/articles/active-trading/041814/four-most-commonlyused-indicators-trend-trading.asp"
+            target="_blank">indicators</a>
+        are computed on the price and volume of each stock, which is then used to compute the predictions.
+    </p>
+    <p>
+        The algorithm makes three different predictions: a buy/sell signal, a projected gain with target, and a
+        projected loss. As discussed in the
+        <a routerLink="/main/disclaimer" routerLinkActive="active">disclaimer</a>, the accuracy of these targets can
+        vary based on many factors, therefore they
+        should not necessary be taken as absolute truth. They are meant to help in the technical analysis process when
+        making investment decisions. These
+        predictions should always be supported by your own investigative diligence. For more details, see below.
+    </p>
+
+    <h2>Understanding Predictions</h2>
+    <p>
+        The predictions are updated on a daily basis. Once they are computed, they will be displayed in a list as
+        follows:
+    </p>
+    <div class="help-diagram" style="max-width: 512px;">
+        <img class="image-fill" src="assets/prediction_examples.png">
+        <!--Sort alphabetically-->
+        <button mat-button class="tooltip-area" matTooltip="Sorts symbols alphabetically"
+            style="width: 20%; height: 8%; left: 1%; top: 1%;"></button>
+        <!--Sort signals-->
+        <button mat-button class="tooltip-area" matTooltip="Sorts symbols by buy or sell strength"
+            style="width: 20%; height: 8%; right: 3%; top: 1%;"></button>
+        <!--Stock ticker-->
+        <button mat-button class="tooltip-area" matTooltip="The ticker symbol"
+            style="width: 23%; height: 9%; left: 4%; top: 12%;"></button>
+        <!--Signal strength-->
+        <button mat-button class="tooltip-area" matTooltip="The strength of the signal ranging from 0% to 100%"
+            style="width: 23%; height: 9%; right: 4%; top: 12%;"></button>
+        <!--Additional details-->
+        <button mat-button class="tooltip-area" matTooltip="Additional details for the prediction, including buy rating, predicted gain and loss with the corresponding targets"
+            style="width: 92%; height: 26%; left: 4%; top: 25%;"></button>
+        <!--Watch button-->
+        <button mat-button class="tooltip-area" matTooltip="Adds the current symbol to the logged in user's watchlist"
+            style="width: 24%; height: 12%; right: 4%; top: 52%;"></button>
+        <!--Details button-->
+        <button mat-button class="tooltip-area" matTooltip="Additional details for the prediction: Coming soon!"
+            style="width: 24%; height: 12%; left: 4%; top: 52%;"></button> 
+        <!--Details button-->
+        <button mat-button class="tooltip-area" matTooltip="Selecting a different ticker expands the details for that prediction"
+            style="width: 98%; height: 16%; left: 1%; top: 66%;"></button> 
+    </div>
+    <h4 style="align-self: center;">Figure 1: Example predictions for the futures</h4>
+    <p>
+        The algorithm's main prediction is the signal, which is a sentiment of strength for either buying or selling. A signal of 100%
+        represents a buy signal while a signal of 0% would represent a sell signal (in practice, the current algorithm occasionally produces signals
+        which are larger than 100% or less than 0%, these should be treated as buy and sell signals respectively).
+    </p>
+</div>

@@ -7,11 +7,15 @@ import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from '../material/material.module';
 import { TutorialsComponent } from './tutorials/tutorials.component';
 import { DisclaimerComponent } from './disclaimer/disclaimer.component';
+import { AppRoutingModule } from '../app-routing.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [TutorialsComponent, DisclaimerComponent],
   imports: [
     CommonModule,
+    RouterModule,
+    AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
