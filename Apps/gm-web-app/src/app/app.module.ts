@@ -14,6 +14,7 @@ import { StocksModule } from './stocks/stocks.module';
 import { CommonModule } from '@angular/common';
 import { ResourcesModule } from './resources/resources.module';
 import { SupportModule } from './support/support.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { SupportModule } from './support/support.module';
     UsersModule,
     StocksModule,
     ResourcesModule,
-    SupportModule
+    SupportModule,
+    NotificationsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },

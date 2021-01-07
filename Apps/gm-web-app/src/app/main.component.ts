@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NotificationsService } from './notifications/notifications.service';
 import { AuthenticationService } from './users/authentication.service';
 import { UserService } from './users/user.service';
 
@@ -12,6 +13,7 @@ export class MainComponent implements OnInit {
 
   constructor(public userService: UserService,
     public authenticationService: AuthenticationService,
+    public notificationsService: NotificationsService,
     private router: Router) { }
 
   ngOnInit(): void {
@@ -38,5 +40,9 @@ export class MainComponent implements OnInit {
   }
   goToDisclaimer() {
     this.router.navigate(['/main/disclaimer']);
+  }
+
+  showNotifications() {
+    this.notificationsService.show();
   }
 }

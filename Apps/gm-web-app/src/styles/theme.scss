@@ -270,6 +270,12 @@ $altTheme: mat-dark-theme($theme-primary, $theme-accent, $theme-warn);
 .accent-border-color {
   border-color: mat-color($mat-accent, default) !important;
 }
+.light-primary-text {
+  color: $light-primary-text !important; 
+}
+.light-accent-text {
+  color: #c4d253 !important;
+}
 
 
 
