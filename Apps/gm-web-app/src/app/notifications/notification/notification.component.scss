@@ -1,0 +1,35 @@
+.notification-list {
+    padding: 0 !important;
+}
+.notification-item {
+    height: auto !important;
+    box-sizing: border-box;
+
+    .notification-message {
+        
+    }
+}
+
+.dismiss-btn {
+    padding: 0 !important;
+}
+
+/* unvisited link */
+a:link {
+    color: red;
+}
+
+/* visited link */
+a:visited {
+    color: green;
+}
+
+/* mouse over link */
+a:hover {
+    color: hotpink;
+}
+
+/* selected link */
+a:active {
+    color: blue;
+}
