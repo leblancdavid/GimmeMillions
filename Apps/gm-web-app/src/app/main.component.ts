@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { NotificationComponent } from './notifications/notification/notification.component';
 import { NotificationsService } from './notifications/notifications.service';
 import { AuthenticationService } from './users/authentication.service';
 import { UserService } from './users/user.service';
@@ -14,9 +16,15 @@ export class MainComponent implements OnInit {
   constructor(public userService: UserService,
     public authenticationService: AuthenticationService,
     public notificationsService: NotificationsService,
-    private router: Router) { }
+    private router: Router, private _snackBar: MatSnackBar) { 
+    }
 
   ngOnInit(): void {
+    this.notificationsService.notificationsChange.subscribe(() => {
+      if(this.notificationsService.currentNotifications.length == 0) {
+        this.closeNotifications();
+      }
+    })
   }
 
   logout() {
@@ -42,7 +50,12 @@ export class MainComponent implements OnInit {
     this.router.navigate(['/main/disclaimer']);
   }
 
-  showNotifications() {
-    this.notificationsService.show();
+  public showNotifications() {
+    this._snackBar.openFromComponent(NotificationComponent, {
+    });
+  }
+
+  public closeNotifications() {
+    this._snackBar.dismiss();
   }
 }

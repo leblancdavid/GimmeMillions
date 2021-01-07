@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Notification } from './notification';
-import { NotificationComponent } from './notification/notification.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationsService {
 
-  constructor(private _snackBar: MatSnackBar) {
+  constructor() {
     this.currentNotifications = new Array<Notification>();
     this.currentNotifications.push(new Notification(`Welcome to the <b>Gimmillions</b> app! We are still very
     early in development but we appreciate your support and time. All feedback is welcomed and is very valuable to us.
@@ -18,23 +16,19 @@ export class NotificationsService {
   }
 
   public currentNotifications: Array<Notification>;
-
-  public show() {
-    this._snackBar.openFromComponent(NotificationComponent, {
-    });
-  }
+  public notificationsChange = new EventEmitter<string>();
+  
 
   public dismiss(n: Notification) {
     const index = this.currentNotifications.indexOf(n);
     if(index > -1) {
       this.currentNotifications.splice(index, 1);
+      this.notificationsChange.emit('dismiss');
     }
-    if(this.currentNotifications.length == 0) {
-      this.close();
-    }
+    //if(this.currentNotifications.length == 0) {
+    //  this.close();
+    //}
   }
 
-  public close() {
-    this._snackBar.dismiss();
-  }
+  
 }
