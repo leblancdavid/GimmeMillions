@@ -1,0 +1,94 @@
+<div class="tutorial-content">
+    <h1>How to Use</h1>
+    <p>
+        Before using <i><b>Gimmillions</b></i>, please make sure you read through the
+        <a routerLink="/main/disclaimer" routerLinkActive="active">disclaimer</a>.
+    </p>
+
+    <h2>Algorithm Overview</h2>
+    <p>
+        The <i><b>Gimmillions</b></i> algorithm uses machine learning and artificial intelligence to generate
+        predictions daily
+        predictions on many stock symbols. The machine learning model has been trained using years of historical data.
+        Various
+        <a href="https://www.investopedia.com/articles/active-trading/041814/four-most-commonlyused-indicators-trend-trading.asp"
+            target="_blank">indicators</a>
+        are computed on the price and volume of each stock, which is then used to compute the predictions.
+    </p>
+    <p>
+        The algorithm makes three different predictions: a buy/sell signal, a projected gain with target, and a
+        projected loss. As discussed in the
+        <a routerLink="/main/disclaimer" routerLinkActive="active">disclaimer</a>, the accuracy of these targets can
+        vary based on many factors, therefore they
+        should not necessary be taken as absolute truth. They are meant to help in the technical analysis process when
+        making investment decisions. These
+        predictions should always be supported by your own investigative diligence. For more details, see below.
+    </p>
+
+    <h2>Understanding Predictions</h2>
+    <p>
+        The predictions are updated on a daily basis. Once they are computed, they will be displayed in a list as
+        follows:
+    </p>
+    <div class="help-diagram" style="max-width: 512px;">
+        <img class="image-fill" src="assets/prediction_examples.png">
+        <!--Sort alphabetically-->
+        <button mat-button class="tooltip-area" matTooltip="Sorts symbols alphabetically"
+            style="width: 20%; height: 8%; left: 1%; top: 1%;"></button>
+        <!--Sort signals-->
+        <button mat-button class="tooltip-area" matTooltip="Sorts symbols by buy or sell strength"
+            style="width: 20%; height: 8%; right: 3%; top: 1%;"></button>
+        <!--Stock ticker-->
+        <button mat-button class="tooltip-area" matTooltip="The ticker symbol"
+            style="width: 23%; height: 9%; left: 4%; top: 12%;"></button>
+        <!--Signal strength-->
+        <button mat-button class="tooltip-area" matTooltip="The strength of the signal ranging from 0% to 100%"
+            style="width: 23%; height: 9%; right: 4%; top: 12%;"></button>
+        <!--Additional details-->
+        <button mat-button class="tooltip-area" matTooltip="Additional details for the prediction, including buy rating, predicted gain and loss with the corresponding targets"
+            style="width: 92%; height: 26%; left: 4%; top: 25%;"></button>
+        <!--Watch button-->
+        <button mat-button class="tooltip-area" matTooltip="Adds the current symbol to the logged in user's watchlist"
+            style="width: 24%; height: 12%; right: 4%; top: 52%;"></button>
+        <!--Details button-->
+        <button mat-button class="tooltip-area" matTooltip="Additional details for the prediction: Coming soon!"
+            style="width: 24%; height: 12%; left: 4%; top: 52%;"></button> 
+        <!--Details button-->
+        <button mat-button class="tooltip-area" matTooltip="Selecting a different ticker expands the details for that prediction"
+            style="width: 98%; height: 16%; left: 1%; top: 66%;"></button> 
+    </div>
+    <h4 style="align-self: center;">Figure 1: Example predictions for the futures</h4>
+    <p>
+        The algorithm's main prediction is the signal, which is a sentiment of strength for either buying or selling. A signal of 100%
+        represents a buy signal while a signal of 0% would represent a sell signal (in practice, the current algorithm occasionally produces signals
+        which are larger than 100% or less than 0%, these should be treated as buy and sell signals respectively).
+    </p>
+    <p>
+        Signals which are greater than 90% are typically considered strong buy signals and inversely signals less than 10% are categorized as strong 
+        sell. Signals between 75% and 90% and those between 10% and 25% are categorized as buy and sell signals respectively. The remaining signals are
+        labelled simply as hold. Filters found in the menu allow the user to easily filter predictions by signal category. <i>Note: strong buy or sell
+        signals <b>should not</b> be blindly followed, they are simply values predicted by an algorithm. <b>Always</b> do your own due diligence before
+        making a decision on investments.</i>
+    </p>
+    <p>
+        The algorithm makes daily predictions for possible swing trading, not necessarily for day trading. The time to hold a security can range from
+        days to months, depending on the price action of the stock, and the trading strategy of each individual.
+    </p>
+    <p>
+        Along with the signal, the algorithm also attempts to predict possible high and low price targets. It is important to remember that these predictions
+        are only estimates and should be treated as such. They are meant to be a tool to aid an investor in visualizing potential gains and risks. The
+        accuracy of these predictions is greatly affected by market volatility, news, earnings reports, and many other factors. It is not unusual for the
+        algorithm to be confused by a certain unknown or abnormal pattern in a stocks price action. Occasionally, the predicted targets may be nonsensical,
+        such as abnormally large gains or losses, or a high target which is lower than the low target. Again, these predictions are merely a tool. Predicted
+        should be backed up with careful study of the stock's chart.
+    </p>
+
+    <h2>Tools</h2>
+    <p>The <i><b>Gimmillions</b></i> app provides tools for users such as exporting predictions to files based on search criteria. Symbols can be looked up
+    using the search bar. The algorithm tracks thousands of commonly traded symbols. If a symbol is not found in the list of predictions, a user may
+    perform a search on a specific symbol. </p>
+
+    <h4>
+        More features will be added in the future so stay tuned!
+    </h4>
+</div>

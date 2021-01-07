@@ -3,6 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { CryptoComponent } from './crypto/crypto/crypto.component';
 import { MainComponent } from './main.component';
 import { StocksComponent } from './stocks/stocks.component';
+import { DisclaimerComponent } from './support/disclaimer/disclaimer.component';
+import { TutorialsComponent } from './support/tutorials/tutorials.component';
 import { CanActivateSuperUser } from './users/auth.guard';
 import { LoginComponent } from './users/login/login.component';
 import { ProfileComponent } from './users/profile/profile.component';
@@ -26,6 +28,14 @@ const routes: Routes = [
         path: 'users',
         component: UserManagementComponent,
         canActivate: [CanActivateSuperUser]
+      },
+      {
+        path: 'tutorials',
+        component: TutorialsComponent
+      },
+      {
+        path: 'disclaimer',
+        component: DisclaimerComponent
       },
       {
         path: 'profile',
