@@ -1,0 +1,6 @@
+<mat-list role="list" *ngIf="notificationsService">
+    <mat-list-item role="listitem" *ngFor="let n of notificationsService.currentNotifications">
+        <span>{{n.message}}</span>
+        
+    </mat-list-item>
+</mat-list>
