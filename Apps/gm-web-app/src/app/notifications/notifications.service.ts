@@ -25,4 +25,18 @@ export class NotificationsService {
     this._snackBar.openFromComponent(NotificationComponent, {
     });
   }
+
+  public dismiss(n: Notification) {
+    const index = this.currentNotifications.indexOf(n);
+    if(index > -1) {
+      this.currentNotifications.splice(index, 1);
+    }
+    if(this.currentNotifications.length == 0) {
+      this.close();
+    }
+  }
+
+  public close() {
+    this._snackBar.dismiss();
+  }
 }

@@ -47,8 +47,10 @@
         <span>Gimmillions</span>
         <span class="spacer"></span>
 
-        <button mat-icon-button (click)="showNotifications()">
-            <mat-icon [matBadge]="notificationsService.currentNotifications.length" matBadgeColor="warn">notification_important</mat-icon>
+        <button mat-icon-button (click)="showNotifications()" [disabled]="notificationsService.currentNotifications.length == 0">
+            <mat-icon [matBadge]="notificationsService.currentNotifications.length" 
+                matBadgeColor="warn"
+                [matBadgeHidden]="notificationsService.currentNotifications.length == 0">notification_important</mat-icon>
         </button>
     </mat-toolbar>
 

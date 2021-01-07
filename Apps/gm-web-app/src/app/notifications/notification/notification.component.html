@@ -3,7 +3,7 @@
         class="notification-item light-primary-text">
         <div class="notification-message">
             <div [innerHtml]="n.message"></div>
-            <button mat-button class="dismiss-btn">Dismiss</button>
+            <button mat-button class="dismiss-btn" (click)="dismiss(n)">Dismiss</button>
         </div>
         
         <mat-divider></mat-divider>

@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NotificationsService } from '../notifications.service';
 
+import { Notification } from '../notification';
+
 @Component({
   selector: 'gm-notification',
   templateUrl: './notification.component.html',
@@ -13,4 +15,7 @@ export class NotificationComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  dismiss(n: Notification) {
+    this.notificationsService.dismiss(n);
+  }
 }
