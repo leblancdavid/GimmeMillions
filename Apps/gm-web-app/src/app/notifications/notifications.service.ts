@@ -15,8 +15,6 @@ export class NotificationsService {
     If you have ideas for improvement or find bugs, please sign up and submit feedback/enhancement ideas/bugs
     <a href="https://github.com/leblancdavid/GimmeMillions/issues" class="light-accent-text"
             target="_blank">here</a>`));
-
-    this.currentNotifications.push(new Notification(`Just another notification for testing purposes`));
   }
 
   public currentNotifications: Array<Notification>;
