@@ -1,2 +1,25 @@
+:host {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.login-layout {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    width: 100%;
+
+    .login-toolbar {
+        height: 48px !important;
+        width: 100%;
+    }
+}
+
 .login-card {
+    margin: 16px;
+    max-width: 256px;
 }
