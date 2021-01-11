@@ -112,7 +112,7 @@ namespace GimmeMillions.Domain.Features
             return Result.Success<(FeatureVector Input, StockData Output)>((featureVector.Value, stockOutput));
         }
 
-        private Result<FeatureVector> GetData(string symbol,
+        public Result<FeatureVector> GetData(string symbol,
             DateTime date,
             List<StockData> stocks)
         {

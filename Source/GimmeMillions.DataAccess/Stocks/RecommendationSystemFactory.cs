@@ -124,37 +124,5 @@ namespace GimmeMillions.DataAccess.Stocks
 
             return recommendationSystem;
         }
-
-        private static IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetService(
-            IStockRepository stockRepository,
-           int numStockSamples = 40,
-           int stockOutputPeriod = 3,
-           bool includeComposites = false)
-        {
-            var stocksRepo = new YahooFinanceStockAccessService(stockRepository);
-
-            var indictatorsExtractor = new StockIndicatorsFeatureExtraction(normalize: false);
-
-            return new CandlestickStockFeatureDatasetService(indictatorsExtractor, stocksRepo,
-                StockDataPeriod.Day, numStockSamples, includeComposites, null, false);
-        }
-
-        private static IFeatureDatasetService<FeatureVector> GetCandlestickFeatureDatasetServiceV2(
-            IStockRepository stockRepository,
-          int numStockSamples = 40,
-          int stockOutputPeriod = 3)
-        {
-            var stocksRepo = new YahooFinanceStockAccessService(stockRepository);
-            var indictatorsExtractor = new StockIndicatorsFeatureExtractionV2(10,
-                numStockSamples,
-                (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
-                (int)(numStockSamples * 0.8), 5,
-                (int)(numStockSamples * 0.8), 5,
-                (int)(numStockSamples * 0.8), 5,
-                false);
-
-            return new CandlestickStockWithFuturesFeatureDatasetService(indictatorsExtractor, stocksRepo,
-                StockDataPeriod.Day, numStockSamples);
-        }
     }
 }
