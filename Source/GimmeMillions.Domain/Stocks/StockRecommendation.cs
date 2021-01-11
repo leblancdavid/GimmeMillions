@@ -6,15 +6,22 @@ namespace GimmeMillions.Domain.Stocks
     {
         public int Id { get; private set; }
         public string SystemId { get; private set; }
+        public StockData LastData { get; private set; }
+        public DateTime DateUpdated { get; private set; }
         public DateTime Date { get; private set; }
-        public string Symbol { get; private set; }
+        public string Symbol 
+        { 
+            get
+            {
+                return LastData.Symbol;
+            }
+        }
         public decimal Prediction { get; private set; }
-        public decimal PreviousClose { get; private set; }
         public decimal PredictedPriceTarget
         { 
             get
             {
-                return PreviousClose * (1.0m + Prediction / 100.0m);
+                return LastData.Close * (1.0m + Prediction / 100.0m);
             }
         }
         public decimal LowPrediction { get; private set; }
@@ -22,30 +29,37 @@ namespace GimmeMillions.Domain.Stocks
         {
             get
             {
-                return PreviousClose * (1.0m + LowPrediction / 100.0m);
+                return LastData.Close * (1.0m + LowPrediction / 100.0m);
+            }
+        }
+        public decimal PreviousClose
+        {
+            get
+            {
+                return LastData.Close;
             }
         }
 
         public decimal Sentiment { get; private set; }
-        public StockRecommendation(string systemId, DateTime date, string symbol, decimal prediction, decimal previousClose)
+        public StockRecommendation(string systemId, decimal prediction, DateTime date, StockData lastData)
         {
             SystemId = systemId;
-            Date = date;
-            Symbol = symbol;
+            DateUpdated = DateTime.Now;
             Prediction = prediction;
-            PreviousClose = previousClose;
+            Date = date;
+            LastData = lastData;
         }
 
-        public StockRecommendation(string systemId, DateTime date, string symbol, 
-            decimal highPrediction, decimal lowPrediction, decimal sentiment, decimal previousClose)
+        public StockRecommendation(string systemId,
+            decimal highPrediction, decimal lowPrediction, decimal sentiment, DateTime date, StockData lastData)
         {
             SystemId = systemId;
-            Date = date;
-            Symbol = symbol;
+            DateUpdated = DateTime.Now;
             Prediction = highPrediction;
             LowPrediction = lowPrediction;
             Sentiment = sentiment;
-            PreviousClose = previousClose;
+            Date = date;
+            LastData = lastData;
         }
 
         public StockRecommendation()

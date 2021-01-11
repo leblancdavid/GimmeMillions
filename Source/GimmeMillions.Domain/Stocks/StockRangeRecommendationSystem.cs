@@ -84,8 +84,9 @@ namespace GimmeMillions.Domain.Stocks
                     //return;
                 }
                 var result = model.Predict(feature.Value);
-                var rec = new StockRecommendation(_systemId, date, symbol,
-                    (decimal)result.PredictedHigh, (decimal)result.PredictedLow, (decimal)result.Sentiment, lastStock.Close);
+                var rec = new StockRecommendation(_systemId,
+                    (decimal)result.PredictedHigh, (decimal)result.PredictedLow, (decimal)result.Sentiment, 
+                    date, lastStock);
 
                 var text = $"{rec.Symbol}, " +
                         $"({Math.Round(rec.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
@@ -155,9 +156,10 @@ namespace GimmeMillions.Domain.Stocks
                         //return;
                     }
                     var result = model.Predict(feature.Value);
-                    var rec = new StockRecommendation(_systemId, date, symbol,
+                    var rec = new StockRecommendation(_systemId,
                         (decimal)result.PredictedHigh, (decimal)result.PredictedLow,
-                        (decimal)result.Sentiment, lastStock.Close);
+                        (decimal)result.Sentiment, 
+                        date, lastStock);
                     
                     var text = $"{rec.Symbol}, " +
                         $"({Math.Round(rec.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
@@ -280,9 +282,10 @@ namespace GimmeMillions.Domain.Stocks
                 return Result.Failure<StockRecommendation>($"Unable to compute feature vector for {symbol}");
             }
             var result = model.Predict(feature.Value);
-            var rec = new StockRecommendation(_systemId, date, symbol,
+            var rec = new StockRecommendation(_systemId,
                 (decimal)result.PredictedHigh, (decimal)result.PredictedLow,
-                (decimal)result.Sentiment, lastStock.Close);
+                (decimal)result.Sentiment, 
+                date, lastStock);
 
             var saveLock = new object();
             lock (saveLock)
