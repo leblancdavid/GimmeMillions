@@ -40,13 +40,19 @@ namespace GimmeMillions.Domain.Stocks.Recommendations
             LastUpdated = DateTime.Now;
         }
 
-        public void AddRecommendation(StockRecommendation recommendation)
+        public void AddOrUpdateRecommendation(StockRecommendation recommendation)
         {
-            if(_historicalData.Any(x => x.Date.Date == recommendation.Date.Date))
+            if (recommendation.Symbol != Symbol || recommendation.SystemId != SystemId)
             {
-                _historicalData.Add(recommendation);
-                _historicalData = _historicalData.OrderBy(x => x.Date).ToList();
+                return;
             }
+
+            var existingData = _historicalData.FirstOrDefault(x => x.Date.Date == recommendation.Date.Date);
+            if(existingData != null)
+                _historicalData.Remove(existingData);
+
+            _historicalData.Add(recommendation);
+            _historicalData = _historicalData.OrderBy(x => x.Date).ToList();
         }
 
         public StockRecommendationHistory(string systemId, string symbol, string dataStr)

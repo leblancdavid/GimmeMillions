@@ -40,9 +40,9 @@ namespace ModelTrainer
             var context = new GimmeMillionsContext(optionsBuilder.Options);
             context.Database.Migrate();
 
-            var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
+            //var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
-            var trainer = new EgyptianMauModelTrainer(new DefaultStockRepository(stockSqlDb), 
+            var trainer = new EgyptianMauModelTrainer(new DefaultStockRepository(null), 
                 new StockSymbolsFile("nasdaq_screener.csv"),
                 "");
             trainer.Train("Resources/Models/EgyptianMau");

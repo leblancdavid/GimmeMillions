@@ -10,6 +10,7 @@ namespace GimmeMillions.Domain.Stocks
         Result<StockRecommendation> GetStockRecommendation(string systemId, string symbol, DateTime dateTime);
         IEnumerable<StockRecommendation> GetStockRecommendations(string systemId, string symbol);
         IEnumerable<StockRecommendation> GetStockRecommendations(string systemId, DateTime dateTime);
+        IEnumerable<StockRecommendation> GetStockRecommendations(string systemId);
 
         void RemoveAll();
     }

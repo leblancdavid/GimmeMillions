@@ -14,8 +14,8 @@ namespace GimmeMillions.WebApi
     {
         public static void RegisterServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IStockRecommendationRepository, SQLStockRecommendationRepository>();
-            services.AddScoped<IStockHistoryRepository, SQLStockHistoryRepository>();
+            //services.AddScoped<IStockRecommendationRepository, SQLStockRecommendationRepository>();
+            //services.AddScoped<IStockHistoryRepository, SQLStockHistoryRepository>();
             services.AddScoped<IStockRepository, DefaultStockRepository>();
             services.AddScoped<IRecommendationSystemProvider, EgyptianMauRecommendationSystemProvider>();
             services.AddScoped<IUserService, SQLUserRepository>();
