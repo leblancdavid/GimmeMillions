@@ -149,7 +149,7 @@ namespace GimmeMillions.Domain.Stocks
                     }
                     var lastStock = stockData.First();
 
-                    var feature = _featureDatasetService.GetFeatureVector(symbol, date);
+                    var feature = _featureDatasetService.GetData(symbol, date, stockData);
                     if (feature.IsFailure)
                     {
                         continue;
@@ -276,7 +276,7 @@ namespace GimmeMillions.Domain.Stocks
             stockData.Reverse();
             var lastStock = stockData.First();
 
-            var feature = _featureDatasetService.GetFeatureVector(symbol, date);
+            var feature = _featureDatasetService.GetData(symbol, date, stockData);
             if (feature.IsFailure)
             {
                 return Result.Failure<StockRecommendation>($"Unable to compute feature vector for {symbol}");
