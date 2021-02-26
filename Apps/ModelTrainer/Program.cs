@@ -10,31 +10,8 @@ namespace ModelTrainer
 {
     class Program
     {
-        public class Options
-        {
-
-            [Option('p', "pathToModel", Required = false, HelpText = "The path to the model file")]
-            public string PathToModel { get; set; }
-            [Option('s', "secret", Required = false, HelpText = "The secret for the Coinbase API")]
-            public string ApiSecret { get; set; }
-            [Option('k', "key", Required = false, HelpText = "The Key for the Coinbase API")]
-            public string ApiKey { get; set; }
-
-            [Option('x', "passphrase", Required = false, HelpText = "The Passphrase for the Coinbase API")]
-            public string ApiPassphrase { get; set; }
-        }
         static void Main(string[] args)
         {
-            string pathToModels = "", secret = "", key = "", passphrase = "";
-            Parser.Default.ParseArguments<Options>(args)
-                  .WithParsed<Options>(o =>
-                  {
-                      pathToModels = o.PathToModel;
-                      secret = o.ApiSecret;
-                      key = o.ApiKey;
-                      passphrase = o.ApiPassphrase;
-                  });
-
             var optionsBuilder = new DbContextOptionsBuilder<GimmeMillionsContext>();
             optionsBuilder.UseSqlite($"Data Source=gm.db");
             var context = new GimmeMillionsContext(optionsBuilder.Options);
@@ -42,10 +19,16 @@ namespace ModelTrainer
 
             var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
-            var trainer = new EgyptianMauModelTrainer(new DefaultStockRepository(stockSqlDb), 
-                new StockSymbolsFile("nasdaq_screener.csv"),
-                "");
-            trainer.Train("Resources/Models/EgyptianMau");
+            var trainer = new FuturesDayTradeModelTrainer(new DefaultStockRepository(stockSqlDb),
+                new StockSymbolsFile("nasdaq_screener.csv"), "");
+
+            trainer.Train("Resources/Models/EgyptianMau/FuturesDayTrader_5m", StockDataPeriod.FiveMinute);
+
+            //var trainer = new EgyptianMauModelTrainer(new DefaultStockRepository(stockSqlDb), 
+            //    new StockSymbolsFile("nasdaq_screener.csv"),
+            //    "");
+            //trainer.Train("Resources/Models/EgyptianMau");
+
 
             //var trainer = new DonskoyModelTrainer(new DefaultStockRepository(stockSqlDb));
             //trainer.Train("C:\\Stocks\\Models\\Donskoy");
