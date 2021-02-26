@@ -25,8 +25,8 @@ namespace ModelTrainer
         }
         public void Train(string modelName, StockDataPeriod period)
         {
-            //var datasetService = GetRawFeaturesBuySellSignalDatasetService(20, 9);
-            var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 12, 80, 9);
+            var datasetService = GetRawFeaturesBuySellSignalDatasetService(period, 50, 9);
+            //var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 12, 80, 9);
             var model = new MLStockRangePredictorModel();
 
             int numSamples = 20000;
@@ -58,16 +58,16 @@ namespace ModelTrainer
                 period, numStockSamples, kernelSize);
         }
 
-        private IFeatureDatasetService<FeatureVector> GetRawFeaturesBuySellSignalDatasetService(
+        private IFeatureDatasetService<FeatureVector> GetRawFeaturesBuySellSignalDatasetService(StockDataPeriod period,
             int numStockSamples = 40,
             int kernelSize = 9)
         {
-            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(_tdAccessFile), _stockSymbolsRepository);
+            var stocksRepo = new AlpacaStockAccessService(_stockRepository);
             var extractor = new RawCandlesStockFeatureExtractor();
             //var extractor = new RawPriceStockFeatureExtractor();
 
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
-                StockDataPeriod.Day, numStockSamples, kernelSize);
+                period, numStockSamples, kernelSize);
         }
     }
 }
