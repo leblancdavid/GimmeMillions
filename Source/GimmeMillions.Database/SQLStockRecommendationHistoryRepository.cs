@@ -28,7 +28,7 @@ namespace GimmeMillions.Database
             {
                 var context = new GimmeMillionsContext(_dbContextOptions);
 
-                var symbolHistory = context.RecommendationHistories.FirstOrDefault(x => x.Symbol == recommendation.Symbol);
+                var symbolHistory = context.RecommendationHistories.FirstOrDefault(x => x.Symbol == recommendation.Symbol && x.SystemId == recommendation.SystemId);
 
                 if(symbolHistory == null)
                 {
@@ -43,7 +43,7 @@ namespace GimmeMillions.Database
                     context.RecommendationHistories.Update(symbolHistory);
                 }
 
-                var lastPrediction = context.LastRecommendations.FirstOrDefault(x => x.Symbol == recommendation.Symbol);
+                var lastPrediction = context.LastRecommendations.FirstOrDefault(x => x.Symbol == recommendation.Symbol && x.SystemId == recommendation.SystemId);
                 if(lastPrediction != null)
                 {
                     if(lastPrediction.Date < recommendation.Date)
@@ -76,7 +76,7 @@ namespace GimmeMillions.Database
             {
                 var context = new GimmeMillionsContext(_dbContextOptions);
 
-                var symbolHistory = context.RecommendationHistories.FirstOrDefault(x => x.Symbol == history.Symbol);
+                var symbolHistory = context.RecommendationHistories.FirstOrDefault(x => x.Symbol == history.Symbol && x.SystemId == history.SystemId);
 
                 if (symbolHistory != null)
                 {
@@ -88,7 +88,7 @@ namespace GimmeMillions.Database
                 var r = history.HistoricalData.LastOrDefault();
                 if(r != null)
                 {
-                    var lastPrediction = context.LastRecommendations.FirstOrDefault(x => x.Symbol == history.Symbol);
+                    var lastPrediction = context.LastRecommendations.FirstOrDefault(x => x.Symbol == history.Symbol && x.SystemId == history.SystemId);
                     if (lastPrediction != null)
                     {
 
