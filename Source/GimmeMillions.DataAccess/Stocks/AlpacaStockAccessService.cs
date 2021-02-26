@@ -49,6 +49,12 @@ namespace GimmeMillions.DataAccess.Stocks
             {
                 stocks.AddRange(GetStockDataFromClient(symbol, period, DateTime.UtcNow, limit));
             }
+
+            for(int i = 1; i < stocks.Count; ++i)
+            {
+                stocks[i].PreviousClose = stocks[i - 1].Close;
+            }
+
             return stocks;
         }
 

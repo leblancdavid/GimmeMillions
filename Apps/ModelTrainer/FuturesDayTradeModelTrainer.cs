@@ -35,24 +35,6 @@ namespace ModelTrainer
             trainingData.AddRange(datasetService.GetTrainingData("SPY", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("QQQ", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("RUT", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("AAPL", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("MSFT", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("AMZN", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("GOOG", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("GOOGL", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("FB", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("BABA", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("TSLA", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("V", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("JPM", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("JNJ", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("WMT", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("MA", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("NVDA", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("DIS", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("PYPL", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("PG", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("BAC", null, true, numSamples));
 
             model.Train(trainingData, 0.1, new SignalOutputMapper());
             model.Save(modelName);
@@ -64,7 +46,7 @@ namespace ModelTrainer
             int numStockSamples = 40,
             int kernelSize = 9)
         {
-            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(_tdAccessFile), _stockSymbolsRepository);
+            var stocksRepo = new AlpacaStockAccessService(_stockRepository);
             var extractor = new StockIndicatorsFeatureExtractionV2(timeSampling,
                 numStockSamples,
                 (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
