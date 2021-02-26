@@ -22,14 +22,14 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
 
         public string ApiKey { get; private set; }
 
-        public HttpResponseMessage GetPriceHistory(PriceHistoryRequest requestData)
+        public HttpResponseMessage GetPriceHistory(IUrlProvider request)
         {
             lock(_throttleLock)
             {
                 try
                 {
                     Thread.Sleep(500);
-                    var url = requestData.GetRequestUrl();
+                    var url = request.GetRequestUrl();
                     return Task.Run(async () => await _client.GetAsync(url)).Result;
                 }
                 catch (Exception)

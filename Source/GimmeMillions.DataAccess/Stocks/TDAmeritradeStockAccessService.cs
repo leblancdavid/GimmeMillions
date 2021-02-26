@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace GimmeMillions.DataAccess.Stocks
 {
@@ -19,11 +21,56 @@ namespace GimmeMillions.DataAccess.Stocks
 
         public IEnumerable<StockData> GetStocks(string symbol, StockDataPeriod period, int limit = -1)
         {
-            var response = _client.GetPriceHistory(BuildPriceHistoryRequest(symbol, period, limit));
-            if(response.IsSuccessStatusCode)
+            if(period >= StockDataPeriod.Day)
             {
-                return ParseResponseContent(response.Content.ReadAsStringAsync().Result, symbol);
+                var response = _client.GetPriceHistory(BuildPriceHistoryRequest(symbol, period, limit));
+                if (response.IsSuccessStatusCode)
+                {
+                    return ParseResponseContent(response.Content.ReadAsStringAsync().Result, symbol);
+                }
             }
+            else
+            {
+                var stockData = new List<StockData>();
+                bool done = false;
+                DateTime endDate = DateTime.UtcNow, startDate;
+                do
+                {
+                    startDate = endDate.AddDays(-1.0);
+                    var response = _client.GetPriceHistory(new IntradayPriceHistoryRequest(_client.ApiKey, symbol)
+                    {
+                        EndDate = endDate,
+                        StartDate = startDate,
+                        Frequency = GetFrequency(period)
+                    });
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        done = true;
+                        //return ParseResponseContent(response.Content.ReadAsStringAsync().Result, symbol);
+                    }
+                    else
+                    {
+                        var segment = ParseResponseContent(response.Content.ReadAsStringAsync().Result, symbol).Where(x => x.Date >= startDate && x.Date < endDate).ToList();
+                        if (!segment.Any())
+                            done = true;
+                        else
+                        {
+                            if(stockData.Any())
+                                stockData[0].PreviousClose = segment.Last().Close;
+
+                            stockData.InsertRange(0, segment);
+
+                            endDate = stockData.First().Date;
+                            if (stockData.Count >= limit)
+                                done = true;
+                        }
+                    }
+
+
+                } while (!done);
+                return stockData;
+            }
+            
             return new List<StockData>();
         }
 
@@ -73,17 +120,17 @@ namespace GimmeMillions.DataAccess.Stocks
                 case StockDataPeriod.FifteenMinute:
                     freqType = "minute";
                     freq = 15;
-                    intraday = false;
+                    intraday = true;
                     break;
                 case StockDataPeriod.FiveMinute:
                     freqType = "minute";
                     freq = 5;
-                    intraday = false;
+                    intraday = true;
                     break;
                 case StockDataPeriod.Minute:
                     freqType = "minute";
                     freq = 1;
-                    intraday = false;
+                    intraday = true;
                     break;
             }
 
@@ -105,9 +152,29 @@ namespace GimmeMillions.DataAccess.Stocks
             {
                 EndDate = endDate,
                 StartDate = startDate,
-                Frequency = freq,
+                Frequency = GetFrequency(period),
                 FrequencyType = freqType
             };
+        }
+
+        private int GetFrequency(StockDataPeriod period)
+        {
+            switch (period)
+            {
+                case StockDataPeriod.Week:
+                    return 5;
+                case StockDataPeriod.FifteenMinute:
+                    return 15;
+                case StockDataPeriod.FiveMinute:
+                    return 5;
+                case StockDataPeriod.SixHour:
+                    return 6;
+                case StockDataPeriod.Minute:
+                case StockDataPeriod.Day:
+                case StockDataPeriod.Hour:
+                default:
+                    return 1;
+            }
         }
 
         public IEnumerable<string> GetSymbols()

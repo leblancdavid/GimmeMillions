@@ -4,16 +4,15 @@ using System.Text;
 
 namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
 {
-    public class PriceHistoryRequest : IUrlProvider
+    public class IntradayPriceHistoryRequest : IUrlProvider
     {
         public string ApiKey { get; set; }
         public string Symbol { get; set; }
-        public string FrequencyType { get; set; }
         public int Frequency { get; set; } = 1;
         public DateTime EndDate { get; set; }
         public DateTime StartDate { get; set; }
 
-        public PriceHistoryRequest(string apiKey, string symbol)
+        public IntradayPriceHistoryRequest(string apiKey, string symbol)
         {
             Symbol = symbol;
             ApiKey = apiKey;
@@ -21,8 +20,7 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
 
         public string GetRequestUrl()
         {
-            var url = $"https://api.tdameritrade.com/v1/marketdata/{Symbol}/pricehistory?apikey={ApiKey}&periodType=year" +
-                "&frequencyType=" + FrequencyType +
+            var url = $"https://api.tdameritrade.com/v1/marketdata/{Symbol}/pricehistory?apikey={ApiKey}&periodType=day&frequencyType=minute" +
                 "&frequency=" + Frequency +
                 "&endDate=" + new DateTimeOffset(EndDate).ToUnixTimeMilliseconds() +
                 "&startDate=" + new DateTimeOffset(StartDate).ToUnixTimeMilliseconds();
