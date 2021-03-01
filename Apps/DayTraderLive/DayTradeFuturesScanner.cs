@@ -12,7 +12,7 @@ namespace DayTraderLive
     {
         private MLStockRangePredictorModel _model;
         private IFeatureDatasetService<FeatureVector> _dataset;
-        private Dictionary<string, Queue<(double Signal, DateTime Time)>> _signalTable;
+        private Dictionary<string, PredictionUpdate> _predictionTable;
         private List<string> _symbols = new List<string>()
         {
             "DIA", "SPY", "QQQ", "RUT"
@@ -28,20 +28,19 @@ namespace DayTraderLive
             _dataset = dataset;
             BUY_SIGNAL_THRESHOLD = buyThreshold;
             SELL_SIGNAL_THRESHOLD = sellThreshold;
-            _signalTable = new Dictionary<string, Queue<(double Signal, DateTime Time)>>();
+            _predictionTable = new Dictionary<string, PredictionUpdate>();
             foreach (var symbol in _symbols)
             {
-                _signalTable[symbol] = new Queue<(double Signal, DateTime Time)>();
-                _signalTable[symbol].Enqueue((50.0, new DateTime()));
+                _predictionTable[symbol] = new PredictionUpdate();
             }
 
             PrintTable();
         }
 
-        public IEnumerable<BuySellNotification> Scan()
+        public IEnumerable<PredictionUpdate> Scan()
         {
             int length = 5;
-            var results = new List<BuySellNotification>();
+            var results = new List<PredictionUpdate>();
             foreach (var symbol in _symbols)
             {
                 var result = UpdateTableFor(symbol, length);
@@ -49,32 +48,22 @@ namespace DayTraderLive
                     continue;
 
                 results.Add(result);
-                //if (_notifier != null && result.IsBuySignal(BUY_SIGNAL_THRESHOLD))
-                //    _notifier.Notify(result);
-                //if (_notifier != null && result.IsSellSignal(SELL_SIGNAL_THRESHOLD))
-                //    _notifier.Notify(result);
             }
             PrintTable();
             return results;
         }
 
-        private BuySellNotification UpdateTableFor(string symbol, int maxLength = 5)
+        private PredictionUpdate UpdateTableFor(string symbol, int maxLength = 5)
         {
             StockData last = null;
             int historyLength = 100;
             var feature = _dataset.GetFeatureVector(symbol, out last, historyLength);
-            if (feature.IsSuccess && feature.Value.Date >= _signalTable[symbol].Last().Time)
+            if (feature.IsSuccess)
             {
                 var prediction = _model.Predict(feature.Value);
-                if (prediction.Sentiment != _signalTable[symbol].Last().Signal)
-                {
-                    _signalTable[symbol].Enqueue((prediction.Sentiment, feature.Value.Date));
-                    if (_signalTable[symbol].Count > maxLength)
-                    {
-                        _signalTable[symbol].Dequeue();
-                    }
-                    return new BuySellNotification(last, prediction.Sentiment);
-                }
+                _predictionTable[symbol].Update(prediction);
+              
+                return _predictionTable[symbol];
             }
 
             return null;
@@ -87,16 +76,19 @@ namespace DayTraderLive
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ResetColor();
+
+            Console.WriteLine("Symbol\tSignal\tChange\tHigh\tLow\tLast Update");
             foreach (var symbol in _symbols)
             {
                 string line = symbol;
-                var color = GetColorFromSignal(_signalTable[symbol].Last().Signal);
-                foreach (var signal in _signalTable[symbol].Reverse())
-                {
-                    string s = String.Format("{0:F2}", signal.Signal);
-                    line += $"\t{s}%";
-                }
+                var color = GetColorFromSignal(_predictionTable[symbol].CurrentPrediction.Sentiment);
                 Console.ForegroundColor = color;
+                line += $"\t{String.Format("{0:F2}", _predictionTable[symbol].CurrentPrediction.Sentiment)}%";
+                string signalChange = _predictionTable[symbol].SignalChange > 0.0 ? "+" : "-";
+                line += $"\t{signalChange}{String.Format("{0:F2}", _predictionTable[symbol].SignalChange)}%";
+                line += $"\t{String.Format("{0:F2}", _predictionTable[symbol].CurrentPrediction.PredictedHigh)}%";
+                line += $"\t{String.Format("{0:F2}", _predictionTable[symbol].CurrentPrediction.PredictedLow)}%";
+                line += $"\t{_predictionTable[symbol].LastUpdated.ToString("hh:mm:ss.F")}";
                 Console.WriteLine(line);
             }
         }

@@ -3,6 +3,7 @@ using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.Stocks;
 using System;
+using System.Threading;
 
 namespace DayTraderLive
 {
@@ -31,7 +32,7 @@ namespace DayTraderLive
                 }
 
                 //scanner.Scan();
-
+                //Thread.Sleep(1000);
                 var currentTime = DateTime.Now;
                 if (currentTime.Minute % 15 == 0 &&
                     lastDigit != currentTime.Minute &&
