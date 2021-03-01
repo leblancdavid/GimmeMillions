@@ -46,7 +46,7 @@ namespace ModelTrainer
             int numStockSamples = 40,
             int kernelSize = 9)
         {
-            var stocksRepo = new AlpacaStockAccessService(_stockRepository);
+            var stocksRepo = new AlpacaStockAccessService();
             var extractor = new StockIndicatorsFeatureExtractionV2(timeSampling,
                 numStockSamples,
                 (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
@@ -62,7 +62,7 @@ namespace ModelTrainer
             int numStockSamples = 40,
             int kernelSize = 9)
         {
-            var stocksRepo = new AlpacaStockAccessService(_stockRepository);
+            var stocksRepo = new AlpacaStockAccessService();
             var extractor = new RawCandlesStockFeatureExtractor();
             //var extractor = new RawPriceStockFeatureExtractor();
 

@@ -11,12 +11,10 @@ namespace GimmeMillions.DataAccess.Stocks
     {
         private string API_KEY = "PKZSK59ADESY8V9EC5SZ";
         private string API_SECRET = "93ia2Pfj9iyrgWf9BnZDJjzRqRAXshcKIbks0W4O";
-        private IStockRepository _stockRepository;
         private IAlpacaDataClient _client;
 
-        public AlpacaStockAccessService(IStockRepository stockRepository)
+        public AlpacaStockAccessService()
         {
-            _stockRepository = stockRepository;
             _client = Alpaca.Markets.Environments.Paper.GetAlpacaDataClient(new SecretKey(API_KEY, API_SECRET));
         }
 
@@ -110,7 +108,7 @@ namespace GimmeMillions.DataAccess.Stocks
 
         public IEnumerable<string> GetSymbols()
         {
-            return _stockRepository.GetSymbols();
+            return new List<string>();
         }
 
         public IEnumerable<StockData> UpdateStocks(string symbol, StockDataPeriod period, int limit = -1)
