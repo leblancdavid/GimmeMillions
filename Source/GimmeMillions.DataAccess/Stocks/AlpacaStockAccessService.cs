@@ -3,6 +3,7 @@ using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GimmeMillions.DataAccess.Stocks
@@ -62,6 +63,8 @@ namespace GimmeMillions.DataAccess.Stocks
             {
                 Limit = limit
             };
+
+            Thread.Sleep(500);
 
             var bars = Task.Run(async () => await _client.GetBarSetAsync(TimeInterval.SetInclusiveTimeInterval(request, new DateTime(), time))).Result;
 

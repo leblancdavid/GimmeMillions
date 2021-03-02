@@ -1,9 +1,11 @@
-﻿using GimmeMillions.DataAccess.Stocks;
+﻿using GimmeMillions.DataAccess.Clients.TDAmeritrade;
+using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.Stocks;
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace DayTraderLive
 {
@@ -11,9 +13,16 @@ namespace DayTraderLive
     {
         static void Main(string[] args)
         {
-            var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(StockDataPeriod.FifteenMinute, 12, 80, 9);
+            //Console.Write("Token: ");
+            //string token = Console.ReadLine();
+            //var client = new TDAmeritradeApiClient("I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP", token);
+
+            //var datasetService = GetAmeritradeIndicatorFeaturesBuySellSignalDatasetService(client, StockDataPeriod.FiveMinute, 12, 80, 9);
+
+            var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(StockDataPeriod.FiveMinute, 12, 80, 9);
             var model = new MLStockRangePredictorModel();
             //model.Load($"Models/DayTrader_15m");
+
             model.Load($"Models/DayTrader_5m");
 
             var scanner = new DayTradeFuturesScanner(model, datasetService);
