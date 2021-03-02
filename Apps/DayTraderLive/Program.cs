@@ -13,9 +13,9 @@ namespace DayTraderLive
     {
         static void Main(string[] args)
         {
-            //Console.Write("Token: ");
-            //string token = Console.ReadLine();
-            //var client = new TDAmeritradeApiClient("I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP", token);
+            Console.Write("Token: ");
+            string token = Console.ReadLine();
+            var client = new TDAmeritradeApiClient("I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP", token);
 
             //var datasetService = GetAmeritradeIndicatorFeaturesBuySellSignalDatasetService(client, StockDataPeriod.FiveMinute, 12, 80, 9);
 
@@ -85,7 +85,7 @@ namespace DayTraderLive
             int numStockSamples = 40,
             int kernelSize = 9)
         {
-            var stocksRepo = new AlpacaStockAccessService();
+            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient("I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP"), null);
             var extractor = new StockIndicatorsFeatureExtractionV2(timeSampling,
                 numStockSamples,
                 (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,

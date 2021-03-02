@@ -6,6 +6,6 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
 {
     public interface IUrlProvider
     {
-        string GetRequestUrl();
+        string GetRequestUrl(bool authenticated = false);
     }
 }

@@ -15,9 +15,15 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
     {
         private readonly HttpClient _client = new HttpClient();
         private object _throttleLock = new object();
-        public TDAmeritradeApiClient(string apiKey)
-        {
+        private string _token;
+        public TDAmeritradeApiClient(string apiKey, string token = null)
+        { 
             ApiKey = apiKey;
+            _token = token;
+            if (!string.IsNullOrEmpty(_token))
+            {
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
         }
 
         public string ApiKey { get; private set; }
@@ -29,7 +35,7 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
                 try
                 {
                     Thread.Sleep(500);
-                    var url = request.GetRequestUrl();
+                    var url = request.GetRequestUrl(!string.IsNullOrEmpty(_token));
                     return Task.Run(async () => await _client.GetAsync(url)).Result;
                 }
                 catch (Exception)

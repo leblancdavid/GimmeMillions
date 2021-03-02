@@ -18,13 +18,21 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
             ApiKey = apiKey;
         }
 
-        public string GetRequestUrl()
+        public string GetRequestUrl(bool authenticated = false)
         {
-            var url = $"https://api.tdameritrade.com/v1/marketdata/{Symbol}/pricehistory?apikey={ApiKey}&periodType=day&frequencyType=minute" +
-                "&frequency=" + Frequency +
+            string url = "";
+            if (authenticated)
+            {
+                url = $"https://api.tdameritrade.com/v1/marketdata/{Symbol}/pricehistory?periodType=day&frequencyType=minute";
+            }
+            else
+            {
+                url = $"https://api.tdameritrade.com/v1/marketdata/{Symbol}/pricehistory?apikey={ApiKey}&periodType=day&frequencyType=minute";
+            }
+
+            url += "&frequency=" + Frequency +
                 "&endDate=" + new DateTimeOffset(EndDate).ToUnixTimeMilliseconds() +
                 "&startDate=" + new DateTimeOffset(StartDate).ToUnixTimeMilliseconds();
-
             return url;
         }
     }

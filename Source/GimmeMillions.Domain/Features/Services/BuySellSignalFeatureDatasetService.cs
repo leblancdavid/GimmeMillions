@@ -385,7 +385,7 @@ namespace GimmeMillions.Domain.Features
                     $"No stock found for symbol '{symbol}' on {date.ToString("yyyy/MM/dd")}");
             }
 
-            stocks.RemoveAt(stocks.Count - 1);
+            //stocks.RemoveAt(stocks.Count - 1);
             last = stocks.Last();
             return GetData(symbol, date, stocks);
         }
