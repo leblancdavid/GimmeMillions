@@ -15,11 +15,11 @@ namespace DayTraderLive
         {
             Console.Write("Token: ");
             string token = Console.ReadLine();
-            var client = new TDAmeritradeApiClient("I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP", token);
+            //var client = new TDAmeritradeApiClient("I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP", token);
 
             //var datasetService = GetAmeritradeIndicatorFeaturesBuySellSignalDatasetService(client, StockDataPeriod.FiveMinute, 12, 80, 9);
 
-            var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(StockDataPeriod.FiveMinute, 12, 80, 9);
+            var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(token, StockDataPeriod.FiveMinute, 12, 80, 9);
             var model = new MLStockRangePredictorModel();
             //model.Load($"Models/DayTrader_15m");
 
@@ -45,9 +45,8 @@ namespace DayTraderLive
                 //scanner.Scan();
                 //Thread.Sleep(1000);
                 var currentTime = DateTime.Now;
-                if (currentTime.Minute % 15 == 0 &&
-                    lastDigit != currentTime.Minute &&
-                    currentTime.Second > 10) // Add a 10 second delay just to give it enough room
+                if (currentTime.Minute % 15 == 1 &&
+                    lastDigit != currentTime.Minute) // Add a 10 second delay just to give it enough room
                 {
                     scanner.Scan();
                     lastDigit = currentTime.Minute;
@@ -69,9 +68,8 @@ namespace DayTraderLive
                 //scanner.Scan();
                 //Thread.Sleep(1000);
                 var currentTime = DateTime.Now;
-                if (currentTime.Minute % 5 == 0 &&
-                    lastDigit != currentTime.Minute &&
-                    currentTime.Second > 30) // Add a 30 second delay just to give it enough room
+                if (currentTime.Minute % 5 == 1 &&
+                    lastDigit != currentTime.Minute)
                 {
                     scanner.Scan();
                     lastDigit = currentTime.Minute;
@@ -80,12 +78,13 @@ namespace DayTraderLive
         }
 
         private static IFeatureDatasetService<FeatureVector> GetIndicatorFeaturesBuySellSignalDatasetService(
+            string token,
             StockDataPeriod period,
             int timeSampling = 10,
             int numStockSamples = 40,
             int kernelSize = 9)
         {
-            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient("I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP"), null);
+            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient("I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP", token), null);
             var extractor = new StockIndicatorsFeatureExtractionV2(timeSampling,
                 numStockSamples,
                 (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
