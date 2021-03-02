@@ -13,17 +13,19 @@ namespace DayTraderLive
         {
             var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(StockDataPeriod.FifteenMinute, 12, 80, 9);
             var model = new MLStockRangePredictorModel();
-            model.Load($"Models/DayTrader_15m");
+            //model.Load($"Models/DayTrader_15m");
+            model.Load($"Models/DayTrader_5m");
 
             var scanner = new DayTradeFuturesScanner(model, datasetService);
 
-            Run15mScan(scanner);
-
+            //Run15mScan(scanner);
+            Run5mScan(scanner);
         }
 
         private static void Run15mScan(DayTradeFuturesScanner scanner)
         {
             var lastDigit = (DateTime.Now.Minute / 15) * 15;
+            scanner.Scan();
             while (true)
             {
                 if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape)
@@ -37,6 +39,30 @@ namespace DayTraderLive
                 if (currentTime.Minute % 15 == 0 &&
                     lastDigit != currentTime.Minute &&
                     currentTime.Second > 10) // Add a 10 second delay just to give it enough room
+                {
+                    scanner.Scan();
+                    lastDigit = currentTime.Minute;
+                }
+            }
+        }
+
+        private static void Run5mScan(DayTradeFuturesScanner scanner)
+        {
+            var lastDigit = (DateTime.Now.Minute / 5) * 5;
+            scanner.Scan();
+            while (true)
+            {
+                if (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.Escape)
+                {
+                    break;
+                }
+
+                //scanner.Scan();
+                //Thread.Sleep(1000);
+                var currentTime = DateTime.Now;
+                if (currentTime.Minute % 5 == 0 &&
+                    lastDigit != currentTime.Minute &&
+                    currentTime.Second > 30) // Add a 30 second delay just to give it enough room
                 {
                     scanner.Scan();
                     lastDigit = currentTime.Minute;

@@ -61,7 +61,7 @@ namespace DayTraderLive
             if (feature.IsSuccess)
             {
                 var prediction = _model.Predict(feature.Value);
-                _predictionTable[symbol].Update(prediction);
+                _predictionTable[symbol].Update(prediction, last);
               
                 return _predictionTable[symbol];
             }
@@ -77,18 +77,19 @@ namespace DayTraderLive
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ResetColor();
 
-            Console.WriteLine("Symbol\tSignal\tChange\tHigh\tLow\tLast Update");
+            Console.WriteLine("Symbol\tSignal\tChange\tHigh\tTarget\tLow\tTarget\tLast Update");
             foreach (var symbol in _symbols)
             {
                 string line = symbol;
                 var color = GetColorFromSignal(_predictionTable[symbol].CurrentPrediction.Sentiment);
                 Console.ForegroundColor = color;
                 line += $"\t{String.Format("{0:F2}", _predictionTable[symbol].CurrentPrediction.Sentiment)}%";
-                string signalChange = _predictionTable[symbol].SignalChange > 0.0 ? "+" : "-";
-                line += $"\t{signalChange}{String.Format("{0:F2}", _predictionTable[symbol].SignalChange)}%";
+                line += $"\t{String.Format("{0:F2}", _predictionTable[symbol].SignalChange)}%";
                 line += $"\t{String.Format("{0:F2}", _predictionTable[symbol].CurrentPrediction.PredictedHigh)}%";
+                line += $"\t{String.Format("{0:F2}", _predictionTable[symbol].HighTarget)}";
                 line += $"\t{String.Format("{0:F2}", _predictionTable[symbol].CurrentPrediction.PredictedLow)}%";
-                line += $"\t{_predictionTable[symbol].LastUpdated.ToString("hh:mm:ss.F")}";
+                line += $"\t{String.Format("{0:F2}", _predictionTable[symbol].LowTarget)}";
+                line += $"\t{_predictionTable[symbol].LastCandle.Date.ToString("hh:mm:ss.F")}";
                 Console.WriteLine(line);
             }
         }
