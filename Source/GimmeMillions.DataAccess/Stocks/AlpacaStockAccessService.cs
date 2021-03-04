@@ -64,7 +64,7 @@ namespace GimmeMillions.DataAccess.Stocks
                 Limit = limit
             };
 
-            Thread.Sleep(500);
+            Thread.Sleep(100);
 
             var bars = Task.Run(async () => await _client.GetBarSetAsync(TimeInterval.SetInclusiveTimeInterval(request, new DateTime(), time))).Result;
 

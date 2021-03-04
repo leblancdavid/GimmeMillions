@@ -258,21 +258,81 @@ namespace GimmeMillions.Domain.Features
                     }
                 }
 
+                for(int i = 0; i < inflectionIndex.Count; ++i)
+                {
+                    if(inflectionIndex[i].BuySignal)
+                    {
+                        //Find the low in the neighborhood
+                        int updatedIndex = inflectionIndex[i].Index;
+                        decimal minPrice = decimal.MaxValue;
+                        for(int j = inflectionIndex[i].Index - _derivativeKernel / 2; j < inflectionIndex[i].Index + _derivativeKernel / 2; ++j)
+                        {
+                            if (j < 0 || j >= stocks.Count)
+                                continue;
+
+                            if(stocks[j].Close < minPrice)
+                            {
+                                updatedIndex = j;
+                                minPrice = stocks[j].Close;
+                            }
+                        }
+
+                        inflectionIndex[i] = (updatedIndex, true);
+                    }
+                    else
+                    {
+                        //Find the low in the neighborhood
+                        int updatedIndex = inflectionIndex[i].Index;
+                        decimal maxPrice = decimal.MinValue;
+                        for (int j = inflectionIndex[i].Index - _derivativeKernel / 2; j < inflectionIndex[i].Index + _derivativeKernel / 2; ++j)
+                        {
+                            if (j < 0 || j >= stocks.Count)
+                                continue;
+
+                            if (stocks[j].Close > maxPrice)
+                            {
+                                updatedIndex = j;
+                                maxPrice = stocks[j].Close;
+                            }
+                        }
+
+                        inflectionIndex[i] = (updatedIndex, false);
+                    }
+                }
+
                 var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
                 var signalCheck = new List<double>();
+                var priceCheck = new List<double>();
+                double averageDistance = 0.0;
                 for (int i = 1; i < inflectionIndex.Count; ++i)
                 {
                     int j = inflectionIndex[i - 1].Index;
-                    double signalStep = 1.0 / (double)(inflectionIndex[i].Index - j);
-                    double signal = 0.0;
-                    if (inflectionIndex[i - 1].BuySignal)
-                    {
-                        signalStep *= -1.0;
-                        signal = 1.0;
-                    }
+                    averageDistance += inflectionIndex[i].Index - j;
+
+                    decimal openPrice = stocks[j].Close;
+                    decimal closePrice = stocks[inflectionIndex[i].Index].Close;
+                    
                     while (j < inflectionIndex[i].Index)
                     {
                         var sample = stocks[j];
+
+                        decimal signal = 0.0m;
+                        if(openPrice == closePrice)
+                        {
+                            signal = inflectionIndex[i - 1].BuySignal ? 1.0m : 0.0m;
+                        }
+                        else if(inflectionIndex[i - 1].BuySignal)
+                        {
+                            signal = 1.0m - (sample.Close - openPrice) / (closePrice - openPrice);
+                        }
+                        else
+                        {
+                            signal = (sample.Close - openPrice) / (closePrice - openPrice);
+                        }
+                        if (signal > 1.0m)
+                            signal = 1.0m;
+                        if (signal < 0.0m)
+                            signal = 0.0m;
                         if (filter.Pass(sample))
                         {
                             var data = GetData(symbol, sample.Date, stocks);
@@ -294,18 +354,21 @@ namespace GimmeMillions.Domain.Features
 
                                 var output = new StockData(symbol, sample.Date, sample.Open, high, low,
                                     stocks[inflectionIndex[i].Index - 1].Close,
+                                    //sample.Close,
                                     stocks[inflectionIndex[i].Index - 1].AdjustedClose,
                                     sample.Volume, sample.PreviousClose);
-                                output.Signal = (decimal)signal;
+
+                                output.Signal = signal;
                                 trainingData.Add((data.Value, output));
-                                signalCheck.Add(signal);
+                                signalCheck.Add((double)signal);
+                                priceCheck.Add((double)sample.Close);
                             }
                         }
-                        signal += signalStep;
                         ++j;
                     }
                 }
 
+                averageDistance /= inflectionIndex.Count - 1;
                 if (!trainingData.Any())
                 {
                     return new List<(FeatureVector Input, StockData Output)>();
