@@ -13,12 +13,10 @@ namespace DayTraderLive
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Token: ");
-            string token = Console.ReadLine();
-            Console.Write("Refresh Token: ");
-            string refreshToken = Console.ReadLine();
+            //var credentials = new AmeritradeCredentials();
+            //AmeritradeCredentials.Write("I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP.json", credentials);
 
-            var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(token, refreshToken, StockDataPeriod.FiveMinute, 12, 80, 9);
+            var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(StockDataPeriod.FiveMinute, 12, 80, 9);
             var model = new MLStockRangePredictorModel();
             //model.Load($"Models/DayTrader_15m");
 
@@ -77,14 +75,13 @@ namespace DayTraderLive
         }
 
         private static IFeatureDatasetService<FeatureVector> GetIndicatorFeaturesBuySellSignalDatasetService(
-            string token, 
-            string refreshToken,
             StockDataPeriod period,
             int timeSampling = 10,
             int numStockSamples = 40,
             int kernelSize = 9)
         {
-            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient("I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP", token, refreshToken), null);
+
+            var stocksRepo = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient("I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP"), null);
             var extractor = new StockIndicatorsFeatureExtractionV2(timeSampling,
                 numStockSamples,
                 (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,

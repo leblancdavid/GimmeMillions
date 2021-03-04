@@ -16,22 +16,28 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
     {
         private readonly HttpClient _client = new HttpClient();
         private object _throttleLock = new object();
-        private string _token;
-        private string _refreshToken;
-        public TDAmeritradeApiClient(string apiKey, string token = null, string refresh_token = null)
-        { 
-            ApiKey = apiKey;
-            _token = token;
-            _refreshToken = refresh_token;
-            if (!string.IsNullOrEmpty(_token))
-            {
-                _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
-                //_client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("application/gzip"));
-                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            }
+        private AmeritradeCredentials _credentials;
+        public TDAmeritradeApiClient(AmeritradeCredentials credentials)
+        {
+            _credentials = credentials;
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _credentials.Token);
         }
 
-        public string ApiKey { get; private set; }
+        public TDAmeritradeApiClient(string apiKey)
+        {
+            _credentials = AmeritradeCredentials.Read($"{apiKey}.json");
+            _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _credentials.Token);
+        }
+
+        public string ApiKey 
+        { 
+            get
+            {
+                return _credentials.ApiKey;
+            }
+        }
 
         public HttpResponseMessage GetPriceHistory(IUrlProvider request)
         {
@@ -40,7 +46,7 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
                 try
                 {
                     Thread.Sleep(500);
-                    var url = request.GetRequestUrl(!string.IsNullOrEmpty(_token));
+                    var url = request.GetRequestUrl(!string.IsNullOrEmpty(_credentials.Token));
                     var result = Task.Run(async () => await _client.GetAsync(url)).Result;
                     if(result.StatusCode == HttpStatusCode.Unauthorized)
                     {
@@ -69,7 +75,7 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
                 var body = new AuthenticationPostBody()
                 {
                     grant_type = "refresh_token",
-                    refresh_token = _refreshToken,
+                    refresh_token = _credentials.RefreshToken,
                     access_type = "offline",
                     client_id = ApiKey,
                     redirect_uri = "https://127.0.0.1"
@@ -100,15 +106,18 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
                 //var responseJson = JsonConvert.DeserializeObject<JObject>(response.Content.ReadAsStringAsync().Result);
                 var responseJson = JsonConvert.DeserializeObject<JObject>(response.Content);
 
-                _token = (string)responseJson["access_token"];
-                _refreshToken = (string)responseJson["refresh_token"];
+                _credentials.Token = (string)responseJson["access_token"];
+                _credentials.RefreshToken = (string)responseJson["refresh_token"];
 
-                if (string.IsNullOrEmpty(_token) || string.IsNullOrEmpty(_refreshToken))
+                if (string.IsNullOrEmpty(_credentials.Token) || string.IsNullOrEmpty(_credentials.RefreshToken))
                 {
                     return new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 }
 
-                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _credentials.Token);
+
+                AmeritradeCredentials.Write($"{_credentials.ApiKey}.json",  _credentials);
+
                 return new HttpResponseMessage(response.StatusCode);
 
             }

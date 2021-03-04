@@ -16,6 +16,6 @@
   "AverageLowerProbability": 0.0,
   "AverageUpperScore": 0.0,
   "AverageLowerScore": 0.0,
-  "FeatureEncoding": "Indicators-Boll(80)MACD(64,32,24,5)VWAP(64,5)RSI(64,5)CMF(64,5),nFalse-v2_80d-9k",
+  "FeatureEncoding": "Indicators-Boll(80)MACD(64,32,24,5)VWAP(64,5)RSI(64,5)CMF(64,5),nFalse-v2_80d-13k",
   "ModelId": null
 }
