@@ -15,7 +15,7 @@ namespace DayTraderLive
         private Dictionary<string, PredictionUpdate> _predictionTable;
         private List<string> _symbols = new List<string>()
         {
-            "DIA", "SPY", "QQQ", "RUT"
+            "DIA", "SPY", "QQQ"
         };
         private double SELL_SIGNAL_THRESHOLD = 10.0;
         private double BUY_SIGNAL_THRESHOLD = 90.0;

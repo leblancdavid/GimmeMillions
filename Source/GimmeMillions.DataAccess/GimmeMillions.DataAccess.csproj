@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Alpaca.Markets" Version="3.9.1" />
+    <PackageReference Include="RestSharp" Version="106.11.7" />
   </ItemGroup>
 
   <ItemGroup>
