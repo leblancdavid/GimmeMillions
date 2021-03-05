@@ -4,7 +4,7 @@ using System.Text;
 
 namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
 {
-    public class PriceHistoryRequest
+    public class PriceHistoryRequest : IUrlProvider
     {
         public string ApiKey { get; set; }
         public string Symbol { get; set; }
@@ -19,14 +19,22 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
             ApiKey = apiKey;
         }
 
-        public string GetRequestUrl()
+        public string GetRequestUrl(bool authenticated = false)
         {
-            var url = $"https://api.tdameritrade.com/v1/marketdata/{Symbol}/pricehistory?apikey={ApiKey}&periodType=year" +
-                "&frequencyType=" + FrequencyType +
+            string url = "";
+            if (authenticated)
+            {
+                url = $"https://api.tdameritrade.com/v1/marketdata/{Symbol}/pricehistory?periodType=year";
+            }
+            else
+            {
+                url = $"https://api.tdameritrade.com/v1/marketdata/{Symbol}/pricehistory?apikey={ApiKey}&periodType=year";
+            }
+
+            url += "&frequencyType=" + FrequencyType +
                 "&frequency=" + Frequency +
                 "&endDate=" + new DateTimeOffset(EndDate).ToUnixTimeMilliseconds() +
                 "&startDate=" + new DateTimeOffset(StartDate).ToUnixTimeMilliseconds();
-
             return url;
         }
     }
