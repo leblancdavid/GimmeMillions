@@ -29,14 +29,14 @@ namespace ModelTrainer
             var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 12, 80, kSize);
             var model = new MLStockRangePredictorModel();
 
-            int numSamples = 100000;
+            int numSamples = 10000;
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(datasetService.GetTrainingData("DIA", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("SPY", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("QQQ", null, true, numSamples));
             //trainingData.AddRange(datasetService.GetTrainingData("RUT", null, true, numSamples));
 
-            model.Train(trainingData, 0.0, new SignalOutputMapper());
+            model.Train(trainingData, 0.1, new SignalOutputMapper());
             model.Save(modelName);
         }
 
