@@ -300,6 +300,59 @@ namespace GimmeMillions.Domain.Features
                     }
                 }
 
+                for (int i = 0; i < inflectionIndex.Count - 3; ++i)
+                {
+                    //If buy and sell signal are too close to eachother, we'll need to filter some out
+                    if(inflectionIndex[i + 1].Index - inflectionIndex[i].Index < _derivativeKernel / 3)
+                    {
+                        //Figure out which is the better signal
+                        if(inflectionIndex[i].BuySignal)
+                        {
+                            if(stocks[inflectionIndex[i].Index].Close < stocks[inflectionIndex[i + 2].Index].Close)
+                            {
+                                //remove the lower buy signal
+                                inflectionIndex.RemoveAt(i + 2);
+                                if(stocks[inflectionIndex[i + 2].Index].Close > stocks[inflectionIndex[i + 1].Index].Close)
+                                {
+                                    inflectionIndex.RemoveAt(i + 1);
+                                }
+                                else
+                                {
+                                    inflectionIndex.RemoveAt(i + 2);
+                                }
+                                
+                            }
+                            else
+                            {
+                                inflectionIndex.RemoveAt(i);
+                                inflectionIndex.RemoveAt(i);
+                            }
+                        }
+                        else
+                        {
+                            if (stocks[inflectionIndex[i].Index].Close > stocks[inflectionIndex[i + 2].Index].Close)
+                            {
+                                inflectionIndex.RemoveAt(i + 2);
+                                if (stocks[inflectionIndex[i + 1].Index].Close < stocks[inflectionIndex[i + 2].Index].Close)
+                                {
+                                    inflectionIndex.RemoveAt(i + 2);
+                                }
+                                else
+                                {
+                                    inflectionIndex.RemoveAt(i + 1);
+                                }
+                            }
+                            else
+                            {
+                                inflectionIndex.RemoveAt(i);
+                                inflectionIndex.RemoveAt(i);
+                            }
+                        }
+
+                        --i;
+                    }
+                }
+
                 var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
                 var signalCheck = new List<double>();
                 var priceCheck = new List<double>();

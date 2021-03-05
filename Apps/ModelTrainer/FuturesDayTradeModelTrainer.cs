@@ -29,7 +29,7 @@ namespace ModelTrainer
             var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 12, 80, kSize);
             var model = new MLStockRangePredictorModel();
 
-            int numSamples = 1000;
+            int numSamples = 10000;
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(datasetService.GetTrainingData("DIA", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("SPY", null, true, numSamples));
@@ -54,7 +54,7 @@ namespace ModelTrainer
                 (int)(numStockSamples * 0.8), 5,
                 (int)(numStockSamples * 0.8), 5,
                 false);
-            return new BuySellSignalV2FeatureDatasetService(extractor, stocksRepo,
+            return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                 period, numStockSamples, kernelSize);
         }
 
