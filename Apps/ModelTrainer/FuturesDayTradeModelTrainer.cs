@@ -26,10 +26,10 @@ namespace ModelTrainer
         public void Train(string modelName, StockDataPeriod period, int kSize)
         {
             //var datasetService = GetRawFeaturesBuySellSignalDatasetService(period, 50, 9);
-            var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 12, 80, kSize);
+            var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 20, 80, kSize);
             var model = new MLStockRangePredictorModel();
 
-            int numSamples = 10000;
+            int numSamples = 100000;
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(datasetService.GetTrainingData("DIA", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("SPY", null, true, numSamples));

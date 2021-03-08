@@ -18,14 +18,13 @@ namespace DayTraderLive
 
             var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(StockDataPeriod.FiveMinute, 12, 80, 9);
             var model = new MLStockRangePredictorModel();
+            model.Load($"Models/DayTrader_5m");
             //model.Load($"Models/DayTrader_15m");
-
-            model.Load($"Models/DayTrader_15m");
 
             var scanner = new DayTradeFuturesScanner(model, datasetService);
 
-            Run15mScan(scanner);
-            //Run5mScan(scanner);
+            //Run15mScan(scanner);
+            Run5mScan(scanner);
         }
 
         private static void Run15mScan(DayTradeFuturesScanner scanner)

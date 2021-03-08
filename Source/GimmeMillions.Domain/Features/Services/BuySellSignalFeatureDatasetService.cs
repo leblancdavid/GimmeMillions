@@ -300,10 +300,10 @@ namespace GimmeMillions.Domain.Features
                     }
                 }
 
-                for (int i = 0; i < inflectionIndex.Count - 3; ++i)
+                /*for (int i = 0; i < inflectionIndex.Count - 3; ++i)
                 {
                     //If buy and sell signal are too close to eachother, we'll need to filter some out
-                    if(inflectionIndex[i + 1].Index - inflectionIndex[i].Index < _derivativeKernel / 3)
+                    if(inflectionIndex[i + 1].Index - inflectionIndex[i].Index < _derivativeKernel)
                     {
                         //Figure out which is the better signal
                         if(inflectionIndex[i].BuySignal)
@@ -319,6 +319,7 @@ namespace GimmeMillions.Domain.Features
                                 else
                                 {
                                     inflectionIndex.RemoveAt(i + 2);
+                                    i++;
                                 }
                                 
                             }
@@ -336,6 +337,7 @@ namespace GimmeMillions.Domain.Features
                                 if (stocks[inflectionIndex[i + 1].Index].Close < stocks[inflectionIndex[i + 2].Index].Close)
                                 {
                                     inflectionIndex.RemoveAt(i + 2);
+                                    i++;
                                 }
                                 else
                                 {
@@ -351,7 +353,7 @@ namespace GimmeMillions.Domain.Features
 
                         --i;
                     }
-                }
+                }*/
 
                 var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
                 var signalCheck = new List<double>();

@@ -136,8 +136,10 @@ namespace GimmeMillions.Domain.ML
             //TRAIN THE LOW RANGE PREDICTOR
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
 
-            var rangeEstimator = _mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: 3000);
-
+            //var rangeEstimator = _mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: 1000);
+            //var rangeEstimator = _mLContext.Regression.Trainers.Gam(labelColumnName: "Value");
+            var rangeEstimator = _mLContext.Regression.Trainers.FastForest(labelColumnName: "Value",
+                numberOfLeaves: 200, numberOfTrees: 20000, minimumExampleCountPerLeaf: 10);
             var trainLowData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Take(trainingCount).Select(x =>
                 {
@@ -240,10 +242,10 @@ namespace GimmeMillions.Domain.ML
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
                     if(posS.Sentiment > 80.0f) 
-                        predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.60f));
+                        predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.70f));
 
                     if (posS.Sentiment < 20.0f)
-                        predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.40f));
+                        predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.30f));
                 }
 
                 predictionData = predictionData.OrderByDescending(x => x.Score).ToList();
