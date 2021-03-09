@@ -1,6 +1,7 @@
 ﻿using GimmeMillions.DataAccess.Clients.TDAmeritrade;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.Features.Extractors;
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.Domain.Stocks.Filters;
@@ -25,11 +26,12 @@ namespace ModelTrainer
         }
         public void Train(string modelName, StockDataPeriod period, int kSize)
         {
-            //var datasetService = GetRawFeaturesBuySellSignalDatasetService(period, 50, 9);
-            var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 12, 80, kSize);
+            var datasetService = GetRawFeaturesBuySellSignalDatasetService(period, 50, 9);
+            //var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 12, 80, kSize);
+            //var datasetService = GetDFTFeaturesBuySellSignalDatasetService(period, 12, 30, kSize);
             var model = new MLStockRangePredictorModel();
 
-            int numSamples = 10000;
+            int numSamples = 15000;
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(datasetService.GetTrainingData("DIA", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("SPY", null, true, numSamples));
@@ -54,6 +56,18 @@ namespace ModelTrainer
                 (int)(numStockSamples * 0.8), 5,
                 (int)(numStockSamples * 0.8), 5,
                 false);
+            return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+                period, numStockSamples, kernelSize);
+        }
+
+        private IFeatureDatasetService<FeatureVector> GetDFTFeaturesBuySellSignalDatasetService(
+            StockDataPeriod period,
+            int timeSampling = 10,
+            int numStockSamples = 40,
+            int kernelSize = 9)
+        {
+            var stocksRepo = new AlpacaStockAccessService();
+            var extractor = new DFTStockFeatureExtractor();
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                 period, numStockSamples, kernelSize);
         }

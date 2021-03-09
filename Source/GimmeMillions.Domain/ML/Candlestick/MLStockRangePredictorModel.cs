@@ -240,10 +240,10 @@ namespace GimmeMillions.Domain.ML
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
                     if(posS.Sentiment > 80.0f) 
-                        predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.60f));
+                        predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.75f));
 
                     if (posS.Sentiment < 20.0f)
-                        predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.40f));
+                        predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.25f));
                 }
 
                 predictionData = predictionData.OrderByDescending(x => x.Score).ToList();
