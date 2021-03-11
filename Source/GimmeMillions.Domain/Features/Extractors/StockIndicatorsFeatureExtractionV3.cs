@@ -9,7 +9,7 @@ namespace GimmeMillions.Domain.Features
     public class StockIndicatorsFeatureExtractionV3 : IFeatureExtractor<StockData>
     {
         public string Encoding { get; private set; }
-        private int _bollingerLength  = 40;
+        private int _bollingerLength = 40;
         private int _timeSampling = 4;
         private int _slowEma = 32;
         private int _fastEma = 16;
@@ -21,11 +21,9 @@ namespace GimmeMillions.Domain.Features
         private int _rsiSlope = 7;
         private int _cmf = 24;
         private int _cmfSlope = 7;
-        private int _version = 3;
-        private int _pivotKernel = 5;
+        private int _version = 2;
+        private bool _normalize = false;
 
-        private Dictionary<int, double[]> _kernels;
-        private double[] _fibonacciLevels;
         public StockIndicatorsFeatureExtractionV3(
             int timesampling = 4,
             int bollingerLength = 40,
@@ -39,7 +37,7 @@ namespace GimmeMillions.Domain.Features
             int rsiSlope = 7,
             int cmf = 24,
             int cmfSlope = 7,
-            int pivotKernel = 5)
+            bool normalize = false)
         {
             _timeSampling = timesampling;
             _bollingerLength = bollingerLength;
@@ -53,24 +51,15 @@ namespace GimmeMillions.Domain.Features
             _rsiSlope = rsiSlope;
             _cmf = cmf;
             _cmfSlope = cmfSlope;
-            _pivotKernel = pivotKernel;
+            _normalize = normalize;
 
-            _kernels = new Dictionary<int, double[]>();
-            _kernels[_macdSlope] = GetNormalizedWavelet(_macdSlope);
-            _kernels[_vwapSlope] = GetNormalizedWavelet(_vwapSlope);
-            _kernels[_rsiSlope] = GetNormalizedWavelet(_rsiSlope);
-            _kernels[_cmfSlope] = GetNormalizedWavelet(_cmfSlope);
-            _fibonacciLevels = new double[] { 0.0, 0.382, 0.5, 0.618, 1.0, 1.618 };
-            Encoding = $"Indicators-Pivots({_pivotKernel})Boll({_bollingerLength})MACD({_slowEma},{_fastEma},{_macdEma},{_macdSlope})VWAP({_vwap},{_vwapSlope})RSI({_rsi},{_rsiSlope})CMF({_cmf},{_cmfSlope}),-v{_version}";
+            Encoding = $"Indicators-Boll({_bollingerLength})MACD({_slowEma},{_fastEma},{_macdEma},{_macdSlope})VWAP({_vwap},{_vwapSlope})RSI({_rsi},{_rsiSlope})CMF({_cmf},{_cmfSlope}),n{_normalize}-v{_version}";
         }
 
         public double[] Extract(IEnumerable<(StockData Data, float Weight)> data)
         {
             var featureVector = new List<double>();
             var boll = new double[_timeSampling];
-            var volume = new double[_timeSampling];
-            var fibs = new List<double>();
-            var volatility = new List<double>();
             var macdVals = new double[_timeSampling];
             var macdSlopeVals = new double[_timeSampling];
             var vwapVals = new double[_timeSampling];
@@ -80,149 +69,64 @@ namespace GimmeMillions.Domain.Features
             var cmfVals = new double[_timeSampling];
             var cmfSlopeVals = new double[_timeSampling];
 
-            var ordered = data.OrderByDescending(x => x.Data.Date).ToList();
             for (int i = 1; i <= _timeSampling; ++i)
             {
-                boll[i - 1] = CalculateBollinger(ordered, _bollingerLength / i);
-                volume[i - 1] = GetVolumeChange(ordered, ordered.Count / (i + 1));
-                fibs = fibs.Concat(GetFibonacciRings(ordered, ordered.Count / (i + 1))).ToList();
-                volatility = volatility.Concat(GetVolatility(ordered, ordered.Count / (i + 1))).ToList();
-                CalculateMACD(ordered, _slowEma / i, _fastEma / i, _macdEma / i, _macdSlope, 
+                boll[i - 1] = CalculateBollinger(data, _bollingerLength / i);
+                CalculateMACD(data, _slowEma / i, _fastEma / i, _macdEma / i, _macdSlope,
                     out macdVals[i - 1], out macdSlopeVals[i - 1]);
-                CalculateVWAP(ordered, _vwap / i, _vwapSlope, 
+                CalculateVWAP(data, _vwap / i, _vwapSlope,
                     out vwapVals[i - 1], out vwapSlopeVals[i - 1]);
-                CalculateRSI(ordered, _rsi / i, _rsiSlope, 
+                CalculateRSI(data, _rsi / i, _rsiSlope,
                     out rsiVals[i - 1], out rsiSlopeVals[i - 1]);
-                CalculateCMF(ordered, _cmf / i, _cmfSlope, 
+                CalculateCMF(data, _cmf / i, _cmfSlope,
                     out cmfVals[i - 1], out cmfSlopeVals[i - 1]);
             }
 
-            return macdVals.Concat(macdSlopeVals)
-                .Concat(rsiVals).Concat(rsiSlopeVals)
-                .Concat(vwapVals).Concat(vwapSlopeVals)
-                .Concat(boll)
-                .Concat(fibs)
-                .Concat(volume)
-                .Concat(cmfVals).Concat(cmfSlopeVals)
-                .ToArray();
+            if (_normalize)
+            {
+                var normalized = Normalize(boll)
+                       .Concat(Normalize(macdVals))
+                       .Concat(Normalize(macdSlopeVals))
+                       .Concat(Normalize(vwapVals))
+                       .Concat(Normalize(vwapSlopeVals))
+                       .Concat(Normalize(rsiVals))
+                       .Concat(Normalize(rsiSlopeVals))
+                       .Concat(Normalize(cmfVals))
+                       .Concat(Normalize(cmfSlopeVals)).ToArray();
+                //var normalized = Normalize(macdSlopeVals)
+                //       .Concat(Normalize(vwapSlopeVals))
+                //       .Concat(Normalize(rsiSlopeVals))
+                //       .Concat(Normalize(cmfSlopeVals)).ToArray();
+                return normalized;
+            }
+            //return macdSlopeVals
+            //        .Concat(vwapSlopeVals)
+            //        .Concat(rsiSlopeVals)
+            //        .Concat(cmfSlopeVals).ToArray();
+
+            return boll
+                       .Concat(macdVals)
+                       .Concat(macdSlopeVals)
+                       .Concat(vwapVals)
+                       .Concat(vwapSlopeVals)
+                       .Concat(rsiVals)
+                       .Concat(rsiSlopeVals)
+                       .Concat(cmfVals)
+                       .Concat(cmfSlopeVals).ToArray();
 
         }
 
-        public double GetVolumeChange(List<(StockData Data, float Weight)> data, int length)
-        {
-            double averageVolume = data.Average(x => (double)x.Data.Volume);
-            double volume = data.Take(length).Average(x => (double)x.Data.Volume);
-            return volume / averageVolume;
-        }
-
-        public double[] GetVolatility(List<(StockData Data, float Weight)> data, int length)
-        {
-            double averageDayRange = data.Average(x => (double)x.Data.PercentPeriodRange);
-            double averageBody = data.Average(x => (double)Math.Abs(x.Data.PercentPeriodChange));
-            double averageBottom = data.Average(x => (double)x.Data.BottomWickPercent);
-            double averageTop = data.Average(x => (double)Math.Abs(x.Data.TopWickPercent));
-            var subData = data.Take(length).ToList();
-            double range = subData.Average(x => (double)x.Data.PercentPeriodRange);
-            double bodyRange = subData.Average(x => (double)Math.Abs(x.Data.PercentPeriodChange));
-            double botRange = subData.Average(x => (double)x.Data.BottomWickPercent);
-            double topRange = subData.Average(x => (double)Math.Abs(x.Data.TopWickPercent));
-
-            var stats = new double[4];
-            stats[0] = range / averageDayRange;
-            stats[1] = bodyRange / averageBody;
-            stats[2] = botRange / averageBottom;
-            stats[3] = topRange / averageTop;
-
-            return stats;
-        }
-
-        public double[] GetFibonacciRings(List<(StockData Data, float Weight)> data, int length)
-        {
-            var subData = data.Take(length).ToList();
-            (double p, int i) max, min;
-            max.p = 0.0;
-            min.p = double.MaxValue;
-            max.i = 0;
-            min.i = 0;
-            var pivots = GetPivots(subData);
-            if (pivots.Count >= 3)
-            {
-                foreach(var p in pivots)
-                {
-                    if(p.p > max.p)
-                    {
-                        max = p;
-                    }
-                    if(p.p < min.p)
-                    {
-                        min = p;
-                    }
-                }
-            }
-            else
-            {
-                int i = 0;
-                foreach(var d in subData)
-                {
-                    if ((double)d.Data.High > max.p)
-                    {
-                        max.p = (double)d.Data.High;
-                        max.i = i;
-                    }
-                    if ((double)d.Data.Low < min.p)
-                    {
-                        min.p = (double)d.Data.Low;
-                        min.i = i;
-                    }
-                    i++;
-                }
-            }
-
-            var fibs = new double[3];
-            double close = (double)data.First().Data.Close;
-            if(max.p == min.p)
-            {
-                fibs[0] = 0.0;
-            }
-            else
-            {
-                fibs[0] = Math.Abs(max.p - close) / (max.p - min.p);
-
-            }
-            double fibRingRange = Math.Sqrt((max.p - min.p) * (max.p - min.p) +
-                (double)(max.i - min.i) * (double)(max.i - min.i));
-
-            if(fibRingRange < 0.01)
-            {
-                fibs[1] = 0.0;
-                fibs[2] = 0.0;
-            }
-            else
-            {
-                double lowRing = Math.Sqrt((close - min.p) * (close - min.p) +
-                (double)(min.i) * (double)(min.i));
-                fibs[1] = lowRing / fibRingRange;
-
-                double highRing = Math.Sqrt((close - max.p) * (close - max.p) +
-                    (double)(max.i) * (double)(max.i));
-                fibs[2] = highRing / fibRingRange;
-            }
-            
-            //return fibLevel;
-            return fibs;
-        }
-
-        private double CalculateBollinger(List<(StockData Data, float Weight)> data,
+        private double CalculateBollinger(IEnumerable<(StockData Data, float Weight)> data,
             int length)
         {
-            var subData = data.Take(length);
-            var mean = subData.Average(x => x.Data.Close);
-            var stdev = Math.Sqrt(subData.Sum(x => Math.Pow((double)(x.Data.Close - mean), 2.0)) / (double)length);
+            var ordered = data.OrderByDescending(x => x.Data.Date).Take(length).ToList();
+            var mean = ordered.Sum(x => x.Data.Close) / (decimal)length;
+            var stdev = Math.Sqrt(ordered.Sum(x => Math.Pow((double)(x.Data.Close - mean), 2.0)) / (double)length);
 
-            return (double)(data.First().Data.Close - mean) / stdev;
+            return (double)(ordered.First().Data.Close - mean) / stdev;
         }
 
-        private void CalculateMACD(List<(StockData Data, float Weight)> data,
+        private void CalculateMACD(IEnumerable<(StockData Data, float Weight)> data,
             int slowEmaLength, int fastEmaLength, int macdEmaLength, int macdSlopeLength,
             out double macd, out double macdSlope)
         {
@@ -233,13 +137,14 @@ namespace GimmeMillions.Domain.Features
                 return;
             }
 
+            var ordered = data.OrderByDescending(x => x.Data.Date).ToList();
             var macdLine = new double[macdEmaLength + macdSlopeLength];
             double maxVal = 0.0001;
             for (int i = 0; i < macdLine.Length; ++i)
             {
-                double slowEma = (double)data.Skip(i).Take(slowEmaLength).Average(x => x.Data.Close);
-                double fastEma = (double)data.Skip(i).Take(fastEmaLength).Average(x => x.Data.Close);
-                if(maxVal < slowEma)
+                double slowEma = (double)ordered.Skip(i).Take(slowEmaLength).Average(x => x.Data.Close);
+                double fastEma = (double)ordered.Skip(i).Take(fastEmaLength).Average(x => x.Data.Close);
+                if (maxVal < slowEma)
                 {
                     maxVal = slowEma;
                 }
@@ -253,23 +158,23 @@ namespace GimmeMillions.Domain.Features
                 macdHistogram[i] = (macdLine[i] - signalLine) / maxVal;
             }
             macd = macdHistogram[0];
-            if(double.IsNaN(macd))
+            if (double.IsNaN(macd))
             {
                 macd = 0.0;
             }
-            var kernel = _kernels[macdSlopeLength];// GetNormalizedWavelet(macdSlopeLength);
+            var kernel = GetNormalizedWavelet(macdSlopeLength);
             macdSlope = 0.0;
-            for(int i = 0; i < macdSlopeLength; ++i)
+            for (int i = 0; i < macdSlopeLength; ++i)
             {
                 macdSlope += macdHistogram[i] * kernel[i];
             }
         }
 
-        private void CalculateVWAP(List<(StockData Data, float Weight)> data,
+        private void CalculateVWAP(IEnumerable<(StockData Data, float Weight)> data,
             int vwapLength, int vwapSlopLength,
             out double vwap, out double vwapSlope)
         {
-            if(data.Count() < vwapLength + vwapSlopLength)
+            if (data.Count() < vwapLength + vwapSlopLength)
             {
                 vwap = 0.0;
                 vwapSlope = 0.0;
@@ -277,19 +182,20 @@ namespace GimmeMillions.Domain.Features
             }
 
             var vwapHistogram = new double[vwapSlopLength];
+            var ordered = data.OrderByDescending(x => x.Data.Date).ToList();
             double maxVal = 0.0001;
             for (int i = 0; i < vwapHistogram.Length; ++i)
             {
-                var samples = data.Skip(i).Take(vwapLength);
+                var samples = ordered.Skip(i).Take(vwapLength);
                 var totalVolume = samples.Sum(x => x.Data.Volume);
-                if(totalVolume < 0.0001m)
+                if (totalVolume < 0.0001m)
                 {
-                    vwapHistogram[i] = (double)data[i].Data.Close;
+                    vwapHistogram[i] = (double)ordered[i].Data.Close;
                 }
                 else
                 {
                     var vwapAvg = (double)samples.Sum(x => x.Data.Close * x.Data.Volume) / (double)totalVolume;
-                    vwapHistogram[i] = ((double)data[i].Data.Close - vwapAvg);
+                    vwapHistogram[i] = ((double)ordered[i].Data.Close - vwapAvg);
                 }
                 if (Math.Abs(vwapHistogram[i]) > maxVal)
                 {
@@ -302,16 +208,16 @@ namespace GimmeMillions.Domain.Features
             {
                 vwap = 0.0;
             }
-
-            var kernel = _kernels[vwapSlopLength];//GetNormalizedWavelet(vwapSlopLength);
+            //vwapSlope = vwapHistogram.Skip(1).Average(x => vwapHistogram[0] - x);
+            var kernel = GetNormalizedWavelet(vwapSlopLength);
             vwapSlope = 0.0;
             for (int i = 0; i < vwapSlopLength; ++i)
             {
                 vwapSlope += vwapHistogram[i] * kernel[i] / maxVal;
             }
         }
-        
-        private void CalculateRSI(List<(StockData Data, float Weight)> data,
+
+        private void CalculateRSI(IEnumerable<(StockData Data, float Weight)> data,
             int rsiLength, int rsiSlopeLength,
             out double rsi, out double rsiSlope)
         {
@@ -329,7 +235,7 @@ namespace GimmeMillions.Domain.Features
                 var samples = ordered.Skip(i).Take(rsiLength);
                 var avgGains = (double)samples.Average(x => x.Data.PercentChangeFromPreviousClose > 0.0m ? x.Data.PercentChangeFromPreviousClose : 0.0m);
                 var avgLosses = (double)samples.Average(x => x.Data.PercentChangeFromPreviousClose <= 0.0m ? Math.Abs(x.Data.PercentChangeFromPreviousClose) : 0.0m);
-                if(avgLosses < 0.01)
+                if (avgLosses < 0.01)
                 {
                     rsiHistogram[i] = 1.0;
                 }
@@ -345,7 +251,7 @@ namespace GimmeMillions.Domain.Features
                 rsi = 0.0;
             }
             //rsiSlope = rsiHistogram.Skip(1).Average(x => rsiHistogram[0] - x);
-            var kernel = _kernels[rsiSlopeLength];//GetNormalizedWavelet(rsiSlopeLength);
+            var kernel = GetNormalizedWavelet(rsiSlopeLength);
             rsiSlope = 0.0;
             for (int i = 0; i < rsiSlopeLength; ++i)
             {
@@ -353,7 +259,7 @@ namespace GimmeMillions.Domain.Features
             }
         }
 
-        private void CalculateCMF(List<(StockData Data, float Weight)> data,
+        private void CalculateCMF(IEnumerable<(StockData Data, float Weight)> data,
             int cmfLength, int cmfSlopeLength,
             out double cmf, out double cmfSlope)
         {
@@ -365,12 +271,13 @@ namespace GimmeMillions.Domain.Features
             }
 
             var cmfHistogram = new double[cmfSlopeLength];
+            var ordered = data.OrderByDescending(x => x.Data.Date).ToList();
             double maxVal = 0.0001;
             for (int i = 0; i < cmfHistogram.Length; ++i)
             {
-                var samples = data.Skip(i).Take(cmfLength);
+                var samples = ordered.Skip(i).Take(cmfLength);
                 var totalVolume = samples.Sum(x => x.Data.Volume);
-                if(totalVolume < 0.0001m)
+                if (totalVolume < 0.0001m)
                 {
                     cmfHistogram[i] = 0;
                 }
@@ -378,7 +285,7 @@ namespace GimmeMillions.Domain.Features
                 {
                     cmfHistogram[i] = (double)(samples.Sum(x => x.Data.CMF * x.Data.Volume) / totalVolume);
                 }
-                if(Math.Abs(cmfHistogram[i]) > maxVal)
+                if (Math.Abs(cmfHistogram[i]) > maxVal)
                 {
                     maxVal = Math.Abs(cmfHistogram[i]);
                 }
@@ -390,12 +297,25 @@ namespace GimmeMillions.Domain.Features
                 cmf = 0.0;
             }
             //cmfSlope = cmfHistogram.Skip(1).Average(x => cmfHistogram[0] - x);
-            var kernel = _kernels[cmfSlopeLength];//GetNormalizedWavelet(cmfSlopeLength);
+            var kernel = GetNormalizedWavelet(cmfSlopeLength);
             cmfSlope = 0.0;
             for (int i = 0; i < cmfSlopeLength; ++i)
             {
                 cmfSlope += cmfHistogram[i] * kernel[i] / maxVal;
             }
+        }
+
+        private double[] Normalize(double[] input)
+        {
+            double max = input.Max(x => Math.Abs(x));
+            var output = new double[input.Length];
+            if (max < 0.0001)
+                return output;
+            for (int i = 0; i < input.Length; ++i)
+            {
+                output[i] = input[i] / max;
+            }
+            return output;
         }
 
         private double[] GetNormalizedWavelet(int length)
@@ -406,7 +326,7 @@ namespace GimmeMillions.Domain.Features
             double f = 2.0 / (Math.Sqrt(3.0 * sigma) * Math.Pow(pi, 0.25));
             int center = length / 2;
             var kernel = new double[length];
-            for(int i = 0; i < length; ++i)
+            for (int i = 0; i < length; ++i)
             {
                 double t = i - center;
                 kernel[i] = f * (1.0 - Math.Pow(t / sigma, 2.0)) *
@@ -414,48 +334,6 @@ namespace GimmeMillions.Domain.Features
             }
 
             return kernel;
-        }
-
-
-        private List<(double p, int i)> GetPivots(List<(StockData Data, float Weight)> data)
-        {
-            var pivots = new List<(double p, int i)>();
-            int k = _pivotKernel / 2;
-            for(int i = k; i < data.Count - k; ++i)
-            {
-                bool resistance = true;
-                for(int j = i - k; j < i + k; ++j)
-                {
-                    if (j == i)
-                        continue;
-                    if(data[i].Data.High < data[j].Data.High)
-                    {
-                        resistance = false;
-                        break;
-                    }
-                }
-                if(resistance)
-                {
-                    pivots.Add(((double)data[i].Data.High, i));
-                }
-
-                bool support = true;
-                for (int j = i - k; j < i + k; ++j)
-                {
-                    if (j == i)
-                        continue;
-                    if (data[i].Data.Low > data[j].Data.Low)
-                    {
-                        support = false;
-                        break;
-                    }
-                }
-                if (support)
-                {
-                    pivots.Add(((double)data[i].Data.Low, i));
-                }
-            }
-            return pivots;
         }
     }
 }

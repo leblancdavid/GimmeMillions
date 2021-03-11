@@ -17,17 +17,18 @@ namespace GimmeMillions.Domain.Features.Extractors
 
         public double[] Extract(IEnumerable<(StockData Data, float Weight)> data)
         {
-            var ordered = data.OrderByDescending(x => x.Data.Date).ToList();
-            double minPrice = data.Min(x => (double)x.Data.Low);
-            double maxPrice = data.Max(x => (double)x.Data.High);
-            double minVolume = data.Min(x => (double)x.Data.Volume);
-            double maxVolume = data.Max(x => (double)x.Data.Volume);
+            var ordered = HeikinAshiCandlesStockFeatureExtractor.ToHeikinAshiCandles(data.Select(x => x.Data)
+                .OrderByDescending(x => x.Date));
+            double minPrice = ordered.Min(x => (double)x.Low);
+            double maxPrice = ordered.Max(x => (double)x.High);
+            double minVolume = ordered.Min(x => (double)x.Volume);
+            double maxVolume = ordered.Max(x => (double)x.Volume);
 
-            var dft = DFT(ordered.Select(x => ((double)x.Data.Close - minPrice) / (maxPrice - minPrice)).ToArray())
-                .Concat(DFT(ordered.Select(x => ((double)x.Data.Open - minPrice) / (maxPrice - minPrice)).ToArray()))
-                .Concat(DFT(ordered.Select(x => ((double)x.Data.High - minPrice) / (maxPrice - minPrice)).ToArray()))
-                .Concat(DFT(ordered.Select(x => ((double)x.Data.Low - minPrice) / (maxPrice - minPrice)).ToArray()))
-                .Concat(DFT(ordered.Select(x => ((double)x.Data.Volume - minVolume) / (maxPrice - maxVolume)).ToArray())).ToArray();
+            var dft = DFT(ordered.Select(x => ((double)x.Close - minPrice) / (maxPrice - minPrice)).ToArray())
+                .Concat(DFT(ordered.Select(x => ((double)x.Open - minPrice) / (maxPrice - minPrice)).ToArray()))
+                .Concat(DFT(ordered.Select(x => ((double)x.High - minPrice) / (maxPrice - minPrice)).ToArray()))
+                .Concat(DFT(ordered.Select(x => ((double)x.Low - minPrice) / (maxPrice - minPrice)).ToArray()))
+                .Concat(DFT(ordered.Select(x => ((double)x.Volume - minVolume) / (maxPrice - maxVolume)).ToArray())).ToArray();
 
             return dft;
         }
