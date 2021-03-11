@@ -58,6 +58,9 @@ namespace GimmeMillions.Domain.Features
 
         public double[] Extract(IEnumerable<(StockData Data, float Weight)> data)
         {
+            //var ordered = HeikinAshiCandlesStockFeatureExtractor.ToHeikinAshiCandles(data.Select(x => x.Data)
+            //    .OrderByDescending(x => x.Date)).Select(x => (x, 1.0f));
+
             var featureVector = new List<double>();
             var boll = new double[_timeSampling];
             var macdVals = new double[_timeSampling];
@@ -93,16 +96,8 @@ namespace GimmeMillions.Domain.Features
                        .Concat(Normalize(rsiSlopeVals))
                        .Concat(Normalize(cmfVals))
                        .Concat(Normalize(cmfSlopeVals)).ToArray();
-                //var normalized = Normalize(macdSlopeVals)
-                //       .Concat(Normalize(vwapSlopeVals))
-                //       .Concat(Normalize(rsiSlopeVals))
-                //       .Concat(Normalize(cmfSlopeVals)).ToArray();
                 return normalized;
             }
-            //return macdSlopeVals
-            //        .Concat(vwapSlopeVals)
-            //        .Concat(rsiSlopeVals)
-            //        .Concat(cmfSlopeVals).ToArray();
 
             return boll
                        .Concat(macdVals)
@@ -120,10 +115,10 @@ namespace GimmeMillions.Domain.Features
             int length)
         {
             var ordered = data.OrderByDescending(x => x.Data.Date).Take(length).ToList();
-            var mean = ordered.Sum(x => x.Data.Close) / (decimal)length;
-            var stdev = Math.Sqrt(ordered.Sum(x => Math.Pow((double)(x.Data.Close - mean), 2.0)) / (double)length);
+            var mean = ordered.Sum(x => x.Data.Average) / (decimal)length;
+            var stdev = Math.Sqrt(ordered.Sum(x => Math.Pow((double)(x.Data.Average - mean), 2.0)) / (double)length);
 
-            return (double)(ordered.First().Data.Close - mean) / stdev;
+            return (double)(ordered.First().Data.Average - mean) / stdev;
         }
 
         private void CalculateMACD(IEnumerable<(StockData Data, float Weight)> data,
@@ -142,8 +137,8 @@ namespace GimmeMillions.Domain.Features
             double maxVal = 0.0001;
             for (int i = 0; i < macdLine.Length; ++i)
             {
-                double slowEma = (double)ordered.Skip(i).Take(slowEmaLength).Average(x => x.Data.Close);
-                double fastEma = (double)ordered.Skip(i).Take(fastEmaLength).Average(x => x.Data.Close);
+                double slowEma = (double)ordered.Skip(i).Take(slowEmaLength).Average(x => x.Data.Average);
+                double fastEma = (double)ordered.Skip(i).Take(fastEmaLength).Average(x => x.Data.Average);
                 if (maxVal < slowEma)
                 {
                     maxVal = slowEma;
@@ -190,12 +185,12 @@ namespace GimmeMillions.Domain.Features
                 var totalVolume = samples.Sum(x => x.Data.Volume);
                 if (totalVolume < 0.0001m)
                 {
-                    vwapHistogram[i] = (double)ordered[i].Data.Close;
+                    vwapHistogram[i] = (double)ordered[i].Data.Average;
                 }
                 else
                 {
-                    var vwapAvg = (double)samples.Sum(x => x.Data.Close * x.Data.Volume) / (double)totalVolume;
-                    vwapHistogram[i] = ((double)ordered[i].Data.Close - vwapAvg);
+                    var vwapAvg = (double)samples.Sum(x => x.Data.Average * x.Data.Volume) / (double)totalVolume;
+                    vwapHistogram[i] = ((double)ordered[i].Data.Average - vwapAvg);
                 }
                 if (Math.Abs(vwapHistogram[i]) > maxVal)
                 {

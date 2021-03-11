@@ -16,6 +16,6 @@
   "AverageLowerProbability": 0.0,
   "AverageUpperScore": 0.0,
   "AverageLowerScore": 0.0,
-  "FeatureEncoding": "DFTFeatures_100d-13k",
+  "FeatureEncoding": "Indicators-Boll(50)MACD(40,20,15,5)VWAP(40,5)RSI(40,5)CMF(40,5),nFalse-v2_50d-13k",
   "ModelId": null
 }

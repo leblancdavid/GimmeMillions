@@ -258,7 +258,7 @@ namespace GimmeMillions.Domain.ML
                     runningAccuracy.Add(correct / (double)(i + 1));
                 }
            
-            }
+          }
             return Result.Success<ModelMetrics>(Metadata.TrainingResults);
         }
 
