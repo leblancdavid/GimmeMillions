@@ -23,7 +23,7 @@ namespace ModelTrainer
                 new StockSymbolsFile("nasdaq_screener.csv"),
                 "I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP");
 
-            trainer.Train("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\EgyptianMau\\DayTrader_15m", StockDataPeriod.FifteenMinute, 15);
+            trainer.Train("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\EgyptianMau\\DayTrader_15m", StockDataPeriod.FifteenMinute, 13);
             //trainer.Train("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\EgyptianMau\\DayTrader_5m", StockDataPeriod.FiveMinute, 13);
 
             //var trainer = new EgyptianMauModelTrainer(new DefaultStockRepository(stockSqlDb), 

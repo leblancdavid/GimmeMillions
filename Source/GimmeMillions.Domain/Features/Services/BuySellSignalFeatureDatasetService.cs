@@ -15,6 +15,7 @@ namespace GimmeMillions.Domain.Features
         private IStockAccessService _stockRepository;
         private int _numStockDailySamples = 20;
         private int _derivativeKernel = 9;
+        private int _signalOffset = 0;
         private double[] _gaussianKernel;
         private double[] _gaussianDerivative;
         private string _stocksEncodingKey;
@@ -36,13 +37,15 @@ namespace GimmeMillions.Domain.Features
             IStockAccessService stockRepository,
             StockDataPeriod period,
             int numStockDailySamples = 20,
-            int derivativeKernel = 9)
+            int derivativeKernel = 9,
+            int signalOffset = 0)
         {
             _stockFeatureExtractor = stockFeatureExtractor;
             _stockRepository = stockRepository;
 
             _numStockDailySamples = numStockDailySamples;
             _derivativeKernel = derivativeKernel;
+            _signalOffset = signalOffset;
             _gaussianKernel = GetGaussianKernel(_derivativeKernel);
             _gaussianDerivative = GetGaussianDerivativeKernel(_derivativeKernel);
             string timeIndicator = $"{_numStockDailySamples}d-{_derivativeKernel}k";
@@ -354,6 +357,14 @@ namespace GimmeMillions.Domain.Features
                         --i;
                     }
                 }*/
+
+                //Add an offset
+                for (int i = 0; i < inflectionIndex.Count; ++i)
+                {
+                    int offsettedIndex = inflectionIndex[i].Index + _signalOffset;
+                    if (offsettedIndex < stocks.Count && offsettedIndex >= 0)
+                        inflectionIndex[i] = (offsettedIndex, inflectionIndex[i].BuySignal);
+                }
 
                 var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
                 var signalCheck = new List<double>();

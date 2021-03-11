@@ -1,6 +1,7 @@
 ﻿using GimmeMillions.DataAccess.Clients.TDAmeritrade;
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.Features.Extractors;
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.Domain.Stocks.Filters;
@@ -25,11 +26,13 @@ namespace ModelTrainer
         }
         public void Train(string modelName, StockDataPeriod period, int kSize)
         {
-            //var datasetService = GetRawFeaturesBuySellSignalDatasetService(period, 50, 9);
-            var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 20, 80, kSize);
+            //var datasetService = GetRawFeaturesBuySellSignalDatasetService(period, 50, kSize);
+            //var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 10, 50, kSize);
+            //var datasetService = GetDFTFeaturesBuySellSignalDatasetService(period, 50, kSize);
+            var datasetService = GetHeikinAshiFeaturesBuySellSignalDatasetService(period, 50, kSize, 3);
             var model = new MLStockRangePredictorModel();
 
-            int numSamples = 100000;
+            int numSamples = 20000;
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(datasetService.GetTrainingData("DIA", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("SPY", null, true, numSamples));
@@ -47,13 +50,24 @@ namespace ModelTrainer
             int kernelSize = 9)
         {
             var stocksRepo = new AlpacaStockAccessService();
-            var extractor = new StockIndicatorsFeatureExtractionV2(timeSampling,
+            var extractor = new StockIndicatorsFeatureExtractionV3(timeSampling,
                 numStockSamples,
                 (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
                 (int)(numStockSamples * 0.8), 5,
                 (int)(numStockSamples * 0.8), 5,
                 (int)(numStockSamples * 0.8), 5,
                 false);
+            return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+                period, numStockSamples, kernelSize);
+        }
+
+        private IFeatureDatasetService<FeatureVector> GetDFTFeaturesBuySellSignalDatasetService(
+            StockDataPeriod period,
+            int numStockSamples = 40,
+            int kernelSize = 9)
+        {
+            var stocksRepo = new AlpacaStockAccessService();
+            var extractor = new DFTStockFeatureExtractor();
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                 period, numStockSamples, kernelSize);
         }
@@ -68,6 +82,18 @@ namespace ModelTrainer
 
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                 period, numStockSamples, kernelSize);
+        }
+
+        private IFeatureDatasetService<FeatureVector> GetHeikinAshiFeaturesBuySellSignalDatasetService(StockDataPeriod period,
+            int numStockSamples = 40,
+            int kernelSize = 9,
+            int signalOffset = 0)
+        {
+            var stocksRepo = new AlpacaStockAccessService();
+            var extractor = new HeikinAshiCandlesStockFeatureExtractor();
+
+            return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+                period, numStockSamples, kernelSize, signalOffset);
         }
     }
 }
