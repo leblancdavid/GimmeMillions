@@ -27,9 +27,9 @@ namespace ModelTrainer
         public void Train(string modelName, StockDataPeriod period, int kSize)
         {
             //var datasetService = GetRawFeaturesBuySellSignalDatasetService(period, 50, kSize);
-            //var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 10, 50, kSize);
+            //var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 10, 80, kSize, 1);
             //var datasetService = GetDFTFeaturesBuySellSignalDatasetService(period, 50, kSize);
-            var datasetService = GetHeikinAshiFeaturesBuySellSignalDatasetService(period, 50, kSize, 3);
+            var datasetService = GetHeikinAshiFeaturesBuySellSignalDatasetService(period, 80, kSize, 1);
             var model = new MLStockRangePredictorModel();
 
             int numSamples = 20000;
@@ -47,7 +47,8 @@ namespace ModelTrainer
             StockDataPeriod period,
             int timeSampling = 10,
             int numStockSamples = 40,
-            int kernelSize = 9)
+            int kernelSize = 9,
+            int signalOffset = 0)
         {
             var stocksRepo = new AlpacaStockAccessService();
             var extractor = new StockIndicatorsFeatureExtractionV3(timeSampling,
@@ -58,7 +59,7 @@ namespace ModelTrainer
                 (int)(numStockSamples * 0.8), 5,
                 false);
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
-                period, numStockSamples, kernelSize);
+                period, numStockSamples, kernelSize, signalOffset);
         }
 
         private IFeatureDatasetService<FeatureVector> GetDFTFeaturesBuySellSignalDatasetService(

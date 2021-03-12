@@ -273,10 +273,10 @@ namespace GimmeMillions.Domain.Features
                             if (j < 0 || j >= stocks.Count)
                                 continue;
 
-                            if(stocks[j].Close < minPrice)
+                            if(stocks[j].Low < minPrice)
                             {
                                 updatedIndex = j;
-                                minPrice = stocks[j].Close;
+                                minPrice = stocks[j].Low;
                             }
                         }
 
@@ -292,10 +292,10 @@ namespace GimmeMillions.Domain.Features
                             if (j < 0 || j >= stocks.Count)
                                 continue;
 
-                            if (stocks[j].Close > maxPrice)
+                            if (stocks[j].High > maxPrice)
                             {
                                 updatedIndex = j;
-                                maxPrice = stocks[j].Close;
+                                maxPrice = stocks[j].High;
                             }
                         }
 
@@ -303,19 +303,19 @@ namespace GimmeMillions.Domain.Features
                     }
                 }
 
-                /*for (int i = 0; i < inflectionIndex.Count - 3; ++i)
+                for (int i = 0; i < inflectionIndex.Count - 3; ++i)
                 {
                     //If buy and sell signal are too close to eachother, we'll need to filter some out
-                    if(inflectionIndex[i + 1].Index - inflectionIndex[i].Index < _derivativeKernel)
+                    if(inflectionIndex[i + 1].Index - inflectionIndex[i].Index < _derivativeKernel / 2)
                     {
                         //Figure out which is the better signal
                         if(inflectionIndex[i].BuySignal)
                         {
-                            if(stocks[inflectionIndex[i].Index].Close < stocks[inflectionIndex[i + 2].Index].Close)
+                            if(stocks[inflectionIndex[i].Index].Low < stocks[inflectionIndex[i + 2].Index].Low)
                             {
                                 //remove the lower buy signal
                                 inflectionIndex.RemoveAt(i + 2);
-                                if(stocks[inflectionIndex[i + 2].Index].Close > stocks[inflectionIndex[i + 1].Index].Close)
+                                if(stocks[inflectionIndex[i + 2].Index].Low > stocks[inflectionIndex[i + 1].Index].Low)
                                 {
                                     inflectionIndex.RemoveAt(i + 1);
                                 }
@@ -334,10 +334,10 @@ namespace GimmeMillions.Domain.Features
                         }
                         else
                         {
-                            if (stocks[inflectionIndex[i].Index].Close > stocks[inflectionIndex[i + 2].Index].Close)
+                            if (stocks[inflectionIndex[i].Index].High > stocks[inflectionIndex[i + 2].Index].High)
                             {
                                 inflectionIndex.RemoveAt(i + 2);
-                                if (stocks[inflectionIndex[i + 1].Index].Close < stocks[inflectionIndex[i + 2].Index].Close)
+                                if (stocks[inflectionIndex[i + 1].Index].High < stocks[inflectionIndex[i + 2].Index].High)
                                 {
                                     inflectionIndex.RemoveAt(i + 2);
                                     i++;
@@ -356,7 +356,7 @@ namespace GimmeMillions.Domain.Features
 
                         --i;
                     }
-                }*/
+                }
 
                 //Add an offset
                 for (int i = 0; i < inflectionIndex.Count; ++i)
@@ -375,9 +375,12 @@ namespace GimmeMillions.Domain.Features
                     int j = inflectionIndex[i - 1].Index;
                     averageDistance += inflectionIndex[i].Index - j;
 
-                    decimal openPrice = stocks[j].Close;
+                    //decimal openPrice = inflectionIndex[i - 1].BuySignal ? stocks[j].Low : stocks[j].High;
+                    //decimal closePrice = inflectionIndex[i - 1].BuySignal ? stocks[inflectionIndex[i].Index].High : stocks[inflectionIndex[i].Index].Low;
+
+                    decimal openPrice = stocks[j].Open;
                     decimal closePrice = stocks[inflectionIndex[i].Index].Close;
-                    
+
                     while (j < inflectionIndex[i].Index)
                     {
                         var sample = stocks[j];
@@ -389,11 +392,11 @@ namespace GimmeMillions.Domain.Features
                         }
                         else if(inflectionIndex[i - 1].BuySignal)
                         {
-                            signal = 1.0m - (sample.Close - openPrice) / (closePrice - openPrice);
+                            signal = 1.0m - (sample.Average - openPrice) / (closePrice - openPrice);
                         }
                         else
                         {
-                            signal = (sample.Close - openPrice) / (closePrice - openPrice);
+                            signal = (sample.Average - openPrice) / (closePrice - openPrice);
                         }
                         if (signal > 1.0m)
                             signal = 1.0m;
@@ -421,6 +424,7 @@ namespace GimmeMillions.Domain.Features
                                 var output = new StockData(symbol, sample.Date, sample.Open, high, low,
                                     stocks[inflectionIndex[i].Index - 1].Close,
                                     //sample.Close,
+                                    //sample.AdjustedClose,
                                     stocks[inflectionIndex[i].Index - 1].AdjustedClose,
                                     sample.Volume, sample.PreviousClose);
 
