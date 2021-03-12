@@ -27,9 +27,9 @@ namespace ModelTrainer
         public void Train(string modelName, StockDataPeriod period, int kSize)
         {
             //var datasetService = GetRawFeaturesBuySellSignalDatasetService(period, 50, kSize);
-            //var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 10, 80, kSize, 1);
+            var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 12, 80, kSize, 1);
             //var datasetService = GetDFTFeaturesBuySellSignalDatasetService(period, 50, kSize);
-            var datasetService = GetHeikinAshiFeaturesBuySellSignalDatasetService(period, 80, kSize, 1);
+            //var datasetService = GetHeikinAshiFeaturesBuySellSignalDatasetService(period, 50, kSize, 1);
             var model = new MLStockRangePredictorModel();
 
             int numSamples = 20000;
