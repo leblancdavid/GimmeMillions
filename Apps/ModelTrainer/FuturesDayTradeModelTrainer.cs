@@ -3,6 +3,7 @@ using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Features.Extractors;
 using GimmeMillions.Domain.ML;
+using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.Domain.Stocks.Filters;
 using System;
@@ -29,10 +30,11 @@ namespace ModelTrainer
             //var datasetService = GetRawFeaturesBuySellSignalDatasetService(period, 50, kSize);
             //var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 12, 80, kSize, 1);
             //var datasetService = GetDFTFeaturesBuySellSignalDatasetService(period, 50, kSize);
-            var datasetService = GetHeikinAshiFeaturesBuySellSignalDatasetService(period, 60, kSize, 1);
-            var model = new MLStockRangePredictorModel();
+            var datasetService = GetHeikinAshiFeaturesBuySellSignalDatasetService(period, 50, kSize, 0);
+            //var model = new MLStockRangePredictorModel();
+            var model = new SVMStockRangePredictorModel();
 
-            int numSamples = 20000;
+            int numSamples = 10000;
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(datasetService.GetTrainingData("DIA", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("SPY", null, true, numSamples));
@@ -40,7 +42,7 @@ namespace ModelTrainer
             //trainingData.AddRange(datasetService.GetTrainingData("RUT", null, true, numSamples));
 
             model.Train(trainingData, 0.1, new SignalOutputMapper());
-            model.Save(modelName);
+            //model.Save(modelName);
         }
 
         private IFeatureDatasetService<FeatureVector> GetIndicatorFeaturesBuySellSignalDatasetService(
