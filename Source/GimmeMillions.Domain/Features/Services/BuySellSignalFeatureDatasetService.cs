@@ -261,7 +261,20 @@ namespace GimmeMillions.Domain.Features
                     }
                 }
 
-                for(int i = 0; i < inflectionIndex.Count; ++i)
+                for (int i = 0; i < inflectionIndex.Count - 1; ++i)
+                {
+                    if((inflectionIndex[i].BuySignal && 
+                        stocks[inflectionIndex[i].Index].Close > stocks[inflectionIndex[i + 1].Index].Close) ||
+                       (!inflectionIndex[i].BuySignal &&
+                        stocks[inflectionIndex[i].Index].Close < stocks[inflectionIndex[i + 1].Index].Close))
+                    {
+                        inflectionIndex.RemoveAt(i);
+                        inflectionIndex.RemoveAt(i);
+                        --i;
+                    }
+                }
+
+                for (int i = 0; i < inflectionIndex.Count; ++i)
                 {
                     if(inflectionIndex[i].BuySignal)
                     {
