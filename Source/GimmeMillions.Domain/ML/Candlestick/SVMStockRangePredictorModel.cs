@@ -66,8 +66,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var network = new DeepBeliefNetwork(new BernoulliFunction(), 
                 firstFeature.Input.Data.Length, 
-                firstFeature.Input.Data.Length / 2,
-                firstFeature.Input.Data.Length / 4,
+                firstFeature.Input.Data.Length * 2,
                 3);
             new GaussianWeights(network).Randomize();
             network.UpdateVisibleWeights();
@@ -89,11 +88,12 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 Console.WriteLine($"({i}): {error}");
                 if(i % 10 == 0)
                 {
-                    Console.WriteLine($"Validation set error: {RunTest(testData, network, trainingOutputMapper, 0.2, 0.8)}");
+                    Console.WriteLine($"Training set accuracy: {RunTest(trainingData, network, trainingOutputMapper, 0.2, 0.8)}");
+                    Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.2, 0.8)}");
                 }
             }
 
-            Console.WriteLine($"Validation set error: {RunTest(testData, network, trainingOutputMapper, 0.2, 0.8)}");
+            Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.2, 0.8)}");
 
             return Result.Success<ModelMetrics>(null);
         }
