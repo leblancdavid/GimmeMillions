@@ -66,12 +66,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var network = new DeepBeliefNetwork(new BernoulliFunction(), 
                 firstFeature.Input.Data.Length, 
-                firstFeature.Input.Data.Length,
-                //firstFeature.Input.Data.Length / 2,
-                firstFeature.Input.Data.Length,
-                //firstFeature.Input.Data.Length / 4,
-                //firstFeature.Input.Data.Length / 8,
-                //firstFeature.Input.Data.Length / 16,
+                firstFeature.Input.Data.Length / 2,
+                firstFeature.Input.Data.Length / 4,
                 3);
             new GaussianWeights(network).Randomize();
             network.UpdateVisibleWeights();
@@ -85,41 +81,19 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             //double[][] layerData = teacher.GetLayerInput(trainingInputs);
 
-            int epochs = 10;
+            int epochs = 1000;
             int i = 0;
             for (i = 0; i < epochs; i++)
             {
                 double error = teacher.RunEpoch(trainingInputs, signalOutputs);
+                Console.WriteLine($"({i}): {error}");
+                if(i % 10 == 0)
+                {
+                    Console.WriteLine($"Validation set error: {RunTest(testData, network, trainingOutputMapper, 0.2, 0.8)}");
+                }
             }
 
-
-
-            var predictionResults = new List<(double PredictedSignal, double ActualSignal)>();
-            foreach (var testSample in testData)
-            {
-                var prediction = network.Compute(testSample.Input.Data);
-                //predictionResults.Add((prediction[0], trainingOutputMapper.GetOutputValue(testSample.Output)));
-
-                //var prediction = signalModel.Score(testSample.Input.Data);
-                if (prediction[0] > 0.8 && prediction[1] > prediction[2])
-                    predictionResults.Add((prediction[0], trainingOutputMapper.GetOutputValue(testSample.Output)));
-
-                if (prediction[0] < 0.2 && prediction[1] < prediction[2])
-                    predictionResults.Add((prediction[0], trainingOutputMapper.GetOutputValue(testSample.Output)));
-            }
-
-            predictionResults = predictionResults.OrderByDescending(x => x.PredictedSignal).ToList();
-            var runningAccuracy = new List<double>();
-            double correct = 0.0;
-            i = 0;
-            foreach (var result in predictionResults)
-            {
-                if((result.PredictedSignal > 0.50 && result.ActualSignal > 0.50) || (result.PredictedSignal < 0.5 && result.ActualSignal < 0.5))
-                    correct++;
-
-                runningAccuracy.Add(correct / (double)(i + 1));
-                i++;
-            }
+            Console.WriteLine($"Validation set error: {RunTest(testData, network, trainingOutputMapper, 0.2, 0.8)}");
 
             return Result.Success<ModelMetrics>(null);
         }
@@ -144,6 +118,42 @@ namespace GimmeMillions.Domain.ML.Candlestick
             if (output > 1.0)
                 return 1.0;
             return output;
+        }
+
+        private double RunTest(IEnumerable<(FeatureVector Input, StockData Output)> testData, 
+            DeepBeliefNetwork network, 
+            ITrainingOutputMapper trainingOutputMapper,
+            double lowThreshold, double highThreshold)
+        {
+            var predictionResults = new List<(double PredictedSignal, double ActualSignal)>();
+            foreach (var testSample in testData)
+            {
+                var prediction = network.Compute(testSample.Input.Data);
+                //predictionResults.Add((prediction[0], trainingOutputMapper.GetOutputValue(testSample.Output)));
+
+                //var prediction = signalModel.Score(testSample.Input.Data);
+                if (prediction[0] > highThreshold)
+                    predictionResults.Add((prediction[0], trainingOutputMapper.GetOutputValue(testSample.Output)));
+
+                if (prediction[0] < lowThreshold)
+                    predictionResults.Add((prediction[0], trainingOutputMapper.GetOutputValue(testSample.Output)));
+            }
+
+            predictionResults = predictionResults.OrderByDescending(x => x.PredictedSignal).ToList();
+            var runningAccuracy = new List<double>();
+            double correct = 0.0;
+            int i = 0;
+            foreach (var result in predictionResults)
+            {
+                if ((result.PredictedSignal > highThreshold && result.ActualSignal > highThreshold) || 
+                    (result.PredictedSignal < lowThreshold && result.ActualSignal < lowThreshold))
+                    correct++;
+
+                runningAccuracy.Add(correct / (double)(i + 1));
+                i++;
+            }
+
+            return runningAccuracy.LastOrDefault();
         }
 
     }
