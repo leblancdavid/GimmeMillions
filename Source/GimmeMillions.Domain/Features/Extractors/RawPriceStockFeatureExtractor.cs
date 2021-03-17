@@ -22,14 +22,9 @@ namespace GimmeMillions.Domain.Features
             var minVolume = ordered.Min(x => x.Data.Volume);
             var maxVolume = ordered.Max(x => x.Data.Volume);
 
-            var minClose = ordered.Min(x => x.Data.Close);
-            var maxClose = ordered.Max(x => x.Data.Close);
+            var minPrice = ordered.Min(x => x.Data.Low);
+            var maxPrice = ordered.Max(x => x.Data.High);
 
-            var minBottom = ordered.Min(x => x.Data.BottomWickPercent);
-            var maxBottom = ordered.Max(x => x.Data.BottomWickPercent);
-
-            var minTop = ordered.Min(x => x.Data.TopWickPercent);
-            var maxTop = ordered.Max(x => x.Data.TopWickPercent);
 
             var feature = new List<double>();
             foreach(var bar in ordered)
@@ -43,32 +38,16 @@ namespace GimmeMillions.Domain.Features
                     feature.Add((double)((bar.Data.Volume - minVolume) / (maxVolume - minVolume)));
                 }
 
-                if (minClose == maxClose)
+                if (minPrice == maxPrice)
                 {
                     feature.Add(0.0);
                 }
                 else
                 {
-                    feature.Add((double)((bar.Data.Close - minClose) / (maxClose - minClose)));
-                    //feature.Add((double)((bar.Data.Open - minClose) / (maxClose - minClose)));
-                }
-
-                if (minBottom == maxBottom)
-                {
-                    feature.Add(0.0);
-                }
-                else
-                {
-                    feature.Add((double)((bar.Data.BottomWickPercent - minBottom) / (maxBottom - minBottom)));
-                }
-
-                if (minTop == maxTop)
-                {
-                    feature.Add(0.0);
-                }
-                else
-                {
-                    feature.Add((double)((bar.Data.TopWickPercent - minTop) / (maxTop - minTop)));
+                    feature.Add((double)((bar.Data.Open - minPrice) / (maxPrice - minPrice)));
+                    feature.Add((double)((bar.Data.Close - minPrice) / (maxPrice - minPrice)));
+                    feature.Add((double)((bar.Data.Low - minPrice) / (maxPrice - minPrice)));
+                    feature.Add((double)((bar.Data.High - minPrice) / (maxPrice - minPrice)));
                 }
             }
 

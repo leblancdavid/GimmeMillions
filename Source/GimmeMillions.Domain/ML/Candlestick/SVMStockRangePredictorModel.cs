@@ -66,12 +66,20 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var network = new DeepBeliefNetwork(new BernoulliFunction(), 
                 firstFeature.Input.Data.Length, 
-                firstFeature.Input.Data.Length * 2,
+                firstFeature.Input.Data.Length,
+                firstFeature.Input.Data.Length / 4,
+                firstFeature.Input.Data.Length / 16,
+                firstFeature.Input.Data.Length / 32,
                 3);
             new GaussianWeights(network).Randomize();
             network.UpdateVisibleWeights();
 
-            var teacher = new BackPropagationLearning(network);
+            var teacher = new BackPropagationLearning(network)
+            {
+                LearningRate = 0.1,
+                Momentum = 0.5
+                
+            };
             //var teacher = new DeepNeuralNetworkLearning(network)
             //{
             //    Algorithm = (ann, i) => new ParallelResilientBackpropagationLearning(ann),
@@ -80,7 +88,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             //double[][] layerData = teacher.GetLayerInput(trainingInputs);
 
-            int epochs = 1000;
+            int epochs = 5000;
             int i = 0;
             for (i = 0; i < epochs; i++)
             {
@@ -88,12 +96,18 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 Console.WriteLine($"({i}): {error}");
                 if(i % 10 == 0)
                 {
-                    Console.WriteLine($"Training set accuracy: {RunTest(trainingData, network, trainingOutputMapper, 0.2, 0.8)}");
-                    Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.2, 0.8)}");
+                    //Console.WriteLine($"Training set accuracy: {RunTest(trainingData, network, trainingOutputMapper, 0.2, 0.8)}");
+                    //Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.2, 0.8)}");
+                    Console.WriteLine($"Training set accuracy: {RunTest(trainingData, network, trainingOutputMapper, 0.5, 0.5)}, " +
+                        $"{RunTestWithCheck(trainingData, network, averageHigh, averageLow, 3.0)}");
+                    Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}, " +
+                        $"{RunTestWithCheck(testData, network, averageHigh, averageLow, 3.0)}");
                 }
             }
 
-            Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.2, 0.8)}");
+            //Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.2, 0.8)}");
+            Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}, " +
+                $"{RunTestWithCheck(testData, network, averageHigh, averageLow, 3.0)}");
 
             return Result.Success<ModelMetrics>(null);
         }
@@ -154,6 +168,31 @@ namespace GimmeMillions.Domain.ML.Candlestick
             }
 
             return runningAccuracy.LastOrDefault();
+        }
+
+        private double RunTestWithCheck(IEnumerable<(FeatureVector Input, StockData Output)> testData,
+           DeepBeliefNetwork network,
+           double averageHigh, double averageLow, double scaling)
+        {
+            double correct = 0.0;
+            foreach (var testSample in testData)
+            {
+                var prediction = network.Compute(testSample.Input.Data);
+                if((prediction[1] > prediction[2] && 
+                    ToHighOutput(testSample.Output.PercentChangeHighToPreviousClose, averageHigh, scaling) >
+                    ToLowOutput(testSample.Output.PercentChangeLowToPreviousClose, averageLow, scaling)) ||
+                    (prediction[2] > prediction[1] &&
+                    ToHighOutput(testSample.Output.PercentChangeHighToPreviousClose, averageHigh, scaling) <
+                    ToLowOutput(testSample.Output.PercentChangeLowToPreviousClose, averageLow, scaling)))
+                {
+                    correct++;
+                }
+
+               
+            }
+
+            correct /= testData.Count();
+            return correct;
         }
 
     }

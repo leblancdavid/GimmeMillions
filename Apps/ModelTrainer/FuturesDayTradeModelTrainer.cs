@@ -27,10 +27,10 @@ namespace ModelTrainer
         }
         public void Train(string modelName, StockDataPeriod period, int kSize)
         {
-            //var datasetService = GetRawFeaturesBuySellSignalDatasetService(period, 50, kSize);
-            //var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 12, 80, kSize, 1);
+            var datasetService = GetRawFeaturesBuySellSignalDatasetService(period, 40, kSize);
+            //var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 12, 80, kSize, 0);
             //var datasetService = GetDFTFeaturesBuySellSignalDatasetService(period, 50, kSize);
-            var datasetService = GetHeikinAshiFeaturesBuySellSignalDatasetService(period, 50, kSize, 0);
+            //var datasetService = GetHeikinAshiFeaturesBuySellSignalDatasetService(period, 50, kSize, 1);
             //var model = new MLStockRangePredictorModel();
             var model = new SVMStockRangePredictorModel();
 
@@ -77,14 +77,15 @@ namespace ModelTrainer
 
         private IFeatureDatasetService<FeatureVector> GetRawFeaturesBuySellSignalDatasetService(StockDataPeriod period,
             int numStockSamples = 40,
-            int kernelSize = 9)
+            int kernelSize = 9,
+            int signalOffset = 0)
         {
             var stocksRepo = new AlpacaStockAccessService();
-            var extractor = new RawCandlesStockFeatureExtractor();
-            //var extractor = new RawPriceStockFeatureExtractor();
+            var extractor = new RawPriceStockFeatureExtractor();
+            //var extractor = new BinaryRawCandlesStockFeatureExtractor();
 
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
-                period, numStockSamples, kernelSize);
+                period, numStockSamples, kernelSize, signalOffset);
         }
 
         private IFeatureDatasetService<FeatureVector> GetHeikinAshiFeaturesBuySellSignalDatasetService(StockDataPeriod period,
@@ -93,6 +94,7 @@ namespace ModelTrainer
             int signalOffset = 0)
         {
             var stocksRepo = new AlpacaStockAccessService();
+            //var extractor = new NormalizedHeikinAshiCandlesStockFeatureExtractor();
             var extractor = new HeikinAshiCandlesStockFeatureExtractor();
 
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
