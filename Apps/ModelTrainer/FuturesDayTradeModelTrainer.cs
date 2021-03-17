@@ -27,7 +27,8 @@ namespace ModelTrainer
         }
         public void Train(string modelName, StockDataPeriod period, int kSize)
         {
-            var datasetService = GetRawFeaturesBuySellSignalDatasetService(period, 40, kSize);
+            var datasetService = GetFibonacciFeaturesBuySellSignalDatasetService(period, 100, kSize);
+            //var datasetService = GetRawFeaturesBuySellSignalDatasetService(period, 40, kSize);
             //var datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, 12, 80, kSize, 0);
             //var datasetService = GetDFTFeaturesBuySellSignalDatasetService(period, 50, kSize);
             //var datasetService = GetHeikinAshiFeaturesBuySellSignalDatasetService(period, 50, kSize, 1);
@@ -43,6 +44,17 @@ namespace ModelTrainer
 
             model.Train(trainingData, 0.1, new SignalOutputMapper());
             //model.Save(modelName);
+        }
+
+        private IFeatureDatasetService<FeatureVector> GetFibonacciFeaturesBuySellSignalDatasetService(
+            StockDataPeriod period,
+            int numStockSamples = 40,
+            int kernelSize = 9)
+        {
+            var stocksRepo = new AlpacaStockAccessService();
+            var extractor = new FibonacciStockFeatureExtractor();
+            return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+                period, numStockSamples, kernelSize);
         }
 
         private IFeatureDatasetService<FeatureVector> GetIndicatorFeaturesBuySellSignalDatasetService(
