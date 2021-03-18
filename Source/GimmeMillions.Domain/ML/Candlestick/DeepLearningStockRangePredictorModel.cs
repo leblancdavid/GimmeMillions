@@ -10,6 +10,7 @@ using Accord.Statistics.Models.Regression.Fitting;
 using Accord.Statistics.Models.Regression.Linear;
 using CSharpFunctionalExtensions;
 using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.ML.ActivationFunctions;
 using GimmeMillions.Domain.Stocks;
 using System;
 using System.Collections.Generic;
@@ -64,7 +65,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 //ToLowOutput(x.Output.PercentChangeLowToPreviousClose, averageLow, 3.0),
                 }).ToArray();
 
-            var network = new DeepBeliefNetwork(new GaussianFunction(3.0), 
+            var network = new DeepBeliefNetwork(new BernoulliFunction(0.5), 
                 firstFeature.Input.Data.Length, 
                 firstFeature.Input.Data.Length,
                 firstFeature.Input.Data.Length,
