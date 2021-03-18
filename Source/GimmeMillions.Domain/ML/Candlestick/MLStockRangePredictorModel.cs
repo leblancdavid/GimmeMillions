@@ -237,11 +237,11 @@ namespace GimmeMillions.Domain.ML
                     var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
-                    if(posS.Sentiment > 80.0f && posS.PredictedHigh > posS.PredictedLow) 
-                        predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.8f));
+                    if(posS.Sentiment > 50.0f) 
+                        predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.5f));
 
-                    if (posS.Sentiment < 20.0f && posS.PredictedHigh < posS.PredictedLow)
-                        predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.2f));
+                    if (posS.Sentiment < 50.0f)
+                        predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.5f));
                 }
 
                 predictionData = predictionData.OrderByDescending(x => x.Score).ToList();

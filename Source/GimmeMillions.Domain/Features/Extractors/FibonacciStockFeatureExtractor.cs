@@ -35,6 +35,7 @@ namespace GimmeMillions.Domain.Features
             decimal distance;
             var fibIndex = fib.NearestFibonacci(lastbar.Data, out distance);
             feature.Add((double)fib.GetFibonacciValue(lastbar.Data));
+            feature.Add((double)distance);
             feature.Add(volumes[fibIndex]);
 
             feature = feature.Concat(volumes).ToList();

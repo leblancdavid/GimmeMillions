@@ -33,7 +33,7 @@ namespace ModelTrainer
             //var datasetService = GetDFTFeaturesBuySellSignalDatasetService(period, 50, kSize);
             //var datasetService = GetHeikinAshiFeaturesBuySellSignalDatasetService(period, 50, kSize, 1);
             //var model = new MLStockRangePredictorModel();
-            var model = new SVMStockRangePredictorModel();
+            var model = new DeepLearningStockRangePredictorModel();
 
             int numSamples = 10000;
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
@@ -52,7 +52,11 @@ namespace ModelTrainer
             int kernelSize = 9)
         {
             var stocksRepo = new AlpacaStockAccessService();
-            var extractor = new FibonacciStockFeatureExtractor();
+            var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
+            {
+                new FibonacciStockFeatureExtractor(),
+                new TrendStockFeatureExtractor(50)
+            });
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                 period, numStockSamples, kernelSize);
         }

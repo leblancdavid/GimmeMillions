@@ -17,7 +17,7 @@ using System.Linq;
 
 namespace GimmeMillions.Domain.ML.Candlestick
 {
-    public class SVMStockRangePredictorModel : IStockRangePredictor
+    public class DeepLearningStockRangePredictorModel : IStockRangePredictor
     {
         public bool IsTrained => false;
 
@@ -60,21 +60,16 @@ namespace GimmeMillions.Domain.ML.Candlestick
             var signalOutputs = trainingData.Select(x => 
                 new double[] {
                 (double)trainingOutputMapper.GetOutputValue(x.Output),
-                ToHighOutput(x.Output.PercentChangeHighToPreviousClose, averageHigh, 3.0),
-                ToLowOutput(x.Output.PercentChangeLowToPreviousClose, averageLow, 3.0),
+                //ToHighOutput(x.Output.PercentChangeHighToPreviousClose, averageHigh, 3.0),
+                //ToLowOutput(x.Output.PercentChangeLowToPreviousClose, averageLow, 3.0),
                 }).ToArray();
 
-            var network = new DeepBeliefNetwork(new BernoulliFunction(), 
+            var network = new DeepBeliefNetwork(new GaussianFunction(3.0), 
                 firstFeature.Input.Data.Length, 
-                firstFeature.Input.Data.Length * 2,
-                firstFeature.Input.Data.Length * 2,
-                firstFeature.Input.Data.Length * 2,
-                firstFeature.Input.Data.Length * 2,
                 firstFeature.Input.Data.Length,
                 firstFeature.Input.Data.Length,
                 firstFeature.Input.Data.Length,
-                firstFeature.Input.Data.Length,
-                3);
+                1);
             new GaussianWeights(network).Randomize();
             network.UpdateVisibleWeights();
 
@@ -100,18 +95,18 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 Console.WriteLine($"({i}): {error}");
                 if(i % 10 == 0)
                 {
-                    //Console.WriteLine($"Training set accuracy: {RunTest(trainingData, network, trainingOutputMapper, 0.2, 0.8)}");
-                    //Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.2, 0.8)}");
-                    Console.WriteLine($"Training set accuracy: {RunTest(trainingData, network, trainingOutputMapper, 0.5, 0.5)}, " +
-                        $"{RunTestWithCheck(trainingData, network, averageHigh, averageLow, 3.0)}");
-                    Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}, " +
-                        $"{RunTestWithCheck(testData, network, averageHigh, averageLow, 3.0)}");
+                    Console.WriteLine($"Training set accuracy: {RunTest(trainingData, network, trainingOutputMapper, 0.4, 0.6)}");
+                    Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.4, 0.6)}");
+                    //Console.WriteLine($"Training set accuracy: {RunTest(trainingData, network, trainingOutputMapper, 0.5, 0.5)}, " +
+                    //    $"{RunTestWithCheck(trainingData, network, averageHigh, averageLow, 3.0)}");
+                    //Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}, " +
+                    //    $"{RunTestWithCheck(testData, network, averageHigh, averageLow, 3.0)}");
                 }
             }
 
-            //Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.2, 0.8)}");
-            Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}, " +
-                $"{RunTestWithCheck(testData, network, averageHigh, averageLow, 3.0)}");
+            Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.4, 0.6)}");
+            //Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}, " +
+            //    $"{RunTestWithCheck(testData, network, averageHigh, averageLow, 3.0)}");
 
             return Result.Success<ModelMetrics>(null);
         }
