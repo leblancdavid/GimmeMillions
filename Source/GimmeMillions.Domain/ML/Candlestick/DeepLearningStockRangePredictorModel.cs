@@ -60,19 +60,22 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var signalOutputs = trainingData.Select(x => 
                 new double[] {
-                    x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose > 0.0m ? 1.0 : 0.0,
-                    x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose > 0.0m ? 0.0 : 1.0,
-                //(double)trainingOutputMapper.GetOutputValue(x.Output),
-                //ToHighOutput(x.Output.PercentChangeHighToPreviousClose, averageHigh, 3.0),
-                //ToLowOutput(x.Output.PercentChangeLowToPreviousClose, averageLow, 3.0),
+                    //x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose > 0.0m ? 1.0 : 0.0,
+                    //x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose > 0.0m ? 0.0 : 1.0,
+                    x.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0,
+                    x.Output.PercentChangeFromPreviousClose > 0.0m ? 0.0 : 1.0,
+                    1.0
                 }).ToArray();
 
-            var network = new DeepBeliefNetwork(new BernoulliFunction(0.8), 
+            var network = new DeepBeliefNetwork(new BernoulliFunction(), 
                 firstFeature.Input.Data.Length, 
-                firstFeature.Input.Data.Length,
-                firstFeature.Input.Data.Length,
-                firstFeature.Input.Data.Length,
-                2);
+                firstFeature.Input.Data.Length * 2,
+                firstFeature.Input.Data.Length * 2,
+                //firstFeature.Input.Data.Length * 2,
+                //firstFeature.Input.Data.Length / 4,
+                //firstFeature.Input.Data.Length,
+                //firstFeature.Input.Data.Length,
+                3);
             new GaussianWeights(network).Randomize();
             network.UpdateVisibleWeights();
 
@@ -82,18 +85,19 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 Momentum = 0.5
                 
             };
-            //var teacher = new DeepNeuralNetworkLearning(network)
-            //{
-            //    Algorithm = (ann, i) => new ParallelResilientBackpropagationLearning(ann),
-            //    LayerIndex = network.Layers.Length - 1,
-            //};
 
-            //double[][] layerData = teacher.GetLayerInput(trainingInputs);
-
+            int updateEveryEpoch = 1;
+            int epochDelay = 10;
+            double uncertaintyRate = 0.33;
+            double factor = 0.99;
             int epochs = 5000;
             int i = 0;
             for (i = 0; i < epochs; i++)
             {
+                if(i >= updateEveryEpoch && i >= epochDelay && i % updateEveryEpoch == 0)
+                {
+                    UpdateConfidences(network, trainingInputs, signalOutputs, factor, uncertaintyRate);
+                }
                 double error = teacher.RunEpoch(trainingInputs, signalOutputs);
                 Console.WriteLine($"({i}): {error}");
                 if(i % 10 == 0)
@@ -112,6 +116,31 @@ namespace GimmeMillions.Domain.ML.Candlestick
             //    $"{RunTestWithCheck(testData, network, averageHigh, averageLow, 3.0)}");
 
             return Result.Success<ModelMetrics>(null);
+        }
+
+        private void UpdateConfidences(DeepBeliefNetwork network, double[][] input, double[][] output, double factor, double p)
+        {
+            var confidences = new List<(int index, double confidence)>();
+            for(int i = 0; i < input.Length; ++i)
+            {
+                var prediction = network.Compute(input[i]);
+                var c = Math.Abs(prediction[0] - prediction[1]);
+                //favor ones that are wrong!
+                if ((prediction[0] > 0.5 && output[i][0] < 0.5) ||
+                    (prediction[1] > 0.5 && output[i][0] < 0.5))
+                {
+                    c = 0.0;
+                }
+                confidences.Add((i, c));
+            }
+
+            confidences = confidences.OrderBy(x => x.confidence).ToList();
+            for(int i = 0; i < confidences.Count * p; ++i)
+            {
+                output[confidences[i].index][0] *= factor; 
+                output[confidences[i].index][1] *= factor;
+                output[confidences[i].index][2] *= factor;
+            }
         }
 
         private double ToHighOutput(decimal percentChange, double averageHigh, double scaling)
@@ -141,26 +170,19 @@ namespace GimmeMillions.Domain.ML.Candlestick
             ITrainingOutputMapper trainingOutputMapper,
             double lowThreshold, double highThreshold)
         {
+            double biasSum = 0.0;
+
             var predictionResults = new List<(double PredictedHighSignal, double PredictedLowSignal, double Confidence, double ActualSignal)>();
             foreach (var testSample in testData)
             {
                 var prediction = network.Compute(testSample.Input.Data);
-                //predictionResults.Add((prediction[0], trainingOutputMapper.GetOutputValue(testSample.Output)));
 
-                //var prediction = signalModel.Score(testSample.Input.Data);
-                if (prediction[0] > prediction[1])
-                    predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
-                        testSample.Output.PercentChangeHighToPreviousClose + testSample.Output.PercentChangeLowToPreviousClose > 0.0m ? 1.0: 0.0));
+                predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
+                        testSample.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0));
+                //predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
+                //        testSample.Output.PercentChangeHighToPreviousClose + testSample.Output.PercentChangeLowToPreviousClose > 0.0m ? 1.0 : 0.0));
 
-                if (prediction[0] < prediction[1])
-                    predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
-                        testSample.Output.PercentChangeHighToPreviousClose + testSample.Output.PercentChangeLowToPreviousClose > 0.0m ? 1.0 : 0.0));
-
-                //if (prediction[0] > highThreshold)
-                //    predictionResults.Add((prediction[0], trainingOutputMapper.GetOutputValue(testSample.Output)));
-
-                //if (prediction[0] < lowThreshold)
-                //    predictionResults.Add((prediction[0], trainingOutputMapper.GetOutputValue(testSample.Output)));
+                biasSum += prediction[2];
             }
 
             predictionResults = predictionResults.OrderByDescending(x => x.Confidence).ToList();
@@ -177,33 +199,19 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 i++;
             }
 
-            return runningAccuracy.LastOrDefault();
-        }
-
-        private double RunTestWithCheck(IEnumerable<(FeatureVector Input, StockData Output)> testData,
-           DeepBeliefNetwork network,
-           double averageHigh, double averageLow, double scaling)
-        {
-            double correct = 0.0;
-            foreach (var testSample in testData)
+            var accuracyByPercentile = new double[] { 0.01, 0.05, 0.10, 0.25, 0.50, 1.0 };
+            foreach(var percent in accuracyByPercentile)
             {
-                var prediction = network.Compute(testSample.Input.Data);
-                if((prediction[1] > prediction[2] && 
-                    ToHighOutput(testSample.Output.PercentChangeHighToPreviousClose, averageHigh, scaling) >
-                    ToLowOutput(testSample.Output.PercentChangeLowToPreviousClose, averageLow, scaling)) ||
-                    (prediction[2] > prediction[1] &&
-                    ToHighOutput(testSample.Output.PercentChangeHighToPreviousClose, averageHigh, scaling) <
-                    ToLowOutput(testSample.Output.PercentChangeLowToPreviousClose, averageLow, scaling)))
+                int index = (int)(runningAccuracy.Count() * percent);
+                if(index >= runningAccuracy.Count)
                 {
-                    correct++;
+                    index = runningAccuracy.Count - 1;
                 }
-
-               
+                Console.WriteLine($"\t{percent * 100.0}%: {runningAccuracy[index]}, Conf: {predictionResults[index].Confidence}");
             }
 
-            correct /= testData.Count();
-            return correct;
+            Console.WriteLine($"\tBias Average: {biasSum / runningAccuracy.Count}");
+            return runningAccuracy.LastOrDefault();
         }
-
     }
 }

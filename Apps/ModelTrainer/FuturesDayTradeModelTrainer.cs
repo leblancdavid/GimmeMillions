@@ -35,7 +35,7 @@ namespace ModelTrainer
             //var model = new MLStockRangePredictorModel();
             var model = new DeepLearningStockRangePredictorModel();
 
-            int numSamples = 10000;
+            int numSamples = 5000;
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(datasetService.GetTrainingData("DIA", null, true, numSamples));
             trainingData.AddRange(datasetService.GetTrainingData("SPY", null, true, numSamples));
