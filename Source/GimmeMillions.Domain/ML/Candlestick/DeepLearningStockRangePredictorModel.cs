@@ -49,7 +49,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
             var firstFeature = dataset.FirstOrDefault();
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
 
-            var trainingData = dataset.Take(trainingCount);
+            var trainingData = dataset.Take(trainingCount);//.Where(x => x.Output.Signal > 0.9m || x.Output.Signal < 0.1m);
             var testData = dataset.Skip(trainingCount);
 
             var trainingInputs = trainingData.Select(x => x.Input.Data).ToArray();
@@ -60,17 +60,19 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var signalOutputs = trainingData.Select(x => 
                 new double[] {
-                (double)trainingOutputMapper.GetOutputValue(x.Output),
+                    x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose > 0.0m ? 1.0 : 0.0,
+                    x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose > 0.0m ? 0.0 : 1.0,
+                //(double)trainingOutputMapper.GetOutputValue(x.Output),
                 //ToHighOutput(x.Output.PercentChangeHighToPreviousClose, averageHigh, 3.0),
                 //ToLowOutput(x.Output.PercentChangeLowToPreviousClose, averageLow, 3.0),
                 }).ToArray();
 
-            var network = new DeepBeliefNetwork(new BernoulliFunction(0.5), 
+            var network = new DeepBeliefNetwork(new BernoulliFunction(0.8), 
                 firstFeature.Input.Data.Length, 
                 firstFeature.Input.Data.Length,
                 firstFeature.Input.Data.Length,
                 firstFeature.Input.Data.Length,
-                1);
+                2);
             new GaussianWeights(network).Randomize();
             network.UpdateVisibleWeights();
 
@@ -96,8 +98,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 Console.WriteLine($"({i}): {error}");
                 if(i % 10 == 0)
                 {
-                    Console.WriteLine($"Training set accuracy: {RunTest(trainingData, network, trainingOutputMapper, 0.4, 0.6)}");
-                    Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.4, 0.6)}");
+                    Console.WriteLine($"Training set accuracy: {RunTest(trainingData, network, trainingOutputMapper, 0.5, 0.5)}");
+                    Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}");
                     //Console.WriteLine($"Training set accuracy: {RunTest(trainingData, network, trainingOutputMapper, 0.5, 0.5)}, " +
                     //    $"{RunTestWithCheck(trainingData, network, averageHigh, averageLow, 3.0)}");
                     //Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}, " +
@@ -105,7 +107,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 }
             }
 
-            Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.4, 0.6)}");
+            Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}");
             //Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}, " +
             //    $"{RunTestWithCheck(testData, network, averageHigh, averageLow, 3.0)}");
 
@@ -139,28 +141,36 @@ namespace GimmeMillions.Domain.ML.Candlestick
             ITrainingOutputMapper trainingOutputMapper,
             double lowThreshold, double highThreshold)
         {
-            var predictionResults = new List<(double PredictedSignal, double ActualSignal)>();
+            var predictionResults = new List<(double PredictedHighSignal, double PredictedLowSignal, double Confidence, double ActualSignal)>();
             foreach (var testSample in testData)
             {
                 var prediction = network.Compute(testSample.Input.Data);
                 //predictionResults.Add((prediction[0], trainingOutputMapper.GetOutputValue(testSample.Output)));
 
                 //var prediction = signalModel.Score(testSample.Input.Data);
-                if (prediction[0] > highThreshold)
-                    predictionResults.Add((prediction[0], trainingOutputMapper.GetOutputValue(testSample.Output)));
+                if (prediction[0] > prediction[1])
+                    predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
+                        testSample.Output.PercentChangeHighToPreviousClose + testSample.Output.PercentChangeLowToPreviousClose > 0.0m ? 1.0: 0.0));
 
-                if (prediction[0] < lowThreshold)
-                    predictionResults.Add((prediction[0], trainingOutputMapper.GetOutputValue(testSample.Output)));
+                if (prediction[0] < prediction[1])
+                    predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
+                        testSample.Output.PercentChangeHighToPreviousClose + testSample.Output.PercentChangeLowToPreviousClose > 0.0m ? 1.0 : 0.0));
+
+                //if (prediction[0] > highThreshold)
+                //    predictionResults.Add((prediction[0], trainingOutputMapper.GetOutputValue(testSample.Output)));
+
+                //if (prediction[0] < lowThreshold)
+                //    predictionResults.Add((prediction[0], trainingOutputMapper.GetOutputValue(testSample.Output)));
             }
 
-            predictionResults = predictionResults.OrderByDescending(x => x.PredictedSignal).ToList();
+            predictionResults = predictionResults.OrderByDescending(x => x.Confidence).ToList();
             var runningAccuracy = new List<double>();
             double correct = 0.0;
             int i = 0;
             foreach (var result in predictionResults)
             {
-                if ((result.PredictedSignal > highThreshold && result.ActualSignal > highThreshold) || 
-                    (result.PredictedSignal < lowThreshold && result.ActualSignal < lowThreshold))
+                if ((result.PredictedHighSignal > highThreshold && result.ActualSignal > highThreshold) || 
+                    (result.PredictedHighSignal < lowThreshold && result.ActualSignal < lowThreshold))
                     correct++;
 
                 runningAccuracy.Add(correct / (double)(i + 1));
