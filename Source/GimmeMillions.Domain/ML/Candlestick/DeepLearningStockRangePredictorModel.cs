@@ -52,20 +52,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
             var trainingData = dataset.Take(trainingCount);//.Where(x => x.Output.Signal > 0.9m || x.Output.Signal < 0.1m);
             var testData = dataset.Skip(trainingCount);
 
-            var trainingInputs = trainingData.Select(x => x.Input.Data).ToArray();
-            double averageHigh = (double)trainingData.Average(x => x.Output.PercentChangeHighToPreviousClose);
-            double stdevHigh = (double)trainingData.Average(x => Math.Abs(x.Output.PercentChangeHighToPreviousClose - (decimal)averageHigh));
-            double averageLow = (double)trainingData.Average(x => x.Output.PercentChangeLowToPreviousClose);
-            double stdevLow = (double)trainingData.Average(x => Math.Abs(x.Output.PercentChangeLowToPreviousClose - (decimal)averageLow));
-
-            var signalOutputs = trainingData.Select(x => 
-                new double[] {
-                    //x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose > 0.0m ? 1.0 : 0.0,
-                    //x.Output.PercentChangeHighToPreviousClose + x.Output.PercentChangeLowToPreviousClose > 0.0m ? 0.0 : 1.0,
-                    x.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0,
-                    x.Output.PercentChangeFromPreviousClose > 0.0m ? 0.0 : 1.0,
-                    1.0
-                }).ToArray();
+            
 
             var network = new DeepBeliefNetwork(new BernoulliFunction(), 
                 firstFeature.Input.Data.Length, 
@@ -87,18 +74,23 @@ namespace GimmeMillions.Domain.ML.Candlestick
             };
 
             int updateEveryEpoch = 1;
-            int epochDelay = 10;
+            int epochDelay = 1;
             double uncertaintyRate = 0.33;
             double factor = 0.99;
             int epochs = 5000;
             int i = 0;
+
+            double[][] trainingInputs;
+            double[][] trainingOutputs;
+            GetTrainingData(trainingData, out trainingInputs, out trainingOutputs, true);
             for (i = 0; i < epochs; i++)
             {
-                if(i >= updateEveryEpoch && i >= epochDelay && i % updateEveryEpoch == 0)
+
+                if (i >= updateEveryEpoch && i >= epochDelay && i % updateEveryEpoch == 0)
                 {
-                    UpdateConfidences(network, trainingInputs, signalOutputs, factor, uncertaintyRate);
+                    UpdateConfidences(network, trainingInputs, trainingOutputs, factor, uncertaintyRate);
                 }
-                double error = teacher.RunEpoch(trainingInputs, signalOutputs);
+                double error = teacher.RunEpoch(trainingInputs, trainingOutputs);
                 Console.WriteLine($"({i}): {error}");
                 if(i % 10 == 0)
                 {
@@ -127,7 +119,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 var c = Math.Abs(prediction[0] - prediction[1]);
                 //favor ones that are wrong!
                 if ((prediction[0] > 0.5 && output[i][0] < 0.5) ||
-                    (prediction[1] > 0.5 && output[i][0] < 0.5))
+                    (prediction[1] > 0.5 && output[i][1] < 0.5))
                 {
                     c = 0.0;
                 }
@@ -141,6 +133,25 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 output[confidences[i].index][1] *= factor;
                 output[confidences[i].index][2] *= factor;
             }
+        }
+
+        private void GetTrainingData(IEnumerable<(FeatureVector Input, StockData Output)> dataset,
+            out double[][] inputs, out double[][] output, bool shuffle = true)
+        {
+            var trainingData = dataset.ToList();
+            if(shuffle)
+            {
+                Random rnd = new Random();
+                trainingData = trainingData.OrderBy(x => rnd.Next()).ToList();
+            }
+
+            inputs = trainingData.Select(x => x.Input.Data).ToArray();
+            output = trainingData.Select(x =>
+                new double[] {
+                    x.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0,
+                    x.Output.PercentChangeFromPreviousClose > 0.0m ? 0.0 : 1.0,
+                    1.0
+                }).ToArray();
         }
 
         private double ToHighOutput(decimal percentChange, double averageHigh, double scaling)
