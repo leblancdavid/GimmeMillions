@@ -78,6 +78,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
             double uncertaintyRate = 0.33;
             double factor = 0.99;
             int epochs = 5000;
+            int batchSize = 1000;
+            int numBatches = trainingData.Count() / batchSize;
             int i = 0;
 
             double[][] trainingInputs;
@@ -85,27 +87,28 @@ namespace GimmeMillions.Domain.ML.Candlestick
             GetTrainingData(trainingData, out trainingInputs, out trainingOutputs, true);
             for (i = 0; i < epochs; i++)
             {
-
-                if (i >= updateEveryEpoch && i >= epochDelay && i % updateEveryEpoch == 0)
+                double epochError = 0.0;
+                for(int j = 0; j < numBatches; ++j)
                 {
-                    UpdateConfidences(network, trainingInputs, trainingOutputs, factor, uncertaintyRate);
+                    var batchInput = trainingInputs.Skip(j * batchSize).Take(batchSize).ToArray();
+                    var batchOutput = trainingOutputs.Skip(j * batchSize).Take(batchSize).ToArray();
+                    if (i >= updateEveryEpoch && i >= epochDelay && i % updateEveryEpoch == 0)
+                    {
+                        UpdateConfidences(network, batchInput, batchOutput, factor, uncertaintyRate);
+                    }
+                    double error = teacher.RunEpoch(batchInput, batchOutput);
+                    Console.WriteLine($"({i},{j}): {error}");
+                    epochError += error;
                 }
-                double error = teacher.RunEpoch(trainingInputs, trainingOutputs);
-                Console.WriteLine($"({i}): {error}");
-                if(i % 10 == 0)
+                Console.WriteLine($"Epoch {i} error: {epochError}");
+                if (i % 10 == 0)
                 {
                     Console.WriteLine($"Training set accuracy: {RunTest(trainingData, network, trainingOutputMapper, 0.5, 0.5)}");
                     Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}");
-                    //Console.WriteLine($"Training set accuracy: {RunTest(trainingData, network, trainingOutputMapper, 0.5, 0.5)}, " +
-                    //    $"{RunTestWithCheck(trainingData, network, averageHigh, averageLow, 3.0)}");
-                    //Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}, " +
-                    //    $"{RunTestWithCheck(testData, network, averageHigh, averageLow, 3.0)}");
                 }
             }
 
             Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}");
-            //Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}, " +
-            //    $"{RunTestWithCheck(testData, network, averageHigh, averageLow, 3.0)}");
 
             return Result.Success<ModelMetrics>(null);
         }
@@ -125,6 +128,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 }
                 confidences.Add((i, c));
             }
+
+            double biasAverage = output.Average(x => x[2]);
 
             confidences = confidences.OrderBy(x => x.confidence).ToList();
             for(int i = 0; i < confidences.Count * p; ++i)
