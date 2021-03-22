@@ -57,7 +57,6 @@ namespace GimmeMillions.Domain.ML.Candlestick
             var network = new DeepBeliefNetwork(new BernoulliFunction(), 
                 firstFeature.Input.Data.Length, 
                 firstFeature.Input.Data.Length * 2,
-                firstFeature.Input.Data.Length * 2,
                 //firstFeature.Input.Data.Length * 2,
                 //firstFeature.Input.Data.Length / 4,
                 //firstFeature.Input.Data.Length,
@@ -68,14 +67,14 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var teacher = new BackPropagationLearning(network)
             {
-                LearningRate = 0.1,
+                LearningRate = 0.25,
                 Momentum = 0.5
                 
             };
 
             int updateEveryEpoch = 1;
             int epochDelay = 1;
-            double uncertaintyRate = 0.33;
+            double uncertaintyRate = 0.1;
             double factor = 0.99;
             int epochs = 5000;
             int batchSize = 1000;
@@ -97,7 +96,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
                         UpdateConfidences(network, batchInput, batchOutput, factor, uncertaintyRate);
                     }
                     double error = teacher.RunEpoch(batchInput, batchOutput);
-                    Console.WriteLine($"({i},{j}): {error}");
+                    //Console.WriteLine($"({i},{j}): {error}");
+                    Console.Write(".");
                     epochError += error;
                 }
                 Console.WriteLine($"Epoch {i} error: {epochError}");
