@@ -72,6 +72,7 @@ namespace ModelTrainer
             var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
             {
                 new FibonacciStockFeatureExtractor(),
+                new TrendStockFeatureExtractor(numStockSamples / 2),
                 new StockIndicatorsFeatureExtractionV3(timeSampling,
                 numStockSamples,
                 (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,

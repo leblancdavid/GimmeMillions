@@ -20,21 +20,60 @@ namespace GimmeMillions.Domain.ML.Candlestick
 {
     public class DeepLearningStockRangePredictorModel : IStockRangePredictor
     {
-        public bool IsTrained => false;
+        private DeepBeliefNetwork _network;
+        private int _maxEpochs = 100;
+        private int _batchSize = 1000;
+        private double _terminationAccuracy = 0.85;
+        private double _outputSentimentScaling = 1.0;
+        public DeepLearningStockRangePredictorModel(int maxEpochs = 100,
+            int batchSize = 1000,
+            double terminationAccuracy = 0.85,
+            double outputScaling = 1.0)
+        {
+            _maxEpochs = maxEpochs;
+            _batchSize = batchSize;
+            _terminationAccuracy = terminationAccuracy;
+            _outputSentimentScaling = outputScaling;
+        }
+        public bool IsTrained => _network != null;
 
         public Result Load(string pathToModel)
         {
-            throw new NotImplementedException();
+            _network = DeepBeliefNetwork.Load(pathToModel);
+            if (_network == null)
+                return Result.Failure($"Unable to load model '{pathToModel}'");
+
+            return Result.Success();
         }
 
         public StockRangePrediction Predict(FeatureVector Input)
         {
-            throw new NotImplementedException();
+            if(_network == null)
+            {
+                return new StockRangePrediction();
+            }
+
+            var prediction = _network.Compute(Input.Data);
+            if(prediction[0] > prediction[1])
+            {
+                return new StockRangePrediction()
+                {
+                    Sentiment = prediction[0] * _outputSentimentScaling * 100.0
+                };
+            }
+            return new StockRangePrediction()
+            {
+                Sentiment = prediction[1] * _outputSentimentScaling * 100.0
+            };
         }
 
         public Result Save(string pathToModel)
         {
-            throw new NotImplementedException();
+            if (_network == null)
+                return Result.Failure($"Model has not been trained yet");
+
+            _network.Save(pathToModel);
+            return Result.Success();
         }
 
         public Result<ModelMetrics> Train(IEnumerable<(FeatureVector Input, StockData Output)> dataset, 
@@ -52,65 +91,49 @@ namespace GimmeMillions.Domain.ML.Candlestick
             var trainingData = dataset.Take(trainingCount);//.Where(x => x.Output.Signal > 0.9m || x.Output.Signal < 0.1m);
             var testData = dataset.Skip(trainingCount);
 
-            
-
-            var network = new DeepBeliefNetwork(new BernoulliFunction(), 
+            _network = new DeepBeliefNetwork(new BernoulliFunction(), 
                 firstFeature.Input.Data.Length, 
                 firstFeature.Input.Data.Length * 2,
                 firstFeature.Input.Data.Length * 2,
                 firstFeature.Input.Data.Length * 2,
-                //firstFeature.Input.Data.Length * 2,
-                //firstFeature.Input.Data.Length / 4,
-                //firstFeature.Input.Data.Length,
-                //firstFeature.Input.Data.Length,
                 3);
-            new GaussianWeights(network).Randomize();
-            network.UpdateVisibleWeights();
+            new GaussianWeights(_network).Randomize();
+            _network.UpdateVisibleWeights();
 
-            var teacher = new BackPropagationLearning(network)
+            var teacher = new BackPropagationLearning(_network)
             {
                 LearningRate = 0.1,
                 Momentum = 0.5
                 
             };
 
-            //int updateEveryEpoch = 1;
-            //int epochDelay = 1;
-            //double uncertaintyRate = 0.25;
-            //double factor = 0.99;
-            int epochs = 100;
-            int batchSize = 1000;
-            int numBatches = trainingData.Count() / batchSize;
-            int i = 0;
-
+            int numBatches = trainingData.Count() / _batchSize;
             double[][] trainingInputs;
             double[][] trainingOutputs;
             GetTrainingData(trainingData, out trainingInputs, out trainingOutputs, true);
-            for (i = 0; i < epochs; i++)
+            for (int i = 0; i < _maxEpochs; i++)
             {
                 double epochError = 0.0;
                 for(int j = 0; j < numBatches; ++j)
                 {
-                    var batchInput = trainingInputs.Skip(j * batchSize).Take(batchSize).ToArray();
-                    var batchOutput = trainingOutputs.Skip(j * batchSize).Take(batchSize).ToArray();
-                    //if (i >= updateEveryEpoch && i >= epochDelay && i % updateEveryEpoch == 0)
-                    //{
-                    //    UpdateConfidences(network, batchInput, batchOutput, factor, uncertaintyRate);
-                    //}
+                    var batchInput = trainingInputs.Skip(j * _batchSize).Take(_batchSize).ToArray();
+                    var batchOutput = trainingOutputs.Skip(j * _batchSize).Take(_batchSize).ToArray();
                     double error = teacher.RunEpoch(batchInput, batchOutput);
-                    //Console.WriteLine($"({i},{j}): {error}");
                     Console.Write(".");
                     epochError += error;
                 }
                 Console.WriteLine($"Epoch {i} error: {epochError}");
-                if (i % 1 == 0)
+                double topAccuracy = Evaluate(trainingData, _network, trainingOutputMapper, 0.5, 0.5);
+                Console.WriteLine($"Training set accuracy: {topAccuracy}");
+                Console.WriteLine($"Validation set accuracy: {Evaluate(testData, _network, trainingOutputMapper, 0.5, 0.5)}");
+
+                if(topAccuracy >= _terminationAccuracy)
                 {
-                    Console.WriteLine($"Training set accuracy: {RunTest(trainingData, network, trainingOutputMapper, 0.5, 0.5)}");
-                    Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}");
+                    break;
                 }
             }
 
-            Console.WriteLine($"Validation set accuracy: {RunTest(testData, network, trainingOutputMapper, 0.5, 0.5)}");
+            Console.WriteLine($"Validation set accuracy: {Evaluate(testData, _network, trainingOutputMapper, 0.5, 0.5)}");
 
             return Result.Success<ModelMetrics>(null);
         }
@@ -183,13 +206,11 @@ namespace GimmeMillions.Domain.ML.Candlestick
             return output;
         }
 
-        private double RunTest(IEnumerable<(FeatureVector Input, StockData Output)> testData, 
+        private double Evaluate(IEnumerable<(FeatureVector Input, StockData Output)> testData, 
             DeepBeliefNetwork network, 
             ITrainingOutputMapper trainingOutputMapper,
             double lowThreshold, double highThreshold)
         {
-            double biasSum = 0.0;
-
             var predictionResults = new List<(double PredictedHighSignal, double PredictedLowSignal, double Confidence, double ActualSignal)>();
             foreach (var testSample in testData)
             {
@@ -218,18 +239,24 @@ namespace GimmeMillions.Domain.ML.Candlestick
             }
 
             var accuracyByPercentile = new double[] { 0.01, 0.05, 0.10, 0.25, 0.50, 1.0 };
-            foreach(var percent in accuracyByPercentile)
+            double topAccuracy = 0.0;
+            for(i = 0; i < accuracyByPercentile.Length; ++i)
             {
-                int index = (int)(runningAccuracy.Count() * percent);
+                int index = (int)(runningAccuracy.Count() * accuracyByPercentile[i]);
                 if(index >= runningAccuracy.Count)
                 {
                     index = runningAccuracy.Count - 1;
                 }
-                Console.WriteLine($"\t{percent * 100.0}%: {runningAccuracy[index]}, Conf: {predictionResults[index].Confidence}");
+
+                if(i == 0)
+                {
+                    topAccuracy = runningAccuracy[index];
+                }
+
+                Console.WriteLine($"\t{accuracyByPercentile[i] * 100.0}%: {runningAccuracy[index]}, Conf: {predictionResults[index].Confidence}");
             }
 
-            //Console.WriteLine($"\tBias Average: {biasSum / runningAccuracy.Count}");
-            return runningAccuracy.LastOrDefault();
+            return topAccuracy;
         }
     }
 }
