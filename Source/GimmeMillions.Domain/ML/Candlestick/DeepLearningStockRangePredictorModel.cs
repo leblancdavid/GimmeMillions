@@ -54,16 +54,23 @@ namespace GimmeMillions.Domain.ML.Candlestick
             }
 
             var prediction = _network.Compute(Input.Data);
-            if(prediction[0] > prediction[1])
+            if(prediction[1] > prediction[0])
             {
                 return new StockRangePrediction()
                 {
-                    Sentiment = prediction[0] * _outputSentimentScaling * 100.0
+                    PredictedHigh = prediction[0],
+                    PredictedLow = prediction[1],
+                    Sentiment = prediction[0] * _outputSentimentScaling * 100.0,
+                    Confidence = Math.Abs(prediction[0] - prediction[1]) * 100.0
                 };
             }
+
             return new StockRangePrediction()
             {
-                Sentiment = prediction[1] * _outputSentimentScaling * 100.0
+                PredictedHigh = prediction[0],
+                PredictedLow = prediction[1],
+                Sentiment = (1.0 - prediction[1]) * _outputSentimentScaling * 100.0,
+                Confidence = Math.Abs(prediction[0] - prediction[1]) * 100.0
             };
         }
 
@@ -125,15 +132,14 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 Console.WriteLine($"Epoch {i} error: {epochError}");
                 double topAccuracy = Evaluate(trainingData, _network, trainingOutputMapper, 0.5, 0.5);
                 Console.WriteLine($"Training set accuracy: {topAccuracy}");
-                Console.WriteLine($"Validation set accuracy: {Evaluate(testData, _network, trainingOutputMapper, 0.5, 0.5)}");
+                if(testData.Any())
+                    Console.WriteLine($"Validation set accuracy: {Evaluate(testData, _network, trainingOutputMapper, 0.5, 0.5)}");
 
                 if(topAccuracy >= _terminationAccuracy)
                 {
                     break;
                 }
             }
-
-            Console.WriteLine($"Validation set accuracy: {Evaluate(testData, _network, trainingOutputMapper, 0.5, 0.5)}");
 
             return Result.Success<ModelMetrics>(null);
         }
@@ -175,13 +181,20 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 trainingData = trainingData.OrderBy(x => rnd.Next()).ToList();
             }
 
+            var activationFunction = new BernoulliFunction();
+            double averageChange = (double)trainingData.Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
             inputs = trainingData.Select(x => x.Input.Data).ToArray();
             output = trainingData.Select(x =>
-                new double[] {
-                    x.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0,
-                    x.Output.PercentChangeFromPreviousClose > 0.0m ? 0.0 : 1.0,
+            {
+                //double output = Math.Tanh((double)x.Output.PercentChangeFromPreviousClose / averageChange);
+                double output = activationFunction.Function((double)x.Output.PercentChangeFromPreviousClose / averageChange);
+                return new double[] {
+                    output,
+                    1.0 - output,
                     1.0
-                }).ToArray();
+                };
+            }).ToArray();
+                
         }
 
         private double ToHighOutput(decimal percentChange, double averageHigh, double scaling)
