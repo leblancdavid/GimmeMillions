@@ -58,8 +58,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
             {
                 return new StockRangePrediction()
                 {
-                    PredictedHigh = prediction[0],
-                    PredictedLow = prediction[1],
+                    PredictedHigh = prediction[2],
+                    PredictedLow = prediction[3],
                     Sentiment = prediction[0] * _outputSentimentScaling * 100.0,
                     Confidence = Math.Abs(prediction[0] - prediction[1]) * 100.0
                 };
@@ -67,8 +67,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             return new StockRangePrediction()
             {
-                PredictedHigh = prediction[0],
-                PredictedLow = prediction[1],
+                PredictedHigh = prediction[2],
+                PredictedLow = prediction[3],
                 Sentiment = (1.0 - prediction[1]) * _outputSentimentScaling * 100.0,
                 Confidence = Math.Abs(prediction[0] - prediction[1]) * 100.0
             };
@@ -103,7 +103,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 firstFeature.Input.Data.Length * 2,
                 firstFeature.Input.Data.Length * 2,
                 firstFeature.Input.Data.Length * 2,
-                3);
+                5);
             new GaussianWeights(_network).Randomize();
             _network.UpdateVisibleWeights();
 
@@ -190,12 +190,14 @@ namespace GimmeMillions.Domain.ML.Candlestick
             output = trainingData.Select(x =>
             {
                 double output = (double)x.Output.Signal;
-                //double output = activationFunction.Function(x.Output.PercentChangeFromPreviousClose > 0.0m ?
-                //    (double)x.Output.PercentChangeFromPreviousClose / averageGain :
-                //    (double)x.Output.PercentChangeFromPreviousClose / averageLoss);
+                double target = activationFunction.Function(x.Output.PercentChangeFromPreviousClose > 0.0m ?
+                    (double)x.Output.PercentChangeFromPreviousClose / averageGain :
+                    (double)x.Output.PercentChangeFromPreviousClose / averageLoss);
                 return new double[] {
                     output,
                     1.0 - output,
+                    target,
+                    1.0 - target,
                     1.0
                 };
             }).ToArray();

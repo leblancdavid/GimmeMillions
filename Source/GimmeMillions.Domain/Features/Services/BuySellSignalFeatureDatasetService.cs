@@ -16,6 +16,7 @@ namespace GimmeMillions.Domain.Features
         private int _numStockDailySamples = 20;
         private int _derivativeKernel = 9;
         private int _signalOffset = 0;
+        private int _predictionLength = 5;
         private double[] _gaussianKernel;
         private double[] _gaussianDerivative;
         private string _stocksEncodingKey;
@@ -38,7 +39,8 @@ namespace GimmeMillions.Domain.Features
             StockDataPeriod period,
             int numStockDailySamples = 20,
             int derivativeKernel = 9,
-            int signalOffset = 0)
+            int signalOffset = 0,
+            int predictionLength = 5)
         {
             _stockFeatureExtractor = stockFeatureExtractor;
             _stockRepository = stockRepository;
@@ -46,6 +48,7 @@ namespace GimmeMillions.Domain.Features
             _numStockDailySamples = numStockDailySamples;
             _derivativeKernel = derivativeKernel;
             _signalOffset = signalOffset;
+            _predictionLength = predictionLength;
             _gaussianKernel = GetGaussianKernel(_derivativeKernel);
             _gaussianDerivative = GetGaussianDerivativeKernel(_derivativeKernel);
             string timeIndicator = $"{_numStockDailySamples}d-{_derivativeKernel}k";
@@ -434,11 +437,15 @@ namespace GimmeMillions.Domain.Features
                                     }
                                 }
 
+                                int outputIndex = j + _predictionLength;
+                                if(outputIndex >= stocks.Count)
+                                {
+                                    outputIndex = stocks.Count - 1;
+                                }
+
                                 var output = new StockData(symbol, sample.Date, sample.Open, high, low,
-                                    stocks[inflectionIndex[i].Index - 1].Close,
-                                    //sample.Close,
-                                    //sample.AdjustedClose,
-                                    stocks[inflectionIndex[i].Index - 1].AdjustedClose,
+                                    stocks[outputIndex].Close,
+                                    stocks[outputIndex].AdjustedClose,
                                     sample.Volume, sample.PreviousClose);
 
                                 output.Signal = signal;
