@@ -182,12 +182,17 @@ namespace GimmeMillions.Domain.ML.Candlestick
             }
 
             var activationFunction = new BernoulliFunction();
-            double averageChange = (double)trainingData.Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
+            double averageGain = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose > 0.0m)
+                .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
+            double averageLoss = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose <= 0.0m)
+                .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
             inputs = trainingData.Select(x => x.Input.Data).ToArray();
             output = trainingData.Select(x =>
             {
-                //double output = Math.Tanh((double)x.Output.PercentChangeFromPreviousClose / averageChange);
-                double output = activationFunction.Function((double)x.Output.PercentChangeFromPreviousClose / averageChange);
+                double output = (double)x.Output.Signal;
+                //double output = activationFunction.Function(x.Output.PercentChangeFromPreviousClose > 0.0m ?
+                //    (double)x.Output.PercentChangeFromPreviousClose / averageGain :
+                //    (double)x.Output.PercentChangeFromPreviousClose / averageLoss);
                 return new double[] {
                     output,
                     1.0 - output,
@@ -230,7 +235,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 var prediction = network.Compute(testSample.Input.Data);
 
                 predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
-                        testSample.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0));
+                        testSample.Output.Signal > 0.5m ? 1.0 : 0.0));
                 //predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
                 //        testSample.Output.PercentChangeHighToPreviousClose + testSample.Output.PercentChangeLowToPreviousClose > 0.0m ? 1.0 : 0.0));
 
