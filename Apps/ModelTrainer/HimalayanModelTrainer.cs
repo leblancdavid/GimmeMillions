@@ -17,16 +17,19 @@ namespace ModelTrainer
     public class HimalayanModelTrainer
     {
         private IFeatureDatasetService<FeatureVector> _datasetService;
+        private IStockSymbolsRepository _stockSymbolsRepository;
         private IStockRangePredictor _model;
         private StockDataPeriod _period;
         private int _numStockSamples = 100;
         public HimalayanModelTrainer(
+            IStockSymbolsRepository stockSymbolsRepository,
             StockDataPeriod period,
             int kSize = 15,
             int numStockSamples = 100,
             int samplingPeriod = 12,
             int offset = 0)
         {
+            _stockSymbolsRepository = stockSymbolsRepository;
             _period = period;
             _numStockSamples = numStockSamples;
             _datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, samplingPeriod, _numStockSamples, kSize, offset);
@@ -38,7 +41,7 @@ namespace ModelTrainer
             _model.Load(modelName);
         }
 
-        public IStockRangePredictor Train(string modelName, int numSamples)
+        public IStockRangePredictor TrainFutures(string modelName, int numSamples)
         {
             _model = new DeepLearningStockRangePredictorModel(200, 1000, 2.0);
 
@@ -48,6 +51,24 @@ namespace ModelTrainer
             trainingData.AddRange(_datasetService.GetTrainingData("QQQ", null, true, numSamples));
             //trainingData.AddRange(datasetService.GetTrainingData("RUT", null, true, numSamples));
 
+            _model.Train(trainingData, 0.0, new SignalOutputMapper());
+            _model.Save(modelName);
+
+            return _model;
+        }
+
+        public IStockRangePredictor TrainStocks(string modelName, int numSamples)
+        {
+            _model = new DeepLearningStockRangePredictorModel(100, 2000, 2.0);
+
+            var stockFilter = new DefaultStockFilter(
+                    maxPercentHigh: 50.0m,
+                maxPercentLow: 50.0m,
+                minPrice: 1.0m,
+                maxPrice: decimal.MaxValue,
+                minVolume: 10000.0m);
+            var trainingData = new List<(FeatureVector Input, StockData Output)>();
+            trainingData.AddRange(_datasetService.GetAllTrainingData(stockFilter, true, numSamples));
             _model.Train(trainingData, 0.0, new SignalOutputMapper());
             _model.Save(modelName);
 
@@ -80,7 +101,7 @@ namespace ModelTrainer
             int signalOffset = 0)
         {
             var ameritradeClient = new TDAmeritradeApiClient("I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP");
-            var stocksRepo = new TDAmeritradeStockAccessService(ameritradeClient, null);
+            var stocksRepo = new TDAmeritradeStockAccessService(ameritradeClient, _stockSymbolsRepository);
             var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
             {
                 new FibonacciStockFeatureExtractor(),

@@ -65,28 +65,30 @@ namespace GimmeMillions.Domain.Features
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             var stockSymbols = _stockRepository.GetSymbols();
 
+            Console.WriteLine("Retrieving stocks training samples...");
             var updateLock = new object();
-            Parallel.ForEach(stockSymbols, symbol =>
-            //foreach (var stock in stocks)
+            //Parallel.ForEach(stockSymbols, symbol =>
+            foreach (var symbol in stockSymbols)
             {
                 List<StockData> stocks = null;
                 stocks = updateStocks ?
-                      _stockRepository.UpdateStocks(symbol, Period).ToList() :
-                      _stockRepository.GetStocks(symbol, Period).ToList();
+                      _stockRepository.UpdateStocks(symbol, Period, historyLimit).ToList() :
+                      _stockRepository.GetStocks(symbol, Period, historyLimit).ToList();
 
+                Console.WriteLine($"{symbol}: {stocks.Count} found");
                 if (!stocks.Any())
                 {
-                    return;
+                    continue;
                 }
-
                 var td = GetTrainingData(symbol, stocks, filter);
                 foreach (var sample in td)
                 {
                     trainingData.Add(sample);
                 }
                 //}
-            });
+            }
 
+            Console.WriteLine($"Done retrieving training data. {trainingData.Count} total samples collected.");
             return trainingData.OrderBy(x => x.Output.Date);
         }
 
