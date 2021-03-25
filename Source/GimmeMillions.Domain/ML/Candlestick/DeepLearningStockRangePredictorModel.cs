@@ -65,8 +65,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
             var prediction = _network.Compute(Input.Data);
 
             var predictedGain = prediction[0] > 0.5 ?
-                (prediction[0] - 0.50) * _averageGain * _outputScaling :
-                (prediction[0] - 0.50) * _averageLoss * _outputScaling;
+                (prediction[0] - 0.50) * 2.0 * _averageGain * _outputScaling :
+                (prediction[0] - 0.50) * 2.0 * _averageLoss * _outputScaling;
 
             return new StockRangePrediction()
             {
@@ -199,8 +199,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
             output = trainingData.Select(x =>
             {
                 double target = activationFunction.Function(x.Output.PercentChangeFromPreviousClose > 0.0m ?
-                    (double)x.Output.PercentChangeFromPreviousClose / (_averageGain * _outputScaling) :
-                    (double)x.Output.PercentChangeFromPreviousClose / (_averageLoss * _outputScaling));
+                    (double)x.Output.PercentChangeFromPreviousClose / (_averageGain) :
+                    (double)x.Output.PercentChangeFromPreviousClose / (_averageLoss));
                 return new double[] {
                     target,
                     1.0 - target,
