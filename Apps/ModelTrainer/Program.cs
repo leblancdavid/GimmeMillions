@@ -23,8 +23,8 @@ namespace ModelTrainer
             var trainer = new HimalayanModelTrainer(StockDataPeriod.Day,
                 9, 100, 12, 0);
 
-            //trainer.Train("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Futures.dnn", 10000);
-            trainer.LoadModel("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Futures.dnn");
+            trainer.Train("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Futures.dnn", 2000);
+            //trainer.LoadModel("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Futures.dnn");
             trainer.Evaluate("model_results.csv", 500, "MSFT");
         }
 

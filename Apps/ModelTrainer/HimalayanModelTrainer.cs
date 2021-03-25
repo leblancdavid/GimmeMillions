@@ -34,13 +34,13 @@ namespace ModelTrainer
 
         public void LoadModel(string modelName)
         {
-            _model = new DeepLearningStockRangePredictorModel(100, 1000, 0.90, 1.0);
+            _model = new DeepLearningStockRangePredictorModel(200, 1000, 1.5);
             _model.Load(modelName);
         }
 
         public IStockRangePredictor Train(string modelName, int numSamples)
         {
-            _model = new DeepLearningStockRangePredictorModel(120, 1000, 100.0, 1.0);
+            _model = new DeepLearningStockRangePredictorModel(200, 1000, 1.5);
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(_datasetService.GetTrainingData("DIA", null, true, numSamples));
@@ -48,7 +48,7 @@ namespace ModelTrainer
             trainingData.AddRange(_datasetService.GetTrainingData("QQQ", null, true, numSamples));
             //trainingData.AddRange(datasetService.GetTrainingData("RUT", null, true, numSamples));
 
-            _model.Train(trainingData, 0.05, new SignalOutputMapper());
+            _model.Train(trainingData, 0.1, new SignalOutputMapper());
             _model.Save(modelName);
 
             return _model;

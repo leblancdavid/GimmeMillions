@@ -40,7 +40,7 @@ namespace GimmeMillions.Domain.Features
             int numStockDailySamples = 20,
             int derivativeKernel = 9,
             int signalOffset = 0,
-            int predictionLength = 5)
+            int predictionLength = 10)
         {
             _stockFeatureExtractor = stockFeatureExtractor;
             _stockRepository = stockRepository;

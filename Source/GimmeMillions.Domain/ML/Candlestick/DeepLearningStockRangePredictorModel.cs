@@ -12,8 +12,10 @@ using CSharpFunctionalExtensions;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML.ActivationFunctions;
 using GimmeMillions.Domain.Stocks;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace GimmeMillions.Domain.ML.Candlestick
@@ -23,17 +25,17 @@ namespace GimmeMillions.Domain.ML.Candlestick
         private DeepBeliefNetwork _network;
         private int _maxEpochs = 100;
         private int _batchSize = 1000;
-        private double _terminationAccuracy = 0.85;
-        private double _outputSentimentScaling = 1.0;
+        private double _outputScaling = 1.5;
+        private double _averageGain = 0.0;
+        private double _averageLoss = 0.0;
+    
         public DeepLearningStockRangePredictorModel(int maxEpochs = 100,
             int batchSize = 1000,
-            double terminationAccuracy = 0.85,
-            double outputScaling = 1.0)
+            double outputScaling = 1.5)
         {
             _maxEpochs = maxEpochs;
             _batchSize = batchSize;
-            _terminationAccuracy = terminationAccuracy;
-            _outputSentimentScaling = outputScaling;
+            _outputScaling = outputScaling;
         }
         public bool IsTrained => _network != null;
 
@@ -42,6 +44,13 @@ namespace GimmeMillions.Domain.ML.Candlestick
             _network = DeepBeliefNetwork.Load(pathToModel);
             if (_network == null)
                 return Result.Failure($"Unable to load model '{pathToModel}'");
+
+            var config = JObject.Parse(File.ReadAllText(pathToModel + ".config.json"));
+            _maxEpochs = (int)config["maxEpochs"];
+            _batchSize = (int)config["batchSize"];
+            _outputScaling = (double)config["outputScaling"];
+            _averageGain = (double)config["averageGain"];
+            _averageLoss = (double)config["averageLoss"];
 
             return Result.Success();
         }
@@ -54,32 +63,18 @@ namespace GimmeMillions.Domain.ML.Candlestick
             }
 
             var prediction = _network.Compute(Input.Data);
+
+            var predictedGain = prediction[0] > 0.5 ?
+                (prediction[0] - 0.50) * _averageGain * _outputScaling :
+                (prediction[0] - 0.50) * _averageLoss * _outputScaling;
+
             return new StockRangePrediction()
             {
-                PredictedHigh = prediction[0],
-                PredictedLow = prediction[0],
-                Sentiment = prediction[0] * _outputSentimentScaling * 100.0,
+                PredictedHigh = predictedGain,
+                PredictedLow = predictedGain,
+                Sentiment = prediction[0] * 100.0,
                 Confidence = Math.Abs(prediction[0] - prediction[1]) * 100.0
             };
-
-            //if (prediction[1] > prediction[0])
-            //{
-            //    return new StockRangePrediction()
-            //    {
-            //        PredictedHigh = prediction[2],
-            //        PredictedLow = prediction[3],
-            //        Sentiment = prediction[0] * _outputSentimentScaling * 100.0,
-            //        Confidence = Math.Abs(prediction[0] - prediction[1]) * 100.0
-            //    };
-            //}
-
-            //return new StockRangePrediction()
-            //{
-            //    PredictedHigh = prediction[2],
-            //    PredictedLow = prediction[3],
-            //    Sentiment = (1.0 - prediction[1]) * _outputSentimentScaling * 100.0,
-            //    Confidence = Math.Abs(prediction[0] - prediction[1]) * 100.0
-            //};
         }
 
         public Result Save(string pathToModel)
@@ -87,7 +82,17 @@ namespace GimmeMillions.Domain.ML.Candlestick
             if (_network == null)
                 return Result.Failure($"Model has not been trained yet");
 
+            var config = JObject.FromObject(new
+            {
+                maxEpochs = _maxEpochs,
+                batchSize = _batchSize,
+                outputScaling = _outputScaling,
+                averageGain = _averageGain,
+                averageLoss = _averageLoss
+            });
+
             _network.Save(pathToModel);
+            File.WriteAllText(pathToModel + ".config.json", config.ToString());
             return Result.Success();
         }
 
@@ -143,10 +148,6 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 if(testData.Any())
                     Console.WriteLine($"Validation set accuracy: {Evaluate(testData, _network, trainingOutputMapper, 0.5, 0.5)}");
 
-                if(topAccuracy >= _terminationAccuracy)
-                {
-                    break;
-                }
             }
 
             return Result.Success<ModelMetrics>(null);
@@ -190,20 +191,17 @@ namespace GimmeMillions.Domain.ML.Candlestick
             }
 
             var activationFunction = new BernoulliFunction();
-            double averageGain = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose > 0.0m)
+            _averageGain = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose > 0.0m)
                 .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
-            double averageLoss = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose <= 0.0m)
+            _averageLoss = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose <= 0.0m)
                 .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
             inputs = trainingData.Select(x => x.Input.Data).ToArray();
             output = trainingData.Select(x =>
             {
-                //double output = (double)x.Output.Signal;
                 double target = activationFunction.Function(x.Output.PercentChangeFromPreviousClose > 0.0m ?
-                    (double)x.Output.PercentChangeFromPreviousClose / averageGain :
-                    (double)x.Output.PercentChangeFromPreviousClose / averageLoss);
+                    (double)x.Output.PercentChangeFromPreviousClose / (_averageGain * _outputScaling) :
+                    (double)x.Output.PercentChangeFromPreviousClose / (_averageLoss * _outputScaling));
                 return new double[] {
-                    //output,
-                    //1.0 - output,
                     target,
                     1.0 - target,
                     1.0
