@@ -54,24 +54,32 @@ namespace GimmeMillions.Domain.ML.Candlestick
             }
 
             var prediction = _network.Compute(Input.Data);
-            if(prediction[1] > prediction[0])
-            {
-                return new StockRangePrediction()
-                {
-                    PredictedHigh = prediction[2],
-                    PredictedLow = prediction[3],
-                    Sentiment = prediction[0] * _outputSentimentScaling * 100.0,
-                    Confidence = Math.Abs(prediction[0] - prediction[1]) * 100.0
-                };
-            }
-
             return new StockRangePrediction()
             {
-                PredictedHigh = prediction[2],
-                PredictedLow = prediction[3],
-                Sentiment = (1.0 - prediction[1]) * _outputSentimentScaling * 100.0,
+                PredictedHigh = prediction[0],
+                PredictedLow = prediction[0],
+                Sentiment = prediction[0] * _outputSentimentScaling * 100.0,
                 Confidence = Math.Abs(prediction[0] - prediction[1]) * 100.0
             };
+
+            //if (prediction[1] > prediction[0])
+            //{
+            //    return new StockRangePrediction()
+            //    {
+            //        PredictedHigh = prediction[2],
+            //        PredictedLow = prediction[3],
+            //        Sentiment = prediction[0] * _outputSentimentScaling * 100.0,
+            //        Confidence = Math.Abs(prediction[0] - prediction[1]) * 100.0
+            //    };
+            //}
+
+            //return new StockRangePrediction()
+            //{
+            //    PredictedHigh = prediction[2],
+            //    PredictedLow = prediction[3],
+            //    Sentiment = (1.0 - prediction[1]) * _outputSentimentScaling * 100.0,
+            //    Confidence = Math.Abs(prediction[0] - prediction[1]) * 100.0
+            //};
         }
 
         public Result Save(string pathToModel)
@@ -103,7 +111,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 firstFeature.Input.Data.Length * 2,
                 firstFeature.Input.Data.Length * 2,
                 firstFeature.Input.Data.Length * 2,
-                5);
+                3);
             new GaussianWeights(_network).Randomize();
             _network.UpdateVisibleWeights();
 
@@ -189,13 +197,13 @@ namespace GimmeMillions.Domain.ML.Candlestick
             inputs = trainingData.Select(x => x.Input.Data).ToArray();
             output = trainingData.Select(x =>
             {
-                double output = (double)x.Output.Signal;
+                //double output = (double)x.Output.Signal;
                 double target = activationFunction.Function(x.Output.PercentChangeFromPreviousClose > 0.0m ?
                     (double)x.Output.PercentChangeFromPreviousClose / averageGain :
                     (double)x.Output.PercentChangeFromPreviousClose / averageLoss);
                 return new double[] {
-                    output,
-                    1.0 - output,
+                    //output,
+                    //1.0 - output,
                     target,
                     1.0 - target,
                     1.0
@@ -236,10 +244,10 @@ namespace GimmeMillions.Domain.ML.Candlestick
             {
                 var prediction = network.Compute(testSample.Input.Data);
 
-                predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
-                        testSample.Output.Signal > 0.5m ? 1.0 : 0.0));
                 //predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
-                //        testSample.Output.PercentChangeHighToPreviousClose + testSample.Output.PercentChangeLowToPreviousClose > 0.0m ? 1.0 : 0.0));
+                //        testSample.Output.Signal > 0.5m ? 1.0 : 0.0));
+                predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
+                        testSample.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0));
 
                 //biasSum += prediction[2];
             }
