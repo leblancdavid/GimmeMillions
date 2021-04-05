@@ -76,6 +76,10 @@ namespace GimmeMillions.Domain.Stocks
                     //return;
                 }
                 var lastStock = stockData.First();
+                if (lastStock.Date < date.AddDays(-1.0))
+                {
+                    continue;
+                }
 
                 var feature = _featureDatasetService.GetFeatureVector(symbol, date);
                 if (feature.IsFailure)
@@ -147,6 +151,11 @@ namespace GimmeMillions.Domain.Stocks
                         //return;
                     }
                     var lastStock = stockData.First();
+
+                    if (lastStock.Date < date.AddDays(-1.0))
+                    {
+                        continue;
+                    }
 
                     var feature = _featureDatasetService.GetFeatureVector(symbol, date);
                     if (feature.IsFailure)
