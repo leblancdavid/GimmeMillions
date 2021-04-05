@@ -1,9 +1,11 @@
 ﻿using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.Features.Extractors;
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 
 namespace GimmeMillions.DataAccess.Stocks
 {
@@ -156,14 +158,19 @@ namespace GimmeMillions.DataAccess.Stocks
                 var period = StockDataPeriod.Day;
                 var numStockSamples = 100;
                 var kernelSize = 9;
-                //var extractor = new RawCandlesStockFeatureExtractor();
-                var extractor = new StockIndicatorsFeatureExtractionV3(12,
+                var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
+                {
+                    new FibonacciStockFeatureExtractor(),
+                    new TrendStockFeatureExtractor(numStockSamples / 2),
+                    new StockIndicatorsFeatureExtractionV3(12,
                     numStockSamples,
                     (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
                     (int)(numStockSamples * 0.8), 5,
                     (int)(numStockSamples * 0.8), 5,
                     (int)(numStockSamples * 0.8), 5,
-                    false);
+                    false)
+                });
+                
                 var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                     period, numStockSamples, kernelSize);
                 var model = new DeepLearningStockRangePredictorModel();

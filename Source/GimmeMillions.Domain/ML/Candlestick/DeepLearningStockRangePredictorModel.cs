@@ -67,13 +67,16 @@ namespace GimmeMillions.Domain.ML.Candlestick
             var predictedGain = prediction[0] > 0.5 ?
                 (prediction[0] - 0.50) * 2.0 * _averageGain * _outputScaling :
                 (prediction[0] - 0.50) * 2.0 * _averageLoss * _outputScaling;
+            double sentiment = Math.Abs(prediction[0] - prediction[1]) * 100.0;
+            if (predictedGain < 0.0)
+                sentiment *= -1.0;
 
             return new StockRangePrediction()
             {
                 PredictedHigh = predictedGain,
                 PredictedLow = predictedGain,
-                Sentiment = prediction[0] * 100.0,
-                Confidence = Math.Abs(prediction[0] - prediction[1]) * 100.0
+                Sentiment = sentiment,
+                Confidence = Math.Abs(sentiment)
             };
         }
 
