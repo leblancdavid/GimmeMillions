@@ -59,7 +59,7 @@ namespace ModelTrainer
 
         public IStockRangePredictor TrainStocks(string modelName, int numSamples)
         {
-            _model = new DeepLearningStockRangePredictorModel(25, 5000, 2.0);
+            _model = new DeepLearningStockRangePredictorModel(100, 5000, 2.0);
 
             var stockFilter = new DefaultStockFilter(
                     maxPercentHigh: 50.0m,
