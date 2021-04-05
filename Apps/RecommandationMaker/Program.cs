@@ -118,10 +118,8 @@ namespace RecommendationMaker
                 {
                     text = $"{r.Symbol}, " +
                          $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
-                        $"gain: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"high: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                        $"loss: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"low: {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                        $"prediction: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                        $"target: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}";
                     Console.WriteLine(text);
                     //if(i < keepTop)
                     //{
@@ -153,10 +151,8 @@ namespace RecommendationMaker
                 {
                     text = $"{r.Symbol}, " +
                          $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
-                        $"gain: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"high: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                        $"loss: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"low: {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                        $"prediction: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                        $"target: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}";
                     Console.WriteLine(text);
                     //if(i < keepTop)
                     //{
@@ -194,10 +190,8 @@ namespace RecommendationMaker
                 {
                     text = $"{r.Symbol}, " +
                         $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
-                        $"gain: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"high: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                        $"loss: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"low: {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                        $"prediction: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                        $"target: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}";
                     Console.WriteLine(text);
                     //if(i < keepTop)
                     //{
@@ -219,10 +213,8 @@ namespace RecommendationMaker
                 {
                     text = $"{r.Symbol}, " +
                         $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
-                        $"gain: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"high: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                        $"loss: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"low: {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                        $"prediction: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                        $"target: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}";
                     Console.WriteLine(text);
                     //if(i < keepTop)
                     //{
