@@ -19,9 +19,6 @@ namespace RecommendationMaker
 
         public class Options
         {
-            [Option('w', "watchlist", Required = false, HelpText = "The watchlist file to pick from for recommendations")]
-            public string WatchlistFile { get; set; }
-
             [Option('d', "date", Required = false, HelpText = "The date to make prediction")]
             public string Date { get; set; }
 
@@ -43,7 +40,6 @@ namespace RecommendationMaker
             IStockRecommendationSystem<FeatureVector> recommendationSystem = null;
             IStockRecommendationSystem<FeatureVector> futuresRecommendationSystem = null;
             var date = DateTime.Today;
-            string model = "EgyptianMau";
             var logger = LoggerFactory.Create(x => x.AddConsole()).CreateLogger<Program>();
             Parser.Default.ParseArguments<Options>(args)
                    .WithParsed<Options>(o =>
@@ -55,16 +51,16 @@ namespace RecommendationMaker
                        var recommendationRepo = new SQLStockRecommendationRepository(optionsBuilder.Options);
 
                        var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdApiKey), 
-                           new StockSymbolsFile(o.WatchlistFile));
-                       recommendationSystem = RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(stockAccess, recommendationRepo,
-                            $"{o.PathToModel}/Stocks", logger);
+                           new StockSymbolsFile("nasdaq_screener.csv"));
+                       recommendationSystem = RecommendationSystemFactory.GetHimalayanRecommendationSystem(stockAccess, recommendationRepo,
+                            $"{o.PathToModel}/Stocks.dnn", logger);
                        if (recommendationSystem == null)
                        {
                            Console.WriteLine($"Unable to retrieve stocks model at {o.PathToModel}/Stocks");
                        }
 
-                       futuresRecommendationSystem = RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(stockAccess, recommendationRepo,
-                            $"{o.PathToModel}/Futures", logger);
+                       futuresRecommendationSystem = RecommendationSystemFactory.GetHimalayanRecommendationSystem(stockAccess, recommendationRepo,
+                            $"{o.PathToModel}/Futures.dnn", logger);
                        if (futuresRecommendationSystem == null)
                        {
                            Console.WriteLine($"Unable to retrieve futures model at {o.PathToModel}/Futures");
@@ -91,14 +87,13 @@ namespace RecommendationMaker
                 return;
             }
 
-            RunFuturesRecommendations(futuresRecommendationSystem, model, date);
-            RunCryptoRecommendations(recommendationSystem, model, date);
-            RunDailyRecommendations(recommendationSystem, stockList, model, date);
+            RunFuturesRecommendations(futuresRecommendationSystem, date);
+            RunCryptoRecommendations(recommendationSystem, date);
+            RunDailyRecommendations(recommendationSystem, stockList, date);
 
         }
 
-        private static void RunCryptoRecommendations(IStockRecommendationSystem<FeatureVector> recommendationSystem,
-            string model, DateTime date)
+        private static void RunCryptoRecommendations(IStockRecommendationSystem<FeatureVector> recommendationSystem, DateTime date)
         {
             IEnumerable<StockRecommendation> recommendations;
             var stockList = new List<string>()
@@ -137,8 +132,7 @@ namespace RecommendationMaker
             }
         }
 
-        private static void RunFuturesRecommendations(IStockRecommendationSystem<FeatureVector> recommendationSystem,
-            string model, DateTime date)
+        private static void RunFuturesRecommendations(IStockRecommendationSystem<FeatureVector> recommendationSystem, DateTime date)
         {
             IEnumerable<StockRecommendation> recommendations;
             var stockList = new List<string>()
@@ -175,7 +169,6 @@ namespace RecommendationMaker
 
         private static void RunDailyRecommendations(IStockRecommendationSystem<FeatureVector> recommendationSystem,
             IEnumerable<string> stockList,
-            string model,
             DateTime date)
         {
             IEnumerable<StockRecommendation> recommendations;
