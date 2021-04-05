@@ -5,6 +5,7 @@ using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.Domain.Stocks.Filters;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ModelTrainer
 {
@@ -19,40 +20,16 @@ namespace ModelTrainer
 
             var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
-            var trainer = new FuturesDayTradeModelTrainer(new DefaultStockRepository(stockSqlDb),
+            var trainer = new HimalayanModelTrainer(
                 new StockSymbolsFile("nasdaq_screener.csv"),
-                "I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP");
+                StockDataPeriod.Day,
+                9, 100, 12, 0);
 
-            trainer.Train("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\EgyptianMau\\DayTrader_15m", StockDataPeriod.FifteenMinute, 25);
-            //trainer.Train("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\EgyptianMau\\DayTrader_5m", StockDataPeriod.FiveMinute, 13);
-
-            //var trainer = new EgyptianMauModelTrainer(new DefaultStockRepository(stockSqlDb), 
-            //    new StockSymbolsFile("nasdaq_screener.csv"),
-            //    "");
-            //trainer.Train("Resources/Models/EgyptianMau");
-
-
-            //var trainer = new DonskoyModelTrainer(new DefaultStockRepository(stockSqlDb));
-            //trainer.Train("C:\\Stocks\\Models\\Donskoy");
-            //trainer.TrainCrypto("C:\\Stocks\\Models\\Donskoy", StockDataPeriod.Minute);
-            //var service = new CoinbaseApiAccessService(secret, key, passphrase);
-            //trainer.TrainCrypto($"{pathToModels}\\Donskoy", StockDataPeriod.Hour, service);
-
-
-            //var trainer = new MarketFuturesTrainer(new DefaultStockRepository(stockSqlDb));
-            //trainer.Train("C:\\Recommendations\\App\\RecommendationMaker\\Models\\MarketFutures");
-
-            //var trainer = new CryptoCatModelTrainer(new DefaultStockRepository(stockSqlDb));
-            //trainer.Train("C:\\Stocks\\Models\\CryptoCat\\CryptoCat");
-
-            //var trainer = new CatModelTrainer(new DefaultStockRepository(stockSqlDb),
-            //    new DefaultStockFilter(
-            //        maxPercentHigh: 40.0m,
-            //    maxPercentLow: 40.0m,
-            //    minPrice: 5.0m,
-            //    maxPrice: 50.0m,
-            //    minVolume: 100000.0m));
-            //trainer.Train("C:\\Recommendations\\App\\RecommendationMaker\\Models\\CatSmallCaps");
+            //trainer.Train("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Futures.dnn", 20000);
+            //730 = 365 x 2, basically two years of historical data should be good enough
+            trainer.TrainStocks("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Stocks.dnn", 730);
+            //trainer.LoadModel("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Futures.dnn");
+            trainer.Evaluate("model_results.csv", 500, "IZEA");
         }
 
     }

@@ -15,7 +15,7 @@ namespace ModelTrainer
             _stockRepository = stockRepository;
 
         }
-        public void Train(string pathToModels)
+        public void TrainFutures(string pathToModels)
         {
             var datasetService = GetRawFeaturesBuySellSignalDatasetService(15, 20);
             //var datasetService = GetRawFeaturesCandlestickDatasetService(20);
@@ -36,22 +36,11 @@ namespace ModelTrainer
             trainingData.AddRange(datasetService.GetTrainingData("^IXIC", null, true));
             trainingData.AddRange(datasetService.GetTrainingData("^NDX", null, true));
 
-            //var averageGrowth = trainingData.Average(x => x.Output.PercentChangeFromPreviousClose);
-            //var trainingResults = model.Train(trainingData, 0.1, new PercentDayChangeOutputMapper(averageGrowth));
             var trainingResults = model.Train(trainingData, 0.0, new SignalOutputMapper());
             model.Save(pathToModels);
-
-            //var diaSamples = datasetService.GetFeatures("DIA").Where(x => x.Date > new DateTime(2020, 1, 1));
-            //using (System.IO.StreamWriter file =
-            //new System.IO.StreamWriter($"C:\\Stocks\\dia_results.txt"))
-            //{
-            //    foreach (var sample in diaSamples)
-            //    {
-            //        var prediction = model.Predict(sample);
-            //        file.WriteLine($"{sample.Date}\t{prediction.Sentiment}\t{prediction.PredictedLow}\t{prediction.PredictedHigh}");
-            //    }
-            //}
         }
+
+       
 
         private IFeatureDatasetService<FeatureVector> GetRawFeaturesBuySellSignalDatasetService(
            int numStockSamples = 40,
