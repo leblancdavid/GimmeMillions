@@ -145,12 +145,16 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     Console.Write(".");
                     epochError += error;
                 }
-                Console.WriteLine($"Epoch {i} error: {epochError}");
-                double topAccuracy = Evaluate(trainingData, _network, trainingOutputMapper, 0.5, 0.5);
-                Console.WriteLine($"Training set accuracy: {topAccuracy}");
-                if(testData.Any())
-                    Console.WriteLine($"Validation set accuracy: {Evaluate(testData, _network, trainingOutputMapper, 0.5, 0.5)}");
 
+                Console.WriteLine($"Epoch {i} error: {epochError}");
+
+                if (i % 10 == 0)
+                {
+                    double topAccuracy = Evaluate(trainingData, _network, trainingOutputMapper, 0.5, 0.5);
+                    Console.WriteLine($"Training set accuracy: {topAccuracy}"); 
+                    if (testData.Any())
+                        Console.WriteLine($"Validation set accuracy: {Evaluate(testData, _network, trainingOutputMapper, 0.5, 0.5)}");
+                }
             }
 
             return Result.Success<ModelMetrics>(null);

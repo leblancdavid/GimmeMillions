@@ -135,7 +135,7 @@ namespace RecommendationMaker
             IEnumerable<StockRecommendation> recommendations;
             var stockList = new List<string>()
             {
-                "DIA", "QQQ", "SPY"
+                "DIA", "QQQ", "SPY", "RUT"
             };
 
             recommendations = recommendationSystem.RunRecommendationsFor(stockList, date, null);

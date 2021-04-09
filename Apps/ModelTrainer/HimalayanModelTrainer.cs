@@ -61,14 +61,8 @@ namespace ModelTrainer
         {
             _model = new DeepLearningStockRangePredictorModel(100, 5000, 2.0);
 
-            var stockFilter = new DefaultStockFilter(
-                    maxPercentHigh: 50.0m,
-                maxPercentLow: 50.0m,
-                minPrice: 1.0m,
-                maxPrice: decimal.MaxValue,
-                minVolume: 10000.0m);
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            trainingData.AddRange(_datasetService.GetAllTrainingData(stockFilter, true, numSamples));
+            trainingData.AddRange(_datasetService.GetAllTrainingData(null, true, numSamples));
             _model.Train(trainingData, 0.0, new SignalOutputMapper());
             _model.Save(modelName);
 
@@ -104,7 +98,8 @@ namespace ModelTrainer
             var stocksRepo = new TDAmeritradeStockAccessService(ameritradeClient, _stockSymbolsRepository);
             var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
             {
-                new FibonacciStockFeatureExtractor(),
+                //Remove the fibonacci because I believe they may not be reliable
+                //new FibonacciStockFeatureExtractor(),
                 new TrendStockFeatureExtractor(numStockSamples / 2),
                 new StockIndicatorsFeatureExtractionV3(timeSampling,
                 numStockSamples,

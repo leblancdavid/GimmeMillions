@@ -63,6 +63,10 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
                         }
                         return authenticationResult;
                     }
+                    if(!result.IsSuccessStatusCode)
+                    {
+                        return result;
+                    }
                     return result;
                 }
                 catch (Exception)

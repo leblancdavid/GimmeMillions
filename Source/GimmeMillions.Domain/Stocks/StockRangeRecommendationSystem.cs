@@ -76,12 +76,12 @@ namespace GimmeMillions.Domain.Stocks
                     //return;
                 }
                 var lastStock = stockData.First();
-                if (lastStock.Date < date.AddDays(-1.0))
+                if (lastStock.Date < date.AddDays(-2.0))
                 {
                     continue;
                 }
 
-                var feature = _featureDatasetService.GetFeatureVector(symbol, date);
+                var feature = _featureDatasetService.GetFeatureVector(stockData, date);
                 if (feature.IsFailure)
                 {
                     continue;
@@ -140,6 +140,7 @@ namespace GimmeMillions.Domain.Stocks
 
                     if (!stockData.Any())
                     {
+                        _logger?.LogInformation($"{symbol}: No historical data found");
                         continue;
                         //return;
                     }
@@ -147,19 +148,22 @@ namespace GimmeMillions.Domain.Stocks
                     stockData.Reverse();
                     if (filter != null && !filter.Pass(StockData.Combine(stockData.Take(_filterLength))))
                     {
+                        _logger?.LogInformation($"{symbol}: Does not pass filter requirements");
                         continue;
                         //return;
                     }
                     var lastStock = stockData.First();
 
-                    if (lastStock.Date < date.AddDays(-1.0))
+                    if (lastStock.Date < date.AddDays(-2.0))
                     {
+                        _logger?.LogInformation($"{symbol}: Historical data is not up to date");
                         continue;
                     }
 
-                    var feature = _featureDatasetService.GetFeatureVector(symbol, date);
+                    var feature = _featureDatasetService.GetFeatureVector(stockData, date);
                     if (feature.IsFailure)
                     {
+                        _logger?.LogInformation($"{symbol}: Unable to compute the feature vector: {feature.Error}");
                         continue;
                         //return;
                     }

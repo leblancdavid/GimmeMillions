@@ -544,5 +544,14 @@ namespace GimmeMillions.Domain.Features
             last = stocks.Last();
             return GetData(symbol, date, stocks);
         }
+
+        public Result<FeatureVector> GetFeatureVector(IEnumerable<StockData> data, DateTime date)
+        {
+            if(!data.Any())
+            {
+                return Result.Failure<FeatureVector>("No data provided to compute feature vector");
+            }
+            return GetData(data.First().Symbol, date, data.ToList());
+        }
     }
 }

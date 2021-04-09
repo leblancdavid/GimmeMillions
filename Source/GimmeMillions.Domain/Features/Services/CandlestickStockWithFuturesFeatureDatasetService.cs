@@ -323,5 +323,10 @@ namespace GimmeMillions.Domain.Features
         {
             throw new NotImplementedException();
         }
+
+        public Result<FeatureVector> GetFeatureVector(IEnumerable<StockData> data, DateTime date)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
