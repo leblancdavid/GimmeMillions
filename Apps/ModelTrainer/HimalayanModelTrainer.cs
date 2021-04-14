@@ -60,9 +60,15 @@ namespace ModelTrainer
         public IStockRangePredictor TrainStocks(string modelName, int numSamples)
         {
             _model = new DeepLearningStockRangePredictorModel(100, 5000, 2.0);
+            var stockFilter = new DefaultStockFilter(
+                    maxPercentHigh: 50.0m,
+                maxPercentLow: 50.0m,
+                minPrice: 5.0m,
+                maxPrice: decimal.MaxValue,
+                minVolume: 10000.0m);
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            trainingData.AddRange(_datasetService.GetAllTrainingData(null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetAllTrainingData(stockFilter, true, numSamples));
             _model.Train(trainingData, 0.0, new SignalOutputMapper());
             _model.Save(modelName);
 

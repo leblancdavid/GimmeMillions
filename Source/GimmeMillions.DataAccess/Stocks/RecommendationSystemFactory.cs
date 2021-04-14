@@ -156,7 +156,7 @@ namespace GimmeMillions.DataAccess.Stocks
             try
             {
                 var period = StockDataPeriod.Day;
-                var numStockSamples = 100;
+                var numStockSamples = 80;
                 var kernelSize = 9;
                 var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
                 {
