@@ -50,7 +50,7 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
             {
                 try
                 {
-                    Thread.Sleep(500);
+                    Thread.Sleep(1000);
                     var url = request.GetRequestUrl(_useAuthentication && !string.IsNullOrEmpty(_credentials.Token));
                     var result = Task.Run(async () => await _client.GetAsync(url)).Result;
                     if(result.StatusCode == HttpStatusCode.Unauthorized)

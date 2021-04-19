@@ -168,14 +168,14 @@ namespace RecommendationMaker
             DateTime date)
         {
             IEnumerable<StockRecommendation> recommendations;
-            var filter = new DefaultStockFilter(minVolume: 500000m, maxPercentHigh: 20.0m, maxPercentLow: 20.0m);
+            var filter = new DefaultStockFilter(minPrice: 5.0m);
             if (stockList.Any())
             {
-                recommendations = recommendationSystem.RunRecommendationsFor(stockList, date, null);
+                recommendations = recommendationSystem.RunRecommendationsFor(stockList, date, filter);
             }
             else
             {
-                recommendations = recommendationSystem.RunAllRecommendations(date, null);
+                recommendations = recommendationSystem.RunAllRecommendations(date, filter);
             }
 
             recommendations = recommendations.OrderByDescending(x => x.Sentiment).ToList();

@@ -76,7 +76,7 @@ namespace GimmeMillions.Domain.Stocks
                     //return;
                 }
                 var lastStock = stockData.First();
-                if (lastStock.Date < date.AddDays(-2.0))
+                if (lastStock.Date < date.AddDays(-5.0))
                 {
                     continue;
                 }
@@ -130,10 +130,10 @@ namespace GimmeMillions.Domain.Stocks
 
             _logger?.LogInformation($"Running recommendations for {date.ToString()}");
             var saveLock = new object();
-            try
+            //Parallel.ForEach(symbols, new ParallelOptions() { MaxDegreeOfParallelism = 2 }, symbol =>
+            foreach(var symbol in symbols)
             {
-                //Parallel.ForEach(symbols, new ParallelOptions() { MaxDegreeOfParallelism = 2 }, symbol =>
-                foreach(var symbol in symbols)
+                try
                 {
                     List<StockData> stockData;
                     stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol, _featureDatasetService.Period).ToList();
@@ -154,7 +154,7 @@ namespace GimmeMillions.Domain.Stocks
                     }
                     var lastStock = stockData.First();
 
-                    if (lastStock.Date < date.AddDays(-2.0))
+                    if (lastStock.Date < date.AddDays(-5.0))
                     {
                         _logger?.LogInformation($"{symbol}: Historical data is not up to date");
                         continue;
@@ -191,13 +191,14 @@ namespace GimmeMillions.Domain.Stocks
                         }
                     }
                 }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex.Message);
+                    //throw new Exception(ex.Message);
+                }
                 //});
             }
-            catch(Exception ex)
-            {
-                _logger?.LogError(ex.Message);
-                throw new Exception(ex.Message);
-            }
+            
 
             return recommendations.ToList().OrderByDescending(x => x.Sentiment);
         }
