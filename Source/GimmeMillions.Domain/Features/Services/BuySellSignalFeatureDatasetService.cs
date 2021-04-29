@@ -150,7 +150,7 @@ namespace GimmeMillions.Domain.Features
                 //var outputStock = stocks.FirstOrDefault(x => x.Date.Date.Year == date.Year
                 //                && x.Date.Date.Month == date.Month
                 //                && x.Date.Date.Day == date.Day); 
-                var outputStock = stocks.FirstOrDefault(x => x.Date == date);
+                var outputStock = stocks.FirstOrDefault(x => x.Date.Date == date.Date);
                 int stockIndex = 0;
                 if (outputStock == null || date > stocks.Last().Date)
                 {
