@@ -46,7 +46,7 @@ namespace ModelTrainer
 
         public IStockRangePredictor TrainFutures(string modelName, int numSamples)
         {
-            _model = new DeepLearningStockRangePredictorModel(400, 1000, 2.0);
+            _model = new DeepLearningStockRangePredictorModel(600, 1000, 2.0);
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(_datasetService.GetTrainingData("DIA", null, true, numSamples));
@@ -54,7 +54,7 @@ namespace ModelTrainer
             trainingData.AddRange(_datasetService.GetTrainingData("QQQ", null, true, numSamples));
             //trainingData.AddRange(datasetService.GetTrainingData("RUT", null, true, numSamples));
 
-            _model.Train(trainingData, 0.1, new SignalOutputMapper());
+            _model.Train(trainingData, 0.05, new SignalOutputMapper());
             _model.Save(modelName);
 
             return _model;
