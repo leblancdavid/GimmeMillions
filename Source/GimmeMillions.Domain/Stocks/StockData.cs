@@ -183,6 +183,14 @@ namespace GimmeMillions.Domain.Stocks
             }
         }
 
+        public decimal PriceNormalizedVolume
+        {
+            get
+            {
+                return Average * Volume;
+            }
+        }
+
         public decimal Signal { get; set; }
 
         public StockData(string symbol, DateTime date, StockDataPeriod period,
