@@ -56,7 +56,8 @@ namespace GimmeMillions.Domain.Features
         }
 
         public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(IStockFilter filter = null,
-            bool updateStocks = false, int historyLimit = 0)
+            bool updateStocks = false, int historyLimit = 0,
+            bool addMirroredSamples = false)
         {
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             var stocks = _stockRepository.GetSymbols().Where(x => x != "^DJI" && x != "^GSPC" && x != "^IXIC");
@@ -241,7 +242,8 @@ namespace GimmeMillions.Domain.Features
 
         public IEnumerable<(FeatureVector Input, StockData Output)> GetTrainingData(
             string symbol, IStockFilter filter = null,
-            bool updateStocks = false, int historyLimit = 0)
+            bool updateStocks = false, int historyLimit = 0,
+            bool addMirroredSamples = false)
         {
             var stocks = updateStocks ?
                    _stockRepository.UpdateStocks(symbol, StockDataPeriod.Day).ToList() :

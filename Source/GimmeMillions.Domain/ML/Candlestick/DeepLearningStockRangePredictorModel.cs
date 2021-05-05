@@ -116,7 +116,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             _network = new DeepBeliefNetwork(new BernoulliFunction(), 
                 firstFeature.Input.Data.Length, 
-                firstFeature.Input.Data.Length * 5,
+                firstFeature.Input.Data.Length * 2,
+                firstFeature.Input.Data.Length * 2,
                 3);
             new GaussianWeights(_network).Randomize();
             _network.UpdateVisibleWeights();
@@ -168,7 +169,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 }
             }
 
-            Console.WriteLine($"Loading best model ({bestModel})...");
+            //Console.WriteLine($"Loading best model ({bestModel})...");
             _network = DeepBeliefNetwork.Load("best_model_cache");
 
             return Result.Success<ModelMetrics>(null);
@@ -306,8 +307,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 }
             }
            
-
-            return runningAccuracy.Last();
+            //return the top 50% accuracy
+            return runningAccuracy[runningAccuracy.Count / 2];
         }
     }
 }

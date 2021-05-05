@@ -60,7 +60,8 @@ namespace GimmeMillions.Domain.Features
 
         public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(
             IStockFilter filter = null,
-            bool updateStocks = false, int historyLimit = 0)
+            bool updateStocks = false, int historyLimit = 0,
+            bool addMirroredSamples = false)
         {
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             var stockSymbols = _stockRepository.GetSymbols();
@@ -80,11 +81,21 @@ namespace GimmeMillions.Domain.Features
                 {
                     continue;
                 }
-                var td = GetTrainingData(symbol, stocks, filter);
+                var td = GetTrainingData(symbol, stocks, filter).ToList();
+                if (addMirroredSamples)
+                {
+                    foreach (var data in stocks)
+                    {
+                        data.ApplyScaling(-1.0m);
+                    }
+                    td.AddRange(GetTrainingData(symbol, stocks, filter));
+                }
+
                 foreach (var sample in td)
                 {
                     trainingData.Add(sample);
                 }
+
                 //}
             }
 
@@ -206,7 +217,8 @@ namespace GimmeMillions.Domain.Features
         public IEnumerable<(FeatureVector Input, StockData Output)> GetTrainingData(
             string symbol,
             IStockFilter filter = null,
-            bool updateStocks = false, int historyLimit = 0)
+            bool updateStocks = false, int historyLimit = 0,
+            bool addMirroredSamples = false)
         {
             var stocks = updateStocks ?
                    _stockRepository.UpdateStocks(symbol, Period, historyLimit).ToList() :
@@ -216,8 +228,16 @@ namespace GimmeMillions.Domain.Features
                 return new List<(FeatureVector Input, StockData Output)>();
             }
 
-
-            return GetTrainingData(symbol, filter == null ? stocks : stocks.Where(x => filter.Pass(x)).ToList(), filter);
+            var trainingData = GetTrainingData(symbol, stocks, filter).ToList();
+            if(addMirroredSamples)
+            {
+                foreach(var data in stocks)
+                {
+                    data.ApplyScaling(-1.0m);
+                }
+                trainingData.AddRange(GetTrainingData(symbol, stocks, filter));
+            }
+            return trainingData;
 
         }
 

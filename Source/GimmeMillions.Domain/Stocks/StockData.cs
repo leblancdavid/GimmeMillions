@@ -187,7 +187,7 @@ namespace GimmeMillions.Domain.Stocks
         {
             get
             {
-                return Average * Volume;
+                return Math.Abs(Average * Volume);
             }
         }
 
@@ -242,6 +242,16 @@ namespace GimmeMillions.Domain.Stocks
             Volume = volume;
             AveragePercentPeriodRange = PercentPeriodRange;
             Period = StockDataPeriod.Day;
+        }
+
+        public void ApplyScaling(decimal scale)
+        {
+            Open *= scale;
+            High *= scale;
+            Low *= scale;
+            Close *= scale;
+            AdjustedClose *= scale;
+            PreviousClose *= scale;
         }
 
         private StockData() { } //default constructor

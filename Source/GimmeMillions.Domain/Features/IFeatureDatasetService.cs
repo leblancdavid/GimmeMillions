@@ -17,11 +17,12 @@ namespace GimmeMillions.Domain.Features
         StockDataPeriod Period { get; }
 
         IEnumerable<(TFeature Input, StockData Output)> GetAllTrainingData(IStockFilter filter = null,
-            bool updateStocks = false, int historyLimit = 0);
+            bool updateStocks = false, int historyLimit = 0, bool addMirroredSamples = false);
         IEnumerable<(TFeature Input, StockData Output)> GetTrainingData(string symbol,
             IStockFilter filter = null,
             bool updateStocks = false,
-            int historyLimit = 0);
+            int historyLimit = 0, 
+            bool addMirroredSamples = false);
         Result<(TFeature Input, StockData Output)> GetData(string symbol, DateTime date, int historyLimit = 0);
         Result<TFeature> GetFeatureVector(string symbol, DateTime date, int historyLimit = 0);
         Result<TFeature> GetFeatureVector(IEnumerable<StockData> data, DateTime date);
