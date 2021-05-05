@@ -29,7 +29,7 @@ namespace ModelTrainer
             int numStockSamples = 200,
             int samplingPeriod = 12,
             int offset = 0,
-            int predictionLength = 3)
+            int predictionLength = 5)
         {
             _stockSymbolsRepository = stockSymbolsRepository;
             _period = period;
@@ -40,18 +40,18 @@ namespace ModelTrainer
 
         public void LoadModel(string modelName)
         {
-            _model = new DeepLearningStockRangePredictorModel(200, 1000, 2.0);
+            _model = new DeepLearningStockRangePredictorModel(200, 1000, 1.0);
             _model.Load(modelName);
         }
 
         public IStockRangePredictor TrainFutures(string modelName, int numSamples)
         {
-            _model = new DeepLearningStockRangePredictorModel(400, 1000, 2.0);
+            _model = new DeepLearningStockRangePredictorModel(1000, 1000, 1.0);
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            trainingData.AddRange(_datasetService.GetTrainingData("DIA", null, true, numSamples, true));
-            trainingData.AddRange(_datasetService.GetTrainingData("SPY", null, true, numSamples, true));
-            trainingData.AddRange(_datasetService.GetTrainingData("QQQ", null, true, numSamples, true));
+            trainingData.AddRange(_datasetService.GetTrainingData("DIA", null, true, numSamples, false));
+            trainingData.AddRange(_datasetService.GetTrainingData("SPY", null, true, numSamples, false));
+            trainingData.AddRange(_datasetService.GetTrainingData("QQQ", null, true, numSamples, false));
             //trainingData.AddRange(datasetService.GetTrainingData("RUT", null, true, numSamples));
 
             _model.Train(trainingData, 0.1, new SignalOutputMapper());
@@ -62,7 +62,7 @@ namespace ModelTrainer
 
         public IStockRangePredictor TrainStocks(string modelName, int numSamples)
         {
-            _model = new DeepLearningStockRangePredictorModel(200, 10000, 2.0);
+            _model = new DeepLearningStockRangePredictorModel(200, 10000, 1.0);
             //var stockFilter = new DefaultStockFilter(
             //        maxPercentHigh: 50.0m,
             //    maxPercentLow: 50.0m,
@@ -106,20 +106,16 @@ namespace ModelTrainer
         {
             var ameritradeClient = new TDAmeritradeApiClient("I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP");
             var stocksRepo = new TDAmeritradeStockAccessService(ameritradeClient, _stockSymbolsRepository);
-            //var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
-            //{
-            //    //Remove the fibonacci because I believe they may not be reliable
-            //    new FibonacciStockFeatureExtractor(),
-            //    new TrendStockFeatureExtractor(numStockSamples / 2),
-            //    new StockIndicatorsFeatureExtractionV3(timeSampling,
-            //    numStockSamples,
-            //    (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
-            //    (int)(numStockSamples * 0.8), 5,
-            //    (int)(numStockSamples * 0.8), 5,
-            //    (int)(numStockSamples * 0.8), 5,
-            //    false)
-            //});
-            var extractor = new SimpleMovingAverageFeatureExtractor();
+            var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
+            {
+                //Remove the fibonacci because I believe they may not be reliable
+                new FibonacciStockFeatureExtractor(),
+                new TrendStockFeatureExtractor(numStockSamples / 2),
+                new SimpleMovingAverageFeatureExtractor(1)
+
+        });
+            //var extractor = new SimpleMovingAverageFeatureExtractor(1);
+            //var extractor = new RawCandlesStockFeatureExtractor();
 
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                 period, numStockSamples, kernelSize, signalOffset, predictionLength);

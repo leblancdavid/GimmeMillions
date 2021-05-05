@@ -25,13 +25,13 @@ namespace GimmeMillions.Domain.ML.Candlestick
         private DeepBeliefNetwork _network;
         private int _maxEpochs = 100;
         private int _batchSize = 1000;
-        private double _outputScaling = 1.5;
+        private double _outputScaling = 1.0;
         private double _averageGain = 0.0;
         private double _averageLoss = 0.0;
     
         public DeepLearningStockRangePredictorModel(int maxEpochs = 100,
             int batchSize = 1000,
-            double outputScaling = 1.5)
+            double outputScaling = 1.0)
         {
             _maxEpochs = maxEpochs;
             _batchSize = batchSize;
@@ -108,6 +108,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 return Result.Failure<ModelMetrics>($"Training dataset is empty");
             }
 
+            dataset = dataset.OrderBy(x => x.Output.Date);
             var firstFeature = dataset.FirstOrDefault();
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
 
