@@ -117,8 +117,9 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             _network = new DeepBeliefNetwork(new BernoulliFunction(), 
                 firstFeature.Input.Data.Length, 
-                firstFeature.Input.Data.Length,
-                firstFeature.Input.Data.Length,
+                firstFeature.Input.Data.Length * 2,
+                firstFeature.Input.Data.Length * 2,
+                firstFeature.Input.Data.Length * 2,
                 3);
             new GaussianWeights(_network).Randomize();
             _network.UpdateVisibleWeights();

@@ -20,7 +20,7 @@ namespace ModelTrainer
 
             var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
-            var trainer = new KoratModelTrainer(
+            var trainer = new JavaneseModelTrainer(
                 new StockSymbolsFile("nasdaq_screener.csv"),
                 StockDataPeriod.Day,
                 9, 200, 12, 0, 5);

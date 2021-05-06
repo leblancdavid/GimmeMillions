@@ -46,7 +46,7 @@ namespace ModelTrainer
 
         public IStockRangePredictor TrainFutures(string modelName, int numSamples)
         {
-            _model = new DeepLearningStockRangePredictorModel(800, 1000, 2.0);
+            _model = new DeepLearningStockRangePredictorModel(800, 1000, 1.0);
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(_datasetService.GetTrainingData("DIA", null, true, numSamples));
@@ -109,8 +109,11 @@ namespace ModelTrainer
             var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
             {
                 //Remove the fibonacci because I believe they may not be reliable
-                new SupportResistanceStockFeatureExtractor(),
-                new TrendStockFeatureExtractor(numStockSamples / 2)
+                //new SupportResistanceStockFeatureExtractor(),
+                new MACDHistogramFeatureExtraction(10),
+                new RSIFeatureExtractor(10),
+                new VWAPFeatureExtraction(10)
+                //new TrendStockFeatureExtractor(numStockSamples / 2)
             });
 
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
