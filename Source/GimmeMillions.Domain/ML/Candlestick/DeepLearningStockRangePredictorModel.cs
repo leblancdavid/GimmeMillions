@@ -108,6 +108,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 return Result.Failure<ModelMetrics>($"Training dataset is empty");
             }
 
+            dataset = dataset.OrderBy(x => x.Output.Date);
+
             var firstFeature = dataset.FirstOrDefault();
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
 
@@ -154,13 +156,13 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 {
                     double topAccuracy = Evaluate(trainingData, _network, trainingOutputMapper, 0.5, 0.5);
                     Console.WriteLine($"Training set accuracy: {topAccuracy}"); 
-                    if (testData.Any())
-                        Console.WriteLine($"Validation set accuracy: {Evaluate(testData, _network, trainingOutputMapper, 0.5, 0.5)}");
 
                 }
 
+                if (testData.Any())
+                    Console.WriteLine($"Validation set accuracy: {Evaluate(testData, _network, trainingOutputMapper, 0.5, 0.5)}");
 
-                UpdateConfidences(_network, trainingInputs, trainingOutputs, 0.99, 0.5);
+                //UpdateConfidences(_network, trainingInputs, trainingOutputs, 0.99, 0.5);
             }
 
             return Result.Success<ModelMetrics>(null);
@@ -264,7 +266,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 //predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
                 //        testSample.Output.Signal > 0.5m ? 1.0 : 0.0));
                 double confidence = Math.Abs(prediction[0] - prediction[1]);
-                confidence = prediction[2];
+                //confidence = prediction[2];
                 predictionResults.Add((prediction[0], prediction[1], confidence,
                         testSample.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0));
 
@@ -305,7 +307,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             Console.WriteLine($"Error: {totalError}");
 
-            return topAccuracy;
+            return runningAccuracy[runningAccuracy.Count / 2];
         }
     }
 }

@@ -109,7 +109,7 @@ namespace ModelTrainer
             var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
             {
                 //Remove the fibonacci because I believe they may not be reliable
-                new FibonacciStockFeatureExtractor(),
+                new SupportResistanceStockFeatureExtractor(),
                 new TrendStockFeatureExtractor(numStockSamples / 2)
             });
 
