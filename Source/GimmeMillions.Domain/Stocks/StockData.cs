@@ -254,6 +254,17 @@ namespace GimmeMillions.Domain.Stocks
             PreviousClose *= scale;
         }
 
+        public void Invert()
+        {
+            Open *= -1.0m;
+            var newHigh = -1.0m * Low;
+            Low *= -1.0m * High;
+            High *= newHigh;
+            Close *= -1.0m;
+            AdjustedClose *= -1.0m;
+            PreviousClose *= -1.0m;
+        }
+
         private StockData() { } //default constructor
 
         public static StockData Combine(IEnumerable<StockData> stockDatas)

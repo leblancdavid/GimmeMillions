@@ -86,7 +86,7 @@ namespace GimmeMillions.Domain.Features
                 {
                     foreach (var data in stocks)
                     {
-                        data.ApplyScaling(-1.0m);
+                        data.Invert();
                     }
                     td.AddRange(GetTrainingData(symbol, stocks, filter));
                 }
@@ -233,7 +233,7 @@ namespace GimmeMillions.Domain.Features
             {
                 foreach(var data in stocks)
                 {
-                    data.ApplyScaling(-1.0m);
+                    data.Invert();
                 }
                 trainingData.AddRange(GetTrainingData(symbol, stocks, filter));
             }

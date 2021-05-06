@@ -117,15 +117,15 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             _network = new DeepBeliefNetwork(new BernoulliFunction(), 
                 firstFeature.Input.Data.Length, 
-                firstFeature.Input.Data.Length * 2,
-                firstFeature.Input.Data.Length * 2,
+                firstFeature.Input.Data.Length,
+                firstFeature.Input.Data.Length,
                 3);
             new GaussianWeights(_network).Randomize();
             _network.UpdateVisibleWeights();
 
             var teacher = new BackPropagationLearning(_network)
             {
-                LearningRate = 0.2,
+                LearningRate = 0.5,
                 Momentum = 0.5
                 
             };
@@ -146,6 +146,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     Console.Write(".");
                     epochError += error;
                 }
+
+                //UpdateConfidences(_network, trainingInputs, trainingOutputs, 0.99, 0.25);
 
                 Console.WriteLine($"Epoch {i} error: {epochError}");
 
@@ -199,7 +201,36 @@ namespace GimmeMillions.Domain.ML.Candlestick
             {
                 //output[confidences[i].index][0] *= factor; 
                 //output[confidences[i].index][1] *= factor;
+                if (output[confidences[i].index][0] > output[confidences[i].index][1])
+                {
+                    output[confidences[i].index][0] *= factor;
+                    output[confidences[i].index][1] = 1.0 - output[confidences[i].index][0];
+                }
+                else
+                {
+                    output[confidences[i].index][1] *= factor;
+                    output[confidences[i].index][0] = 1.0 - output[confidences[i].index][1];
+                }
+
                 output[confidences[i].index][2] *= factor;
+            }
+
+            ///Update the most confident ones
+            confidences.OrderByDescending(x => x.confidence).ToList();
+            for (int i = 0; i < confidences.Count * p; ++i)
+            {
+                if (output[confidences[i].index][0] > output[confidences[i].index][1])
+                {
+                    output[confidences[i].index][0] /= factor;
+                    output[confidences[i].index][1] = 1.0 - output[confidences[i].index][0];
+                }
+                else
+                {
+                    output[confidences[i].index][1] /= factor;
+                    output[confidences[i].index][0] = 1.0 - output[confidences[i].index][1];
+                }
+
+                output[confidences[i].index][2] /= factor;
             }
         }
 
@@ -273,7 +304,10 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 error += Math.Abs(target - prediction[0]) + Math.Abs(1.0 - target - prediction[1]);
                 //predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
                 //        testSample.Output.Signal > 0.5m ? 1.0 : 0.0));
-                predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
+                double confidence = Math.Abs(prediction[0] - prediction[1]);
+                //confidence = prediction[2];
+
+                predictionResults.Add((prediction[0], prediction[1], confidence,
                         testSample.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0));
 
                 //biasSum += prediction[2];
