@@ -116,16 +116,18 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             _network = new DeepBeliefNetwork(new BernoulliFunction(), 
                 firstFeature.Input.Data.Length, 
-                firstFeature.Input.Data.Length * 2,
-                firstFeature.Input.Data.Length * 2,
-                firstFeature.Input.Data.Length * 2,
+                firstFeature.Input.Data.Length,
+                firstFeature.Input.Data.Length,
+                firstFeature.Input.Data.Length,
+                //(int)(firstFeature.Input.Data.Length * 0.5),
+                //(int)(firstFeature.Input.Data.Length * 0.2),
                 3);
             new GaussianWeights(_network).Randomize();
             _network.UpdateVisibleWeights();
 
             var teacher = new BackPropagationLearning(_network)
             {
-                LearningRate = 0.1,
+                LearningRate = 0.5,
                 Momentum = 0.5
                 
             };
@@ -134,7 +136,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
             double[][] trainingInputs;
             double[][] trainingOutputs;
             GetTrainingData(trainingData, out trainingInputs, out trainingOutputs, true);
-            for (int i = 0; i < _maxEpochs; i++)
+            for (int i = 1; i <= _maxEpochs; i++)
             {
                 double epochError = 0.0;
                 for(int j = 0; j < numBatches; ++j)
@@ -154,7 +156,11 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     Console.WriteLine($"Training set accuracy: {topAccuracy}"); 
                     if (testData.Any())
                         Console.WriteLine($"Validation set accuracy: {Evaluate(testData, _network, trainingOutputMapper, 0.5, 0.5)}");
+
                 }
+
+
+                UpdateConfidences(_network, trainingInputs, trainingOutputs, 0.99, 0.5);
             }
 
             return Result.Success<ModelMetrics>(null);
@@ -245,13 +251,21 @@ namespace GimmeMillions.Domain.ML.Candlestick
             double lowThreshold, double highThreshold)
         {
             var predictionResults = new List<(double PredictedHighSignal, double PredictedLowSignal, double Confidence, double ActualSignal)>();
+
+            var activationFunction = new BernoulliFunction();
+            double totalError = 0.0;
             foreach (var testSample in testData)
             {
                 var prediction = network.Compute(testSample.Input.Data);
-
+                double target = activationFunction.Function(testSample.Output.PercentChangeFromPreviousClose > 0.0m ?
+                    (double)testSample.Output.PercentChangeFromPreviousClose / (_averageGain) :
+                    (double)testSample.Output.PercentChangeFromPreviousClose / (_averageLoss));
+                totalError += Math.Abs(target - prediction[0]);
                 //predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
                 //        testSample.Output.Signal > 0.5m ? 1.0 : 0.0));
-                predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
+                double confidence = Math.Abs(prediction[0] - prediction[1]);
+                confidence = prediction[2];
+                predictionResults.Add((prediction[0], prediction[1], confidence,
                         testSample.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0));
 
                 //biasSum += prediction[2];
@@ -288,6 +302,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
                 Console.WriteLine($"\t{accuracyByPercentile[i] * 100.0}%: {runningAccuracy[index]}, Conf: {predictionResults[index].Confidence}");
             }
+
+            Console.WriteLine($"Error: {totalError}");
 
             return topAccuracy;
         }
