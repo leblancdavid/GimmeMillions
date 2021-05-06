@@ -126,7 +126,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var teacher = new BackPropagationLearning(_network)
             {
-                LearningRate = 0.5,
+                LearningRate = 0.1,
                 Momentum = 0.5
                 
             };

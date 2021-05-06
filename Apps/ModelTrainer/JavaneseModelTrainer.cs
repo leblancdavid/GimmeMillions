@@ -112,7 +112,8 @@ namespace ModelTrainer
                 //new SupportResistanceStockFeatureExtractor(),
                 new MACDHistogramFeatureExtraction(10),
                 new RSIFeatureExtractor(10),
-                new VWAPFeatureExtraction(10)
+                new VWAPFeatureExtraction(10),
+                new BollingerBandFeatureExtraction(5)
                 //new TrendStockFeatureExtractor(numStockSamples / 2)
             });
 
