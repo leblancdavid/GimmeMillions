@@ -136,7 +136,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
             double bestModel = 0.0;
             GetTrainingData(trainingData, out trainingInputs, out trainingOutputs, true);
 
-            var filteredTestset = testData.Where(x => (double)Math.Abs(x.Output.PercentChangeFromPreviousClose) > _averageGain).ToList();
+            //var filteredTestset = testData.Where(x => (double)Math.Abs(x.Output.PercentChangeFromPreviousClose) < _averageGain).ToList();
 
             for (int i = 0; i < _maxEpochs; i++)
             {
@@ -150,7 +150,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     epochError += error;
                 }
 
-                //UpdateConfidences(_network, trainingInputs, trainingOutputs, 0.99, 0.25);
+                UpdateConfidences(_network, trainingInputs, trainingOutputs, 0.8, 0.25);
 
                 Console.WriteLine($"Epoch {i} error: {epochError}");
 
@@ -163,7 +163,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
                 if (testData.Any())
                 {
-                    var validationAccuracy = Evaluate(filteredTestset, _network, trainingOutputMapper, 0.5, 0.5, i % 10 == 0);
+                    var validationAccuracy = Evaluate(testData, _network, trainingOutputMapper, 0.5, 0.5, i % 10 == 0);
                     Console.WriteLine($"Validation set accuracy: {validationAccuracy}");
                     if (validationAccuracy > bestModel)
                     {
@@ -187,19 +187,23 @@ namespace GimmeMillions.Domain.ML.Candlestick
             for(int i = 0; i < input.Length; ++i)
             {
                 var prediction = network.Compute(input[i]);
+
+                double confidence = Math.Abs(prediction[0] - prediction[1]);
+                //var e = Math.Abs(prediction[0] - output[i][0]) + Math.Abs(prediction[1] - output[i][1]);
                 
-                var e = Math.Abs(prediction[0] - output[i][0]) + Math.Abs(prediction[1] - output[i][1]);
-                
-                confidences.Add((i, e));
+                //Prioritize wrong predictions
+                if((prediction[0] > prediction[1] && output[i][0] > 0.5) || 
+                    (prediction[0] < prediction[1] && output[i][0] < 0.5))
+                {
+                    confidence *= -1.0;
+                }
+
+                confidences.Add((i, confidence));
             }
 
-            double biasAverage = output.Average(x => x[2]);
-
-            confidences = confidences.OrderByDescending(x => x.error).ToList();
+            confidences = confidences.OrderBy(x => x.error).ToList();
             for(int i = 0; i < confidences.Count * p; ++i)
             {
-                //output[confidences[i].index][0] *= factor; 
-                //output[confidences[i].index][1] *= factor;
                 if (output[confidences[i].index][0] > output[confidences[i].index][1])
                 {
                     output[confidences[i].index][0] *= factor;
@@ -211,26 +215,28 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     output[confidences[i].index][0] = 1.0 - output[confidences[i].index][1];
                 }
 
+                //output[confidences[i].index][0] *= factor;
+                //output[confidences[i].index][1] *= factor;
                 output[confidences[i].index][2] *= factor;
             }
 
-            /////Update the most confident ones
-            //confidences = confidences.OrderBy(x => x.error).ToList();
-            //for (int i = 0; i < confidences.Count * p; ++i)
-            //{
-            //    if (output[confidences[i].index][0] > output[confidences[i].index][1])
-            //    {
-            //        output[confidences[i].index][0] /= factor;
-            //        output[confidences[i].index][1] = 1.0 - output[confidences[i].index][0];
-            //    }
-            //    else
-            //    {
-            //        output[confidences[i].index][1] /= factor;
-            //        output[confidences[i].index][0] = 1.0 - output[confidences[i].index][1];
-            //    }
+            //rescale back the dataset
+            for (int i = 0; i < output.Length; ++i)
+            {
+                double v = 0.0;
+                if (output[i][0] > output[i][1])
+                {
+                    output[i][0] = (output[i][0] * output[i][0] + 1.0) / 2.0;
+                    output[i][1] = 1.0 - output[i][0];
+                }
+                else
+                {
+                    output[i][1] = (output[i][1] * output[i][1] + 1.0) / 2.0;
+                    output[i][0] = 1.0 - output[i][1];
+                }
 
-            //    output[confidences[i].index][2] /= factor;
-            //}
+                output[i][2] = Math.Abs(output[i][0] - output[i][1]);
+            }
         }
 
         private void GetTrainingData(IEnumerable<(FeatureVector Input, StockData Output)> dataset,
@@ -249,14 +255,15 @@ namespace GimmeMillions.Domain.ML.Candlestick
             _averageLoss = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose <= 0.0m)
                 .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
 
-            var filteredDataset = trainingData.Where(x => (double)Math.Abs(x.Output.PercentChangeFromPreviousClose) > _averageGain);
+           // var filteredDataset = trainingData.Where(x => (double)Math.Abs(x.Output.PercentChangeFromPreviousClose) < _averageGain);
 
-            inputs = filteredDataset.Select(x => x.Input.Data).ToArray();
-            output = filteredDataset.Select(x =>
+            inputs = dataset.Select(x => x.Input.Data).ToArray();
+            output = dataset.Select(x =>
             {
-                double target = activationFunction.Function(x.Output.PercentChangeFromPreviousClose > 0.0m ?
-                    (double)x.Output.PercentChangeFromPreviousClose / (_averageGain) :
-                    (double)x.Output.PercentChangeFromPreviousClose / (_averageLoss));
+                //double target = activationFunction.Function(x.Output.PercentChangeFromPreviousClose > 0.0m ?
+                //    (double)x.Output.PercentChangeFromPreviousClose / (_averageGain) :
+                //    (double)x.Output.PercentChangeFromPreviousClose / (_averageLoss));
+                double target = x.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0;
                 return new double[] {
                     target,
                     1.0 - target,
