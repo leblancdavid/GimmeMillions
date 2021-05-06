@@ -29,7 +29,7 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
 
         public TDAmeritradeApiClient(string apiKey, bool useAuthentication = false)
         {
-            _credentials = AmeritradeCredentials.Read($"{apiKey}.json");
+            //_credentials = AmeritradeCredentials.Read($"{apiKey}.json");
             _useAuthentication = useAuthentication;
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
             if (_useAuthentication)
@@ -40,7 +40,7 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
         { 
             get
             {
-                return _credentials.ApiKey;
+                return "I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP";
             }
         }
 

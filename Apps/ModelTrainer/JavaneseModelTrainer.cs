@@ -14,7 +14,7 @@ using System.Text;
 
 namespace ModelTrainer
 {
-    public class HimalayanModelTrainer
+    public class JavaneseModelTrainer
     {
         private IFeatureDatasetService<FeatureVector> _datasetService;
         private IStockSymbolsRepository _stockSymbolsRepository;
@@ -22,14 +22,14 @@ namespace ModelTrainer
         private StockDataPeriod _period;
         private int _numStockSamples = 100;
         private int _predictionLength = 5;
-        public HimalayanModelTrainer(
+        public JavaneseModelTrainer(
             IStockSymbolsRepository stockSymbolsRepository,
             StockDataPeriod period,
             int kSize = 15,
             int numStockSamples = 100,
             int samplingPeriod = 12,
             int offset = 0,
-            int predictionLength = 3)
+            int predictionLength = 5)
         {
             _stockSymbolsRepository = stockSymbolsRepository;
             _period = period;
@@ -46,7 +46,7 @@ namespace ModelTrainer
 
         public IStockRangePredictor TrainFutures(string modelName, int numSamples)
         {
-            _model = new DeepLearningStockRangePredictorModel(600, 1000, 2.0);
+            _model = new DeepLearningStockRangePredictorModel(800, 1000, 2.0);
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(_datasetService.GetTrainingData("DIA", null, true, numSamples));
@@ -54,7 +54,7 @@ namespace ModelTrainer
             trainingData.AddRange(_datasetService.GetTrainingData("QQQ", null, true, numSamples));
             //trainingData.AddRange(datasetService.GetTrainingData("RUT", null, true, numSamples));
 
-            _model.Train(trainingData, 0.05, new SignalOutputMapper());
+            _model.Train(trainingData, 0.1, new SignalOutputMapper());
             _model.Save(modelName);
 
             return _model;
@@ -109,15 +109,8 @@ namespace ModelTrainer
             var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
             {
                 //Remove the fibonacci because I believe they may not be reliable
-                new FibonacciStockFeatureExtractor(),
-                new TrendStockFeatureExtractor(numStockSamples / 2),
-                new StockIndicatorsFeatureExtractionV3(timeSampling,
-                numStockSamples,
-                (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
-                (int)(numStockSamples * 0.8), 5,
-                (int)(numStockSamples * 0.8), 5,
-                (int)(numStockSamples * 0.8), 5,
-                false)
+                new SupportResistanceStockFeatureExtractor(),
+                new TrendStockFeatureExtractor(numStockSamples / 2)
             });
 
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,

@@ -133,8 +133,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
             int numBatches = trainingData.Count() / _batchSize;
             double[][] trainingInputs;
             double[][] trainingOutputs;
-            GetTrainingData(trainingData, out trainingInputs, out trainingOutputs, true);
             double bestModel = 0.0;
+            GetTrainingData(trainingData, out trainingInputs, out trainingOutputs, true);
             for (int i = 0; i < _maxEpochs; i++)
             {
                 double epochError = 0.0;
