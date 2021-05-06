@@ -109,13 +109,15 @@ namespace ModelTrainer
             var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
             {
                 //Remove the fibonacci because I believe they may not be reliable
-                //new SupportResistanceStockFeatureExtractor(),
-                new MACDHistogramFeatureExtraction(10),
+                new SupportResistanceStockFeatureExtractor(),
+                new FibonacciStockFeatureExtractor(),
+                new MACDHistogramFeatureExtraction(20),
                 new RSIFeatureExtractor(10),
-                new VWAPFeatureExtraction(10),
-                new BollingerBandFeatureExtraction(5)
-                //new TrendStockFeatureExtractor(numStockSamples / 2)
-            });
+                new VWAPFeatureExtraction(20),
+                new BollingerBandFeatureExtraction(10),
+                new TrendStockFeatureExtractor(10),
+                new SimpleMovingAverageFeatureExtractor(10)
+        });
 
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                 period, numStockSamples, kernelSize, signalOffset, predictionLength);
