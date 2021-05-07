@@ -118,15 +118,15 @@ namespace GimmeMillions.Domain.ML.Candlestick
             _network = new DeepBeliefNetwork(new BernoulliFunction(), 
                 firstFeature.Input.Data.Length, 
                 firstFeature.Input.Data.Length * 2,
-                firstFeature.Input.Data.Length * 2,
+                firstFeature.Input.Data.Length,
                 //firstFeature.Input.Data.Length,
-                3);
+                4);
             new GaussianWeights(_network).Randomize();
             _network.UpdateVisibleWeights();
 
             var teacher = new BackPropagationLearning(_network)
             {
-                LearningRate = 0.1,
+                LearningRate = 0.2,
                 Momentum = 0.5
                 
             };
@@ -151,7 +151,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     epochError += error;
                 }
 
-                UpdateConfidences(_network, trainingInputs, trainingOutputs, 0.9);
+                UpdateConfidences(_network, trainingInputs, trainingOutputs, 0.8);
 
                 Console.WriteLine($"Epoch {i} error: {epochError}");
 
@@ -184,24 +184,62 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
         private void UpdateConfidences(DeepBeliefNetwork network, double[][] input, double[][] output, double factor)
         {
-            var confidences = new List<(int index, double error)>();
+            var confidences = new List<(int index, double confidence)>();
             for(int i = 0; i < input.Length; ++i)
             {
                 var prediction = network.Compute(input[i]);
 
                 double confidence = Math.Abs(prediction[0] - prediction[1]);
-                ////var e = Math.Abs(prediction[0] - output[i][0]) + Math.Abs(prediction[1] - output[i][1]);
-
                 ////Prioritize wrong predictions
                 if ((prediction[0] > prediction[1] && output[i][0] < 0.5) ||
                     (prediction[0] < prediction[1] && output[i][0] > 0.5))
                 {
                     confidence *= -1.0;
                 }
-                output[i][2] = (output[i][2] * factor) + (confidence * (1.0 - factor));
+                confidences.Add((i, confidence));
+                //var error = Math.Abs(prediction[2] - output[i][2]);
+                //confidences.Add((i, error));
+
+                //if it's not as confident as it once was, lower confidence
+                //if (confidence < output[i][2])
+                //    output[i][2] = (output[i][2] * factor) + (confidence * (1.0 - factor));
 
                 //confidences.Add((i, confidence));
             }
+
+            confidences = confidences.OrderByDescending(x => x.confidence).ToList();
+            double c = 0.0;
+            for (int i = 0; i < confidences.Count; ++i)
+            {
+                //c = (1.0 - ((double)i / (double)confidences.Count)) / 2.0 + 0.5;
+                //if (output[confidences[i].index][0] > output[confidences[i].index][1])
+                //{
+                //    output[confidences[i].index][0] =
+                //    (output[confidences[i].index][0] * factor) +
+                //    c * (1.0 - factor);
+                //    output[confidences[i].index][1] = 1.0 - output[confidences[i].index][0];
+                //}
+                //else
+                //{
+                //    output[confidences[i].index][1] =
+                //       (output[confidences[i].index][1] * factor) +
+                //       c * (1.0 - factor);
+                //    output[confidences[i].index][0] = 1.0 - output[confidences[i].index][1];
+
+                //}
+
+                //c = i < confidences.Count
+                c = (1.0 - ((double)i / (double)confidences.Count));
+                output[confidences[i].index][2] =
+                    (output[confidences[i].index][2] * factor) +
+                    c * (1.0 - factor);
+                output[confidences[i].index][3] = 1.0 - output[confidences[i].index][2];
+                //output[confidences[i].index][2] = Math.Abs(output[confidences[i].index][0] - output[confidences[i].index][1]);
+
+                //output[confidences[i].index][2] = c;
+
+            }
+
         }
 
         private void GetTrainingData(IEnumerable<(FeatureVector Input, StockData Output)> dataset,
@@ -232,6 +270,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 return new double[] {
                     target,
                     1.0 - target,
+                    0.0,
                     1.0
                 };
             }).ToArray();

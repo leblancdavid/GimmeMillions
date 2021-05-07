@@ -78,7 +78,8 @@ namespace GimmeMillions.Domain.ML
             var highScore = highP.GetColumn<float>("Score").ToArray();
 
             var sP = _sentimentModel.Transform(inputDataView);
-            var sScore = sP.GetColumn<float>("Score").ToArray();
+            //var sScore = sP.GetColumn<float>("Score").ToArray();
+            var sScore = sP.GetColumn<float>("Probability").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
             //var probability = prediction.GetColumn<float>("Probability").ToArray();
 
@@ -137,6 +138,7 @@ namespace GimmeMillions.Domain.ML
             //var rangeEstimator = _mLContext.Transforms.ApproximatedKernelMap("Features", rank: 100)
             //    .Append(_mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: 3000));
             var rangeEstimator = _mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: 5000);
+            var sentimateEstimator = _mLContext.BinaryClassification.Trainers.FastTree();
 
             var trainLowData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Take(trainingCount).Select(x =>
@@ -223,7 +225,7 @@ namespace GimmeMillions.Domain.ML
             //    .Append(_mLContext.BinaryClassification.Calibrators.Platt());
             //var estimator = _mLContext.BinaryClassification.Trainers.FastTree();
 
-            _sentimentModel = rangeEstimator.Fit(trainData);
+            _sentimentModel = sentimateEstimator.Fit(trainData);
 
             Metadata.TrainingResults = new ModelMetrics();
             if (testData != null)
