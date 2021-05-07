@@ -118,15 +118,16 @@ namespace GimmeMillions.Domain.ML.Candlestick
             _network = new DeepBeliefNetwork(new BernoulliFunction(), 
                 firstFeature.Input.Data.Length, 
                 firstFeature.Input.Data.Length * 2,
+                //firstFeature.Input.Data.Length * 2,
+                //firstFeature.Input.Data.Length * 2,
                 firstFeature.Input.Data.Length,
-                //firstFeature.Input.Data.Length,
-                4);
+                2);
             new GaussianWeights(_network).Randomize();
             _network.UpdateVisibleWeights();
 
             var teacher = new BackPropagationLearning(_network)
             {
-                LearningRate = 0.2,
+                LearningRate = 0.01,
                 Momentum = 0.5
                 
             };
@@ -151,7 +152,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     epochError += error;
                 }
 
-                UpdateConfidences(_network, trainingInputs, trainingOutputs, 0.8);
+                UpdateConfidences(_network, trainingInputs, trainingOutputs, 0.99);
 
                 Console.WriteLine($"Epoch {i} error: {epochError}");
 
@@ -211,29 +212,29 @@ namespace GimmeMillions.Domain.ML.Candlestick
             double c = 0.0;
             for (int i = 0; i < confidences.Count; ++i)
             {
-                //c = (1.0 - ((double)i / (double)confidences.Count)) / 2.0 + 0.5;
-                //if (output[confidences[i].index][0] > output[confidences[i].index][1])
-                //{
-                //    output[confidences[i].index][0] =
-                //    (output[confidences[i].index][0] * factor) +
-                //    c * (1.0 - factor);
-                //    output[confidences[i].index][1] = 1.0 - output[confidences[i].index][0];
-                //}
-                //else
-                //{
-                //    output[confidences[i].index][1] =
-                //       (output[confidences[i].index][1] * factor) +
-                //       c * (1.0 - factor);
-                //    output[confidences[i].index][0] = 1.0 - output[confidences[i].index][1];
+                c = (1.0 - ((double)i / (double)confidences.Count)) / 2.0 + 0.6;
+                if (output[confidences[i].index][0] > output[confidences[i].index][1])
+                {
+                    output[confidences[i].index][0] =
+                    (output[confidences[i].index][0] * factor) +
+                    c * (1.0 - factor);
+                    output[confidences[i].index][1] = 1.0 - output[confidences[i].index][0];
+                }
+                else
+                {
+                    output[confidences[i].index][1] =
+                       (output[confidences[i].index][1] * factor) +
+                       c * (1.0 - factor);
+                    output[confidences[i].index][0] = 1.0 - output[confidences[i].index][1];
 
-                //}
+                }
 
                 //c = i < confidences.Count
-                c = (1.0 - ((double)i / (double)confidences.Count));
-                output[confidences[i].index][2] =
-                    (output[confidences[i].index][2] * factor) +
-                    c * (1.0 - factor);
-                output[confidences[i].index][3] = 1.0 - output[confidences[i].index][2];
+                //c = (1.0 - ((double)i / (double)confidences.Count));
+                //output[confidences[i].index][2] =
+                //    (output[confidences[i].index][2] * factor) +
+                //    c * (1.0 - factor);
+                //output[confidences[i].index][3] = 1.0 - output[confidences[i].index][2];
                 //output[confidences[i].index][2] = Math.Abs(output[confidences[i].index][0] - output[confidences[i].index][1]);
 
                 //output[confidences[i].index][2] = c;
@@ -318,7 +319,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 //predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
                 //        testSample.Output.Signal > 0.5m ? 1.0 : 0.0));
                 double confidence = Math.Abs(prediction[0] - prediction[1]);
-                confidence = prediction[2];
+                //confidence = prediction[2];
 
                 predictionResults.Add((prediction[0], prediction[1], confidence,
                         testSample.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0));
