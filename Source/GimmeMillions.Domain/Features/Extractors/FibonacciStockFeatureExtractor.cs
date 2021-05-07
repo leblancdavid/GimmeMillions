@@ -12,11 +12,13 @@ namespace GimmeMillions.Domain.Features
     {
         public string Encoding { get; private set; }
         private decimal _fibThreshold = 0.025m;
+        private bool _includeVolume;
 
-        public FibonacciStockFeatureExtractor(decimal fibThreshold = 0.025m)
+        public FibonacciStockFeatureExtractor(decimal fibThreshold = 0.025m, bool includeVolume = true)
         {
             Encoding = "FibonacciFeatures";
             _fibThreshold = fibThreshold;
+            _includeVolume = includeVolume;
         }
 
         public double[] Extract(IEnumerable<(StockData Data, float Weight)> data)
@@ -37,9 +39,12 @@ namespace GimmeMillions.Domain.Features
             var fibIndex = fib.NearestFibonacci(lastbar.Data, out distance);
             feature.Add((double)fib.GetFibonacciValue(lastbar.Data));
             feature.Add((double)distance);
-            feature.Add(volumes[fibIndex]);
-
-            feature = feature.Concat(volumes).ToList();
+            if(_includeVolume)
+            {
+                feature.Add(volumes[fibIndex]);
+                feature = feature.Concat(volumes).ToList();
+            }
+                
             return feature.ToArray();
         }
 

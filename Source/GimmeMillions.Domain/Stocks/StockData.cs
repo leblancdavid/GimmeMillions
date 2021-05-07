@@ -205,7 +205,7 @@ namespace GimmeMillions.Domain.Stocks
             Close = close;
             AdjustedClose = adjClose;
             PreviousClose = open;
-            Volume = volume;
+            Volume = volume + 1; //ensure volume is always at least 1
             AveragePercentPeriodRange = PercentPeriodRange;
         }
 
@@ -221,7 +221,7 @@ namespace GimmeMillions.Domain.Stocks
             Close = close;
             AdjustedClose = adjClose;
             PreviousClose = previousClose;
-            Volume = volume;
+            Volume = volume + 1; //ensure volume is always at least 1
             AveragePercentPeriodRange = PercentPeriodRange;
             Period = StockDataPeriod.Day;
         }
@@ -239,7 +239,7 @@ namespace GimmeMillions.Domain.Stocks
             Close = close;
             AdjustedClose = adjClose;
             PreviousClose = previousClose;
-            Volume = volume;
+            Volume = volume + 1; //ensure volume is always at least 1
             AveragePercentPeriodRange = PercentPeriodRange;
             Period = StockDataPeriod.Day;
         }
@@ -271,7 +271,7 @@ namespace GimmeMillions.Domain.Stocks
         {
             decimal high = stockDatas.Max(x => x.High);
             decimal low = stockDatas.Min(x => x.Low);
-            decimal volume = stockDatas.Sum(x => x.Volume);
+            decimal volume = stockDatas.Sum(x => x.Volume) + 1; //ensure volume is always at least 1
             DateTime date = stockDatas.Min(x => x.Date);
             DateTime endDate = stockDatas.Max(x => x.Date);
 

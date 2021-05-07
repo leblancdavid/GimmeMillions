@@ -10,16 +10,23 @@ namespace GimmeMillions.Domain.Features.Extractors
     {
         public string Encoding { get; private set; }
         private int _quantization;
+        private bool _includeVolume;
 
-        public SimpleMovingAverageFeatureExtractor(int quantization = 5)
+        public SimpleMovingAverageFeatureExtractor(int quantization = 5, bool includeVolume = true)
         {
             Encoding = "SMA";
             _quantization = quantization;
+            _includeVolume = includeVolume;
         }
 
         public double[] Extract(IEnumerable<(StockData Data, float Weight)> data)
         {
             var ordered = data.OrderByDescending(x => x.Data.Date).ToList();
+
+            if(!_includeVolume)
+            {
+                return GetMovingAverageFeature(ordered).ToArray();
+            }
 
             return GetMovingAverageFeature(ordered)
                 .Concat(GetMovingVolumeFeature(ordered)).ToArray();
