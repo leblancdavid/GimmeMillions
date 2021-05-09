@@ -24,17 +24,17 @@ namespace GimmeMillions.Domain.ML.Candlestick
     {
         private DeepBeliefNetwork _network;
         private int _maxEpochs = 100;
-        private int _batchSize = 1000;
+        private int _resetEpoch = 40;
         private double _outputScaling = 1.0;
         private double _averageGain = 0.0;
         private double _averageLoss = 0.0;
     
         public DeepLearningStockRangePredictorModel(int maxEpochs = 100,
-            int batchSize = 1000,
+            int resetEpoch = 40,
             double outputScaling = 1.0)
         {
             _maxEpochs = maxEpochs;
-            _batchSize = batchSize;
+            _resetEpoch = resetEpoch;
             _outputScaling = outputScaling;
         }
         public bool IsTrained => _network != null;
@@ -47,7 +47,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var config = JObject.Parse(File.ReadAllText(pathToModel + ".config.json"));
             _maxEpochs = (int)config["maxEpochs"];
-            _batchSize = (int)config["batchSize"];
+            _resetEpoch = (int)config["resetEpoch"];
             _outputScaling = (double)config["outputScaling"];
             _averageGain = (double)config["averageGain"];
             _averageLoss = (double)config["averageLoss"];
@@ -88,7 +88,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
             var config = JObject.FromObject(new
             {
                 maxEpochs = _maxEpochs,
-                batchSize = _batchSize,
+                resetEpoch = _resetEpoch,
                 outputScaling = _outputScaling,
                 averageGain = _averageGain,
                 averageLoss = _averageLoss
@@ -134,7 +134,6 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 
             };
 
-            int numBatches = trainingData.Count() / _batchSize;
             double[][] trainingInputs;
             double[][] trainingOutputs;
             double bestModel = 0.0;
@@ -144,7 +143,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             for (int i = 0; i < _maxEpochs; i++)
             {
-                if(i % 50 == 0)
+                if(i % _resetEpoch == 0)
                 {
                     rngWeights.Randomize();
                 }
@@ -274,10 +273,10 @@ namespace GimmeMillions.Domain.ML.Candlestick
             inputs = dataset.Select(x => x.Input.Data).ToArray();
             output = dataset.Select(x =>
             {
-                //double target = activationFunction.Function(x.Output.PercentChangeFromPreviousClose > 0.0m ?
-                //    (double)x.Output.PercentChangeFromPreviousClose / (_averageGain) :
-                //    (double)x.Output.PercentChangeFromPreviousClose / (_averageLoss));
-                double target = x.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0;
+                double target = activationFunction.Function(x.Output.PercentChangeFromPreviousClose > 0.0m ?
+                    (double)x.Output.PercentChangeFromPreviousClose / (_averageGain) :
+                    (double)x.Output.PercentChangeFromPreviousClose / (_averageLoss));
+                //double target = x.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0;
                 return new double[] {
                     target,
                     1.0 - target,
