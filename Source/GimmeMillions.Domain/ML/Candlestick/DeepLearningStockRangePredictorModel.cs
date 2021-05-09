@@ -147,16 +147,9 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 {
                     rngWeights.Randomize();
                 }
-                UpdateConfidences(_network, trainingInputs, trainingOutputs, 0.9);
+                UpdateConfidences(_network, trainingInputs, trainingOutputs, 0.99);
                 double epochError = 0.0;
-                //for(int j = 0; j < numBatches; ++j)
-                //{
-                //    var batchInput = trainingInputs.Skip(j * _batchSize).Take(_batchSize).ToArray();
-                //    var batchOutput = trainingOutputs.Skip(j * _batchSize).Take(_batchSize).ToArray();
-                //    double error = teacher.RunEpoch(batchInput, batchOutput);
-                //    Console.Write(".");
-                //    epochError += error;
-                //}
+                
                 double error = teacher.RunEpoch(trainingInputs, trainingOutputs);
                 Console.Write(".");
                 epochError += error;
@@ -207,38 +200,13 @@ namespace GimmeMillions.Domain.ML.Candlestick
                     confidence *= -1.0;
                 }
                 confidences.Add((i, confidence));
-                //var error = Math.Abs(prediction[2] - output[i][2]);
-                //confidences.Add((i, error));
-
-                //if it's not as confident as it once was, lower confidence
-                //if (confidence < output[i][2])
-                //    output[i][2] = (output[i][2] * factor) + (confidence * (1.0 - factor));
-
-                //confidences.Add((i, confidence));
+                
             }
 
             confidences = confidences.OrderByDescending(x => x.confidence).ToList();
             double c = 0.0;
             for (int i = 0; i < confidences.Count; ++i)
             {
-                //c = (1.0 - ((double)i / (double)confidences.Count)) / 2.0 + 0.6;
-                //if (output[confidences[i].index][0] > output[confidences[i].index][1])
-                //{
-                //    output[confidences[i].index][0] =
-                //    (output[confidences[i].index][0] * factor) +
-                //    c * (1.0 - factor);
-                //    output[confidences[i].index][1] = 1.0 - output[confidences[i].index][0];
-                //}
-                //else
-                //{
-                //    output[confidences[i].index][1] =
-                //       (output[confidences[i].index][1] * factor) +
-                //       c * (1.0 - factor);
-                //    output[confidences[i].index][0] = 1.0 - output[confidences[i].index][1];
-
-                //}
-
-                //c = i < confidences.Count
                 c = (1.0 - ((double)i / (double)confidences.Count));
                 output[confidences[i].index][2] =
                     (output[confidences[i].index][2] * factor) +
@@ -285,28 +253,6 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 };
             }).ToArray();
                 
-        }
-
-        private double ToHighOutput(decimal percentChange, double averageHigh, double scaling)
-        {
-            if (percentChange < 0.0m)
-                return 0.0;
-
-            double output = ((double)percentChange / (averageHigh)) / scaling;
-            if (output > 1.0)
-                return 1.0;
-            return output;
-        }
-
-        private double ToLowOutput(decimal percentChange, double averageHigh, double scaling)
-        {
-            if (percentChange > 0.0m)
-                return 0.0;
-
-            double output = ((double)percentChange / (averageHigh)) / scaling;
-            if (output > 1.0)
-                return 1.0;
-            return output;
         }
 
         private double Evaluate(IEnumerable<(FeatureVector Input, StockData Output)> testData, 

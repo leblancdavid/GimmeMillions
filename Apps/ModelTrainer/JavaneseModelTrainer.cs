@@ -47,7 +47,7 @@ namespace ModelTrainer
         public IStockRangePredictor TrainFutures(string modelName, int numSamples)
         {
             //var datasetService = GetMarketIndicatorsDatasetService(_period, 12, _numStockSamples);
-            _model = new DeepLearningStockRangePredictorModel(800, 40, 1.0);
+            _model = new DeepLearningStockRangePredictorModel(1000, 40, 1.0);
             //_model = new MLStockRangePredictorModelV2();
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(_datasetService.GetTrainingData("DIA", null, true, numSamples));
