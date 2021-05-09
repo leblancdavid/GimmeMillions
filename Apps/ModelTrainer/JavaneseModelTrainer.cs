@@ -74,7 +74,7 @@ namespace ModelTrainer
             var averageLoss = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose <= 0.0m)
                 .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
 
-            _model.Train(trainingData, 0.25, new BernoulliPercentChange(averageGain, averageLoss));
+            _model.Train(trainingData, 0.5, new BernoulliPercentChange(averageGain, averageLoss));
 
             _model.Save(modelName);
 

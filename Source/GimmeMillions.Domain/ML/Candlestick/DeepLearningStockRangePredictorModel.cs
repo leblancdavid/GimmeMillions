@@ -122,13 +122,15 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 //firstFeature.Input.Data.Length * 2,
                 firstFeature.Input.Data.Length,
                 4);
-            new GaussianWeights(_network).Randomize();
+
+            var rngWeights = new GaussianWeights(_network);
+            //new GaussianWeights(_network).Randomize();
             _network.UpdateVisibleWeights();
 
             var teacher = new BackPropagationLearning(_network)
             {
                 LearningRate = 0.005,
-                Momentum = 0.5
+                Momentum = 0.1
                 
             };
 
@@ -142,6 +144,10 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             for (int i = 0; i < _maxEpochs; i++)
             {
+                if(i % 50 == 0)
+                {
+                    rngWeights.Randomize();
+                }
                 UpdateConfidences(_network, trainingInputs, trainingOutputs, 0.9);
                 double epochError = 0.0;
                 //for(int j = 0; j < numBatches; ++j)
@@ -181,6 +187,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             //Console.WriteLine($"Loading best model ({bestModel})...");
             _network = DeepBeliefNetwork.Load("best_model_cache");
+            Evaluate(trainingData, _network, trainingOutputMapper, 0.5, 0.5, true);
+            Evaluate(testData, _network, trainingOutputMapper, 0.5, 0.5, true);
 
             return Result.Success<ModelMetrics>(null);
         }
