@@ -23,11 +23,11 @@ namespace ModelTrainer
             var trainer = new JavaneseModelTrainer(
                 new StockSymbolsFile("nasdaq_screener.csv"),
                 StockDataPeriod.Day,
-                9, 100, 12, 0, 5);
+                9, 200, 12, 0, 5);
 
             //trainer.Train("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Futures.dnn", 20000);
             //730 = 365 x 2, basically two years of historical data should be good enough
-            trainer.TrainFutures("Futures.dnn", 5000);
+            trainer.TrainFutures("Futures.dnn", 2000);
             //trainer.TrainStocks("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Stocks.dnn", 730);
             //trainer.LoadModel("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Futures.dnn");
             trainer.Evaluate("model_results.csv", 500, "IZEA");

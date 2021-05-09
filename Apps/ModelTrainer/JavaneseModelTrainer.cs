@@ -46,31 +46,35 @@ namespace ModelTrainer
 
         public IStockRangePredictor TrainFutures(string modelName, int numSamples)
         {
-            var datasetService = GetMarketIndicatorsDatasetService(_period, 12, _numStockSamples);
-            _model = new DeepLearningStockRangePredictorModel(1000, 200, 1.0);
+            //var datasetService = GetMarketIndicatorsDatasetService(_period, 12, _numStockSamples);
+            _model = new DeepLearningStockRangePredictorModel(500, 100000, 1.0);
             //_model = new MLStockRangePredictorModelV2();
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            trainingData.AddRange(datasetService.GetTrainingData("$RUT.X", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("$SPX.X", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("$NDX.X", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("$DJI", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("$A1UTI", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("$A1CYC", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("$A1FIN", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("$A1HCR", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("$A1IDU", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("$A1ENE", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("$A1TEC", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("$A1BSC", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("$A1NCY", null, true, numSamples));
-            trainingData.AddRange(datasetService.GetTrainingData("$A1TSL", null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetTrainingData("DIA", null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetTrainingData("QQQ", null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetTrainingData("SPY", null, true, numSamples));
+
+            //trainingData.AddRange(_datasetService.GetTrainingData("$RUT.X", null, true, numSamples));
+            //trainingData.AddRange(_datasetService.GetTrainingData("$SPX.X", null, true, numSamples));
+            //trainingData.AddRange(_datasetService.GetTrainingData("$NDX.X", null, true, numSamples));
+            //trainingData.AddRange(_datasetService.GetTrainingData("$DJI", null, true, numSamples));
+            //trainingData.AddRange(_datasetService.GetTrainingData("$A1UTI", null, true, numSamples));
+            //trainingData.AddRange(_datasetService.GetTrainingData("$A1CYC", null, true, numSamples));
+            //trainingData.AddRange(_datasetService.GetTrainingData("$A1FIN", null, true, numSamples));
+            //trainingData.AddRange(_datasetService.GetTrainingData("$A1HCR", null, true, numSamples));
+            //trainingData.AddRange(_datasetService.GetTrainingData("$A1IDU", null, true, numSamples));
+            //trainingData.AddRange(_datasetService.GetTrainingData("$A1ENE", null, true, numSamples));
+            //trainingData.AddRange(_datasetService.GetTrainingData("$A1TEC", null, true, numSamples));
+            //trainingData.AddRange(_datasetService.GetTrainingData("$A1BSC", null, true, numSamples));
+            //trainingData.AddRange(_datasetService.GetTrainingData("$A1NCY", null, true, numSamples));
+            //trainingData.AddRange(_datasetService.GetTrainingData("$A1TSL", null, true, numSamples));
 
             var averageGain = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose > 0.0m)
               .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
             var averageLoss = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose <= 0.0m)
                 .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
 
-            _model.Train(trainingData, 0.1, new BernoulliPercentChange(averageGain, averageLoss));
+            _model.Train(trainingData, 0.25, new BernoulliPercentChange(averageGain, averageLoss));
 
             _model.Save(modelName);
 
