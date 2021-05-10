@@ -127,7 +127,7 @@ namespace GimmeMillions.Domain.ML
                 return Result.Failure<ModelMetrics>($"Training dataset is empty");
             }
 
-            dataset = dataset.OrderBy(x => x.Output.Date);
+            dataset = dataset.OrderBy(x => x.Output.Date).ToList();
 
             var firstFeature = dataset.FirstOrDefault();
             Metadata.FeatureEncoding = firstFeature.Input.Encoding;
@@ -138,7 +138,8 @@ namespace GimmeMillions.Domain.ML
             //var rangeEstimator = _mLContext.Transforms.ApproximatedKernelMap("Features", rank: 100)
             //    .Append(_mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: 3000));
             var rangeEstimator = _mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: 5000);
-            var sentimateEstimator = _mLContext.BinaryClassification.Trainers.FastTree();
+            var sentimateEstimator = _mLContext.BinaryClassification.Trainers.FastForest(numberOfTrees: 2000, numberOfLeaves: 20)
+                .Append(_mLContext.BinaryClassification.Calibrators.Platt());
 
             var trainLowData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Take(trainingCount).Select(x =>
@@ -241,10 +242,10 @@ namespace GimmeMillions.Domain.ML
                     var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
-                    if(posS.Sentiment > 50.0f) 
+                    if(posS.Sentiment > 80.0f) 
                         predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.5f));
 
-                    if (posS.Sentiment < 50.0f)
+                    if (posS.Sentiment < 20.0f)
                         predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.5f));
                 }
 
@@ -260,7 +261,7 @@ namespace GimmeMillions.Domain.ML
                     runningAccuracy.Add(correct / (double)(i + 1));
                 }
            
-          }
+            }
             return Result.Success<ModelMetrics>(Metadata.TrainingResults);
         }
 

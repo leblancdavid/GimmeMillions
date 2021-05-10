@@ -47,8 +47,8 @@ namespace ModelTrainer
         public IStockRangePredictor TrainFutures(string modelName, int numSamples)
         {
             //var datasetService = GetMarketIndicatorsDatasetService(_period, 12, _numStockSamples);
-            _model = new DeepLearningStockRangePredictorModel(200, 40, 1.0);
-            //_model = new MLStockRangePredictorModelV2();
+            //_model = new DeepLearningStockRangePredictorModel(200, 40, 1.0);
+            _model = new MLStockRangePredictorModelV2();
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(_datasetService.GetTrainingData("DIA", null, true, numSamples));
             trainingData.AddRange(_datasetService.GetTrainingData("QQQ", null, true, numSamples));
@@ -69,16 +69,16 @@ namespace ModelTrainer
             //trainingData.AddRange(_datasetService.GetTrainingData("$A1NCY", null, true, numSamples));
             //trainingData.AddRange(_datasetService.GetTrainingData("$A1TSL", null, true, numSamples));
 
-            var averageGain = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose > 0.0m)
-              .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
-            var averageLoss = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose <= 0.0m)
-                .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
+            var medianGain = (double)trainingData.OrderBy(x => x.Output.PercentChangeFromPreviousClose)
+                .ToList()[trainingData.Count / 2].Output.PercentChangeFromPreviousClose;
+            var averageGain = (double)trainingData.Average(x => Math.Abs((double)x.Output.PercentChangeFromPreviousClose - medianGain));
 
-            _model.Train(trainingData, 0.5, new BernoulliPercentChange(averageGain, averageLoss));
+            _model.Train(trainingData, 0.1, new BernoulliPercentChange(averageGain, medianGain));
 
             _model.Save(modelName);
 
-            Console.WriteLine($"Total accuracy DIA: {Evaluate("trainingResults.csv", numSamples, "DIA")}");
+            //Console.WriteLine($"Total accuracy $RUT.X: {Evaluate("rut.csv", numSamples, "$RUT.X")}");
+            //Console.WriteLine($"Total accuracy DIA: {Evaluate("dia.csv", numSamples, "DIA")}");
 
             return _model;
         }
@@ -117,7 +117,7 @@ namespace ModelTrainer
                         (prediction.Sentiment < 0.0 && sample.Output.PercentChangeFromPreviousClose < 0.0m))
                         accuracy++;
                     var stockData = stocks.FirstOrDefault(x => x.Date == sample.Output.Date);
-                    var line = string.Format($"{stockData.Close}\t{sample.Output.PercentChangeFromPreviousClose}\t{prediction.PredictedHigh}\t{prediction.Sentiment}");
+                    var line = string.Format($"{stockData.Close}\t{sample.Output.PercentChangeFromPreviousClose}\t{prediction.PredictedHigh}\t{prediction.PredictedLow}\t{prediction.Sentiment}");
                     w.WriteLine(line);
                     w.Flush();
                 }

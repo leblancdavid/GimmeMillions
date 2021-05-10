@@ -6,12 +6,12 @@ namespace GimmeMillions.Domain.ML
     public class BernoulliPercentChange : ITrainingOutputMapper
     {
         private double _averageGain;
-        private double _averageLoss;
+        private double _medianGain;
         private BernoulliFunction _activationFunction = new BernoulliFunction();
-        public BernoulliPercentChange(double averageGain, double averageLoss)
+        public BernoulliPercentChange(double averageGain, double medianGain)
         {
             _averageGain = averageGain;
-            _averageLoss = averageLoss;
+            _medianGain = medianGain;
         }
 
         public bool GetBinaryValue(StockData stockData)
@@ -21,9 +21,7 @@ namespace GimmeMillions.Domain.ML
       
         public float GetOutputValue(StockData stockData)
         {
-            return (float)_activationFunction.Function(stockData.PercentChangeFromPreviousClose > 0.0m ?
-                    (double)stockData.PercentChangeFromPreviousClose / (_averageGain) :
-                    (double)stockData.PercentChangeFromPreviousClose / (_averageLoss));
+            return (float)_activationFunction.Function(((double)stockData.PercentChangeFromPreviousClose - _medianGain) / _averageGain);
         }
     };
 }
