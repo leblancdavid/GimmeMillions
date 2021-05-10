@@ -23,6 +23,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
     public class DeepLearningStockRangePredictorModel : IStockRangePredictor
     {
         private DeepBeliefNetwork _network;
+        private PolynomialRegression _sentimentScaler;
+        private PolynomialRegression _predictionScaler;
         private int _maxEpochs = 100;
         private int _resetEpoch = 40;
         private double _outputScaling = 1.0;
@@ -52,6 +54,14 @@ namespace GimmeMillions.Domain.ML.Candlestick
             _averageGain = (double)config["averageGain"];
             _averageLoss = (double)config["averageLoss"];
 
+            _predictionScaler = new PolynomialRegression((int)config["psDegree"]);
+            _predictionScaler.Weights = config["psWeights"].ToObject<double[]>();
+            _predictionScaler.Intercept = (double)config["psIntercept"];
+
+            _sentimentScaler = new PolynomialRegression((int)config["ssDegree"]);
+            _sentimentScaler.Weights = config["ssWeights"].ToObject<double[]>();
+            _sentimentScaler.Intercept = (double)config["ssIntercept"];
+
             return Result.Success();
         }
 
@@ -63,11 +73,21 @@ namespace GimmeMillions.Domain.ML.Candlestick
             }
 
             var prediction = _network.Compute(Input.Data);
+            double p = prediction[0];
+            if(_predictionScaler != null)
+            {
+                p = _predictionScaler.Transform(prediction[0]);
+            }
+            double s = prediction[2];
+            if (_sentimentScaler != null)
+            {
+                //s = _sentimentScaler.Transform(prediction[2]);
+            }
 
-            var predictedGain = prediction[0] > 0.5 ?
-                (prediction[0] - 0.50) * 2.0 * _averageGain * _outputScaling :
-                (prediction[0] - 0.50) * 2.0 * _averageLoss * _outputScaling;
-            double sentiment = Math.Abs(prediction[0] - prediction[1]) * 100.0;
+            var predictedGain = p > 0.5 ?
+                (p - 0.50) * 2.0 * _averageGain * _outputScaling :
+                (p - 0.50) * 2.0 * _averageLoss * _outputScaling;
+            double sentiment = s * 100.0;
             if (predictedGain < 0.0)
                 sentiment *= -1.0;
 
@@ -91,10 +111,17 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 resetEpoch = _resetEpoch,
                 outputScaling = _outputScaling,
                 averageGain = _averageGain,
-                averageLoss = _averageLoss
+                averageLoss = _averageLoss,
+                psWeights = _predictionScaler.Weights,
+                psIntercept = _predictionScaler.Intercept,
+                psDegree = _predictionScaler.Degree,
+                ssWeights = _sentimentScaler.Weights,
+                ssIntercept = _sentimentScaler.Intercept,
+                ssDegree = _sentimentScaler.Degree,
             });
 
             _network.Save(pathToModel);
+            //_predictionScaler.(pathToModel + ".ps");
             File.WriteAllText(pathToModel + ".config.json", config.ToString());
             return Result.Success();
         }
@@ -181,6 +208,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
             _network = DeepBeliefNetwork.Load("best_model_cache");
             Evaluate(trainingData, _network, trainingOutputMapper, 0.5, 0.5, true);
             Evaluate(testData, _network, trainingOutputMapper, 0.5, 0.5, true);
+
+            TrainOutputScaler(_network, trainingInputs);
 
             return Result.Success<ModelMetrics>(null);
         }
@@ -313,6 +342,35 @@ namespace GimmeMillions.Domain.ML.Candlestick
            
             //return the top 50% accuracy
             return runningAccuracy[runningAccuracy.Count / 10];
+        }
+
+        private void TrainOutputScaler(DeepBeliefNetwork network, double[][] input)
+        {
+            var sentiments = new List<double>();
+            var predictions = new List<double>();
+            var outputs = new List<double>();
+            foreach(var sample in input)
+            {
+                var p = network.Compute(sample);
+                sentiments.Add(p[2]);
+                predictions.Add(p[0]);
+            }
+
+            sentiments = sentiments.OrderBy(x => x).ToList();
+            predictions = predictions.OrderBy(x => x).ToList();
+            for(int i = 0; i < sentiments.Count; ++i)
+            {
+                outputs.Add((double)i / (double)sentiments.Count);
+            }
+
+            var ls = new PolynomialLeastSquares()
+            {
+                Degree = 2
+            };
+
+            _sentimentScaler = ls.Learn(sentiments.ToArray(), outputs.ToArray());
+            _predictionScaler = ls.Learn(predictions.ToArray(), outputs.ToArray());
+
         }
     }
 }

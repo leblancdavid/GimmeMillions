@@ -111,7 +111,7 @@ namespace ModelTrainer
                     var prediction = _model.Predict(sample.Input);
 
                     var stockData = stocks.FirstOrDefault(x => x.Date == sample.Output.Date);
-                    var line = string.Format($"{stockData.Close}\t{sample.Output.Signal}\t{sample.Output.PercentChangeFromPreviousClose}\t{prediction.PredictedHigh}\t{prediction.PredictedLow}\t{prediction.Sentiment}\t{prediction.Confidence}");
+                    var line = string.Format($"{stockData.Close}\t{sample.Output.PercentChangeFromPreviousClose}\t{prediction.PredictedHigh}\t{prediction.Sentiment}");
                     w.WriteLine(line);
                     w.Flush();
                 }
