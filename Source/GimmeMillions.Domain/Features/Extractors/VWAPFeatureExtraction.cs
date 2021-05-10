@@ -11,8 +11,6 @@ namespace GimmeMillions.Domain.Features
         public string Encoding { get; private set; }
         private int _timeSampling = 5;
         private int _vwapLength = 10;
-        private int _fastEma = 12;
-        private int _macdEma = 9;
 
         public VWAPFeatureExtraction(
             int timesampling = 5,
@@ -20,7 +18,7 @@ namespace GimmeMillions.Domain.Features
         {
             _timeSampling = timesampling;
             _vwapLength = vwapLength;
-            Encoding = $"VWAP{_vwapLength},{_fastEma},{_macdEma},{_timeSampling}";
+            Encoding = $"VWAP{_vwapLength},{_timeSampling}";
         }
 
         public double[] Extract(IEnumerable<(StockData Data, float Weight)> data)

@@ -40,7 +40,7 @@ namespace ModelTrainer
 
         public void LoadModel(string modelName)
         {
-            _model = new DeepLearningStockRangePredictorModel(200, 1000, 2.0);
+            _model = new MLStockRangePredictorModelV2();
             _model.Load(modelName);
         }
 
@@ -54,26 +54,11 @@ namespace ModelTrainer
             trainingData.AddRange(_datasetService.GetTrainingData("QQQ", null, true, numSamples));
             trainingData.AddRange(_datasetService.GetTrainingData("SPY", null, true, numSamples));
 
-            //trainingData.AddRange(_datasetService.GetTrainingData("$RUT.X", null, true, numSamples));
-            //trainingData.AddRange(_datasetService.GetTrainingData("$SPX.X", null, true, numSamples));
-            //trainingData.AddRange(_datasetService.GetTrainingData("$NDX.X", null, true, numSamples));
-            //trainingData.AddRange(_datasetService.GetTrainingData("$DJI", null, true, numSamples));
-            //trainingData.AddRange(_datasetService.GetTrainingData("$A1UTI", null, true, numSamples));
-            //trainingData.AddRange(_datasetService.GetTrainingData("$A1CYC", null, true, numSamples));
-            //trainingData.AddRange(_datasetService.GetTrainingData("$A1FIN", null, true, numSamples));
-            //trainingData.AddRange(_datasetService.GetTrainingData("$A1HCR", null, true, numSamples));
-            //trainingData.AddRange(_datasetService.GetTrainingData("$A1IDU", null, true, numSamples));
-            //trainingData.AddRange(_datasetService.GetTrainingData("$A1ENE", null, true, numSamples));
-            //trainingData.AddRange(_datasetService.GetTrainingData("$A1TEC", null, true, numSamples));
-            //trainingData.AddRange(_datasetService.GetTrainingData("$A1BSC", null, true, numSamples));
-            //trainingData.AddRange(_datasetService.GetTrainingData("$A1NCY", null, true, numSamples));
-            //trainingData.AddRange(_datasetService.GetTrainingData("$A1TSL", null, true, numSamples));
-
             var medianGain = (double)trainingData.OrderBy(x => x.Output.PercentChangeFromPreviousClose)
                 .ToList()[trainingData.Count / 2].Output.PercentChangeFromPreviousClose;
             var averageGain = (double)trainingData.Average(x => Math.Abs((double)x.Output.PercentChangeFromPreviousClose - medianGain));
 
-            _model.Train(trainingData, 0.1, new BernoulliPercentChange(averageGain, medianGain));
+            _model.Train(trainingData, 0.0, new BernoulliPercentChange(averageGain, medianGain));
 
             _model.Save(modelName);
 
@@ -87,16 +72,21 @@ namespace ModelTrainer
         {
            // _model = new DeepLearningStockRangePredictorModel(200, 10000, 2.0);
             _model = new MLStockRangePredictorModelV2();
-            //var stockFilter = new DefaultStockFilter(
-            //        maxPercentHigh: 50.0m,
-            //    maxPercentLow: 50.0m,
-            //    minPrice: 5.0m,
-            //    maxPrice: decimal.MaxValue,
-            //    minVolume: 10000.0m);
+            var stockFilter = new DefaultStockFilter(
+                    maxPercentHigh: 50.0m,
+                maxPercentLow: 50.0m,
+                minPrice: 10.0m,
+                maxPrice: decimal.MaxValue,
+                minVolume: 100000.0m);
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            trainingData.AddRange(_datasetService.GetAllTrainingData(null, true, numSamples));
-            _model.Train(trainingData, 0.5, new SignalOutputMapper());
+            trainingData.AddRange(_datasetService.GetAllTrainingData(stockFilter, true, numSamples));
+
+            var medianGain = (double)trainingData.OrderBy(x => x.Output.PercentChangeFromPreviousClose)
+               .ToList()[trainingData.Count / 2].Output.PercentChangeFromPreviousClose;
+            var averageGain = (double)trainingData.Average(x => Math.Abs((double)x.Output.PercentChangeFromPreviousClose - medianGain));
+
+            _model.Train(trainingData, 0.0, new BernoulliPercentChange(averageGain, medianGain));
             _model.Save(modelName);
 
             return _model;
@@ -128,32 +118,7 @@ namespace ModelTrainer
             return accuracy;
         }
 
-        private IFeatureDatasetService<FeatureVector> GetMarketIndicatorsDatasetService(
-            StockDataPeriod period,
-            int timeSampling = 10,
-            int numStockSamples = 40,
-            int kernelSize = 9,
-            int signalOffset = 0,
-            int predictionLength = 5)
-        {
-            var ameritradeClient = new TDAmeritradeApiClient("I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP");
-            var stocksRepo = new TDAmeritradeStockAccessService(ameritradeClient, _stockSymbolsRepository);
-            var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
-            {
-                //Remove the fibonacci because I believe they may not be reliable
-                new SupportResistanceStockFeatureExtractor(0.02m),
-                new FibonacciStockFeatureExtractor(0.02m, false),
-                new MACDHistogramFeatureExtraction(20),
-                new RSIFeatureExtractor(10),
-                new BollingerBandFeatureExtraction(10),
-                new TrendStockFeatureExtractor(10, false),
-                new SimpleMovingAverageFeatureExtractor(10, false)
-        });
-
-            return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
-                period, numStockSamples, kernelSize, signalOffset, predictionLength);
-        }
-
+        
         private IFeatureDatasetService<FeatureVector> GetIndicatorFeaturesBuySellSignalDatasetService(
             StockDataPeriod period,
             int timeSampling = 10,
@@ -166,15 +131,15 @@ namespace ModelTrainer
             var stocksRepo = new TDAmeritradeStockAccessService(ameritradeClient, _stockSymbolsRepository);
             var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
             {
-                //Remove the fibonacci because I believe they may not be reliable
-                new SupportResistanceStockFeatureExtractor(),
-                new FibonacciStockFeatureExtractor(),
-                new MACDHistogramFeatureExtraction(20),
+                //new SupportResistanceStockFeatureExtractor(),
+                //new FibonacciStockFeatureExtractor(),
+                new MACDHistogramFeatureExtraction(10),
                 new RSIFeatureExtractor(10),
-                new VWAPFeatureExtraction(20),
+                new VWAPFeatureExtraction(10),
+                new CMFFeatureExtraction(10),
                 new BollingerBandFeatureExtraction(10),
                 new TrendStockFeatureExtractor(10),
-                new SimpleMovingAverageFeatureExtractor(10)
+                new SimpleMovingAverageFeatureExtractor(20)
         });
 
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,

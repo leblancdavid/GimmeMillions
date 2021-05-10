@@ -440,36 +440,37 @@ namespace GimmeMillions.Domain.Features
                             signal = 1.0m;
                         if (signal < 0.0m)
                             signal = 0.0m;
-                        if (filter.Pass(sample))
+
+                        var data = GetData(symbol, sample.Date, stocks);
+                        if (data.IsSuccess)
                         {
-                            var data = GetData(symbol, sample.Date, stocks);
-                            if (data.IsSuccess)
+                            decimal high = 0.0m;
+                            decimal low = decimal.MaxValue;
+                            for (int l = j; l < inflectionIndex[i].Index; ++l)
                             {
-                                decimal high = 0.0m;
-                                decimal low = decimal.MaxValue;
-                                for (int l = j; l < inflectionIndex[i].Index; ++l)
+                                if (stocks[l].High > high)
                                 {
-                                    if (stocks[l].High > high)
-                                    {
-                                        high = stocks[l].High;
-                                    }
-                                    if (stocks[l].Low < low)
-                                    {
-                                        low = stocks[l].Low;
-                                    }
+                                    high = stocks[l].High;
                                 }
-
-                                int outputIndex = j + _predictionLength;
-                                if(outputIndex >= stocks.Count)
+                                if (stocks[l].Low < low)
                                 {
-                                    outputIndex = stocks.Count - 1;
+                                    low = stocks[l].Low;
                                 }
+                            }
 
-                                var output = new StockData(symbol, sample.Date, sample.Open, high, low,
-                                    stocks[outputIndex].Close,
-                                    stocks[outputIndex].AdjustedClose,
-                                    sample.Volume, sample.PreviousClose);
+                            int outputIndex = j + _predictionLength;
+                            if(outputIndex >= stocks.Count)
+                            {
+                                outputIndex = stocks.Count - 1;
+                            }
 
+                            var output = new StockData(symbol, sample.Date, sample.Open, high, low,
+                                stocks[outputIndex].Close,
+                                stocks[outputIndex].AdjustedClose,
+                                sample.Volume, sample.PreviousClose);
+
+                            if(filter.Pass(output))
+                            {
                                 output.Signal = signal;
                                 trainingData.Add((data.Value, output));
                                 signalCheck.Add((double)signal);
