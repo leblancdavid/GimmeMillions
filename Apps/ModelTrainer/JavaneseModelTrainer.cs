@@ -47,7 +47,7 @@ namespace ModelTrainer
         public IStockRangePredictor TrainFutures(string modelName, int numSamples)
         {
             //var datasetService = GetMarketIndicatorsDatasetService(_period, 12, _numStockSamples);
-            _model = new DeepLearningStockRangePredictorModel(600, 30, 1.0);
+            _model = new DeepLearningStockRangePredictorModel(200, 40, 1.0);
             //_model = new MLStockRangePredictorModelV2();
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(_datasetService.GetTrainingData("DIA", null, true, numSamples));
@@ -78,7 +78,7 @@ namespace ModelTrainer
 
             _model.Save(modelName);
 
-            Console.WriteLine($"Total accuracy DIA: {Evaluate("trainingResults.csv", 500, "DIA")}");
+            Console.WriteLine($"Total accuracy DIA: {Evaluate("trainingResults.csv", numSamples, "DIA")}");
 
             return _model;
         }
@@ -96,7 +96,7 @@ namespace ModelTrainer
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(_datasetService.GetAllTrainingData(null, true, numSamples));
-            _model.Train(trainingData, 0.0, new SignalOutputMapper());
+            _model.Train(trainingData, 0.5, new SignalOutputMapper());
             _model.Save(modelName);
 
             return _model;
@@ -113,8 +113,8 @@ namespace ModelTrainer
                 {
                     var prediction = _model.Predict(sample.Input);
 
-                    if ((prediction.Sentiment > 0.0 && sample.Output.PercentChangeFromPreviousClose >= 0.75m) ||
-                        (prediction.Sentiment < 0.0 && sample.Output.PercentChangeFromPreviousClose < 0.75m))
+                    if ((prediction.Sentiment > 0.0 && sample.Output.PercentChangeFromPreviousClose >= 0.0m) ||
+                        (prediction.Sentiment < 0.0 && sample.Output.PercentChangeFromPreviousClose < 0.0m))
                         accuracy++;
                     var stockData = stocks.FirstOrDefault(x => x.Date == sample.Output.Date);
                     var line = string.Format($"{stockData.Close}\t{sample.Output.PercentChangeFromPreviousClose}\t{prediction.PredictedHigh}\t{prediction.Sentiment}");
