@@ -29,7 +29,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
         private int _resetEpoch = 40;
         private double _outputScaling = 1.0;
         private double _averageGain = 0.0;
-        private double _averageLoss = 0.0;
+        private double _medianGain = 0.0;
     
         public DeepLearningStockRangePredictorModel(int maxEpochs = 100,
             int resetEpoch = 40,
@@ -52,7 +52,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
             _resetEpoch = (int)config["resetEpoch"];
             _outputScaling = (double)config["outputScaling"];
             _averageGain = (double)config["averageGain"];
-            _averageLoss = (double)config["averageLoss"];
+            _medianGain = (double)config["medianGain"];
 
             _predictionScaler = new PolynomialRegression((int)config["psDegree"]);
             _predictionScaler.Weights = config["psWeights"].ToObject<double[]>();
@@ -81,12 +81,10 @@ namespace GimmeMillions.Domain.ML.Candlestick
             double s = prediction[2];
             if (_sentimentScaler != null)
             {
-                //s = _sentimentScaler.Transform(prediction[2]);
+                s = _sentimentScaler.Transform(prediction[2]);
             }
 
-            var predictedGain = p > 0.5 ?
-                (p - 0.50) * 2.0 * _averageGain * _outputScaling :
-                (p - 0.50) * 2.0 * _averageLoss * _outputScaling;
+            var predictedGain = (p - 0.50) * _averageGain + _medianGain;
             double sentiment = s * 100.0;
             if (predictedGain < 0.0)
                 sentiment *= -1.0;
@@ -111,7 +109,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 resetEpoch = _resetEpoch,
                 outputScaling = _outputScaling,
                 averageGain = _averageGain,
-                averageLoss = _averageLoss,
+                medianGain = _medianGain,
                 psWeights = _predictionScaler.Weights,
                 psIntercept = _predictionScaler.Intercept,
                 psDegree = _predictionScaler.Degree,
@@ -135,16 +133,16 @@ namespace GimmeMillions.Domain.ML.Candlestick
                 return Result.Failure<ModelMetrics>($"Training dataset is empty");
             }
 
-            dataset = dataset.OrderBy(x => x.Output.Date);
+            dataset = dataset.OrderBy(x => x.Output.Date).ToList();
             var firstFeature = dataset.FirstOrDefault();
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
 
-            var trainingData = dataset.Take(trainingCount);//.Where(x => x.Output.Signal > 0.9m || x.Output.Signal < 0.1m);
-            var testData = dataset.Skip(trainingCount);
+            var trainingData = dataset.Take(trainingCount).ToList();//.Where(x => x.Output.Signal > 0.9m || x.Output.Signal < 0.1m);
+            var testData = dataset.Skip(trainingCount).ToList();
 
             _network = new DeepBeliefNetwork(new BernoulliFunction(), 
                 firstFeature.Input.Data.Length, 
-                firstFeature.Input.Data.Length * 5,
+                firstFeature.Input.Data.Length * 2,
                 //firstFeature.Input.Data.Length * 2,
                 //firstFeature.Input.Data.Length * 2,
                 firstFeature.Input.Data.Length,
@@ -156,7 +154,7 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
             var teacher = new BackPropagationLearning(_network)
             {
-                LearningRate = 0.005,
+                LearningRate = 0.01,
                 Momentum = 0.1
                 
             };
@@ -260,20 +258,19 @@ namespace GimmeMillions.Domain.ML.Candlestick
             }
 
             var activationFunction = new BernoulliFunction();
-            _averageGain = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose > 0.0m)
-                .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
-            _averageLoss = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose <= 0.0m)
-                .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
 
-           // var filteredDataset = trainingData.Where(x => (double)Math.Abs(x.Output.PercentChangeFromPreviousClose) < _averageGain);
+            _medianGain = (double)trainingData.OrderBy(x => x.Output.PercentChangeFromPreviousClose)
+                .ToList()[trainingData.Count / 2].Output.PercentChangeFromPreviousClose;
+
+            _averageGain = (double)trainingData.Average(x => Math.Abs((double)x.Output.PercentChangeFromPreviousClose - _medianGain));
+            //_medianGain = (double)trainingData.Average(x => x.Output.PercentChangeFromPreviousClose);
+            // var filteredDataset = trainingData.Where(x => (double)Math.Abs(x.Output.PercentChangeFromPreviousClose) < _averageGain);
 
             inputs = dataset.Select(x => x.Input.Data).ToArray();
             output = dataset.Select(x =>
             {
-                double target = activationFunction.Function(x.Output.PercentChangeFromPreviousClose > 0.0m ?
-                    (double)x.Output.PercentChangeFromPreviousClose / (_averageGain) :
-                    (double)x.Output.PercentChangeFromPreviousClose / (_averageLoss));
-                //double target = x.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0;
+                //double target = activationFunction.Function(((double)x.Output.PercentChangeFromPreviousClose - _medianGain) / _averageGain);
+                double target = (double)x.Output.PercentChangeFromPreviousClose > _medianGain ? 1.0 : 0.0;
                 return new double[] {
                     target,
                     1.0 - target,
@@ -295,18 +292,18 @@ namespace GimmeMillions.Domain.ML.Candlestick
             foreach (var testSample in testData)
             {
                 var prediction = network.Compute(testSample.Input.Data);
-                double target = activationFunction.Function(testSample.Output.PercentChangeFromPreviousClose > 0.0m ?
-                   (double)testSample.Output.PercentChangeFromPreviousClose / (_averageGain) :
-                   (double)testSample.Output.PercentChangeFromPreviousClose / (_averageLoss));
+                //double target = activationFunction.Function(testSample.Output.PercentChangeFromPreviousClose > _medianGain ?
+                //   (double)testSample.Output.PercentChangeFromPreviousClose / (_averageGain) :
+                //   (double)testSample.Output.PercentChangeFromPreviousClose / (_averageLoss));
+                //error += Math.Abs(target - prediction[0]) + Math.Abs(1.0 - target - prediction[1]);
 
-                error += Math.Abs(target - prediction[0]) + Math.Abs(1.0 - target - prediction[1]);
                 //predictionResults.Add((prediction[0], prediction[1], Math.Abs(prediction[0] - prediction[1]),
                 //        testSample.Output.Signal > 0.5m ? 1.0 : 0.0));
                 double confidence = Math.Abs(prediction[0] - prediction[1]);
                 confidence = prediction[2];
 
                 predictionResults.Add((prediction[0], prediction[1], confidence,
-                        testSample.Output.PercentChangeFromPreviousClose > 0.0m ? 1.0 : 0.0));
+                        (double)testSample.Output.PercentChangeFromPreviousClose > _medianGain ? 1.0 : 0.0));
 
                 //biasSum += prediction[2];
             }
@@ -314,19 +311,27 @@ namespace GimmeMillions.Domain.ML.Candlestick
             predictionResults = predictionResults.OrderByDescending(x => x.Confidence).ToList();
             var runningAccuracy = new List<double>();
             double correct = 0.0;
+            int TP = 0, TN = 0;
             int i = 0;
             foreach (var result in predictionResults)
             {
-                if ((result.PredictedHighSignal > highThreshold && result.ActualSignal > highThreshold) || 
-                    (result.PredictedHighSignal < lowThreshold && result.ActualSignal < lowThreshold))
+                if (result.PredictedHighSignal > highThreshold && result.ActualSignal > highThreshold)
+                {
                     correct++;
+                    TP++;
+                }
+                if (result.PredictedHighSignal < lowThreshold && result.ActualSignal < lowThreshold)
+                {
+                    correct++;
+                    TN++;
+                }
 
                 runningAccuracy.Add(correct / (double)(i + 1));
                 i++;
             }
 
             if(verbose)
-            {
+            { 
                 var accuracyByPercentile = new double[] { 0.01, 0.05, 0.10, 0.25, 0.50, 1.0 };
                 for (i = 0; i < accuracyByPercentile.Length; ++i)
                 {
@@ -338,6 +343,8 @@ namespace GimmeMillions.Domain.ML.Candlestick
 
                     Console.WriteLine($"\t{accuracyByPercentile[i] * 100.0}%: {runningAccuracy[index]}, Conf: {predictionResults[index].Confidence}");
                 }
+
+                Console.WriteLine($"\tTP: {TP}, TN: {TN}");
             }
            
             //return the top 50% accuracy

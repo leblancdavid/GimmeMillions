@@ -27,10 +27,10 @@ namespace ModelTrainer
 
             //trainer.Train("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Futures.dnn", 20000);
             //730 = 365 x 2, basically two years of historical data should be good enough
-            //trainer.TrainFutures("Futures.dnn", 1200);
+            trainer.TrainFutures("Futures.dnn", 1200);
             //trainer.TrainStocks("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Stocks.dnn", 730);
-            trainer.LoadModel("Futures.dnn");
-            trainer.Evaluate("model_results.csv", 500, "DIA");
+            //trainer.LoadModel("Futures.dnn");
+            Console.WriteLine($"Total accuracy DIA: {trainer.Evaluate("trainingResults.csv", 500, "DIA")}");
         }
 
     }
