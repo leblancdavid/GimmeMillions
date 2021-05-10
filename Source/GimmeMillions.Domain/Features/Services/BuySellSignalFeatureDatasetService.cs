@@ -476,6 +476,11 @@ namespace GimmeMillions.Domain.Features
                                 signalCheck.Add((double)signal);
                                 priceCheck.Add((double)sample.Close);
                             }
+                            else
+                            {
+                                //failed filter
+                                var test = output.Close;
+                            }
                         }
                         ++j;
                     }
