@@ -92,10 +92,8 @@ namespace GimmeMillions.Domain.Stocks
 
                 var text = $"{rec.Symbol}, " +
                         $"({Math.Round(rec.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
-                       $"gain: {Math.Round(rec.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                       $"high: {Math.Round(rec.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                       $"loss: {Math.Round(rec.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                       $"low: {Math.Round(rec.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                       $"high: {Math.Round(rec.Prediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(rec.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                       $"low: {Math.Round(rec.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(rec.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, ";
                 _logger.LogInformation($"Updating {symbol}: {text}");
                 recommendations.Add(rec);
                 lock (saveLock)
@@ -169,13 +167,11 @@ namespace GimmeMillions.Domain.Stocks
                     var rec = new StockRecommendation(_systemId, date, symbol,
                         (decimal)result.PredictedHigh, (decimal)result.PredictedLow,
                         (decimal)result.Sentiment, lastStock.Close);
-                    
+
                     var text = $"{rec.Symbol}, " +
-                        $"({Math.Round(rec.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
-                       $"gain: {Math.Round(rec.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                       $"high: {Math.Round(rec.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                       $"loss: {Math.Round(rec.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                       $"low: {Math.Round(rec.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                         $"({Math.Round(rec.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
+                        $"high: {Math.Round(rec.Prediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(rec.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                        $"low: {Math.Round(rec.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(rec.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, ";
                     _logger?.LogInformation($"Updating {symbol}: {text}");
 
                     recommendations.Add(rec);
