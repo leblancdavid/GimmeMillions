@@ -19,9 +19,6 @@ namespace RecommendationMaker
 
         public class Options
         {
-            [Option('w', "watchlist", Required = false, HelpText = "The watchlist file to pick from for recommendations")]
-            public string WatchlistFile { get; set; }
-
             [Option('d', "date", Required = false, HelpText = "The date to make prediction")]
             public string Date { get; set; }
 
@@ -43,7 +40,6 @@ namespace RecommendationMaker
             IStockRecommendationSystem<FeatureVector> recommendationSystem = null;
             IStockRecommendationSystem<FeatureVector> futuresRecommendationSystem = null;
             var date = DateTime.Today;
-            string model = "EgyptianMau";
             var logger = LoggerFactory.Create(x => x.AddConsole()).CreateLogger<Program>();
             Parser.Default.ParseArguments<Options>(args)
                    .WithParsed<Options>(o =>
@@ -55,19 +51,19 @@ namespace RecommendationMaker
                        var recommendationRepo = new SQLStockRecommendationRepository(optionsBuilder.Options);
 
                        var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdApiKey), 
-                           new StockSymbolsFile(o.WatchlistFile));
-                       recommendationSystem = RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(stockAccess, recommendationRepo,
-                            $"{o.PathToModel}/Stocks", logger);
+                           new StockSymbolsFile("nasdaq_screener.csv"));
+                       recommendationSystem = RecommendationSystemFactory.GetJavaneseRecommendationSystem(stockAccess, recommendationRepo,
+                            $"{o.PathToModel}/StocksModel", logger);
                        if (recommendationSystem == null)
                        {
-                           Console.WriteLine($"Unable to retrieve stocks model at {o.PathToModel}/Stocks");
+                           Console.WriteLine($"Unable to retrieve stocks model at {o.PathToModel}/StocksModel");
                        }
 
-                       futuresRecommendationSystem = RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(stockAccess, recommendationRepo,
-                            $"{o.PathToModel}/Futures", logger);
+                       futuresRecommendationSystem = RecommendationSystemFactory.GetJavaneseRecommendationSystem(stockAccess, recommendationRepo,
+                            $"{o.PathToModel}/FuturesModel", logger);
                        if (futuresRecommendationSystem == null)
                        {
-                           Console.WriteLine($"Unable to retrieve futures model at {o.PathToModel}/Futures");
+                           Console.WriteLine($"Unable to retrieve futures model at {o.PathToModel}/FuturesModel");
                        }
 
                        if (!string.IsNullOrEmpty(o.Date))
@@ -91,59 +87,18 @@ namespace RecommendationMaker
                 return;
             }
 
-            RunFuturesRecommendations(futuresRecommendationSystem, model, date);
-            RunCryptoRecommendations(recommendationSystem, model, date);
-            RunDailyRecommendations(recommendationSystem, stockList, model, date);
+            RunFuturesRecommendations(futuresRecommendationSystem, date);
+            //RunCryptoRecommendations(recommendationSystem, date);
+            RunDailyRecommendations(recommendationSystem, stockList, date);
 
         }
 
-        private static void RunCryptoRecommendations(IStockRecommendationSystem<FeatureVector> recommendationSystem,
-            string model, DateTime date)
+        private static void RunFuturesRecommendations(IStockRecommendationSystem<FeatureVector> recommendationSystem, DateTime date)
         {
             IEnumerable<StockRecommendation> recommendations;
             var stockList = new List<string>()
             {
-                "BTC-USD",
-                "ETH-USD",
-                "XRP-USD",
-                "LINK-USD",
-            };
-
-            recommendations = recommendationSystem.RunRecommendationsFor(stockList, date, null)
-                .OrderByDescending(x => x.Sentiment).ToList();
-
-            using (System.IO.StreamWriter file =
-            new System.IO.StreamWriter($"crypto-predictions"))
-            {
-                string text = $"Stock recommendation for {date.ToString("MM/dd/yyyy")}:";
-                Console.WriteLine(text);
-                //file.WriteLine(text);
-                int i = 0;
-                foreach (var r in recommendations)
-                {
-                    text = $"{r.Symbol}, " +
-                         $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
-                        $"gain: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"high: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                        $"loss: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"low: {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
-                    Console.WriteLine(text);
-                    //if(i < keepTop)
-                    //{
-                    file.WriteLine(text);
-                    //s}
-                    ++i;
-                }
-            }
-        }
-
-        private static void RunFuturesRecommendations(IStockRecommendationSystem<FeatureVector> recommendationSystem,
-            string model, DateTime date)
-        {
-            IEnumerable<StockRecommendation> recommendations;
-            var stockList = new List<string>()
-            {
-                "DIA", "QQQ", "SPY"
+                "DIA", "QQQ", "SPY", "RUT"
             };
 
             recommendations = recommendationSystem.RunRecommendationsFor(stockList, date, null);
@@ -159,10 +114,9 @@ namespace RecommendationMaker
                 {
                     text = $"{r.Symbol}, " +
                          $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
-                        $"gain: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"high: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                        $"loss: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"low: {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                        $"Sentiment: {Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%, " +
+                        $"High: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                        $"Low: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, ";
                     Console.WriteLine(text);
                     //if(i < keepTop)
                     //{
@@ -175,18 +129,17 @@ namespace RecommendationMaker
 
         private static void RunDailyRecommendations(IStockRecommendationSystem<FeatureVector> recommendationSystem,
             IEnumerable<string> stockList,
-            string model,
             DateTime date)
         {
             IEnumerable<StockRecommendation> recommendations;
-            var filter = new DefaultStockFilter(minVolume: 500000m, maxPercentHigh: 20.0m, maxPercentLow: 20.0m);
+            var filter = new DefaultStockFilter(minPrice: 10.0m);
             if (stockList.Any())
             {
-                recommendations = recommendationSystem.RunRecommendationsFor(stockList, date, null);
+                recommendations = recommendationSystem.RunRecommendationsFor(stockList, date, filter);
             }
             else
             {
-                recommendations = recommendationSystem.RunAllRecommendations(date, null);
+                recommendations = recommendationSystem.RunAllRecommendations(date, filter);
             }
 
             recommendations = recommendations.OrderByDescending(x => x.Sentiment).ToList();
@@ -200,11 +153,10 @@ namespace RecommendationMaker
                 foreach (var r in recommendations)
                 {
                     text = $"{r.Symbol}, " +
-                        $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
-                        $"gain: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"high: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                        $"loss: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"low: {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                         $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
+                        $"Sentiment: {Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%, " +
+                        $"High: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                        $"Low: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, ";
                     Console.WriteLine(text);
                     //if(i < keepTop)
                     //{
@@ -225,11 +177,10 @@ namespace RecommendationMaker
                 foreach (var r in recommendations)
                 {
                     text = $"{r.Symbol}, " +
-                        $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
-                        $"gain: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"high: {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                        $"loss: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                        $"low: {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                         $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
+                        $"Sentiment: {Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%, " +
+                        $"High: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                        $"Low: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, ";
                     Console.WriteLine(text);
                     //if(i < keepTop)
                     //{

@@ -17,25 +17,30 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
         private readonly HttpClient _client = new HttpClient();
         private object _throttleLock = new object();
         private AmeritradeCredentials _credentials;
-        public TDAmeritradeApiClient(AmeritradeCredentials credentials)
+        private bool _useAuthentication = false;
+        public TDAmeritradeApiClient(AmeritradeCredentials credentials, bool useAuthentication = false)
         {
             _credentials = credentials;
+            _useAuthentication = useAuthentication;
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _credentials.Token);
+            if(_useAuthentication)
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _credentials.Token);
         }
 
-        public TDAmeritradeApiClient(string apiKey)
+        public TDAmeritradeApiClient(string apiKey, bool useAuthentication = false)
         {
-            _credentials = AmeritradeCredentials.Read($"{apiKey}.json");
+            //_credentials = AmeritradeCredentials.Read($"{apiKey}.json");
+            _useAuthentication = useAuthentication;
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _credentials.Token);
+            if (_useAuthentication)
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _credentials.Token);
         }
 
         public string ApiKey 
         { 
             get
             {
-                return _credentials.ApiKey;
+                return "I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP";
             }
         }
 
@@ -45,8 +50,8 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
             {
                 try
                 {
-                    Thread.Sleep(500);
-                    var url = request.GetRequestUrl(!string.IsNullOrEmpty(_credentials.Token));
+                    Thread.Sleep(1000);
+                    var url = request.GetRequestUrl(_useAuthentication && !string.IsNullOrEmpty(_credentials.Token));
                     var result = Task.Run(async () => await _client.GetAsync(url)).Result;
                     if(result.StatusCode == HttpStatusCode.Unauthorized)
                     {
@@ -57,6 +62,10 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
                             return GetPriceHistory(request);
                         }
                         return authenticationResult;
+                    }
+                    if(!result.IsSuccessStatusCode)
+                    {
+                        return result;
                     }
                     return result;
                 }

@@ -69,15 +69,18 @@ namespace GimmeMillions.Domain.Stocks
                     //return;
                 }
 
-                stockData.Reverse();
-                if (filter != null && !filter.Pass(StockData.Combine(stockData.Take(_filterLength))))
+                if (filter != null && !filter.Pass(StockData.Combine(stockData.Skip(stockData.Count - _filterLength))))
                 {
                     continue;
                     //return;
                 }
-                var lastStock = stockData.First();
+                var lastStock = stockData.Last();
+                if (lastStock.Date < date.AddDays(-5.0))
+                {
+                    continue;
+                }
 
-                var feature = _featureDatasetService.GetFeatureVector(symbol, date);
+                var feature = _featureDatasetService.GetFeatureVector(stockData, date);
                 if (feature.IsFailure)
                 {
                     continue;
@@ -89,10 +92,8 @@ namespace GimmeMillions.Domain.Stocks
 
                 var text = $"{rec.Symbol}, " +
                         $"({Math.Round(rec.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
-                       $"gain: {Math.Round(rec.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                       $"high: {Math.Round(rec.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                       $"loss: {Math.Round(rec.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                       $"low: {Math.Round(rec.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                       $"high: {Math.Round(rec.Prediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(rec.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                       $"low: {Math.Round(rec.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(rec.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, ";
                 _logger.LogInformation($"Updating {symbol}: {text}");
                 recommendations.Add(rec);
                 lock (saveLock)
@@ -126,31 +127,39 @@ namespace GimmeMillions.Domain.Stocks
 
             _logger?.LogInformation($"Running recommendations for {date.ToString()}");
             var saveLock = new object();
-            try
+            //Parallel.ForEach(symbols, new ParallelOptions() { MaxDegreeOfParallelism = 2 }, symbol =>
+            foreach(var symbol in symbols)
             {
-                //Parallel.ForEach(symbols, new ParallelOptions() { MaxDegreeOfParallelism = 2 }, symbol =>
-                foreach(var symbol in symbols)
+                try
                 {
                     List<StockData> stockData;
                     stockData = _featureDatasetService.StockAccess.UpdateStocks(symbol, _featureDatasetService.Period).ToList();
 
                     if (!stockData.Any())
                     {
+                        _logger?.LogInformation($"{symbol}: No historical data found");
                         continue;
                         //return;
                     }
 
-                    stockData.Reverse();
-                    if (filter != null && !filter.Pass(StockData.Combine(stockData.Take(_filterLength))))
+                    if (filter != null && !filter.Pass(StockData.Combine(stockData.Skip(stockData.Count - _filterLength))))
                     {
+                        _logger?.LogInformation($"{symbol}: Does not pass filter requirements");
                         continue;
                         //return;
                     }
-                    var lastStock = stockData.First();
+                    var lastStock = stockData.Last();
 
-                    var feature = _featureDatasetService.GetFeatureVector(symbol, date);
+                    if (lastStock.Date < date.AddDays(-5.0))
+                    {
+                        _logger?.LogInformation($"{symbol}: Historical data is not up to date");
+                        continue;
+                    }
+
+                    var feature = _featureDatasetService.GetFeatureVector(stockData, date);
                     if (feature.IsFailure)
                     {
+                        _logger?.LogInformation($"{symbol}: Unable to compute the feature vector: {feature.Error}");
                         continue;
                         //return;
                     }
@@ -158,13 +167,11 @@ namespace GimmeMillions.Domain.Stocks
                     var rec = new StockRecommendation(_systemId, date, symbol,
                         (decimal)result.PredictedHigh, (decimal)result.PredictedLow,
                         (decimal)result.Sentiment, lastStock.Close);
-                    
+
                     var text = $"{rec.Symbol}, " +
-                        $"({Math.Round(rec.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
-                       $"gain: {Math.Round(rec.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                       $"high: {Math.Round(rec.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                       $"loss: {Math.Round(rec.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                       $"low: {Math.Round(rec.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                         $"({Math.Round(rec.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
+                        $"high: {Math.Round(rec.Prediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(rec.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                        $"low: {Math.Round(rec.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(rec.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, ";
                     _logger?.LogInformation($"Updating {symbol}: {text}");
 
                     recommendations.Add(rec);
@@ -178,13 +185,14 @@ namespace GimmeMillions.Domain.Stocks
                         }
                     }
                 }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(ex.Message);
+                    //throw new Exception(ex.Message);
+                }
                 //});
             }
-            catch(Exception ex)
-            {
-                _logger?.LogError(ex.Message);
-                throw new Exception(ex.Message);
-            }
+            
 
             return recommendations.ToList().OrderByDescending(x => x.Sentiment);
         }
@@ -271,8 +279,7 @@ namespace GimmeMillions.Domain.Stocks
                 return Result.Failure<StockRecommendation>($"No stock data found for {symbol}");
             }
 
-            stockData.Reverse();
-            var lastStock = stockData.First();
+            var lastStock = stockData.Last();
 
             var feature = _featureDatasetService.GetFeatureVector(symbol, date);
             if (feature.IsFailure)

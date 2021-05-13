@@ -12,18 +12,21 @@ namespace GimmeMillions.Domain.Features
     {
         public string Encoding { get; private set; }
         private decimal _fibThreshold = 0.025m;
+        private bool _includeVolume;
 
-        public FibonacciStockFeatureExtractor(decimal fibThreshold = 0.025m)
+        public FibonacciStockFeatureExtractor(decimal fibThreshold = 0.025m, bool includeVolume = true)
         {
             Encoding = "FibonacciFeatures";
             _fibThreshold = fibThreshold;
+            _includeVolume = includeVolume;
         }
 
         public double[] Extract(IEnumerable<(StockData Data, float Weight)> data)
         {
             var ordered = data.OrderByDescending(x => x.Data.Date).ToList();
 
-            var fib = GetOptimalFibonacciRetracement(ordered);
+            //var fib = GetOptimalFibonacciRetracement(ordered);
+            var fib = GetMinMaxFiboFibonacciRetracement(ordered);
             var feature = new List<double>();
             if(fib == null || !ordered.Any())
             {
@@ -36,9 +39,12 @@ namespace GimmeMillions.Domain.Features
             var fibIndex = fib.NearestFibonacci(lastbar.Data, out distance);
             feature.Add((double)fib.GetFibonacciValue(lastbar.Data));
             feature.Add((double)distance);
-            feature.Add(volumes[fibIndex]);
-
-            feature = feature.Concat(volumes).ToList();
+            if(_includeVolume)
+            {
+                feature.Add(volumes[fibIndex]);
+                feature = feature.Concat(volumes).ToList();
+            }
+                
             return feature.ToArray();
         }
 
@@ -62,6 +68,36 @@ namespace GimmeMillions.Domain.Features
             }
 
             return volumes;
+        }
+        
+        private FibonacciRetracement GetMinMaxFiboFibonacciRetracement(List<(StockData Data, float Weight)> data)
+        {
+            List<int> support, resistance;
+            GetPivots(data, out resistance, out support);
+
+            if(!support.Any() || !resistance.Any())
+            {
+                return new FibonacciRetracement(data.Max(x => x.Data.High), data.Min(x => x.Data.Low));
+            }
+
+            decimal maxHigh = 0.0m;
+            decimal minLow = decimal.MaxValue;
+            foreach (var r in resistance)
+            {
+                if (data[r].Data.High > maxHigh)
+                {
+                    maxHigh = data[r].Data.High;
+                }
+            }
+            foreach (var s in support)
+            {
+                if (data[s].Data.High < minLow)
+                {
+                    minLow = data[s].Data.Low;
+                }
+            }
+
+            return new FibonacciRetracement(maxHigh, minLow);
         }
 
         private FibonacciRetracement GetOptimalFibonacciRetracement(List<(StockData Data, float Weight)> data)
@@ -131,17 +167,13 @@ namespace GimmeMillions.Domain.Features
             for(int i = 2; i < data.Count - 2; ++i)
             {
                 if(data[i].Data.High > data[i - 1].Data.High && 
-                    data[i].Data.High > data[i - 2].Data.High &&
-                    data[i].Data.High > data[i + 1].Data.High &&
-                    data[i].Data.High > data[i + 2].Data.High)
+                    data[i].Data.High > data[i + 1].Data.High)
                 {
                     resistance.Add(i);
                 }
 
                 if (data[i].Data.Low < data[i - 1].Data.Low &&
-                    data[i].Data.Low < data[i - 2].Data.Low &&
-                    data[i].Data.Low < data[i + 1].Data.Low &&
-                    data[i].Data.Low < data[i + 2].Data.Low)
+                    data[i].Data.Low < data[i + 1].Data.Low)
                 {
                     support.Add(i);
                 }

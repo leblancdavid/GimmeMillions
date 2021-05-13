@@ -20,16 +20,17 @@ namespace ModelTrainer
 
             var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
-            var trainer = new HimalayanModelTrainer(
+            var trainer = new JavaneseModelTrainer(
                 new StockSymbolsFile("nasdaq_screener.csv"),
                 StockDataPeriod.Day,
-                9, 100, 12, 0);
+                9, 200, 12, 0, 5);
 
             //trainer.Train("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Futures.dnn", 20000);
             //730 = 365 x 2, basically two years of historical data should be good enough
-            trainer.TrainStocks("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Stocks.dnn", 730);
-            //trainer.LoadModel("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Futures.dnn");
-            trainer.Evaluate("model_results.csv", 500, "IZEA");
+            //trainer.TrainFutures("FuturesModel", 1000);
+            trainer.TrainStocks("StocksModel", 800);
+            //trainer.LoadModel("FuturesModel");
+            Console.WriteLine($"Total accuracy DIA: {trainer.Evaluate("trainingResults.csv", 500, "TSLA")}");
         }
 
     }

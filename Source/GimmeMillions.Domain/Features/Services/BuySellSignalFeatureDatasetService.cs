@@ -60,7 +60,8 @@ namespace GimmeMillions.Domain.Features
 
         public IEnumerable<(FeatureVector Input, StockData Output)> GetAllTrainingData(
             IStockFilter filter = null,
-            bool updateStocks = false, int historyLimit = 0)
+            bool updateStocks = false, int historyLimit = 0,
+            bool addMirroredSamples = false)
         {
             var trainingData = new ConcurrentBag<(FeatureVector Input, StockData Output)>();
             var stockSymbols = _stockRepository.GetSymbols();
@@ -80,11 +81,21 @@ namespace GimmeMillions.Domain.Features
                 {
                     continue;
                 }
-                var td = GetTrainingData(symbol, stocks, filter);
+                var td = GetTrainingData(symbol, stocks, filter).ToList();
+                if (addMirroredSamples)
+                {
+                    foreach (var data in stocks)
+                    {
+                        data.Invert();
+                    }
+                    td.AddRange(GetTrainingData(symbol, stocks, filter));
+                }
+
                 foreach (var sample in td)
                 {
                     trainingData.Add(sample);
                 }
+
                 //}
             }
 
@@ -150,7 +161,7 @@ namespace GimmeMillions.Domain.Features
                 //var outputStock = stocks.FirstOrDefault(x => x.Date.Date.Year == date.Year
                 //                && x.Date.Date.Month == date.Month
                 //                && x.Date.Date.Day == date.Day); 
-                var outputStock = stocks.FirstOrDefault(x => x.Date == date);
+                var outputStock = stocks.FirstOrDefault(x => x.Date.Date == date.Date);
                 int stockIndex = 0;
                 if (outputStock == null || date > stocks.Last().Date)
                 {
@@ -206,7 +217,8 @@ namespace GimmeMillions.Domain.Features
         public IEnumerable<(FeatureVector Input, StockData Output)> GetTrainingData(
             string symbol,
             IStockFilter filter = null,
-            bool updateStocks = false, int historyLimit = 0)
+            bool updateStocks = false, int historyLimit = 0,
+            bool addMirroredSamples = false)
         {
             var stocks = updateStocks ?
                    _stockRepository.UpdateStocks(symbol, Period, historyLimit).ToList() :
@@ -216,8 +228,16 @@ namespace GimmeMillions.Domain.Features
                 return new List<(FeatureVector Input, StockData Output)>();
             }
 
-
-            return GetTrainingData(symbol, filter == null ? stocks : stocks.Where(x => filter.Pass(x)).ToList(), filter);
+            var trainingData = GetTrainingData(symbol, stocks, filter).ToList();
+            if(addMirroredSamples)
+            {
+                foreach(var data in stocks)
+                {
+                    data.Invert();
+                }
+                trainingData.AddRange(GetTrainingData(symbol, stocks, filter));
+            }
+            return trainingData;
 
         }
 
@@ -420,40 +440,46 @@ namespace GimmeMillions.Domain.Features
                             signal = 1.0m;
                         if (signal < 0.0m)
                             signal = 0.0m;
-                        if (filter.Pass(sample))
+
+                        var data = GetData(symbol, sample.Date, stocks);
+                        if (data.IsSuccess)
                         {
-                            var data = GetData(symbol, sample.Date, stocks);
-                            if (data.IsSuccess)
+                            decimal high = 0.0m;
+                            decimal low = decimal.MaxValue;
+                            for (int l = j; l < inflectionIndex[i].Index; ++l)
                             {
-                                decimal high = 0.0m;
-                                decimal low = decimal.MaxValue;
-                                for (int l = j; l < inflectionIndex[i].Index; ++l)
+                                if (stocks[l].High > high)
                                 {
-                                    if (stocks[l].High > high)
-                                    {
-                                        high = stocks[l].High;
-                                    }
-                                    if (stocks[l].Low < low)
-                                    {
-                                        low = stocks[l].Low;
-                                    }
+                                    high = stocks[l].High;
                                 }
-
-                                int outputIndex = j + _predictionLength;
-                                if(outputIndex >= stocks.Count)
+                                if (stocks[l].Low < low)
                                 {
-                                    outputIndex = stocks.Count - 1;
+                                    low = stocks[l].Low;
                                 }
+                            }
 
-                                var output = new StockData(symbol, sample.Date, sample.Open, high, low,
-                                    stocks[outputIndex].Close,
-                                    stocks[outputIndex].AdjustedClose,
-                                    sample.Volume, sample.PreviousClose);
+                            int outputIndex = j + _predictionLength;
+                            if(outputIndex >= stocks.Count)
+                            {
+                                outputIndex = stocks.Count - 1;
+                            }
 
+                            var output = new StockData(symbol, sample.Date, sample.Open, high, low,
+                                stocks[outputIndex].Close,
+                                stocks[outputIndex].AdjustedClose,
+                                sample.Volume, sample.PreviousClose);
+
+                            if(filter.Pass(output))
+                            {
                                 output.Signal = signal;
                                 trainingData.Add((data.Value, output));
                                 signalCheck.Add((double)signal);
                                 priceCheck.Add((double)sample.Close);
+                            }
+                            else
+                            {
+                                //failed filter
+                                var test = output.Close;
                             }
                         }
                         ++j;
@@ -543,6 +569,15 @@ namespace GimmeMillions.Domain.Features
             //stocks.RemoveAt(stocks.Count - 1);
             last = stocks.Last();
             return GetData(symbol, date, stocks);
+        }
+
+        public Result<FeatureVector> GetFeatureVector(IEnumerable<StockData> data, DateTime date)
+        {
+            if(!data.Any())
+            {
+                return Result.Failure<FeatureVector>("No data provided to compute feature vector");
+            }
+            return GetData(data.First().Symbol, date, data.ToList());
         }
     }
 }
