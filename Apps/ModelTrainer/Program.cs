@@ -9,18 +9,31 @@ using System;
 
 namespace ModelTrainer
 {
+    
     class Program
     {
+        public class Options
+        {
+            [Option('a', "td-access", Required = true, HelpText = "The ameritrade access api key")]
+            public string TdApiKey { get; set; }
+        }
+
         static void Main(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<GimmeMillionsContext>();
             optionsBuilder.UseSqlite($"Data Source=gm.db");
             var context = new GimmeMillionsContext(optionsBuilder.Options);
             context.Database.Migrate();
+            string apiKey = "";
+            Parser.Default.ParseArguments<Options>(args)
+                   .WithParsed<Options>(o =>
+                   {
+                       apiKey = o.TdApiKey;
+                   });
 
             var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
-            var trainer = new JavaneseModelTrainer(
+            var trainer = new JavaneseModelTrainer(apiKey,
                 new StockSymbolsFile("nasdaq_screener.csv"),
                 StockDataPeriod.Day,
                 9, 200, 12, 0, 5);

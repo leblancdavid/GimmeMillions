@@ -30,6 +30,7 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
         public TDAmeritradeApiClient(string apiKey, bool useAuthentication = false)
         {
             //_credentials = AmeritradeCredentials.Read($"{apiKey}.json");
+            _credentials = new AmeritradeCredentials(apiKey, "", "");
             _useAuthentication = useAuthentication;
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
             if (_useAuthentication)
@@ -40,7 +41,7 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
         { 
             get
             {
-                return "I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP";
+                return _credentials.ApiKey;
             }
         }
 
@@ -50,7 +51,7 @@ namespace GimmeMillions.DataAccess.Clients.TDAmeritrade
             {
                 try
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                     var url = request.GetRequestUrl(_useAuthentication && !string.IsNullOrEmpty(_credentials.Token));
                     var result = Task.Run(async () => await _client.GetAsync(url)).Result;
                     if(result.StatusCode == HttpStatusCode.Unauthorized)
