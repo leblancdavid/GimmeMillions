@@ -22,7 +22,9 @@ namespace ModelTrainer
         private StockDataPeriod _period;
         private int _numStockSamples = 100;
         private int _predictionLength = 5;
+        private string _apiKey;
         public HimalayanModelTrainer(
+            string apiKey,
             IStockSymbolsRepository stockSymbolsRepository,
             StockDataPeriod period,
             int kSize = 15,
@@ -31,6 +33,7 @@ namespace ModelTrainer
             int offset = 0,
             int predictionLength = 3)
         {
+            _apiKey = apiKey;
             _stockSymbolsRepository = stockSymbolsRepository;
             _period = period;
             _numStockSamples = numStockSamples;
@@ -104,7 +107,7 @@ namespace ModelTrainer
             int signalOffset = 0,
             int predictionLength = 5)
         {
-            var ameritradeClient = new TDAmeritradeApiClient("I12BJE0PV9ARIGTWWOPJGCGRWPBUJLRP");
+            var ameritradeClient = new TDAmeritradeApiClient(_apiKey);
             var stocksRepo = new TDAmeritradeStockAccessService(ameritradeClient, _stockSymbolsRepository);
             var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
             {
