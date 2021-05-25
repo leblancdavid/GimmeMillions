@@ -65,21 +65,29 @@ namespace GimmeMillions.Domain.Stocks
 
                 if (!stockData.Any())
                 {
+                    _logger?.LogInformation($"{symbol}: No historical data found");
                     continue;
                     //return;
                 }
 
-                stockData.Reverse();
-                if (filter != null && !filter.Pass(StockData.Combine(stockData.Take(_filterLength))))
+                if (filter != null && !filter.Pass(StockData.Combine(stockData.Skip(stockData.Count - _filterLength))))
                 {
+                    _logger?.LogInformation($"{symbol}: Does not pass filter requirements");
                     continue;
                     //return;
                 }
-                var lastStock = stockData.First();
 
-                var feature = _featureDatasetService.GetFeatureVector(symbol, date);
+                var lastStock = stockData.Last();
+                if (lastStock.Date < date.AddDays(-5.0))
+                {
+                    _logger?.LogInformation($"{symbol}: Historical data is not up to date");
+                    continue;
+                }
+
+                var feature = _featureDatasetService.GetData(symbol, date, stockData);
                 if (feature.IsFailure)
                 {
+                    _logger?.LogInformation($"{symbol}: Unable to compute the feature vector: {feature.Error}");
                     continue;
                     //return;
                 }
@@ -137,21 +145,28 @@ namespace GimmeMillions.Domain.Stocks
 
                     if (!stockData.Any())
                     {
+                        _logger?.LogInformation($"{symbol}: No historical data found");
                         continue;
                         //return;
                     }
 
-                    stockData.Reverse();
-                    if (filter != null && !filter.Pass(StockData.Combine(stockData.Take(_filterLength))))
+                    if (filter != null && !filter.Pass(StockData.Combine(stockData.Skip(stockData.Count - _filterLength))))
                     {
+                        _logger?.LogInformation($"{symbol}: Does not pass filter requirements");
                         continue;
                         //return;
                     }
-                    var lastStock = stockData.First();
+                    var lastStock = stockData.Last();
+                    if (lastStock.Date < date.AddDays(-5.0))
+                    {
+                        _logger?.LogInformation($"{symbol}: Historical data is not up to date");
+                        continue;
+                    }
 
                     var feature = _featureDatasetService.GetData(symbol, date, stockData);
                     if (feature.IsFailure)
                     {
+                        _logger?.LogInformation($"{symbol}: Unable to compute the feature vector: {feature.Error}");
                         continue;
                         //return;
                     }
@@ -273,8 +288,7 @@ namespace GimmeMillions.Domain.Stocks
                 return Result.Failure<StockRecommendation>($"No stock data found for {symbol}");
             }
 
-            stockData.Reverse();
-            var lastStock = stockData.First();
+            var lastStock = stockData.Last();
 
             var feature = _featureDatasetService.GetData(symbol, date, stockData);
             if (feature.IsFailure)
