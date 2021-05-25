@@ -1,9 +1,11 @@
 ﻿using GimmeMillions.Domain.Features;
+using GimmeMillions.Domain.Features.Extractors;
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 
 namespace GimmeMillions.DataAccess.Stocks
 {
@@ -89,6 +91,90 @@ namespace GimmeMillions.DataAccess.Stocks
                 return recommendationSystem;
             }
             catch(Exception ex)
+            {
+                logger?.LogError(ex.Message);
+                throw ex;
+            }
+        }
+
+        public static IStockRecommendationSystem<FeatureVector> GetHimalayanRecommendationSystem(
+            IStockAccessService stocksRepo,
+            IStockRecommendationRepository stockRecommendationRepository,
+            string pathToModel, ILogger logger)
+        {
+            try
+            {
+                var period = StockDataPeriod.Day;
+                var numStockSamples = 80;
+                var kernelSize = 9;
+                var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
+                {
+                    new FibonacciStockFeatureExtractor(),
+                    new TrendStockFeatureExtractor(numStockSamples / 2),
+                    new StockIndicatorsFeatureExtractionV3(12,
+                    numStockSamples,
+                    (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
+                    (int)(numStockSamples * 0.8), 5,
+                    (int)(numStockSamples * 0.8), 5,
+                    (int)(numStockSamples * 0.8), 5,
+                    false)
+                });
+                
+                var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+                    period, numStockSamples, kernelSize);
+                var model = new DeepLearningStockRangePredictorModel();
+                int filterLength = 3;
+                var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
+                    pathToModel, "himalayan", filterLength, logger);
+
+                model.Load(pathToModel);
+                recommendationSystem.AddModel(model);
+
+                return recommendationSystem;
+            }
+            catch (Exception ex)
+            {
+                logger?.LogError(ex.Message);
+                throw ex;
+            }
+        }
+
+        public static IStockRecommendationSystem<FeatureVector> GetJavaneseRecommendationSystem(
+            IStockAccessService stocksRepo,
+            IStockRecommendationRepository stockRecommendationRepository,
+            string pathToModel, ILogger logger)
+        {
+            try
+            {
+                var period = StockDataPeriod.Day;
+                var numStockSamples = 200;
+                var kernelSize = 9;
+                var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
+                {
+                    //new SupportResistanceStockFeatureExtractor(),
+                    //new FibonacciStockFeatureExtractor(),
+                    new MACDHistogramFeatureExtraction(10),
+                    new RSIFeatureExtractor(10),
+                    new VWAPFeatureExtraction(10),
+                    new CMFFeatureExtraction(10),
+                    new BollingerBandFeatureExtraction(10),
+                    new TrendStockFeatureExtractor(10),
+                    new SimpleMovingAverageFeatureExtractor(20)
+                });
+
+                var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+                    period, numStockSamples, kernelSize);
+                var model = new MLStockRangePredictorModelV2();
+                int filterLength = 3;
+                var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
+                    pathToModel, "javanese", filterLength, logger);
+
+                model.Load(pathToModel);
+                recommendationSystem.AddModel(model);
+
+                return recommendationSystem;
+            }
+            catch (Exception ex)
             {
                 logger?.LogError(ex.Message);
                 throw ex;

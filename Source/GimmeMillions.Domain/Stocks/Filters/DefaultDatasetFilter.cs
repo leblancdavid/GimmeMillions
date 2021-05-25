@@ -19,8 +19,8 @@ namespace GimmeMillions.Domain.Stocks.Filters
         private decimal _maxPercentLow;
         public DefaultStockFilter(DateTime start = default(DateTime),
             DateTime end = default(DateTime),
-            decimal minPrice = 0.0m, decimal maxPrice = decimal.MaxValue,
-            decimal minVolume = 0.0m, decimal maxVolume = decimal.MaxValue,
+            decimal minPrice = decimal.MinValue, decimal maxPrice = decimal.MaxValue,
+            decimal minVolume = decimal.MinValue, decimal maxVolume = decimal.MaxValue,
             decimal maxPercentHigh = decimal.MaxValue,
             decimal maxPercentLow = decimal.MaxValue)
         {

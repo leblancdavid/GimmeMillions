@@ -1,0 +1,7 @@
+{
+  "maxEpochs": 400,
+  "batchSize": 1000,
+  "outputScaling": 2.0,
+  "averageGain": 1.7009310648060947,
+  "averageLoss": 1.8824675138348015
+}

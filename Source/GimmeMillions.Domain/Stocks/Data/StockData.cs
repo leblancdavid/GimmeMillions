@@ -183,6 +183,14 @@ namespace GimmeMillions.Domain.Stocks
             }
         }
 
+        public decimal PriceNormalizedVolume
+        {
+            get
+            {
+                return Math.Abs(Average * Volume);
+            }
+        }
+
         public decimal Signal { get; set; }
 
         public StockData(string symbol, DateTime date, StockDataPeriod period,
@@ -197,7 +205,7 @@ namespace GimmeMillions.Domain.Stocks
             Close = close;
             AdjustedClose = adjClose;
             PreviousClose = open;
-            Volume = volume;
+            Volume = volume + 1; //ensure volume is always at least 1
             AveragePercentPeriodRange = PercentPeriodRange;
         }
 
@@ -213,7 +221,7 @@ namespace GimmeMillions.Domain.Stocks
             Close = close;
             AdjustedClose = adjClose;
             PreviousClose = previousClose;
-            Volume = volume;
+            Volume = volume + 1; //ensure volume is always at least 1
             AveragePercentPeriodRange = PercentPeriodRange;
             Period = StockDataPeriod.Day;
         }
@@ -231,9 +239,30 @@ namespace GimmeMillions.Domain.Stocks
             Close = close;
             AdjustedClose = adjClose;
             PreviousClose = previousClose;
-            Volume = volume;
+            Volume = volume + 1; //ensure volume is always at least 1
             AveragePercentPeriodRange = PercentPeriodRange;
             Period = StockDataPeriod.Day;
+        }
+
+        public void ApplyScaling(decimal scale)
+        {
+            Open *= scale;
+            High *= scale;
+            Low *= scale;
+            Close *= scale;
+            AdjustedClose *= scale;
+            PreviousClose *= scale;
+        }
+
+        public void Invert()
+        {
+            Open *= -1.0m;
+            var newHigh = -1.0m * Low;
+            Low *= -1.0m * High;
+            High *= newHigh;
+            Close *= -1.0m;
+            AdjustedClose *= -1.0m;
+            PreviousClose *= -1.0m;
         }
 
         private StockData() { } //default constructor
@@ -242,7 +271,7 @@ namespace GimmeMillions.Domain.Stocks
         {
             decimal high = stockDatas.Max(x => x.High);
             decimal low = stockDatas.Min(x => x.Low);
-            decimal volume = stockDatas.Sum(x => x.Volume);
+            decimal volume = stockDatas.Sum(x => x.Volume) + 1; //ensure volume is always at least 1
             DateTime date = stockDatas.Min(x => x.Date);
             DateTime endDate = stockDatas.Max(x => x.Date);
 
