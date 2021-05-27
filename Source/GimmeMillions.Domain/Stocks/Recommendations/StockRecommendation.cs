@@ -1,14 +1,17 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace GimmeMillions.Domain.Stocks
 {
     public class StockRecommendation
     {
         public int Id { get; private set; }
-        public string SystemId { get; private set; }
-        public StockData LastData { get; private set; }
-        public DateTime DateUpdated { get; private set; }
-        public DateTime Date { get; private set; }
+        public string SystemId { get; set; }
+        public StockData LastData { get; set; }
+        public DateTime DateUpdated { get; set; }
+        public DateTime Date { get; set; }
+
+        [JsonIgnore]
         public string Symbol 
         { 
             get
@@ -16,7 +19,9 @@ namespace GimmeMillions.Domain.Stocks
                 return LastData.Symbol;
             }
         }
-        public decimal Prediction { get; private set; }
+        public decimal Prediction { get; set; }
+
+        [JsonIgnore]
         public decimal PredictedPriceTarget
         { 
             get
@@ -24,7 +29,9 @@ namespace GimmeMillions.Domain.Stocks
                 return LastData.Close * (1.0m + Prediction / 100.0m);
             }
         }
-        public decimal LowPrediction { get; private set; }
+        public decimal LowPrediction { get; set; }
+
+        [JsonIgnore]
         public decimal PredictedLowTarget
         {
             get
@@ -40,7 +47,7 @@ namespace GimmeMillions.Domain.Stocks
             }
         }
 
-        public decimal Sentiment { get; private set; }
+        public decimal Sentiment { get; set; }
         public StockRecommendation(string systemId, decimal prediction, DateTime date, StockData lastData)
         {
             SystemId = systemId;

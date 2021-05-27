@@ -83,15 +83,22 @@ namespace GimmeMillions.Database
 
                 if (symbolHistory != null)
                 {
-                    context.RecommendationHistories.Remove(symbolHistory);
+                    symbolHistory.HistoricalDataStr = history.HistoricalDataStr;
+
+                    symbolHistory.LoadData();
+                    symbolHistory.LastUpdated = history.LastUpdated;
+                }
+                else
+                {
+                    context.RecommendationHistories.Add(history);
                 }
 
-                context.RecommendationHistories.Add(symbolHistory);
-
-                var r = history.HistoricalData.LastOrDefault();
+                var r = history.LastRecommendation;
                 if(r != null)
                 {
-                    var lastPrediction = context.LastRecommendations.FirstOrDefault(x => x.Symbol == history.Symbol && x.SystemId == history.SystemId);
+                    var lastPrediction = context.LastRecommendations
+                        .Include(x => x.LastData)
+                        .FirstOrDefault(x => x.LastData.Symbol == history.Symbol && x.SystemId == history.SystemId);
                     if (lastPrediction != null)
                     {
 
@@ -188,12 +195,13 @@ namespace GimmeMillions.Database
 
             var history = context.RecommendationHistories.FirstOrDefault(x => x.Symbol == symbol &&
                     x.SystemId == systemId);
+
             if (history != null)
             {
+                history.LoadData();
                 return Result.Success(history);
             }
 
-            history.LoadData();
             return Result.Failure<StockRecommendationHistory>($"No recommendation history found for {symbol} for sytem {systemId}");
         }
 

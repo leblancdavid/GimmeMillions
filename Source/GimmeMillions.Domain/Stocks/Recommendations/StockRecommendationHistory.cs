@@ -60,6 +60,7 @@ namespace GimmeMillions.Domain.Stocks.Recommendations
 
             _historicalData.Add(recommendation);
             _historicalData = _historicalData.OrderBy(x => x.Date).ToList();
+            _historicalDataStr = Stringify(_historicalData);
         }
 
         public StockRecommendationHistory(string systemId, string symbol, string dataStr)

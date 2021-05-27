@@ -24,7 +24,7 @@ namespace GimmeMillions.Domain.Stocks
         private string _pathToModels;
         private string _systemId;
         private int _filterLength = 3;
-        private int _historyLength = 10;
+        private int _historyLength = 5;
         private ILogger _logger;
 
         public StockRangeRecommendationSystem(IFeatureDatasetService<FeatureVector> featureDatasetService,

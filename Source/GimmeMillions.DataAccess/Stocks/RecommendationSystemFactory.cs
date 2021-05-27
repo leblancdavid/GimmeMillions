@@ -23,7 +23,7 @@ namespace GimmeMillions.DataAccess.Stocks
             var model = new MLStockRangePredictorModel();
             int filterLength = 3;
             var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
-                pathToModel, "cat", filterLength, 10, null);
+                pathToModel, "cat", filterLength, 5, null);
 
             model.Load(pathToModel);
             recommendationSystem.AddModel(model);
@@ -53,7 +53,7 @@ namespace GimmeMillions.DataAccess.Stocks
             var model = new MLStockRangePredictorModel();
             int filterLength = 3;
             var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
-                pathToModel, "donskoy", filterLength, 10, null);
+                pathToModel, "donskoy", filterLength, 5, null);
 
             model.Load(pathToModel);
             recommendationSystem.AddModel(model);
@@ -84,7 +84,7 @@ namespace GimmeMillions.DataAccess.Stocks
                 var model = new MLStockRangePredictorModel();
                 int filterLength = 3;
                 var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
-                    pathToModel, "egyptianMau", filterLength, 10, logger);
+                    pathToModel, "egyptianMau", filterLength, 5, logger);
 
                 model.Load(pathToModel);
                 recommendationSystem.AddModel(model);
@@ -126,7 +126,7 @@ namespace GimmeMillions.DataAccess.Stocks
                 var model = new DeepLearningStockRangePredictorModel();
                 int filterLength = 3;
                 var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
-                    pathToModel, "himalayan", filterLength, 10, logger);
+                    pathToModel, "himalayan", filterLength, 5, logger);
 
                 model.Load(pathToModel);
                 recommendationSystem.AddModel(model);
@@ -168,7 +168,7 @@ namespace GimmeMillions.DataAccess.Stocks
                 var model = new MLStockRangePredictorModelV2();
                 int filterLength = 3;
                 var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
-                    pathToModel, "javanese", filterLength, 10, logger);
+                    pathToModel, "javanese", filterLength, 5, logger);
 
                 model.Load(pathToModel);
                 recommendationSystem.AddModel(model);
@@ -204,7 +204,7 @@ namespace GimmeMillions.DataAccess.Stocks
             var model = new MLStockRangePredictorModel();
             int filterLength = 3;
             var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
-                pathToModel, "donskoy", filterLength, 10, null);
+                pathToModel, "donskoy", filterLength, 5, null);
 
             model.Load(pathToModel);
             recommendationSystem.AddModel(model);
