@@ -1,15 +1,15 @@
 ﻿using GimmeMillions.Domain.Authentication;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.Domain.Stocks.Recommendations;
 using Microsoft.EntityFrameworkCore;
 
 namespace GimmeMillions.Database
 {
     public class GimmeMillionsContext : DbContext
     {
-        public DbSet<FeatureVector> FeatureVectors { get; set; }
-        public DbSet<StockHistory> StockHistories { get; set; }
-        public DbSet<StockRecommendation> StockRecommendations { get; set; }
+        public DbSet<StockRecommendation> LastRecommendations { get; set; }
+        public DbSet<StockRecommendationHistory> RecommendationHistories { get; set; }
         public DbSet<User> Users { get; set; }
 
         public GimmeMillionsContext(DbContextOptions options)
@@ -27,15 +27,12 @@ namespace GimmeMillions.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<FeatureVector>()
-                .Ignore(x => x.Data)
-                .Property<string>("DataStr");
-
-            modelBuilder.Entity<StockHistory>().Ignore(x => x.HistoricalData);
+            modelBuilder.Entity<StockRecommendationHistory>().Ignore(x => x.HistoricalData);
 
             modelBuilder.Entity<StockRecommendation>()
                 .Ignore(x => x.PredictedPriceTarget)
                 .Ignore(x => x.PredictedLowTarget);
+
         }
 
 

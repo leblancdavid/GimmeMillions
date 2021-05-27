@@ -2,17 +2,18 @@
 using GimmeMillions.Domain.Stocks;
 using GimmeMillions.DataAccess.Stocks;
 using Microsoft.Extensions.Logging;
+using GimmeMillions.Domain.Stocks.Recommendations;
 
 namespace GimmeMillions.WebApi.Services
 {
     public class EgyptianMauRecommendationSystemProvider : IRecommendationSystemProvider
     {
         private IStockAccessService _stockAccessService;
-        private IStockRecommendationRepository _stockRecommendationRepository;
+        private IStockRecommendationHistoryRepository _stockRecommendationRepository;
         private ILogger _logger;
         public EgyptianMauRecommendationSystemProvider(
             IStockAccessService stockAccessService,
-            IStockRecommendationRepository stockRecommendationRepository,
+            IStockRecommendationHistoryRepository stockRecommendationRepository,
             ILogger logger)
         {
             _stockAccessService = stockAccessService;

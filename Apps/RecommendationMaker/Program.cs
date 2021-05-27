@@ -47,8 +47,8 @@ namespace RecommendationMaker
                        optionsBuilder.UseSqlite($"Data Source={o.DatabaseLocation}");
                        var context = new GimmeMillionsContext(optionsBuilder.Options);
                        context.Database.Migrate();
-                       var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
-                       var recommendationRepo = new SQLStockRecommendationRepository(optionsBuilder.Options);
+                       //var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
+                       var recommendationRepo = new SQLStockRecommendationHistoryRepository(optionsBuilder.Options, logger);
 
                        var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdApiKey), 
                            new StockSymbolsFile("nasdaq_screener.csv"));

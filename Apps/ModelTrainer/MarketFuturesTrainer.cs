@@ -53,14 +53,5 @@ namespace ModelTrainer
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                 StockDataPeriod.Day, numStockSamples, kernelSize);
         }
-
-        private IFeatureDatasetService<FeatureVector> GetRawFeaturesCandlestickDatasetService(
-           int numStockSamples = 40)
-        {
-            var stocksRepo = new YahooFinanceStockAccessService(_stockRepository);
-            var extractor = new RawCandlesStockFeatureExtractor();
-            return new CandlestickStockWithFuturesFeatureDatasetService(extractor, stocksRepo,
-                StockDataPeriod.Day, numStockSamples);
-        }
     }
 }

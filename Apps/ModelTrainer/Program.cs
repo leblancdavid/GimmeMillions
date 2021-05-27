@@ -31,7 +31,7 @@ namespace ModelTrainer
                        apiKey = o.TdApiKey;
                    });
 
-            var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
+            //var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
 
             var trainer = new JavaneseModelTrainer(apiKey,
                 new StockSymbolsFile("nasdaq_screener.csv"),

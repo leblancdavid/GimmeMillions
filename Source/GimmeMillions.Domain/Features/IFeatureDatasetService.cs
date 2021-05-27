@@ -27,6 +27,7 @@ namespace GimmeMillions.Domain.Features
         Result<TFeature> GetFeatureVector(string symbol, DateTime date, int historyLimit = 0);
         Result<TFeature> GetFeatureVector(IEnumerable<StockData> data, DateTime date);
         Result<TFeature> GetFeatureVector(string symbol, out StockData last, int historyLimit = 0);
+        Result<TFeature> GetData(string symbol, DateTime date, List<StockData> stocks);
         IEnumerable<TFeature> GetFeatures(string symbol);
     }
 }
