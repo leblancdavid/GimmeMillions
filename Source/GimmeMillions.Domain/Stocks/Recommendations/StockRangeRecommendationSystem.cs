@@ -112,6 +112,10 @@ namespace GimmeMillions.Domain.Stocks
                     if (si < stockData.Count)
                     {
                         recommendationDate = stockData[si].Date;
+                        if(history.ContainsEntryFor(recommendationDate))
+                        {
+                            continue;
+                        }
                     }
 
                     var feature = _featureDatasetService.GetData(symbol, recommendationDate, stockData);
@@ -225,6 +229,10 @@ namespace GimmeMillions.Domain.Stocks
                         if (si < stockData.Count)
                         {
                             recommendationDate = stockData[si].Date;
+                            if (history.ContainsEntryFor(recommendationDate))
+                            {
+                                continue;
+                            }
                         }
 
                         var feature = _featureDatasetService.GetData(symbol, recommendationDate, stockData);
