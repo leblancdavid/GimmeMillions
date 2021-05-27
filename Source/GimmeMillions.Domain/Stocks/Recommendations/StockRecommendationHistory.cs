@@ -29,6 +29,13 @@ namespace GimmeMillions.Domain.Stocks.Recommendations
         }
 
         public DateTime LastUpdated { get; set; }
+        public StockRecommendation LastRecommendation
+        {
+            get
+            {
+                return _historicalData.LastOrDefault();
+            }
+        }
 
         public StockRecommendationHistory() { }
         public StockRecommendationHistory(string systemId, string symbol, IEnumerable<StockRecommendation> historicalData)
@@ -62,6 +69,11 @@ namespace GimmeMillions.Domain.Stocks.Recommendations
             _historicalDataStr = dataStr;
             _historicalData = Parse(symbol, dataStr).ToList();
             LastUpdated = DateTime.Now;
+        }
+
+        public bool ContainsEntryFor(DateTime date)
+        {
+            return _historicalData.Any(x => x.Date.Date == date.Date);
         }
 
         public void LoadData()

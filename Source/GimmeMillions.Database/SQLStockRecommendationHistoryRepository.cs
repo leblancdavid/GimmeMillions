@@ -193,6 +193,7 @@ namespace GimmeMillions.Database
                 return Result.Success(history);
             }
 
+            history.LoadData();
             return Result.Failure<StockRecommendationHistory>($"No recommendation history found for {symbol} for sytem {systemId}");
         }
 

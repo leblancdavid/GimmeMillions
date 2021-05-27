@@ -2,6 +2,7 @@
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.Stocks.Filters;
+using GimmeMillions.Domain.Stocks.Recommendations;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -18,18 +19,20 @@ namespace GimmeMillions.Domain.Stocks
     {
         private IStockPredictionModel<FeatureVector, StockRangePrediction> model;
         private IFeatureDatasetService<FeatureVector> _featureDatasetService;
-        private IStockRecommendationRepository _stockRecommendationRepository;
+        private IStockRecommendationHistoryRepository _stockRecommendationRepository;
         private StockRecommendationSystemConfiguration _systemConfiguration;
         private string _pathToModels;
         private string _systemId;
         private int _filterLength = 3;
+        private int _historyLength = 10;
         private ILogger _logger;
 
         public StockRangeRecommendationSystem(IFeatureDatasetService<FeatureVector> featureDatasetService,
-            IStockRecommendationRepository stockRecommendationRepository,
+            IStockRecommendationHistoryRepository stockRecommendationRepository,
             string pathToModels,
             string systemId,
             int filterLength,
+            int historyLength,
             ILogger logger)
         {
             _featureDatasetService = featureDatasetService;
@@ -38,10 +41,11 @@ namespace GimmeMillions.Domain.Stocks
             _pathToModels = pathToModels;
             _systemId = systemId;
             _filterLength = filterLength;
+            _historyLength = historyLength;
             _logger = logger;
         }
 
-        public IStockRecommendationRepository RecommendationRepository => _stockRecommendationRepository;
+        public IStockRecommendationHistoryRepository RecommendationRepository => _stockRecommendationRepository;
         public string SystemId => _systemId;
 
         public void AddModel(IStockPredictionModel<FeatureVector, StockRangePrediction> stockPredictionModel)
@@ -84,34 +88,69 @@ namespace GimmeMillions.Domain.Stocks
                     continue;
                 }
 
-                var feature = _featureDatasetService.GetData(symbol, date, stockData);
-                if (feature.IsFailure)
+                StockRecommendationHistory history = null;
+                var existingHistory = _stockRecommendationRepository.GetStockRecommendationHistory(_systemId, symbol);
+                if(existingHistory.IsSuccess)
                 {
-                    _logger?.LogInformation($"{symbol}: Unable to compute the feature vector: {feature.Error}");
-                    continue;
-                    //return;
+                    history = existingHistory.Value;
                 }
-                var result = model.Predict(feature.Value);
-                var rec = new StockRecommendation(_systemId,
-                    (decimal)result.PredictedHigh, (decimal)result.PredictedLow, (decimal)result.Sentiment, 
-                    date, lastStock);
-
-                var text = $"{rec.Symbol}, " +
-                        $"({Math.Round(rec.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
-                       $"gain: {Math.Round(rec.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                       $"high: {Math.Round(rec.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                       $"loss: {Math.Round(rec.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                       $"low: {Math.Round(rec.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
-                _logger.LogInformation($"Updating {symbol}: {text}");
-                recommendations.Add(rec);
-                lock (saveLock)
+                else
                 {
-                    var addResult = _stockRecommendationRepository.AddOrUpdateRecommendation(rec);
-                    if (addResult.IsFailure)
+                    history = new StockRecommendationHistory(_systemId, symbol, new List<StockRecommendation>());
+                }
+
+
+                int startingIndex = stockData.FindIndex(x => x.Date.Date == date.Date);
+
+                for(int i = 0; i < _historyLength; ++i)
+                {
+                    int si = stockData.Count - (i + startingIndex) - 1;
+                    if (si < 0)
+                        break;
+
+                    DateTime recommendationDate = date;
+                    if(si < stockData.Count)
                     {
-                        _logger?.LogError($"Unable to add recommendation: '{addResult.Error}'");
+                        recommendationDate = stockData[si].Date;
+                    }
+
+                    var feature = _featureDatasetService.GetData(symbol, date, stockData);
+                    if (feature.IsFailure)
+                    {
+                        _logger?.LogInformation($"{symbol}: Unable to compute the feature vector: {feature.Error}");
+                        break;
+                        //return;
+                    }
+
+                    var result = model.Predict(feature.Value);
+                    var rec = new StockRecommendation(_systemId,
+                        (decimal)result.PredictedHigh, (decimal)result.PredictedLow, (decimal)result.Sentiment,
+                        date, lastStock);
+
+                    history.AddOrUpdateRecommendation(rec);
+
+                }
+
+                if(history.LastRecommendation != null)
+                {
+                    var text = $"{history.LastRecommendation.Symbol}, " +
+                        $"({Math.Round(history.LastRecommendation.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
+                       $"gain: {Math.Round(history.LastRecommendation.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                       $"high: {Math.Round(history.LastRecommendation.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                       $"loss: {Math.Round(history.LastRecommendation.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                       $"low: {Math.Round(history.LastRecommendation.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                    _logger.LogInformation($"Updating {symbol}: {text}");
+                    recommendations.Add(history.LastRecommendation);
+                    lock (saveLock)
+                    {
+                        var addResult = _stockRecommendationRepository.AddOrUpdateRecommendationHistory(history);
+                        if (addResult.IsFailure)
+                        {
+                            _logger?.LogError($"Unable to add recommendation: '{addResult.Error}'");
+                        }
                     }
                 }
+                
             }
             //});
 
@@ -163,35 +202,65 @@ namespace GimmeMillions.Domain.Stocks
                         continue;
                     }
 
-                    var feature = _featureDatasetService.GetData(symbol, date, stockData);
-                    if (feature.IsFailure)
+                    StockRecommendationHistory history = null;
+                    var existingHistory = _stockRecommendationRepository.GetStockRecommendationHistory(_systemId, symbol);
+                    if (existingHistory.IsSuccess)
                     {
-                        _logger?.LogInformation($"{symbol}: Unable to compute the feature vector: {feature.Error}");
-                        continue;
-                        //return;
+                        history = existingHistory.Value;
                     }
-                    var result = model.Predict(feature.Value);
-                    var rec = new StockRecommendation(_systemId,
-                        (decimal)result.PredictedHigh, (decimal)result.PredictedLow,
-                        (decimal)result.Sentiment, 
-                        date, lastStock);
-                    
-                    var text = $"{rec.Symbol}, " +
-                        $"({Math.Round(rec.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
-                       $"gain: {Math.Round(rec.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                       $"high: {Math.Round(rec.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                       $"loss: {Math.Round(rec.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                       $"low: {Math.Round(rec.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
-                    _logger?.LogInformation($"Updating {symbol}: {text}");
-
-                    recommendations.Add(rec);
-
-                    lock (saveLock)
+                    else
                     {
-                        var addResult = _stockRecommendationRepository.AddOrUpdateRecommendation(rec);
-                        if (addResult.IsFailure)
+                        history = new StockRecommendationHistory(_systemId, symbol, new List<StockRecommendation>());
+                    }
+
+                    int startingIndex = stockData.FindIndex(x => x.Date.Date == date.Date);
+
+                    for (int i = 0; i < _historyLength; ++i)
+                    {
+                        int si = stockData.Count - (i + startingIndex) - 1;
+                        if (si < 1)
+                            break;
+
+                        DateTime recommendationDate = date;
+                        if (si < stockData.Count)
                         {
-                            _logger?.LogError($"Unable to add recommendation: '{addResult.Error}'");
+                            recommendationDate = stockData[si].Date;
+                        }
+
+                        var feature = _featureDatasetService.GetData(symbol, recommendationDate, stockData);
+                        if (feature.IsFailure)
+                        {
+                            _logger?.LogInformation($"{symbol}: Unable to compute the feature vector: {feature.Error}");
+                            break;
+                            //return;
+                        }
+
+                        var result = model.Predict(feature.Value);
+                        var rec = new StockRecommendation(_systemId,
+                            (decimal)result.PredictedHigh, (decimal)result.PredictedLow, (decimal)result.Sentiment,
+                            recommendationDate, stockData[si - 1]);
+
+                        history.AddOrUpdateRecommendation(rec);
+
+                    }
+
+                    if (history.LastRecommendation != null)
+                    {
+                        var text = $"{history.LastRecommendation.Symbol}, " +
+                            $"({Math.Round(history.LastRecommendation.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
+                           $"gain: {Math.Round(history.LastRecommendation.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                           $"high: {Math.Round(history.LastRecommendation.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                           $"loss: {Math.Round(history.LastRecommendation.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                           $"low: {Math.Round(history.LastRecommendation.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                        _logger.LogInformation($"Updating {symbol}: {text}");
+                        recommendations.Add(history.LastRecommendation);
+                        lock (saveLock)
+                        {
+                            var addResult = _stockRecommendationRepository.AddOrUpdateRecommendationHistory(history);
+                            if (addResult.IsFailure)
+                            {
+                                _logger?.LogError($"Unable to add recommendation: '{addResult.Error}'");
+                            }
                         }
                     }
                 }

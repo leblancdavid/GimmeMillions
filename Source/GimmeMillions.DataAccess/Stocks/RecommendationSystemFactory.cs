@@ -3,6 +3,7 @@ using GimmeMillions.Domain.Features.Extractors;
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.Domain.Stocks.Recommendations;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace GimmeMillions.DataAccess.Stocks
     {
         public static IStockRecommendationSystem<FeatureVector> GetCatRecommendationSystem(
             IStockRepository stockRepository,
-            IStockRecommendationRepository stockRecommendationRepository,
+            IStockRecommendationHistoryRepository stockRecommendationRepository,
             string pathToModel)
         {
             var stocksRepo = new YahooFinanceStockAccessService(stockRepository);
@@ -22,7 +23,7 @@ namespace GimmeMillions.DataAccess.Stocks
             var model = new MLStockRangePredictorModel();
             int filterLength = 3;
             var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
-                pathToModel, "cat", filterLength, null);
+                pathToModel, "cat", filterLength, 10, null);
 
             model.Load(pathToModel);
             recommendationSystem.AddModel(model);
@@ -32,7 +33,7 @@ namespace GimmeMillions.DataAccess.Stocks
 
         public static IStockRecommendationSystem<FeatureVector> GetDonskoyRecommendationSystem(
             IStockRepository stockRepository,
-            IStockRecommendationRepository stockRecommendationRepository,
+            IStockRecommendationHistoryRepository stockRecommendationRepository,
             string pathToModel)
         {
             var period = StockDataPeriod.Day;
@@ -52,7 +53,7 @@ namespace GimmeMillions.DataAccess.Stocks
             var model = new MLStockRangePredictorModel();
             int filterLength = 3;
             var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
-                pathToModel, "donskoy", filterLength, null);
+                pathToModel, "donskoy", filterLength, 10, null);
 
             model.Load(pathToModel);
             recommendationSystem.AddModel(model);
@@ -62,7 +63,7 @@ namespace GimmeMillions.DataAccess.Stocks
 
         public static IStockRecommendationSystem<FeatureVector> GetEgyptianMauRecommendationSystem(
             IStockAccessService stocksRepo,
-            IStockRecommendationRepository stockRecommendationRepository,
+            IStockRecommendationHistoryRepository stockRecommendationRepository,
             string pathToModel, ILogger logger)
         {
             try
@@ -83,7 +84,7 @@ namespace GimmeMillions.DataAccess.Stocks
                 var model = new MLStockRangePredictorModel();
                 int filterLength = 3;
                 var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
-                    pathToModel, "egyptianMau", filterLength, logger);
+                    pathToModel, "egyptianMau", filterLength, 10, logger);
 
                 model.Load(pathToModel);
                 recommendationSystem.AddModel(model);
@@ -99,7 +100,7 @@ namespace GimmeMillions.DataAccess.Stocks
 
         public static IStockRecommendationSystem<FeatureVector> GetHimalayanRecommendationSystem(
             IStockAccessService stocksRepo,
-            IStockRecommendationRepository stockRecommendationRepository,
+            IStockRecommendationHistoryRepository stockRecommendationRepository,
             string pathToModel, ILogger logger)
         {
             try
@@ -125,7 +126,7 @@ namespace GimmeMillions.DataAccess.Stocks
                 var model = new DeepLearningStockRangePredictorModel();
                 int filterLength = 3;
                 var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
-                    pathToModel, "himalayan", filterLength, logger);
+                    pathToModel, "himalayan", filterLength, 10, logger);
 
                 model.Load(pathToModel);
                 recommendationSystem.AddModel(model);
@@ -141,7 +142,7 @@ namespace GimmeMillions.DataAccess.Stocks
 
         public static IStockRecommendationSystem<FeatureVector> GetJavaneseRecommendationSystem(
             IStockAccessService stocksRepo,
-            IStockRecommendationRepository stockRecommendationRepository,
+            IStockRecommendationHistoryRepository stockRecommendationRepository,
             string pathToModel, ILogger logger)
         {
             try
@@ -167,7 +168,7 @@ namespace GimmeMillions.DataAccess.Stocks
                 var model = new MLStockRangePredictorModelV2();
                 int filterLength = 3;
                 var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
-                    pathToModel, "javanese", filterLength, logger);
+                    pathToModel, "javanese", filterLength, 10, logger);
 
                 model.Load(pathToModel);
                 recommendationSystem.AddModel(model);
@@ -182,7 +183,7 @@ namespace GimmeMillions.DataAccess.Stocks
         }
 
         public static IStockRecommendationSystem<FeatureVector> GetDonskoyCryptoRecommendationSystem(
-            IStockRecommendationRepository stockRecommendationRepository,
+            IStockRecommendationHistoryRepository stockRecommendationRepository,
             string pathToModel,
             string secret, string key, string passphrase)
         {
@@ -203,7 +204,7 @@ namespace GimmeMillions.DataAccess.Stocks
             var model = new MLStockRangePredictorModel();
             int filterLength = 3;
             var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
-                pathToModel, "donskoy", filterLength, null);
+                pathToModel, "donskoy", filterLength, 10, null);
 
             model.Load(pathToModel);
             recommendationSystem.AddModel(model);

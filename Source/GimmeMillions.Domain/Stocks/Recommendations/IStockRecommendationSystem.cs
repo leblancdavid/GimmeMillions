@@ -2,6 +2,7 @@
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.Stocks.Filters;
+using GimmeMillions.Domain.Stocks.Recommendations;
 using System;
 using System.Collections.Generic;
 
@@ -10,7 +11,7 @@ namespace GimmeMillions.Domain.Stocks
     public interface IStockRecommendationSystem<TFeature>
         where TFeature : FeatureVector
     {
-        IStockRecommendationRepository RecommendationRepository { get; }
+        IStockRecommendationHistoryRepository RecommendationRepository { get; }
         string SystemId { get; }
         Result LoadConfiguration(string configurationFile);
         Result SaveConfiguration(string configurationFile);

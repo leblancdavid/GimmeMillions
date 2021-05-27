@@ -1,15 +1,16 @@
 ﻿using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.Domain.Stocks.Recommendations;
 
 namespace GimmeMillions.WebApi.Services
 {
     public class DonskoyRecommendationSystemProvider : IRecommendationSystemProvider
     {
         private IStockRepository _stockRepository;
-        private IStockRecommendationRepository _stockRecommendationRepository;
+        private IStockRecommendationHistoryRepository _stockRecommendationRepository;
         public DonskoyRecommendationSystemProvider(IStockRepository stockRepository,
-            IStockRecommendationRepository stockRecommendationRepository)
+            IStockRecommendationHistoryRepository stockRecommendationRepository)
         {
             _stockRepository = stockRepository;
             _stockRecommendationRepository = stockRecommendationRepository;
