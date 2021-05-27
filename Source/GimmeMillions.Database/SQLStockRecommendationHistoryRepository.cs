@@ -32,7 +32,7 @@ namespace GimmeMillions.Database
 
                 if(symbolHistory == null)
                 {
-                    symbolHistory = new StockRecommendationHistory(recommendation.SystemId, recommendation.SystemId,
+                    symbolHistory = new StockRecommendationHistory(recommendation.SystemId, recommendation.Symbol,
                         new List<StockRecommendation>() { recommendation });
 
                     context.RecommendationHistories.Add(symbolHistory);
@@ -43,7 +43,10 @@ namespace GimmeMillions.Database
                     context.RecommendationHistories.Update(symbolHistory);
                 }
 
-                var lastPrediction = context.LastRecommendations.FirstOrDefault(x => x.Symbol == recommendation.Symbol && x.SystemId == recommendation.SystemId);
+                var lastPrediction = context.LastRecommendations
+                    .Include(x => x.LastData)
+                    .FirstOrDefault(x => x.LastData.Symbol == recommendation.Symbol && 
+                                    x.SystemId == recommendation.SystemId);
                 if(lastPrediction != null)
                 {
                     if(lastPrediction.Date < recommendation.Date)
@@ -133,7 +136,7 @@ namespace GimmeMillions.Database
 
                 if (symbolHistory == null)
                 {
-                    symbolHistory = new StockRecommendationHistory(recommendations.First().SystemId, recommendations.First().SystemId,
+                    symbolHistory = new StockRecommendationHistory(recommendations.First().SystemId, recommendations.First().Symbol,
                         recommendations);
 
                     context.RecommendationHistories.Add(symbolHistory);
