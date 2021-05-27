@@ -105,16 +105,16 @@ namespace GimmeMillions.Domain.Stocks
                 for(int i = 0; i < _historyLength; ++i)
                 {
                     int si = stockData.Count - (i + startingIndex) - 1;
-                    if (si < 0)
+                    if (si < 1)
                         break;
 
                     DateTime recommendationDate = date;
-                    if(si < stockData.Count)
+                    if (si < stockData.Count)
                     {
                         recommendationDate = stockData[si].Date;
                     }
 
-                    var feature = _featureDatasetService.GetData(symbol, date, stockData);
+                    var feature = _featureDatasetService.GetData(symbol, recommendationDate, stockData);
                     if (feature.IsFailure)
                     {
                         _logger?.LogInformation($"{symbol}: Unable to compute the feature vector: {feature.Error}");
@@ -125,7 +125,7 @@ namespace GimmeMillions.Domain.Stocks
                     var result = model.Predict(feature.Value);
                     var rec = new StockRecommendation(_systemId,
                         (decimal)result.PredictedHigh, (decimal)result.PredictedLow, (decimal)result.Sentiment,
-                        date, lastStock);
+                        recommendationDate, stockData[si - 1]);
 
                     history.AddOrUpdateRecommendation(rec);
 
