@@ -17,7 +17,7 @@ namespace GimmeMillions.WebApi
             //services.AddScoped<IStockRecommendationRepository, SQLStockRecommendationRepository>();
             //services.AddScoped<IStockHistoryRepository, SQLStockHistoryRepository>();
             services.AddScoped<IStockRepository, DefaultStockRepository>();
-            services.AddScoped<IRecommendationSystemProvider, EgyptianMauRecommendationSystemProvider>();
+            services.AddScoped<IRecommendationSystemProvider, JavaneseRecommendationSystemProvider>();
             services.AddScoped<IUserService, SQLUserRepository>();
             services.AddSingleton<IStockSymbolsRepository>(new StockSymbolsFile("Resources/nasdaq_screener.csv"));
 
