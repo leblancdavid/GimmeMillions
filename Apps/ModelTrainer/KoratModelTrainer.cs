@@ -60,7 +60,7 @@ namespace ModelTrainer
                .ToList()[trainingData.Count / 2].Output.PercentChangeFromPreviousClose;
             var averageGain = (double)trainingData.Average(x => Math.Abs((double)x.Output.PercentChangeFromPreviousClose - medianGain));
 
-            _model.Train(trainingData, 0.1, new BernoulliPercentChange(averageGain, medianGain));
+            _model.Train(trainingData, 0.0, new BernoulliPercentChange(averageGain, medianGain));
             _model.Save(modelName);
 
             return _model;
@@ -101,8 +101,8 @@ namespace ModelTrainer
                 {
                     var prediction = _model.Predict(sample.Input);
 
-                    if ((prediction.Sentiment > 0.0 && sample.Output.PercentChangeFromPreviousClose >= 0.0m) ||
-                        (prediction.Sentiment < 0.0 && sample.Output.PercentChangeFromPreviousClose < 0.0m))
+                    if ((prediction.Sentiment > 50.0 && sample.Output.PercentChangeFromPreviousClose >= 0.0m) ||
+                        (prediction.Sentiment < 50.0 && sample.Output.PercentChangeFromPreviousClose < 0.0m))
                         accuracy++;
                     var stockData = stocks.FirstOrDefault(x => x.Date == sample.Output.Date);
                     var line = string.Format($"{stockData.Close}\t{sample.Output.PercentChangeFromPreviousClose}\t{prediction.PredictedHigh}\t{prediction.PredictedLow}\t{prediction.Sentiment}");
@@ -136,8 +136,7 @@ namespace ModelTrainer
                 new BollingerBandFeatureExtraction(10),
                 new KeltnerChannelFeatureExtraction(10),
                 new TrendStockFeatureExtractor(10),
-                new SimpleMovingAverageFeatureExtractor(20),
-                new RawCandlesStockFeatureExtractor(10)
+                new SimpleMovingAverageFeatureExtractor(20)
             });
 
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,

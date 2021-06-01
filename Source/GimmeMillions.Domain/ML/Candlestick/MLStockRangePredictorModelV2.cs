@@ -146,7 +146,8 @@ namespace GimmeMillions.Domain.ML
             //var lowBernoulli = new BernoulliLowPercentChange(averageLow, medianLow);
             //var rangeEstimator = _mLContext.Transforms.ApproximatedKernelMap("Features", rank: 100)
             //    .Append(_mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: 3000));
-            var rangeEstimator = _mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: 5000);
+            //var rangeEstimator = _mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: 5000);
+            var rangeEstimator = _mLContext.Regression.Trainers.FastForest(labelColumnName: "Value", numberOfTrees: 2000, numberOfLeaves: 20);
             var sentimateEstimator = _mLContext.BinaryClassification.Trainers.FastForest(numberOfTrees: 2000, numberOfLeaves: 20)
                 .Append(_mLContext.BinaryClassification.Calibrators.Platt());
 
