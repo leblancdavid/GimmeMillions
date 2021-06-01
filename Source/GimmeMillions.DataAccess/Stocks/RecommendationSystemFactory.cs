@@ -182,6 +182,48 @@ namespace GimmeMillions.DataAccess.Stocks
             }
         }
 
+        public static IStockRecommendationSystem<FeatureVector> GetKoratRecommendationSystem(
+            IStockAccessService stocksRepo,
+            IStockRecommendationHistoryRepository stockRecommendationRepository,
+            string pathToModel, ILogger logger)
+        {
+            try
+            {
+                var period = StockDataPeriod.Day;
+                var numStockSamples = 200;
+                var kernelSize = 9;
+                var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
+                {
+                    new MACDHistogramFeatureExtraction(20),
+                    new TTMSqueezeFeatureExtraction(20),
+                    new RSIFeatureExtractor(10),
+                    new VWAPFeatureExtraction(10),
+                    new CMFFeatureExtraction(10),
+                    new BollingerBandFeatureExtraction(10),
+                    new KeltnerChannelFeatureExtraction(10),
+                    new TrendStockFeatureExtractor(10),
+                    new SimpleMovingAverageFeatureExtractor(20)
+                });
+
+                var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+                    period, numStockSamples, kernelSize);
+                var model = new MLStockRangePredictorModelV2();
+                int filterLength = 3;
+                var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
+                    pathToModel, "korat", filterLength, 5, logger);
+
+                model.Load(pathToModel);
+                recommendationSystem.AddModel(model);
+
+                return recommendationSystem;
+            }
+            catch (Exception ex)
+            {
+                logger?.LogError(ex.Message);
+                throw ex;
+            }
+        }
+
         public static IStockRecommendationSystem<FeatureVector> GetDonskoyCryptoRecommendationSystem(
             IStockRecommendationHistoryRepository stockRecommendationRepository,
             string pathToModel,

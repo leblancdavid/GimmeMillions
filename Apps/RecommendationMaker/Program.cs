@@ -52,15 +52,15 @@ namespace RecommendationMaker
 
                        var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdApiKey), 
                            new StockSymbolsFile("nasdaq_screener.csv"));
-                       recommendationSystem = RecommendationSystemFactory.GetJavaneseRecommendationSystem(stockAccess, recommendationRepo,
-                            $"{o.PathToModel}/StocksModel", logger);
+                       recommendationSystem = RecommendationSystemFactory.GetKoratRecommendationSystem(stockAccess, recommendationRepo,
+                            $"{o.PathToModel}/Stocks", logger);
                        if (recommendationSystem == null)
                        {
                            Console.WriteLine($"Unable to retrieve stocks model at {o.PathToModel}/StocksModel");
                        }
 
-                       futuresRecommendationSystem = RecommendationSystemFactory.GetJavaneseRecommendationSystem(stockAccess, recommendationRepo,
-                            $"{o.PathToModel}/FuturesModel", logger);
+                       futuresRecommendationSystem = RecommendationSystemFactory.GetKoratRecommendationSystem(stockAccess, recommendationRepo,
+                            $"{o.PathToModel}/Futures", logger);
                        if (futuresRecommendationSystem == null)
                        {
                            Console.WriteLine($"Unable to retrieve futures model at {o.PathToModel}/FuturesModel");
