@@ -48,6 +48,14 @@ namespace GimmeMillions.Domain.Stocks
             }
         }
 
+        public decimal Range
+        {
+            get
+            {
+                return High - Low;
+            }
+        }
+
         public decimal AveragePercentPeriodRange { get; set; }
 
         public decimal PercentChangeHighToOpen

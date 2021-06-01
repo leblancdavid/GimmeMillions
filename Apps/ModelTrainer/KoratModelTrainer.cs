@@ -49,21 +49,18 @@ namespace ModelTrainer
 
         public IStockRangePredictor TrainFutures(string modelName, int numSamples)
         {
-            _model = new DeepLearningStockRangePredictorModel(1000, 1000, 1.0);
-            //_model = new MLStockRangePredictorModelV2();
+            _model = new MLStockRangePredictorModelV2();
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            trainingData.AddRange(_datasetService.GetTrainingData("DIA", null, true, numSamples, true));
-            trainingData.AddRange(_datasetService.GetTrainingData("SPY", null, true, numSamples, true));
-            trainingData.AddRange(_datasetService.GetTrainingData("QQQ", null, true, numSamples, true));
-            //trainingData.AddRange(datasetService.GetTrainingData("RUT", null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetTrainingData("DIA", null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetTrainingData("SPY", null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetTrainingData("QQQ", null, true, numSamples));
 
-            var averageGain = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose > 0.0m)
-              .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
-            var averageLoss = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose <= 0.0m)
-                .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
+            var medianGain = (double)trainingData.OrderBy(x => x.Output.PercentChangeFromPreviousClose)
+               .ToList()[trainingData.Count / 2].Output.PercentChangeFromPreviousClose;
+            var averageGain = (double)trainingData.Average(x => Math.Abs((double)x.Output.PercentChangeFromPreviousClose - medianGain));
 
-            _model.Train(trainingData, 0.1, new BernoulliPercentChange(averageGain, averageLoss));
+            _model.Train(trainingData, 0.1, new BernoulliPercentChange(averageGain, medianGain));
             _model.Save(modelName);
 
             return _model;
@@ -73,43 +70,50 @@ namespace ModelTrainer
         {
             //_model = new DeepLearningStockRangePredictorModel(200, 10000, 1.0);
             _model = new MLStockRangePredictorModelV2();
-            //var stockFilter = new DefaultStockFilter(
-            //        maxPercentHigh: 50.0m,
-            //    maxPercentLow: 50.0m,
-            //    minPrice: 5.0m,
-            //    maxPrice: decimal.MaxValue,
-            //    minVolume: 10000.0m);
+            var stockFilter = new DefaultStockFilter(
+                    maxPercentHigh: 50.0m,
+                maxPercentLow: 50.0m,
+                minPrice: 10.0m,
+                maxPrice: decimal.MaxValue,
+                minVolume: 100000.0m);
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            trainingData.AddRange(_datasetService.GetAllTrainingData(null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetAllTrainingData(stockFilter, true, numSamples));
 
-            var averageGain = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose > 0.0m)
-               .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
-            var averageLoss = (double)trainingData.Where(x => x.Output.PercentChangeFromPreviousClose <= 0.0m)
-                .Average(x => Math.Abs(x.Output.PercentChangeFromPreviousClose));
+            var medianGain = (double)trainingData.OrderBy(x => x.Output.PercentChangeFromPreviousClose)
+                .ToList()[trainingData.Count / 2].Output.PercentChangeFromPreviousClose;
+            var averageGain = (double)trainingData.Average(x => Math.Abs((double)x.Output.PercentChangeFromPreviousClose - medianGain));
 
-            _model.Train(trainingData, 0.1, new BernoulliPercentChange(averageGain, averageLoss));
+            _model.Train(trainingData, 0.0, new BernoulliPercentChange(averageGain, medianGain));
             _model.Save(modelName);
 
             return _model;
         }
 
-        public void Evaluate(string outputDataFile, int numSamples, string symbol)
+        public double Evaluate(string outputDataFile, int numSamples, string symbol)
         {
+            double accuracy = 0.0;
             using (var w = new StreamWriter(outputDataFile))
             {
                 var testData = _datasetService.GetTrainingData(symbol, null, true, numSamples);
                 var stocks = _datasetService.StockAccess.GetStocks(symbol, _period);
-                foreach(var sample in testData)
+                foreach (var sample in testData)
                 {
                     var prediction = _model.Predict(sample.Input);
 
+                    if ((prediction.Sentiment > 0.0 && sample.Output.PercentChangeFromPreviousClose >= 0.0m) ||
+                        (prediction.Sentiment < 0.0 && sample.Output.PercentChangeFromPreviousClose < 0.0m))
+                        accuracy++;
                     var stockData = stocks.FirstOrDefault(x => x.Date == sample.Output.Date);
-                    var line = string.Format($"{stockData.Close}\t{sample.Output.Signal}\t{sample.Output.PercentChangeFromPreviousClose}\t{prediction.PredictedHigh}\t{prediction.PredictedLow}\t{prediction.Sentiment}\t{prediction.Confidence}");
+                    var line = string.Format($"{stockData.Close}\t{sample.Output.PercentChangeFromPreviousClose}\t{prediction.PredictedHigh}\t{prediction.PredictedLow}\t{prediction.Sentiment}");
                     w.WriteLine(line);
                     w.Flush();
                 }
+
+                accuracy /= (double)testData.Count();
             }
+
+            return accuracy;
         }
 
         private IFeatureDatasetService<FeatureVector> GetIndicatorFeaturesBuySellSignalDatasetService(
@@ -122,34 +126,22 @@ namespace ModelTrainer
         {
             var ameritradeClient = new TDAmeritradeApiClient(_apiKey);
             var stocksRepo = new TDAmeritradeStockAccessService(ameritradeClient, _stockSymbolsRepository);
-            //var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
-            //{
-            //    //Remove the fibonacci because I believe they may not be reliable
-            //    new FibonacciStockFeatureExtractor(),
-            //    new TrendStockFeatureExtractor(numStockSamples / 10),
-            //    new SimpleMovingAverageFeatureExtractor(10)
-
-            //});
-
             var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
             {
-                //Remove the fibonacci because I believe they may not be reliable
-                new FibonacciStockFeatureExtractor(),
-                new TrendStockFeatureExtractor(numStockSamples / 2),
-                new StockIndicatorsFeatureExtractionV3(timeSampling,
-                numStockSamples,
-                (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
-                (int)(numStockSamples * 0.8), 5,
-                (int)(numStockSamples * 0.8), 5,
-                (int)(numStockSamples * 0.8), 5,
-                false)
+                new MACDHistogramFeatureExtraction(20),
+                new TTMSqueezeFeatureExtraction(20),
+                new RSIFeatureExtractor(10),
+                new VWAPFeatureExtraction(10),
+                new CMFFeatureExtraction(10),
+                new BollingerBandFeatureExtraction(10),
+                new KeltnerChannelFeatureExtraction(10),
+                new TrendStockFeatureExtractor(10),
+                new SimpleMovingAverageFeatureExtractor(20),
+                new RawCandlesStockFeatureExtractor(10)
             });
-            //var extractor = new SimpleMovingAverageFeatureExtractor(10);
-            //var extractor = new RawCandlesStockFeatureExtractor();
 
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
                 period, numStockSamples, kernelSize, signalOffset, predictionLength);
         }
-
     }
 }
