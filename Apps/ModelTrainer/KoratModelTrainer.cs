@@ -60,7 +60,7 @@ namespace ModelTrainer
                .ToList()[trainingData.Count / 2].Output.PercentChangeFromPreviousClose;
             var averageGain = (double)trainingData.Average(x => Math.Abs((double)x.Output.PercentChangeFromPreviousClose - medianGain));
 
-            _model.Train(trainingData, 0.0, new BernoulliPercentChange(averageGain, medianGain));
+            _model.Train(trainingData, 0.0, new SignalOutputMapper());
             _model.Save(modelName);
 
             return _model;
@@ -84,7 +84,7 @@ namespace ModelTrainer
                 .ToList()[trainingData.Count / 2].Output.PercentChangeFromPreviousClose;
             var averageGain = (double)trainingData.Average(x => Math.Abs((double)x.Output.PercentChangeFromPreviousClose - medianGain));
 
-            _model.Train(trainingData, 0.0, new BernoulliPercentChange(averageGain, medianGain));
+            _model.Train(trainingData, 0.0, new SignalOutputMapper());
             _model.Save(modelName);
 
             return _model;
@@ -128,6 +128,8 @@ namespace ModelTrainer
             var stocksRepo = new TDAmeritradeStockAccessService(ameritradeClient, _stockSymbolsRepository);
             var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
             {
+                new SupportResistanceStockFeatureExtractor(),
+                new FibonacciStockFeatureExtractor(),
                 new MACDHistogramFeatureExtraction(20),
                 new TTMSqueezeFeatureExtraction(20),
                 new RSIFeatureExtractor(10),
@@ -135,7 +137,7 @@ namespace ModelTrainer
                 new CMFFeatureExtraction(10),
                 new BollingerBandFeatureExtraction(10),
                 new KeltnerChannelFeatureExtraction(10),
-                new TrendStockFeatureExtractor(10),
+                new TrendStockFeatureExtractor(20),
                 new SimpleMovingAverageFeatureExtractor(20)
             });
 

@@ -78,8 +78,8 @@ namespace GimmeMillions.Domain.ML
             var highScore = highP.GetColumn<float>("Score").ToArray();
 
             var sP = _sentimentModel.Transform(inputDataView);
-            //var sScore = sP.GetColumn<float>("Score").ToArray();
-            var sScore = sP.GetColumn<float>("Probability").ToArray();
+            var sScore = sP.GetColumn<float>("Score").ToArray();
+            //var sScore = sP.GetColumn<float>("Probability").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
             //var probability = prediction.GetColumn<float>("Probability").ToArray();
 
@@ -134,22 +134,10 @@ namespace GimmeMillions.Domain.ML
 
             //TRAIN THE LOW RANGE PREDICTOR
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
-            //var trainingDataset = dataset.Take(trainingCount);
-            //var medianHigh = (double)trainingDataset.OrderBy(x => x.Output.PercentChangeHighToPreviousClose)
-            //    .ToList()[trainingCount / 2].Output.PercentChangeHighToPreviousClose;
-            //var averageHigh = (double)trainingDataset.Average(x => Math.Abs((double)x.Output.PercentChangeHighToPreviousClose - medianHigh));
-            //var highBernoulli = new BernoulliHighPercentChange(averageHigh, medianHigh);
 
-            //var medianLow = (double)trainingDataset.OrderBy(x => x.Output.PercentChangeLowToPreviousClose)
-            //    .ToList()[trainingCount / 2].Output.PercentChangeLowToPreviousClose;
-            //var averageLow = (double)trainingDataset.Average(x => Math.Abs((double)x.Output.PercentChangeLowToPreviousClose - medianLow));
-            //var lowBernoulli = new BernoulliLowPercentChange(averageLow, medianLow);
-            //var rangeEstimator = _mLContext.Transforms.ApproximatedKernelMap("Features", rank: 100)
-            //    .Append(_mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: 3000));
-            //var rangeEstimator = _mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: 5000);
-            var rangeEstimator = _mLContext.Regression.Trainers.FastForest(labelColumnName: "Value", numberOfTrees: 2000, numberOfLeaves: 20);
-            var sentimateEstimator = _mLContext.BinaryClassification.Trainers.FastForest(numberOfTrees: 2000, numberOfLeaves: 20)
-                .Append(_mLContext.BinaryClassification.Calibrators.Platt());
+            var rangeEstimator = _mLContext.Regression.Trainers.Gam(labelColumnName: "Value");
+            var sentimateEstimator = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true)
+                .Append(_mLContext.Regression.Trainers.Sdca(labelColumnName: "Value"));
 
             var trainLowData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Take(trainingCount).Select(x =>
@@ -252,10 +240,10 @@ namespace GimmeMillions.Domain.ML
                     var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
-                    if (posS.Sentiment > 50.0f && posS.PredictedHigh > Math.Abs(posS.PredictedLow))
+                    if (posS.Sentiment > 80.0f && (posS.PredictedHigh + posS.PredictedLow) > 0.0)
                         predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.5f));
 
-                    if (posS.Sentiment < 50.0f && posS.PredictedHigh < Math.Abs(posS.PredictedLow))
+                    if (posS.Sentiment < 20.0f && (posS.PredictedHigh + posS.PredictedLow) < 0.0)
                         predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.5f));
 
                     //if (Math.Abs(posS.PredictedHigh) > Math.Abs(posS.PredictedLow))
