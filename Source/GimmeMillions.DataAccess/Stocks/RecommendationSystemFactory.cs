@@ -194,6 +194,8 @@ namespace GimmeMillions.DataAccess.Stocks
                 var kernelSize = 9;
                 var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
                 {
+                    new SupportResistanceStockFeatureExtractor(),
+                    new FibonacciStockFeatureExtractor(),
                     new MACDHistogramFeatureExtraction(20),
                     new TTMSqueezeFeatureExtraction(20),
                     new RSIFeatureExtractor(10),
@@ -201,7 +203,7 @@ namespace GimmeMillions.DataAccess.Stocks
                     new CMFFeatureExtraction(10),
                     new BollingerBandFeatureExtraction(10),
                     new KeltnerChannelFeatureExtraction(10),
-                    new TrendStockFeatureExtractor(10),
+                    new TrendStockFeatureExtractor(20),
                     new SimpleMovingAverageFeatureExtractor(20)
                 });
 
