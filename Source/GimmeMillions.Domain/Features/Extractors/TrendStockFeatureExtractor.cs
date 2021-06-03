@@ -11,10 +11,12 @@ namespace GimmeMillions.Domain.Features.Extractors
         public string Encoding { get; private set; }
         public int MaxLength { get; private set; }
         public bool IncludeVolume { get; private set; }
+        public int OutputLength { get; private set; }
         public TrendStockFeatureExtractor(int maxLength, bool includeVolume = true)
         {
             Encoding = "TrendFeatures";
             MaxLength = maxLength;
+            OutputLength = maxLength;
             IncludeVolume = includeVolume;
         }
 

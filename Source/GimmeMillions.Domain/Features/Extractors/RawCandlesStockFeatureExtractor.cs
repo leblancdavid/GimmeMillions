@@ -12,9 +12,11 @@ namespace GimmeMillions.Domain.Features
         public string Encoding { get; private set; }
         private int _maxLength = 10;
 
+        public int OutputLength { get; private set; }
         public RawCandlesStockFeatureExtractor(int maxLength = 10)
         {
             _maxLength = maxLength;
+            OutputLength = _maxLength;
             Encoding = $"RawFeatures{maxLength}";
         }
 

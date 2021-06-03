@@ -11,12 +11,14 @@ namespace GimmeMillions.Domain.Features
         public string Encoding { get; private set; }
         private int _timeSampling = 5;
         private int _keltnerLength = 20;
+        public int OutputLength { get; private set; }
 
         public KeltnerChannelFeatureExtraction(
             int timesampling = 5,
             int keltnerLength = 20)
         {
             _timeSampling = timesampling;
+            OutputLength = _timeSampling;
             _keltnerLength = keltnerLength;
             Encoding = $"Keltner{_keltnerLength},{_timeSampling}";
         }

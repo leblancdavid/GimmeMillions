@@ -11,11 +11,13 @@ namespace GimmeMillions.Domain.Features.Extractors
         public string Encoding { get; private set; }
 
         private IEnumerable<IFeatureExtractor<StockData>> _featureExtractors;
+        public int OutputLength { get; private set; }
 
         public MultiStockFeatureExtractor(IEnumerable<IFeatureExtractor<StockData>> featureExtractors)
         {
             Encoding = string.Join('-', featureExtractors.Select(x => x.Encoding));
             _featureExtractors = featureExtractors;
+            OutputLength = _featureExtractors.Sum(x => x.OutputLength);
         }
 
         public double[] Extract(IEnumerable<(StockData Data, float Weight)> data)

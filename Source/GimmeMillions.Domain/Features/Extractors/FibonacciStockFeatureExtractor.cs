@@ -13,6 +13,7 @@ namespace GimmeMillions.Domain.Features
         public string Encoding { get; private set; }
         private decimal _fibThreshold = 0.025m;
         private bool _includeVolume;
+        public int OutputLength { get; private set; }
 
         public FibonacciStockFeatureExtractor(decimal fibThreshold = 0.025m, bool includeVolume = true)
         {

@@ -12,11 +12,14 @@ namespace GimmeMillions.Domain.Features
         private int _timeSampling = 5;
         private int _vwapLength = 10;
 
+        public int OutputLength { get; private set; }
+
         public VWAPFeatureExtraction(
             int timesampling = 5,
             int vwapLength = 10)
         {
             _timeSampling = timesampling;
+            OutputLength = _timeSampling;
             _vwapLength = vwapLength;
             Encoding = $"VWAP{_vwapLength},{_timeSampling}";
         }

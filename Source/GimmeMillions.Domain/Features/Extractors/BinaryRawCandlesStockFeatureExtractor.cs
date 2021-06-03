@@ -11,6 +11,8 @@ namespace GimmeMillions.Domain.Features
     {
         public string Encoding { get; private set; }
 
+        public int OutputLength { get; private set; }
+
         public BinaryRawCandlesStockFeatureExtractor()
         {
             Encoding = "BinaryRawFeatures";
@@ -33,6 +35,7 @@ namespace GimmeMillions.Domain.Features
                 feature.Add((double)bar.Data.Volume > averageVolume ? 1.0 : 0.0);
             }
 
+            OutputLength = feature.Count;
             return feature.ToArray();
         }
     }

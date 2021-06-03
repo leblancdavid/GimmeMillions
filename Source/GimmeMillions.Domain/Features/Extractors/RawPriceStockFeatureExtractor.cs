@@ -11,6 +11,7 @@ namespace GimmeMillions.Domain.Features
     {
         public string Encoding { get; private set; }
 
+        public int OutputLength { get; private set; }
         public RawPriceStockFeatureExtractor()
         {
             Encoding = "RawPriceFeatures";

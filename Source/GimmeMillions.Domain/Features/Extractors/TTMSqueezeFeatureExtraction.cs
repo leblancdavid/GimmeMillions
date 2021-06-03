@@ -11,12 +11,14 @@ namespace GimmeMillions.Domain.Features
         public string Encoding { get; private set; }
         private int _timeSampling = 5;
         private int _sma = 20;
+        public int OutputLength { get; private set; }
 
         public TTMSqueezeFeatureExtraction(
             int timesampling = 5,
             int sma = 20)
         {
             _timeSampling = timesampling;
+            OutputLength = _timeSampling;
             _sma = sma;
             Encoding = $"TTM{_sma},{_timeSampling}";
         }

@@ -10,6 +10,7 @@ namespace GimmeMillions.Domain.Features
         private int _version = 2;
         private bool _normalize = false;
         public string Encoding { get; set; }
+        public int OutputLength { get; private set; }
 
         public CandlestickStockFeatureExtractor(int version = 2, bool normalize = false)
         {
@@ -47,6 +48,8 @@ namespace GimmeMillions.Domain.Features
 
             if (_normalize)
                 return Normalize(feature);
+
+            OutputLength = feature.Length;
 
             return feature;
         }

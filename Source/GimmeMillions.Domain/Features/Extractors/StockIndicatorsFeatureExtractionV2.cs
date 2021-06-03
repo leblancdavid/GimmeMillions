@@ -23,6 +23,7 @@ namespace GimmeMillions.Domain.Features
         private int _cmfSlope = 7;
         private int _version = 2;
         private bool _normalize = false;
+        public int OutputLength { get; private set; }
 
         public StockIndicatorsFeatureExtractionV2(
             int timesampling = 4,

@@ -11,12 +11,14 @@ namespace GimmeMillions.Domain.Features.Extractors
         public string Encoding { get; private set; }
         private int _timeSampling = 5;
         private int _rsi = 14;
+        public int OutputLength { get; private set; }
 
         public RSIFeatureExtractor(
             int timesampling = 5,
             int rsi = 14)
         {
             _timeSampling = timesampling;
+            OutputLength = _timeSampling;
             _rsi = rsi;
             Encoding = $"RSI{_rsi},{_timeSampling}";
         }
