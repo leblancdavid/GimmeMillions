@@ -81,7 +81,7 @@ namespace GimmeMillions.Domain.ML
 
             var sP = _sentimentModel.Transform(inputDataView);
             var sScore = sP.GetColumn<float>("Score").ToArray();
-            var sProb = sP.GetColumn<float>("Probability").ToArray();
+            //var sProb = sP.GetColumn<float>("Probability").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
             //var probability = prediction.GetColumn<float>("Probability").ToArray();
 
@@ -89,7 +89,7 @@ namespace GimmeMillions.Domain.ML
             {
                 PredictedLow = lowScore[0],
                 PredictedHigh = highScore[0],
-                Sentiment = sProb[0] * 100.0
+                Sentiment = sScore[0] * 100.0
                 //Sentiment = (lowProb[0]) * 100.0
                 //Sentiment = highScore[0] / (highScore[0] - lowScore[0]) * 100.0f
             };
@@ -140,6 +140,7 @@ namespace GimmeMillions.Domain.ML
 
             var predictor = _mLContext.Transforms.NormalizeMeanVariance("Features")
                 .Append(_mLContext.Regression.Trainers.Gam(labelColumnName: "Value"));
+                //.Append(_mLContext.BinaryClassification.Calibrators.Platt());
 
             var trainingSet = dataset.Take(trainingCount);
             var testSet = dataset.Skip(trainingCount);
@@ -174,25 +175,19 @@ namespace GimmeMillions.Domain.ML
                 GetSchemaDefinition(firstFeature.Input));
             _highRangeModel = predictor.Fit(trainHighData);
 
-
-            var medianGain = trainingSet.OrderBy(x => x.Output.PercentChangeFromPreviousClose)
-               .ToList()[trainingSet.Count() / 2].Output.PercentChangeFromPreviousClose;
-            var sentimentPredictor = _mLContext.Transforms.NormalizeMeanVariance("Features")
-                .Append(_mLContext.BinaryClassification.Trainers.SdcaNonCalibrated(labelColumnName: "Label"))
-                .Append(_mLContext.BinaryClassification.Calibrators.Platt());
             var trainData = _mLContext.Data.LoadFromEnumerable(
                 trainingSet.Select(x =>
                 {
                     var normVector = x.Input;
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    x.Output.PercentChangeFromPreviousClose > medianGain,
-                    (float)x.Output.PercentChangeFromPreviousClose,
+                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    trainingOutputMapper.GetOutputValue(x.Output),
                     x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
                 GetSchemaDefinition(firstFeature.Input));
-            _sentimentModel = sentimentPredictor.Fit(trainData);
+            _sentimentModel = predictor.Fit(trainData);
 
             var testData = _mLContext.Data.LoadFromEnumerable(
                testSet.Select(x =>
@@ -200,8 +195,8 @@ namespace GimmeMillions.Domain.ML
                    var normVector = x.Input;
                    return new StockCandlestickDataFeature(
                    Array.ConvertAll(x.Input.Data, y => (float)y),
-                   x.Output.PercentChangeFromPreviousClose > medianGain,
-                   (float)x.Output.PercentChangeFromPreviousClose,
+                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    trainingOutputMapper.GetOutputValue(x.Output),
                    x.Output.Symbol,
                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                }),
@@ -227,10 +222,10 @@ namespace GimmeMillions.Domain.ML
                     var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
-                    if (posS.Sentiment > 50.0f)
+                    if (posS.Sentiment > 60.0f)
                         predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.5f, i));
 
-                    if (posS.Sentiment < 50.0f)
+                    if (posS.Sentiment < 40.0f)
                         predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.5f, i));
 
                     //if (Math.Abs(posS.PredictedHigh) > Math.Abs(posS.PredictedLow))

@@ -146,10 +146,10 @@ namespace ModelTrainer
                 new RSIFeatureExtractor(20),
                 new VWAPFeatureExtraction(20),
                 new CMFFeatureExtraction(20),
-                new BollingerBandFeatureExtraction(10),
-                new KeltnerChannelFeatureExtraction(10),
-                new TrendStockFeatureExtractor(10),
-                new SimpleMovingAverageFeatureExtractor(10)
+                new BollingerBandFeatureExtraction(20),
+                new KeltnerChannelFeatureExtraction(20),
+                new TrendStockFeatureExtractor(20),
+                new SimpleMovingAverageFeatureExtractor(20)
             });
 
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
