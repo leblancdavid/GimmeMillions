@@ -234,17 +234,17 @@ namespace GimmeMillions.Domain.ML
                 var values = testData.GetColumn<float>("Value").ToArray();
                 var features = testData.GetColumn<float[]>("Features").ToArray();
 
-                var predictionData = new List<(float Score, float Probability, bool PredictedLabel, bool ActualLabel)>();
+                var predictionData = new List<(float Score, float Probability, bool PredictedLabel, bool ActualLabel, int Index)>();
                 for (int i = 0; i < features.Length; ++i)
                 {
                     var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
-                    if (posS.Sentiment > 80.0f && (posS.PredictedHigh + posS.PredictedLow) > 0.0)
-                        predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.5f));
+                    if (posS.Sentiment > 50.0f/* && (posS.PredictedHigh + posS.PredictedLow) > 0.0*/)
+                        predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.5f, i));
 
-                    if (posS.Sentiment < 20.0f && (posS.PredictedHigh + posS.PredictedLow) < 0.0)
-                        predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.5f));
+                    if (posS.Sentiment < 50.0f/* && (posS.PredictedHigh + posS.PredictedLow) < 0.0*/)
+                        predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.5f, i));
 
                     //if (Math.Abs(posS.PredictedHigh) > Math.Abs(posS.PredictedLow))
                     //    predictionData.Add(((float)posS.PredictedHigh, (float)values[i], true, values[i] > 0.5f));

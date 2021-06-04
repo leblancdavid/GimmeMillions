@@ -36,7 +36,7 @@ namespace ModelTrainer
             var trainer = new LambkinModelTrainer(apiKey,
                 new StockSymbolsFile("nasdaq_screener.csv"),
                 StockDataPeriod.Day,
-                9, 200, 12, 0, 10);
+                15, 200, 12, 0, 10);
 
             //trainer.Train("C:\\Users\\leblanc_d\\Documents\\Projects\\GimmeMillions\\Repository\\Models\\Himalayan\\Futures.dnn", 20000);
             //730 = 365 x 2, basically two years of historical data should be good enough

@@ -12,15 +12,15 @@ using System.Linq;
 
 namespace GimmeMillions.Domain.ML
 {
-    public class WeakRegressionPredictorModelParameters
+    public class MultiFeatureClassificationPredictorModelParameters
     {
-        public WeakRegressionPredictorModelParameters()
+        public MultiFeatureClassificationPredictorModelParameters()
         {
             
         }
 
     }
-    public class WeakRegressionPredictorModel : IStockRangePredictor
+    public class MultiFeatureClassificationPredictorModel : IStockRangePredictor
     {
         private MLContext _mLContext; 
         private DataViewSchema _dataSchema;
@@ -30,21 +30,21 @@ namespace GimmeMillions.Domain.ML
         private ITransformer _sentimentModel;
 
         public bool IsTrained => Metadata.IsTrained;
-        public CandlestickPredictionModelMetadata<WeakRegressionPredictorModelParameters> Metadata { get; private set; }
-        public WeakRegressionPredictorModelParameters Parameters { get; set; }
-        public WeakRegressionPredictorModel()
+        public CandlestickPredictionModelMetadata<MultiFeatureClassificationPredictorModelParameters> Metadata { get; private set; }
+        public MultiFeatureClassificationPredictorModelParameters Parameters { get; set; }
+        public MultiFeatureClassificationPredictorModel()
         {
-            Metadata = new CandlestickPredictionModelMetadata<WeakRegressionPredictorModelParameters>();
+            Metadata = new CandlestickPredictionModelMetadata<MultiFeatureClassificationPredictorModelParameters>();
             _seed = 27;
             _mLContext = new MLContext(_seed);
-            Parameters = new WeakRegressionPredictorModelParameters();
+            Parameters = new MultiFeatureClassificationPredictorModelParameters();
         }
 
         public Result Load(string pathToModel)
         {
             try
             {
-                Metadata = JsonConvert.DeserializeObject<CandlestickPredictionModelMetadata<WeakRegressionPredictorModelParameters>>(
+                Metadata = JsonConvert.DeserializeObject<CandlestickPredictionModelMetadata<MultiFeatureClassificationPredictorModelParameters>>(
                     File.ReadAllText($"{pathToModel}-Metadata.json"));
 
                 DataViewSchema schema = null;
@@ -71,11 +71,11 @@ namespace GimmeMillions.Domain.ML
                 },
                 GetSchemaDefinition(input));
 
-            var lowP = _lowRangeModel.Transform(inputDataView);
-            var lowScore = lowP.GetColumn<float>("Score").ToArray();
+            //var lowP = _lowRangeModel.Transform(inputDataView);
+            //var lowScore = lowP.GetColumn<float>("Score").ToArray();
 
-            var highP = _highRangeModel.Transform(inputDataView);
-            var highScore = highP.GetColumn<float>("Score").ToArray();
+            //var highP = _highRangeModel.Transform(inputDataView);
+            //var highScore = highP.GetColumn<float>("Score").ToArray();
 
             var sP = _sentimentModel.Transform(inputDataView);
             var sScore = sP.GetColumn<float>("Score").ToArray();
@@ -85,8 +85,8 @@ namespace GimmeMillions.Domain.ML
 
             return new StockRangePrediction()
             {
-                PredictedLow = lowScore[0],
-                PredictedHigh = highScore[0],
+                //PredictedLow = lowScore[0],
+                //PredictedHigh = highScore[0],
                 Sentiment = sScore[0] * 100.0
                 //Sentiment = highScore[0] / (highScore[0] - lowScore[0]) * 100.0f
             };
@@ -135,8 +135,18 @@ namespace GimmeMillions.Domain.ML
             //TRAIN THE LOW RANGE PREDICTOR
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
 
-            var sentimateEstimator = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true)
-                .Append(_mLContext.Regression.Trainers.Sdca(labelColumnName: "Value"));
+            //var sentimateEstimator = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true)
+            //    .Append(_mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 1000)
+            //    .Append(_mLContext.BinaryClassification.Calibrators.Platt()));
+            //var sentimateEstimator = _mLContext.Transforms.NormalizeMinMax("Features")
+            //    .Append(_mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 1000)
+            //    .Append(_mLContext.BinaryClassification.Calibrators.Platt()));
+            //var sentimateEstimator = _mLContext.Transforms.NormalizeMinMax("Features")
+            //    .Append(_mLContext.BinaryClassification.Trainers.FastTree()
+            //    .Append(_mLContext.BinaryClassification.Calibrators.Platt()));
+            var sentimateEstimator = _mLContext.Transforms.NormalizeMeanVariance("Features")
+                .Append(_mLContext.Regression.Trainers.Gam(labelColumnName: "Value"));
+                //.Append(_mLContext.Regression.Calibrators.Platt()));
 
             var trainData = _mLContext.Data.LoadFromEnumerable(
                dataset.Take(trainingCount).Select(x =>
@@ -178,17 +188,17 @@ namespace GimmeMillions.Domain.ML
                 var values = testData.GetColumn<float>("Value").ToArray();
                 var features = testData.GetColumn<float[]>("Features").ToArray();
 
-                var predictionData = new List<(float Score, float Probability, bool PredictedLabel, bool ActualLabel)>();
+                var predictionData = new List<(float Score, float Probability, bool PredictedLabel, bool ActualLabel, int Index)>();
                 for (int i = 0; i < features.Length; ++i)
                 {
                     var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
-                    if (posS.Sentiment > 80.0f && (posS.PredictedHigh + posS.PredictedLow) > 0.0)
-                        predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.5f));
+                    if (posS.Sentiment > 80.0f)
+                        predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.5f, i));
 
-                    if (posS.Sentiment < 20.0f && (posS.PredictedHigh + posS.PredictedLow) < 0.0)
-                        predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.5f));
+                    if (posS.Sentiment < 20.0f)
+                        predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.5f, i));
 
                     //if (Math.Abs(posS.PredictedHigh) > Math.Abs(posS.PredictedLow))
                     //    predictionData.Add(((float)posS.PredictedHigh, (float)values[i], true, values[i] > 0.5f));
