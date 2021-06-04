@@ -142,7 +142,7 @@ namespace GimmeMillions.Domain.Stocks
                        $"gain: {Math.Round(history.LastRecommendation.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
                        $"high: {Math.Round(history.LastRecommendation.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
                        $"loss: {Math.Round(history.LastRecommendation.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                       $"low: {Math.Round(history.LastRecommendation.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}" +
+                       $"low: {Math.Round(history.LastRecommendation.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, " +
                        $"conf: {Math.Round(history.LastRecommendation.Confidence, 2, MidpointRounding.AwayFromZero)}";
                     _logger.LogInformation($"Updating {symbol}: {text}");
                     recommendations.Add(history.LastRecommendation);
@@ -260,7 +260,7 @@ namespace GimmeMillions.Domain.Stocks
                            $"gain: {Math.Round(history.LastRecommendation.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
                            $"high: {Math.Round(history.LastRecommendation.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
                            $"loss: {Math.Round(history.LastRecommendation.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                           $"low: {Math.Round(history.LastRecommendation.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}" +
+                           $"low: {Math.Round(history.LastRecommendation.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, " +
                             $"conf: {Math.Round(history.LastRecommendation.Confidence, 2, MidpointRounding.AwayFromZero)}";
                         _logger.LogInformation($"Updating {symbol}: {text}");
                         recommendations.Add(history.LastRecommendation);
