@@ -90,7 +90,7 @@ namespace GimmeMillions.Domain.ML
                 PredictedLow = lowScore[0],
                 PredictedHigh = highScore[0],
                 Sentiment = sProb[0] * 100.0,
-                Confidence = highProb[0] - (1.0 - lowProb[0])
+                Confidence = highProb[0] - (lowProb[0])
                 //Sentiment = (lowProb[0]) * 100.0
                 //Sentiment = highScore[0] / (highScore[0] - lowScore[0]) * 100.0f
             };
@@ -139,22 +139,24 @@ namespace GimmeMillions.Domain.ML
             //TRAIN THE LOW RANGE PREDICTOR
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
 
-            var predictor = _mLContext.Transforms.NormalizeMeanVariance("Features")
+            var predictor = _mLContext.Transforms.NormalizeSupervisedBinning("Features")
                 .Append(_mLContext.Regression.Trainers.Gam(labelColumnName: "Value", 
-                numberOfIterations: 100,
+                numberOfIterations: 200,
                 maximumBinCountPerFeature: 16))
                 .Append(_mLContext.BinaryClassification.Calibrators.Platt());
 
             var trainingSet = dataset.Take(trainingCount);
             var testSet = dataset.Skip(trainingCount);
 
+            var medianLow = trainingSet.OrderBy(x => x.Output.PercentChangeLowToPreviousClose)
+                .ToList()[trainingSet.Count() / 2].Output.PercentChangeLowToPreviousClose;
             var trainLowData = _mLContext.Data.LoadFromEnumerable(
                 trainingSet.Select(x =>
                 {
                     var normVector = x.Input;
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    x.Output.PercentChangeLowToPreviousClose > medianLow,
                    (float)x.Output.PercentChangeLowToPreviousClose,
                     x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
@@ -163,14 +165,15 @@ namespace GimmeMillions.Domain.ML
            
             _dataSchema = trainLowData.Schema;
             _lowRangeModel = predictor.Fit(trainLowData);
-
+            var medianHigh = trainingSet.OrderBy(x => x.Output.PercentChangeHighToPreviousClose)
+                .ToList()[trainingSet.Count() / 2].Output.PercentChangeHighToPreviousClose;
             var trainHighData = _mLContext.Data.LoadFromEnumerable(
                 trainingSet.Select(x =>
                 {
                     var normVector = x.Input;
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
-                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    x.Output.PercentChangeHighToPreviousClose > medianHigh,
                     (float)x.Output.PercentChangeHighToPreviousClose,
                     x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
@@ -225,10 +228,10 @@ namespace GimmeMillions.Domain.ML
                     var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
-                    if (posS.Sentiment > 70.0f /*&& posS.Confidence > 0.0*/)
+                    if (posS.Sentiment > 70.0f && posS.Confidence > 0.0)
                         predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.5f, i, posS.Confidence));
 
-                    if (posS.Sentiment < 30.0f /*&& posS.Confidence < 0.0*/)
+                    if (posS.Sentiment < 30.0f && posS.Confidence < 0.0)
                         predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.5f, i, posS.Confidence));
 
                     //if (Math.Abs(posS.PredictedHigh) > Math.Abs(posS.PredictedLow))
