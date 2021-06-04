@@ -128,7 +128,7 @@ namespace GimmeMillions.Domain.Stocks
 
                     var result = model.Predict(feature.Value);
                     var rec = new StockRecommendation(_systemId,
-                        (decimal)result.PredictedHigh, (decimal)result.PredictedLow, (decimal)result.Sentiment,
+                        (decimal)result.PredictedHigh, (decimal)result.PredictedLow, (decimal)result.Sentiment, (decimal)result.Confidence,
                         recommendationDate, stockData[si - 1]);
 
                     history.AddOrUpdateRecommendation(rec);
@@ -142,7 +142,8 @@ namespace GimmeMillions.Domain.Stocks
                        $"gain: {Math.Round(history.LastRecommendation.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
                        $"high: {Math.Round(history.LastRecommendation.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
                        $"loss: {Math.Round(history.LastRecommendation.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                       $"low: {Math.Round(history.LastRecommendation.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                       $"low: {Math.Round(history.LastRecommendation.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}" +
+                       $"conf: {Math.Round(history.LastRecommendation.Confidence, 2, MidpointRounding.AwayFromZero)}";
                     _logger.LogInformation($"Updating {symbol}: {text}");
                     recommendations.Add(history.LastRecommendation);
                     lock (saveLock)
@@ -245,7 +246,7 @@ namespace GimmeMillions.Domain.Stocks
 
                         var result = model.Predict(feature.Value);
                         var rec = new StockRecommendation(_systemId,
-                            (decimal)result.PredictedHigh, (decimal)result.PredictedLow, (decimal)result.Sentiment,
+                            (decimal)result.PredictedHigh, (decimal)result.PredictedLow, (decimal)result.Sentiment, (decimal)result.Confidence,
                             recommendationDate, stockData[si - 1]);
 
                         history.AddOrUpdateRecommendation(rec);
@@ -259,7 +260,8 @@ namespace GimmeMillions.Domain.Stocks
                            $"gain: {Math.Round(history.LastRecommendation.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
                            $"high: {Math.Round(history.LastRecommendation.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
                            $"loss: {Math.Round(history.LastRecommendation.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
-                           $"low: {Math.Round(history.LastRecommendation.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}";
+                           $"low: {Math.Round(history.LastRecommendation.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}" +
+                            $"conf: {Math.Round(history.LastRecommendation.Confidence, 2, MidpointRounding.AwayFromZero)}";
                         _logger.LogInformation($"Updating {symbol}: {text}");
                         recommendations.Add(history.LastRecommendation);
                         lock (saveLock)
@@ -375,7 +377,7 @@ namespace GimmeMillions.Domain.Stocks
             var result = model.Predict(feature.Value);
             var rec = new StockRecommendation(_systemId,
                 (decimal)result.PredictedHigh, (decimal)result.PredictedLow,
-                (decimal)result.Sentiment, 
+                (decimal)result.Sentiment, (decimal)result.Confidence,
                 date, lastStock);
 
             var saveLock = new object();

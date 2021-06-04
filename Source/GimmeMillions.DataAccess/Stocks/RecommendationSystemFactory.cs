@@ -226,34 +226,48 @@ namespace GimmeMillions.DataAccess.Stocks
             }
         }
 
-        public static IStockRecommendationSystem<FeatureVector> GetDonskoyCryptoRecommendationSystem(
+        public static IStockRecommendationSystem<FeatureVector> GetLambkinRecommendationSystem(
+            IStockAccessService stocksRepo,
             IStockRecommendationHistoryRepository stockRecommendationRepository,
-            string pathToModel,
-            string secret, string key, string passphrase)
+            string pathToModel, ILogger logger)
         {
-            var period = StockDataPeriod.Day;
-            var numStockSamples = 100;
-            var kernelSize = 9;
-            var stocksRepo = new CoinbaseApiAccessService(secret, key, passphrase);
-            //var extractor = new RawCandlesStockFeatureExtractor();
-            var extractor = new StockIndicatorsFeatureExtractionV2(10,
-                numStockSamples,
-                (int)(numStockSamples * 0.8), (int)(numStockSamples * 0.4), (int)(numStockSamples * 0.3), 5,
-                (int)(numStockSamples * 0.8), 5,
-                (int)(numStockSamples * 0.8), 5,
-                (int)(numStockSamples * 0.8), 5,
-                false);
-            var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
-                period, numStockSamples, kernelSize);
-            var model = new MLStockRangePredictorModel();
-            int filterLength = 3;
-            var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
-                pathToModel, "donskoy", filterLength, 5, null);
+            try
+            {
+                var period = StockDataPeriod.Day;
+                var numStockSamples = 200;
+                var kernelSize = 15;
+                var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
+                {
+                    new SupportResistanceStockFeatureExtractor(),
+                    new FibonacciStockFeatureExtractor(),
+                    new MACDHistogramFeatureExtraction(20),
+                    new TTMSqueezeFeatureExtraction(20),
+                    new RSIFeatureExtractor(20),
+                    new VWAPFeatureExtraction(20),
+                    new CMFFeatureExtraction(20),
+                    new BollingerBandFeatureExtraction(20),
+                    new KeltnerChannelFeatureExtraction(20),
+                    new TrendStockFeatureExtractor(20),
+                    new SimpleMovingAverageFeatureExtractor(20)
+                });
 
-            model.Load(pathToModel);
-            recommendationSystem.AddModel(model);
+                var datasetService = new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+                    period, numStockSamples, kernelSize);
+                var model = new LambkinPredictorModel();
+                int filterLength = 3;
+                var recommendationSystem = new StockRangeRecommendationSystem(datasetService, stockRecommendationRepository,
+                    pathToModel, "lambkin", filterLength, 5, logger);
 
-            return recommendationSystem;
+                model.Load(pathToModel);
+                recommendationSystem.AddModel(model);
+
+                return recommendationSystem;
+            }
+            catch (Exception ex)
+            {
+                logger?.LogError(ex.Message);
+                throw ex;
+            }
         }
     }
 }
