@@ -78,13 +78,24 @@ namespace ModelTrainer
                 minVolume: 100000.0m);
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            trainingData.AddRange(_datasetService.GetAllTrainingData(stockFilter, true, numSamples));
+            trainingData.AddRange(_datasetService.GetTrainingData("TSLA", null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetTrainingData("MSFT", null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetTrainingData("F", null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetTrainingData("S", null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetTrainingData("SPOT", null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetTrainingData("AMD", null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetTrainingData("AMZN", null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetTrainingData("BIDU", null, true, numSamples));
+            trainingData.AddRange(_datasetService.GetTrainingData("FB", null, true, numSamples));
+
+            //var trainingData = new List<(FeatureVector Input, StockData Output)>();
+            //trainingData.AddRange(_datasetService.GetAllTrainingData(stockFilter, true, numSamples));
 
             var medianGain = (double)trainingData.OrderBy(x => x.Output.PercentChangeFromPreviousClose)
                 .ToList()[trainingData.Count / 2].Output.PercentChangeFromPreviousClose;
             var averageGain = (double)trainingData.Average(x => Math.Abs((double)x.Output.PercentChangeFromPreviousClose - medianGain));
 
-            _model.Train(trainingData, 0.0, new SignalOutputMapper());
+            _model.Train(trainingData, 0.1, new SignalOutputMapper());
             _model.Save(modelName);
 
             return _model;
