@@ -49,7 +49,7 @@ namespace ModelTrainer
 
         public IStockRangePredictor TrainFutures(string modelName, int numSamples)
         {
-            _model = new MultiFeatureClassificationPredictorModel();
+            _model = new LambkinPredictorModel();
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
             trainingData.AddRange(_datasetService.GetTrainingData("DIA", null, true, numSamples));
@@ -69,7 +69,7 @@ namespace ModelTrainer
         public IStockRangePredictor TrainStocks(string modelName, int numSamples)
         {
             //_model = new DeepLearningStockRangePredictorModel(200, 10000, 1.0);
-            _model = new MultiFeatureClassificationPredictorModel();
+            _model = new LambkinPredictorModel();
             var stockFilter = new DefaultStockFilter(
                     maxPercentHigh: 50.0m,
                 maxPercentLow: 50.0m,
@@ -146,10 +146,10 @@ namespace ModelTrainer
                 new RSIFeatureExtractor(20),
                 new VWAPFeatureExtraction(20),
                 new CMFFeatureExtraction(20),
-                new BollingerBandFeatureExtraction(20),
-                new KeltnerChannelFeatureExtraction(20),
-                new TrendStockFeatureExtractor(20),
-                new SimpleMovingAverageFeatureExtractor(20)
+                new BollingerBandFeatureExtraction(10),
+                new KeltnerChannelFeatureExtraction(10),
+                new TrendStockFeatureExtractor(10),
+                new SimpleMovingAverageFeatureExtractor(10)
             });
 
             return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,

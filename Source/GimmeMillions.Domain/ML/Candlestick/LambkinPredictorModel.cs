@@ -12,15 +12,15 @@ using System.Linq;
 
 namespace GimmeMillions.Domain.ML
 {
-    public class MultiFeatureClassificationPredictorModelParameters
+    public class LambkinPredictorModelParameters
     {
-        public MultiFeatureClassificationPredictorModelParameters()
+        public LambkinPredictorModelParameters()
         {
             
         }
 
     }
-    public class MultiFeatureClassificationPredictorModel : IStockRangePredictor
+    public class LambkinPredictorModel : IStockRangePredictor
     {
         private MLContext _mLContext; 
         private DataViewSchema _dataSchema;
@@ -30,21 +30,21 @@ namespace GimmeMillions.Domain.ML
         private ITransformer _sentimentModel;
 
         public bool IsTrained => Metadata.IsTrained;
-        public CandlestickPredictionModelMetadata<MultiFeatureClassificationPredictorModelParameters> Metadata { get; private set; }
-        public MultiFeatureClassificationPredictorModelParameters Parameters { get; set; }
-        public MultiFeatureClassificationPredictorModel()
+        public CandlestickPredictionModelMetadata<LambkinPredictorModelParameters> Metadata { get; private set; }
+        public LambkinPredictorModelParameters Parameters { get; set; }
+        public LambkinPredictorModel()
         {
-            Metadata = new CandlestickPredictionModelMetadata<MultiFeatureClassificationPredictorModelParameters>();
+            Metadata = new CandlestickPredictionModelMetadata<LambkinPredictorModelParameters>();
             _seed = 27;
             _mLContext = new MLContext(_seed);
-            Parameters = new MultiFeatureClassificationPredictorModelParameters();
+            Parameters = new LambkinPredictorModelParameters();
         }
 
         public Result Load(string pathToModel)
         {
             try
             {
-                Metadata = JsonConvert.DeserializeObject<CandlestickPredictionModelMetadata<MultiFeatureClassificationPredictorModelParameters>>(
+                Metadata = JsonConvert.DeserializeObject<CandlestickPredictionModelMetadata<LambkinPredictorModelParameters>>(
                     File.ReadAllText($"{pathToModel}-Metadata.json"));
 
                 DataViewSchema schema = null;
@@ -71,23 +71,26 @@ namespace GimmeMillions.Domain.ML
                 },
                 GetSchemaDefinition(input));
 
-            //var lowP = _lowRangeModel.Transform(inputDataView);
-            //var lowScore = lowP.GetColumn<float>("Score").ToArray();
+            var lowP = _lowRangeModel.Transform(inputDataView);
+            var lowScore = lowP.GetColumn<float>("Score").ToArray();
+            //var lowProb = lowP.GetColumn<float>("Probability").ToArray();
 
-            //var highP = _highRangeModel.Transform(inputDataView);
-            //var highScore = highP.GetColumn<float>("Score").ToArray();
+            var highP = _highRangeModel.Transform(inputDataView);
+            var highScore = highP.GetColumn<float>("Score").ToArray();
+            //var highProb = highP.GetColumn<float>("Probability").ToArray();
 
             var sP = _sentimentModel.Transform(inputDataView);
             var sScore = sP.GetColumn<float>("Score").ToArray();
-            //var sScore = sP.GetColumn<float>("Probability").ToArray();
+            var sProb = sP.GetColumn<float>("Probability").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
             //var probability = prediction.GetColumn<float>("Probability").ToArray();
 
             return new StockRangePrediction()
             {
-                //PredictedLow = lowScore[0],
-                //PredictedHigh = highScore[0],
-                Sentiment = sScore[0] * 100.0
+                PredictedLow = lowScore[0],
+                PredictedHigh = highScore[0],
+                Sentiment = sProb[0] * 100.0
+                //Sentiment = (lowProb[0]) * 100.0
                 //Sentiment = highScore[0] / (highScore[0] - lowScore[0]) * 100.0f
             };
         }
@@ -135,55 +138,85 @@ namespace GimmeMillions.Domain.ML
             //TRAIN THE LOW RANGE PREDICTOR
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
 
-            //var sentimateEstimator = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true)
-            //    .Append(_mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 1000)
-            //    .Append(_mLContext.BinaryClassification.Calibrators.Platt()));
-            //var sentimateEstimator = _mLContext.Transforms.NormalizeMinMax("Features")
-            //    .Append(_mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 1000)
-            //    .Append(_mLContext.BinaryClassification.Calibrators.Platt()));
-            //var sentimateEstimator = _mLContext.Transforms.NormalizeMinMax("Features")
-            //    .Append(_mLContext.BinaryClassification.Trainers.FastTree()
-            //    .Append(_mLContext.BinaryClassification.Calibrators.Platt()));
-            var sentimateEstimator = _mLContext.Transforms.NormalizeMeanVariance("Features")
+            var predictor = _mLContext.Transforms.NormalizeMeanVariance("Features")
                 .Append(_mLContext.Regression.Trainers.Gam(labelColumnName: "Value"));
-                //.Append(_mLContext.Regression.Calibrators.Platt()));
 
-            var trainData = _mLContext.Data.LoadFromEnumerable(
-               dataset.Take(trainingCount).Select(x =>
-               {
-                   var normVector = x.Input;
-                   return new StockCandlestickDataFeature(
-                   Array.ConvertAll(x.Input.Data, y => (float)y),
-                   trainingOutputMapper.GetBinaryValue(x.Output),
-                   trainingOutputMapper.GetOutputValue(x.Output),
-                   x.Output.Symbol,
-                   (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
-               }),
-               GetSchemaDefinition(firstFeature.Input));
-            var testData = _mLContext.Data.LoadFromEnumerable(
-                dataset.Skip(trainingCount).Select(x =>
+            var trainingSet = dataset.Take(trainingCount);
+            var testSet = dataset.Skip(trainingCount);
+
+            var trainLowData = _mLContext.Data.LoadFromEnumerable(
+                trainingSet.Select(x =>
                 {
                     var normVector = x.Input;
                     return new StockCandlestickDataFeature(
                     Array.ConvertAll(x.Input.Data, y => (float)y),
                     trainingOutputMapper.GetBinaryValue(x.Output),
-                    trainingOutputMapper.GetOutputValue(x.Output),
+                   (float)x.Output.PercentChangeLowToPreviousClose,
                     x.Output.Symbol,
                     (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
                 }),
                 GetSchemaDefinition(firstFeature.Input));
+           
+            _dataSchema = trainLowData.Schema;
+            _lowRangeModel = predictor.Fit(trainLowData);
 
+            var trainHighData = _mLContext.Data.LoadFromEnumerable(
+                trainingSet.Select(x =>
+                {
+                    var normVector = x.Input;
+                    return new StockCandlestickDataFeature(
+                    Array.ConvertAll(x.Input.Data, y => (float)y),
+                    trainingOutputMapper.GetBinaryValue(x.Output),
+                    (float)x.Output.PercentChangeHighToPreviousClose,
+                    x.Output.Symbol,
+                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
+                }),
+                GetSchemaDefinition(firstFeature.Input));
+            _highRangeModel = predictor.Fit(trainHighData);
+
+
+            var medianGain = trainingSet.OrderBy(x => x.Output.PercentChangeFromPreviousClose)
+               .ToList()[trainingSet.Count() / 2].Output.PercentChangeFromPreviousClose;
+            var sentimentPredictor = _mLContext.Transforms.NormalizeMeanVariance("Features")
+                .Append(_mLContext.BinaryClassification.Trainers.SdcaNonCalibrated(labelColumnName: "Label"))
+                .Append(_mLContext.BinaryClassification.Calibrators.Platt());
+            var trainData = _mLContext.Data.LoadFromEnumerable(
+                trainingSet.Select(x =>
+                {
+                    var normVector = x.Input;
+                    return new StockCandlestickDataFeature(
+                    Array.ConvertAll(x.Input.Data, y => (float)y),
+                    x.Output.PercentChangeFromPreviousClose > medianGain,
+                    (float)x.Output.PercentChangeFromPreviousClose,
+                    x.Output.Symbol,
+                    (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
+                }),
+                GetSchemaDefinition(firstFeature.Input));
+            _sentimentModel = sentimentPredictor.Fit(trainData);
+
+            var testData = _mLContext.Data.LoadFromEnumerable(
+               testSet.Select(x =>
+               {
+                   var normVector = x.Input;
+                   return new StockCandlestickDataFeature(
+                   Array.ConvertAll(x.Input.Data, y => (float)y),
+                   x.Output.PercentChangeFromPreviousClose > medianGain,
+                   (float)x.Output.PercentChangeFromPreviousClose,
+                   x.Output.Symbol,
+                   (int)x.Input.Date.DayOfWeek / 7.0f, x.Input.Date.DayOfYear / 366.0f);
+               }),
+               GetSchemaDefinition(firstFeature.Input));
 
             //var estimator = _mLContext.BinaryClassification.Trainers.LinearSvm(numberOfIterations: 500)
             //    .Append(_mLContext.BinaryClassification.Calibrators.Platt());
             //var estimator = _mLContext.BinaryClassification.Trainers.FastTree();
 
-            _sentimentModel = sentimateEstimator.Fit(trainData);
+            //_sentimentModel = predictor.Fit(trainData);
 
             Metadata.TrainingResults = new ModelMetrics();
             if (testData != null)
             {
-                var testPredictions = _sentimentModel.Transform(testData);
+                //var testPredictions = _sentimentModel.Transform(testData);
                 var labels = testData.GetColumn<bool>("Label").ToArray();
                 var values = testData.GetColumn<float>("Value").ToArray();
                 var features = testData.GetColumn<float[]>("Features").ToArray();
@@ -194,10 +227,10 @@ namespace GimmeMillions.Domain.ML
                     var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
-                    if (posS.Sentiment > 80.0f)
+                    if (posS.Sentiment > 50.0f)
                         predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.5f, i));
 
-                    if (posS.Sentiment < 20.0f)
+                    if (posS.Sentiment < 50.0f)
                         predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.5f, i));
 
                     //if (Math.Abs(posS.PredictedHigh) > Math.Abs(posS.PredictedLow))
