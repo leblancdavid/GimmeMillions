@@ -2,6 +2,7 @@
 using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Domain.Features;
 using GimmeMillions.Domain.Features.Extractors;
+using GimmeMillions.Domain.Features.Services;
 using GimmeMillions.Domain.ML;
 using GimmeMillions.Domain.ML.Candlestick;
 using GimmeMillions.Domain.Stocks;
@@ -16,7 +17,8 @@ namespace ModelTrainer
 {
     public class LambkinModelTrainer
     {
-        private IFeatureDatasetService<FeatureVector> _datasetService;
+        private IFeatureDatasetService<FeatureVector> _futuresDatasetService;
+        private IFeatureDatasetService<FeatureVector> _stocksDatasetService;
         private IStockSymbolsRepository _stockSymbolsRepository;
         private IStockRangePredictor _model;
         private StockDataPeriod _period;
@@ -38,7 +40,8 @@ namespace ModelTrainer
             _period = period;
             _numStockSamples = numStockSamples;
             _predictionLength = predictionLength;
-            _datasetService = GetIndicatorFeaturesBuySellSignalDatasetService(period, samplingPeriod, _numStockSamples, kSize, offset, _predictionLength);
+            _futuresDatasetService = GetFuturesFeaturesBuySellSignalDatasetService(period, numStockSamples, kSize, offset, _predictionLength);
+            _stocksDatasetService = GetStocksFeaturesBuySellSignalDatasetService(period, numStockSamples, kSize, offset, _predictionLength);
         }
 
         public void LoadModel(string modelName)
@@ -52,9 +55,9 @@ namespace ModelTrainer
             _model = new LambkinPredictorModel();
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            trainingData.AddRange(_datasetService.GetTrainingData("DIA", null, true, numSamples));
-            trainingData.AddRange(_datasetService.GetTrainingData("SPY", null, true, numSamples));
-            trainingData.AddRange(_datasetService.GetTrainingData("QQQ", null, true, numSamples));
+            trainingData.AddRange(_futuresDatasetService.GetTrainingData("DIA", null, true, numSamples));
+            trainingData.AddRange(_futuresDatasetService.GetTrainingData("SPY", null, true, numSamples));
+            trainingData.AddRange(_futuresDatasetService.GetTrainingData("QQQ", null, true, numSamples));
 
             var medianGain = (double)trainingData.OrderBy(x => x.Output.PercentChangeFromPreviousClose)
                .ToList()[trainingData.Count / 2].Output.PercentChangeFromPreviousClose;
@@ -78,15 +81,15 @@ namespace ModelTrainer
                 minVolume: 100000.0m);
 
             var trainingData = new List<(FeatureVector Input, StockData Output)>();
-            trainingData.AddRange(_datasetService.GetTrainingData("TSLA", null, true, numSamples));
-            trainingData.AddRange(_datasetService.GetTrainingData("MSFT", null, true, numSamples));
-            trainingData.AddRange(_datasetService.GetTrainingData("F", null, true, numSamples));
-            trainingData.AddRange(_datasetService.GetTrainingData("S", null, true, numSamples));
-            trainingData.AddRange(_datasetService.GetTrainingData("SPOT", null, true, numSamples));
-            trainingData.AddRange(_datasetService.GetTrainingData("AMD", null, true, numSamples));
-            trainingData.AddRange(_datasetService.GetTrainingData("AMZN", null, true, numSamples));
-            trainingData.AddRange(_datasetService.GetTrainingData("BIDU", null, true, numSamples));
-            trainingData.AddRange(_datasetService.GetTrainingData("FB", null, true, numSamples));
+            trainingData.AddRange(_futuresDatasetService.GetTrainingData("TSLA", null, true, numSamples));
+            trainingData.AddRange(_futuresDatasetService.GetTrainingData("MSFT", null, true, numSamples));
+            trainingData.AddRange(_futuresDatasetService.GetTrainingData("F", null, true, numSamples));
+            trainingData.AddRange(_futuresDatasetService.GetTrainingData("S", null, true, numSamples));
+            trainingData.AddRange(_futuresDatasetService.GetTrainingData("SPOT", null, true, numSamples));
+            trainingData.AddRange(_futuresDatasetService.GetTrainingData("AMD", null, true, numSamples));
+            trainingData.AddRange(_futuresDatasetService.GetTrainingData("AMZN", null, true, numSamples));
+            trainingData.AddRange(_futuresDatasetService.GetTrainingData("BIDU", null, true, numSamples));
+            trainingData.AddRange(_futuresDatasetService.GetTrainingData("FB", null, true, numSamples));
 
             //var trainingData = new List<(FeatureVector Input, StockData Output)>();
             //trainingData.AddRange(_datasetService.GetAllTrainingData(stockFilter, true, numSamples));
@@ -106,8 +109,8 @@ namespace ModelTrainer
             double accuracy = 0.0;
             using (var w = new StreamWriter(outputDataFile))
             {
-                var testData = _datasetService.GetTrainingData(symbol, null, true, numSamples);
-                var stocks = _datasetService.StockAccess.GetStocks(symbol, _period);
+                var testData = _stocksDatasetService.GetTrainingData(symbol, null, true, numSamples);
+                var stocks = _stocksDatasetService.StockAccess.GetStocks(symbol, _period);
                 foreach (var sample in testData)
                 {
                     var prediction = _model.Predict(sample.Input);
@@ -127,9 +130,8 @@ namespace ModelTrainer
             return accuracy;
         }
 
-        private IFeatureDatasetService<FeatureVector> GetIndicatorFeaturesBuySellSignalDatasetService(
+        private IFeatureDatasetService<FeatureVector> GetFuturesFeaturesBuySellSignalDatasetService(
             StockDataPeriod period,
-            int timeSampling = 10,
             int numStockSamples = 40,
             int kernelSize = 9,
             int signalOffset = 0,
@@ -139,6 +141,35 @@ namespace ModelTrainer
             var stocksRepo = new TDAmeritradeStockAccessService(ameritradeClient, _stockSymbolsRepository);
             var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
             {
+                new SupportResistanceStockFeatureExtractor(),
+                new FibonacciStockFeatureExtractor(),
+                new MACDHistogramFeatureExtraction(20),
+                new TTMSqueezeFeatureExtraction(20),
+                new RSIFeatureExtractor(20),
+                new VWAPFeatureExtraction(20),
+                new CMFFeatureExtraction(20),
+                new BollingerBandFeatureExtraction(20),
+                new KeltnerChannelFeatureExtraction(20),
+                new TrendStockFeatureExtractor(20),
+                new SimpleMovingAverageFeatureExtractor(20)
+            });
+
+            return new BuySellSignalFeatureDatasetService(extractor, stocksRepo,
+                period, numStockSamples, kernelSize, signalOffset, predictionLength);
+        }
+
+        private IFeatureDatasetService<FeatureVector> GetStocksFeaturesBuySellSignalDatasetService(
+            StockDataPeriod period,
+            int numStockSamples = 40,
+            int kernelSize = 9,
+            int signalOffset = 0,
+            int predictionLength = 5)
+        {
+            var ameritradeClient = new TDAmeritradeApiClient(_apiKey);
+            var stocksRepo = new TDAmeritradeStockAccessService(ameritradeClient, _stockSymbolsRepository);
+            var extractor = new MultiStockFeatureExtractor(new List<IFeatureExtractor<StockData>>
+            {
+                new FuturesFeatureExtractor(new FuturesFeatureDatasetCache(_futuresDatasetService)),
                 new SupportResistanceStockFeatureExtractor(),
                 new FibonacciStockFeatureExtractor(),
                 new MACDHistogramFeatureExtraction(20),
