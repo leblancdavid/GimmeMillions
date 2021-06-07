@@ -6,12 +6,12 @@ using GimmeMillions.Domain.Stocks.Recommendations;
 
 namespace GimmeMillions.WebApi.Services
 {
-    public class EgyptianMauRecommendationSystemProvider : IRecommendationSystemProvider
+    public class JavaneseRecommendationSystemProvider : IRecommendationSystemProvider
     {
         private IStockAccessService _stockAccessService;
         private IStockRecommendationHistoryRepository _stockRecommendationRepository;
         private ILogger _logger;
-        public EgyptianMauRecommendationSystemProvider(
+        public JavaneseRecommendationSystemProvider(
             IStockAccessService stockAccessService,
             IStockRecommendationHistoryRepository stockRecommendationRepository,
             ILogger logger)
@@ -23,7 +23,7 @@ namespace GimmeMillions.WebApi.Services
 
         public IStockRecommendationSystem<FeatureVector> GetCryptoRecommendations()
         {
-            return RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(
+            return RecommendationSystemFactory.GetJavaneseRecommendationSystem(
                 _stockAccessService,
                 _stockRecommendationRepository,
                 "Resources/Models/Futures", _logger);
@@ -31,7 +31,7 @@ namespace GimmeMillions.WebApi.Services
 
         public IStockRecommendationSystem<FeatureVector> GetFuturesRecommendations()
         {
-            return RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(
+            return RecommendationSystemFactory.GetJavaneseRecommendationSystem(
                 _stockAccessService,
                 _stockRecommendationRepository,
                 "Resources/Models/Futures", _logger);
@@ -39,7 +39,7 @@ namespace GimmeMillions.WebApi.Services
 
         public IStockRecommendationSystem<FeatureVector> GetStocksRecommendations()
         {
-            return RecommendationSystemFactory.GetEgyptianMauRecommendationSystem(
+            return RecommendationSystemFactory.GetJavaneseRecommendationSystem(
                 _stockAccessService,
                 _stockRecommendationRepository,
                 "Resources/Models/Stocks", _logger);

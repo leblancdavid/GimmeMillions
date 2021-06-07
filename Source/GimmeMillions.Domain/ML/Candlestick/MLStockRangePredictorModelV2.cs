@@ -78,8 +78,8 @@ namespace GimmeMillions.Domain.ML
             var highScore = highP.GetColumn<float>("Score").ToArray();
 
             var sP = _sentimentModel.Transform(inputDataView);
-            //var sScore = sP.GetColumn<float>("Score").ToArray();
-            var sScore = sP.GetColumn<float>("Probability").ToArray();
+            var sScore = sP.GetColumn<float>("Score").ToArray();
+            //var sScore = sP.GetColumn<float>("Probability").ToArray();
             //var predictedLabel = prediction.GetColumn<bool>("PredictedLabel").ToArray();
             //var probability = prediction.GetColumn<float>("Probability").ToArray();
 
@@ -135,11 +135,9 @@ namespace GimmeMillions.Domain.ML
             //TRAIN THE LOW RANGE PREDICTOR
             int trainingCount = (int)((double)dataset.Count() * (1.0 - testFraction));
 
-            //var rangeEstimator = _mLContext.Transforms.ApproximatedKernelMap("Features", rank: 100)
-            //    .Append(_mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: 3000));
-            var rangeEstimator = _mLContext.Regression.Trainers.LightGbm(labelColumnName: "Value", numberOfLeaves: 5000);
-            var sentimateEstimator = _mLContext.BinaryClassification.Trainers.FastForest(numberOfTrees: 2000, numberOfLeaves: 20)
-                .Append(_mLContext.BinaryClassification.Calibrators.Platt());
+            var rangeEstimator = _mLContext.Regression.Trainers.Gam(labelColumnName: "Value");
+            var sentimateEstimator = _mLContext.Transforms.NormalizeMeanVariance("Features", useCdf: true)
+                .Append(_mLContext.Regression.Trainers.Sdca(labelColumnName: "Value"));
 
             var trainLowData = _mLContext.Data.LoadFromEnumerable(
                 dataset.Take(trainingCount).Select(x =>
@@ -236,17 +234,23 @@ namespace GimmeMillions.Domain.ML
                 var values = testData.GetColumn<float>("Value").ToArray();
                 var features = testData.GetColumn<float[]>("Features").ToArray();
 
-                var predictionData = new List<(float Score, float Probability, bool PredictedLabel, bool ActualLabel)>();
+                var predictionData = new List<(float Score, float Probability, bool PredictedLabel, bool ActualLabel, int Index)>();
                 for (int i = 0; i < features.Length; ++i)
                 {
                     var posS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding));
                     //var negS = Predict(new FeatureVector(Array.ConvertAll(features[i], y => (double)y), new DateTime(), firstFeature.Input.Encoding), false);
 
-                    if(posS.Sentiment > 80.0f) 
-                        predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.5f));
+                    if (posS.Sentiment > 50.0f/* && (posS.PredictedHigh + posS.PredictedLow) > 0.0*/)
+                        predictionData.Add(((float)posS.Sentiment, (float)values[i], true, values[i] > 0.5f, i));
 
-                    if (posS.Sentiment < 20.0f)
-                        predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.5f));
+                    if (posS.Sentiment < 50.0f/* && (posS.PredictedHigh + posS.PredictedLow) < 0.0*/)
+                        predictionData.Add(((float)posS.Sentiment, (float)values[i], false, values[i] > 0.5f, i));
+
+                    //if (Math.Abs(posS.PredictedHigh) > Math.Abs(posS.PredictedLow))
+                    //    predictionData.Add(((float)posS.PredictedHigh, (float)values[i], true, values[i] > 0.5f));
+
+                    //if (Math.Abs(posS.PredictedHigh) < Math.Abs(posS.PredictedLow))
+                    //    predictionData.Add(((float)posS.PredictedHigh, (float)values[i], false, values[i] > 0.5f));
                 }
 
                 predictionData = predictionData.OrderByDescending(x => x.Score).ToList();

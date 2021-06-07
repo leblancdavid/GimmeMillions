@@ -10,6 +10,8 @@ namespace GimmeMillions.Domain.Features.Extractors
     {
         public string Encoding { get; private set; }
 
+        public int OutputLength { get; private set; }
+
         public DFTStockFeatureExtractor()
         {
             Encoding = "DFTFeatures";
@@ -29,6 +31,7 @@ namespace GimmeMillions.Domain.Features.Extractors
                 .Concat(DFT(ordered.Select(x => ((double)x.High - minPrice) / (maxPrice - minPrice)).ToArray()))
                 .Concat(DFT(ordered.Select(x => ((double)x.Low - minPrice) / (maxPrice - minPrice)).ToArray()))
                 .Concat(DFT(ordered.Select(x => ((double)x.Volume - minVolume) / (maxPrice - maxVolume)).ToArray())).ToArray();
+
 
             return dft;
         }

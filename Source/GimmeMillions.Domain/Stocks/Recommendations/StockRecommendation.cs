@@ -48,6 +48,7 @@ namespace GimmeMillions.Domain.Stocks
         }
 
         public decimal Sentiment { get; set; }
+        public decimal Confidence { get; set; }
         public StockRecommendation(string systemId, decimal prediction, DateTime date, StockData lastData)
         {
             SystemId = systemId;
@@ -58,13 +59,15 @@ namespace GimmeMillions.Domain.Stocks
         }
 
         public StockRecommendation(string systemId,
-            decimal highPrediction, decimal lowPrediction, decimal sentiment, DateTime date, StockData lastData)
+            decimal highPrediction, decimal lowPrediction, decimal sentiment, decimal confidence, 
+            DateTime date, StockData lastData)
         {
             SystemId = systemId;
             DateUpdated = DateTime.Now;
             Prediction = highPrediction;
             LowPrediction = lowPrediction;
             Sentiment = sentiment;
+            Confidence = confidence;
             Date = date;
             LastData = lastData;
         }

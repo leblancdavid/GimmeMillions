@@ -9,6 +9,7 @@ namespace GimmeMillions.Domain.Features
     {
         public string Encoding { get; private set; }
 
+        public int OutputLength { get; private set; }
         public NormalizedHeikinAshiCandlesStockFeatureExtractor()
         {
             Encoding = "NormHeikinAshiFeatures";

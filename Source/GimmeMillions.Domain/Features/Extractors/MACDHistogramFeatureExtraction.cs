@@ -13,6 +13,7 @@ namespace GimmeMillions.Domain.Features
         private int _slowEma = 26;
         private int _fastEma = 12;
         private int _macdEma = 9;
+        public int OutputLength { get; private set; }
 
         public MACDHistogramFeatureExtraction(
             int timesampling = 5,
@@ -21,6 +22,7 @@ namespace GimmeMillions.Domain.Features
             int macdEma = 9)
         {
             _timeSampling = timesampling;
+            OutputLength = _timeSampling;
             _slowEma = slowEma;
             _fastEma = fastEma;
             _macdEma = macdEma;

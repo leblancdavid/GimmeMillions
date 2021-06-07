@@ -52,15 +52,15 @@ namespace RecommendationMaker
 
                        var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdApiKey), 
                            new StockSymbolsFile("nasdaq_screener.csv"));
-                       recommendationSystem = RecommendationSystemFactory.GetJavaneseRecommendationSystem(stockAccess, recommendationRepo,
-                            $"{o.PathToModel}/StocksModel", logger);
+                       recommendationSystem = RecommendationSystemFactory.GetLambkinRecommendationSystem(stockAccess, recommendationRepo,
+                            $"{o.PathToModel}/Stocks", logger);
                        if (recommendationSystem == null)
                        {
                            Console.WriteLine($"Unable to retrieve stocks model at {o.PathToModel}/StocksModel");
                        }
 
-                       futuresRecommendationSystem = RecommendationSystemFactory.GetJavaneseRecommendationSystem(stockAccess, recommendationRepo,
-                            $"{o.PathToModel}/FuturesModel", logger);
+                       futuresRecommendationSystem = RecommendationSystemFactory.GetLambkinRecommendationSystem(stockAccess, recommendationRepo,
+                            $"{o.PathToModel}/Futures", logger);
                        if (futuresRecommendationSystem == null)
                        {
                            Console.WriteLine($"Unable to retrieve futures model at {o.PathToModel}/FuturesModel");
@@ -116,7 +116,8 @@ namespace RecommendationMaker
                          $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
                         $"Sentiment: {Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%, " +
                         $"High: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                        $"Low: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, ";
+                        $"Low: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                        $"Conf: {Math.Round(r.Confidence, 2, MidpointRounding.AwayFromZero)}%";
                     Console.WriteLine(text);
                     //if(i < keepTop)
                     //{
@@ -156,7 +157,8 @@ namespace RecommendationMaker
                          $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
                         $"Sentiment: {Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%, " +
                         $"High: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                        $"Low: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, ";
+                        $"Low: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                        $"Conf: {Math.Round(r.Confidence, 2, MidpointRounding.AwayFromZero)}%";
                     Console.WriteLine(text);
                     //if(i < keepTop)
                     //{
@@ -180,7 +182,8 @@ namespace RecommendationMaker
                          $"({Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
                         $"Sentiment: {Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%, " +
                         $"High: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                        $"Low: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, ";
+                        $"Low: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                        $"Conf: {Math.Round(r.Confidence, 2, MidpointRounding.AwayFromZero)}%";
                     Console.WriteLine(text);
                     //if(i < keepTop)
                     //{

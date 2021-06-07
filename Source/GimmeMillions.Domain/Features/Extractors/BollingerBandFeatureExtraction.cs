@@ -11,14 +11,15 @@ namespace GimmeMillions.Domain.Features
         public string Encoding { get; private set; }
         private int _timeSampling = 5;
         private int _bollingerLength = 20;
-        private int _fastEma = 12;
-        private int _macdEma = 9;
+
+        public int OutputLength { get; private set; }
 
         public BollingerBandFeatureExtraction(
             int timesampling = 5,
             int bollingerLength = 20)
         {
             _timeSampling = timesampling;
+            OutputLength = _timeSampling;
             _bollingerLength = bollingerLength;
             Encoding = $"Bollinger{_bollingerLength},{_timeSampling}";
         }

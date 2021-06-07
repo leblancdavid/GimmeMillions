@@ -12,11 +12,13 @@ namespace GimmeMillions.Domain.Features
     {
         public string Encoding { get; private set; }
         private decimal _threshold = 0.01m;
+        public int OutputLength { get; private set; }
 
         public SupportResistanceStockFeatureExtractor(decimal threshold = 0.01m)
         {
             Encoding = "SupportResistance";
             _threshold = threshold;
+            OutputLength = 2;
         }
 
         public double[] Extract(IEnumerable<(StockData Data, float Weight)> data)

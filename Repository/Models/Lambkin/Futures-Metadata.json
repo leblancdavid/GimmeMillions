@@ -1,0 +1,21 @@
+{
+  "TrainingResults": {
+    "AreaUnderRocCurve": 0.0,
+    "Accuracy": 0.0,
+    "PositivePrecision": 0.0,
+    "PositiveRecall": 0.0,
+    "NegativePrecision": 0.0,
+    "NegativeRecall": 0.0,
+    "F1Score": 0.0,
+    "AreaUnderPrecisionRecallCurve": 0.0,
+    "Error": 0.0
+  },
+  "Parameters": null,
+  "IsTrained": true,
+  "AverageUpperProbability": 0.0,
+  "AverageLowerProbability": 0.0,
+  "AverageUpperScore": 0.0,
+  "AverageLowerScore": 0.0,
+  "FeatureEncoding": "SupportResistance-FibonacciFeatures-MACD26,12,9,20-TTM20,20-RSI14,20-VWAP10,20-CMF21,20-Bollinger20,20-Keltner20,20-TrendFeatures-SMA_200d-15k",
+  "ModelId": null
+}

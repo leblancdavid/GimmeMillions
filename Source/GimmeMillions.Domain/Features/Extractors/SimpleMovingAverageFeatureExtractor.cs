@@ -11,6 +11,7 @@ namespace GimmeMillions.Domain.Features.Extractors
         public string Encoding { get; private set; }
         private int _quantization;
         private bool _includeVolume;
+        public int OutputLength { get; private set; }
 
         public SimpleMovingAverageFeatureExtractor(int quantization = 5, bool includeVolume = true)
         {

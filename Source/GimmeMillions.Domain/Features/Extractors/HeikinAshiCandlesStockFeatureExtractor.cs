@@ -8,6 +8,7 @@ namespace GimmeMillions.Domain.Features
     public class HeikinAshiCandlesStockFeatureExtractor : IFeatureExtractor<StockData>
     {
         public string Encoding { get; private set; }
+        public int OutputLength { get; private set; }
 
         public HeikinAshiCandlesStockFeatureExtractor()
         {

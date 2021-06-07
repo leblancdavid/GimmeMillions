@@ -7,34 +7,35 @@ using System.Threading.Tasks;
 
 namespace GimmeMillions.Domain.Features
 {
-    public class RawCandlesStockFeatureExtractor : IFeatureExtractor<StockData>
+    public class BinaryRawCandlesStockFeatureExtractor : IFeatureExtractor<StockData>
     {
         public string Encoding { get; private set; }
 
-        public RawCandlesStockFeatureExtractor()
+        public int OutputLength { get; private set; }
+
+        public BinaryRawCandlesStockFeatureExtractor()
         {
-            Encoding = "RawFeatures";
+            Encoding = "BinaryRawFeatures";
         }
 
         public double[] Extract(IEnumerable<(StockData Data, float Weight)> data)
         {
             var ordered = data.OrderByDescending(x => x.Data.Date).ToList();
-            double averageVolume = ordered.Average(x => (double)x.Data.Volume); 
-            double averageBody = data.Average(x => (double)Math.Abs(x.Data.PercentPeriodChange));
-            double averageGap = data.Average(x => (double)Math.Abs(x.Data.PercentChangeOpenToPreviousClose));
+            double averageVolume = ordered.Average(x => (double)x.Data.Volume);
             double averageBottom = data.Average(x => (double)x.Data.BottomWickPercent);
             double averageTop = data.Average(x => (double)x.Data.TopWickPercent);
             
              var feature = new List<double>();
             foreach(var bar in ordered)
             {
-                feature.Add((double)bar.Data.PercentPeriodChange / averageBody);
-                feature.Add((double)bar.Data.PercentChangeOpenToPreviousClose / averageGap);
-                feature.Add((double)bar.Data.BottomWickPercent / averageBottom);
-                feature.Add((double)bar.Data.TopWickPercent / averageTop);
-                feature.Add((double)bar.Data.Volume / averageVolume);
+                feature.Add((double)bar.Data.PercentPeriodChange > 0.0 ? 1.0 : 0.0);
+                feature.Add((double)bar.Data.PercentChangeOpenToPreviousClose > 0.0 ? 1.0 : 0.0);
+                feature.Add((double)bar.Data.BottomWickPercent > averageBottom ? 1.0 : 0.0);
+                feature.Add((double)bar.Data.TopWickPercent > averageTop ? 1.0 : 0.0);
+                feature.Add((double)bar.Data.Volume > averageVolume ? 1.0 : 0.0);
             }
 
+            OutputLength = feature.Count;
             return feature.ToArray();
         }
     }

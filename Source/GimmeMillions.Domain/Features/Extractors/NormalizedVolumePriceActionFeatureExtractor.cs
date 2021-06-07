@@ -11,6 +11,7 @@ namespace GimmeMillions.Domain.Features.Extractors
     {
         public string Encoding { get; private set; }
         private int _length;
+        public int OutputLength { get; private set; }
         public NormalizedVolumePriceActionFeatureExtractor(int length)
         {
             _length = length;
