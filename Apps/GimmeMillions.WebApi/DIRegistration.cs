@@ -3,6 +3,7 @@ using GimmeMillions.DataAccess.Stocks;
 using GimmeMillions.Database;
 using GimmeMillions.Domain.Authentication;
 using GimmeMillions.Domain.Stocks;
+using GimmeMillions.Domain.Stocks.Recommendations;
 using GimmeMillions.WebApi.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,8 +17,9 @@ namespace GimmeMillions.WebApi
         {
             //services.AddScoped<IStockRecommendationRepository, SQLStockRecommendationRepository>();
             //services.AddScoped<IStockHistoryRepository, SQLStockHistoryRepository>();
+            services.AddScoped<IStockRecommendationHistoryRepository, SQLStockRecommendationHistoryRepository>();
             services.AddScoped<IStockRepository, DefaultStockRepository>();
-            services.AddScoped<IRecommendationSystemProvider, JavaneseRecommendationSystemProvider>();
+            services.AddScoped<IRecommendationSystemProvider, RecommendationSystemProvider>();
             services.AddScoped<IUserService, SQLUserRepository>();
             services.AddSingleton<IStockSymbolsRepository>(new StockSymbolsFile("Resources/nasdaq_screener.csv"));
 
