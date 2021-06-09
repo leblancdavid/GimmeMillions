@@ -11,6 +11,7 @@
                 {{item.sentiment | number : '1.2-2'}}%
             </div>
         </mat-expansion-panel-header>
+        
         <mat-grid-list cols="2" rowHeight="32px">
             <mat-grid-tile>
                 <div class="stock-detail-row">
@@ -58,10 +59,12 @@
                 </div>
             </mat-grid-tile>
         </mat-grid-list>
+
         <div class="stock-detail-actions">
-            <button mat-button disabled>DETAILS</button>
+            <button mat-button (click)="getDetails($event)">DETAILS</button>
             <button mat-raised-button color="primary" *ngIf="!isWatching" (click)="watch($event)">WATCH</button>
             <button mat-raised-button color="primary" *ngIf="isWatching" (click)="unwatch($event)">UNWATCH</button>
         </div>
+        
     </mat-expansion-panel>
 </mat-accordion>

@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { AuthenticationService } from '../users/authentication.service';
 import { StockData } from './stock-data';
 import { StockRecommendation } from './stock-recommendation';
+import { StockRecommendationHistory } from './stock-recommendation-history';
 
 @Injectable({
   providedIn: 'root'
@@ -57,6 +58,10 @@ export class StockRecommendationService {
           r.lastData.open, r.lastData.high, r.lastData.low, r.lastData.close, 
           r.lastData.adjustedClose, r.lastData.volume, r.lastData.previousClose));
     }));
+  }
+
+  public getHistoryFor(symbol: string): Observable<StockRecommendationHistory> {
+    return this.http.get<StockRecommendationHistory>(this.url + '/stocks/history/' + symbol);
   }
 
   public getUserWatchlistRecommendations(): Observable<Array<StockRecommendation>> {

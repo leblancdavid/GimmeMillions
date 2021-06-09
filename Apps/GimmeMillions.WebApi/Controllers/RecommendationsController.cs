@@ -107,7 +107,7 @@ namespace GimmeMillions.WebApi.Controllers
                 return BadRequest(history.Error);
             }
 
-            return Ok(history.Value);
+            return Ok(history.Value.ToDto());
         }
 
         [HttpDelete()]

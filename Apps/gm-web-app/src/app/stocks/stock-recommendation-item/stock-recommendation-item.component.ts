@@ -58,4 +58,9 @@ export class StockRecommendationItemComponent implements OnInit {
     }
   }
 
+  getDetails(event: MouseEvent) {
+    event.stopImmediatePropagation();
+
+  }
+
 }

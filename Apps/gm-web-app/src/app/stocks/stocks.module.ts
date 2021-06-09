@@ -15,6 +15,7 @@ import { DailyPredictionsComponent } from './daily-predictions/daily-predictions
 import { TrendIconComponent } from './stock-recommendation-item/trend-icon/trend-icon.component';
 import { ConsensusPipe } from './stock-recommendation-item/consensus.pipe';
 import { ResourcesModule } from '../resources/resources.module';
+import { RecommendationHistoryDialogComponent } from './recommendation-history-dialog/recommendation-history-dialog.component';
 
 
 @NgModule({
@@ -27,7 +28,7 @@ import { ResourcesModule } from '../resources/resources.module';
     StockDetailsComponent,
     DailyPredictionsComponent, 
     TrendIconComponent, 
-    ConsensusPipe
+    ConsensusPipe, RecommendationHistoryDialogComponent
   ],
   imports: [
     CommonModule,
@@ -38,6 +39,9 @@ import { ResourcesModule } from '../resources/resources.module';
     ReactiveFormsModule,
     MaterialModule,
     ResourcesModule
-  ]
+  ],
+  entryComponents: [
+    RecommendationHistoryDialogComponent
+  ],
 })
 export class StocksModule { }
