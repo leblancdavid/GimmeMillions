@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { RecommendationHistoryDialogComponent } from '../recommendation-history-dialog/recommendation-history-dialog.component';
 import { StockRecommendation } from '../stock-recommendation';
 import { UserWatchlistService } from '../user-watchlist/user-watchlist.service';
 
@@ -26,7 +28,8 @@ export class StockRecommendationItemComponent implements OnInit {
   get item(): StockRecommendation | undefined {
     return this._item;
   }
-  constructor(public watchlistService: UserWatchlistService) { 
+  constructor(public watchlistService: UserWatchlistService,
+    public dialog: MatDialog) { 
     this.selected = false;
     this.isWatching = false;
     this.watchlistService.watchlistUpdate.subscribe(() => {
@@ -60,7 +63,13 @@ export class StockRecommendationItemComponent implements OnInit {
 
   getDetails(event: MouseEvent) {
     event.stopImmediatePropagation();
+    const dialogRef  = this.dialog.open(RecommendationHistoryDialogComponent, {
+      data: { symbol: this._item?.symbol }
+    })
 
+    dialogRef.afterClosed().subscribe(result => {
+      //react if needed
+    });
   }
 
 }

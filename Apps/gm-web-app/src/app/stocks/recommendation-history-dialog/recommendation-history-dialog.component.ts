@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'gm-recommendation-history-dialog',
@@ -8,7 +8,8 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class RecommendationHistoryDialogComponent implements OnInit {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {symbol: string}) { }
+  constructor(public dialogRef: MatDialogRef<RecommendationHistoryDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: {symbol: string}) { }
 
   ngOnInit(): void {
   }
