@@ -1,13 +1,17 @@
+import { StockData } from "./stock-data";
+
 export class StockRecommendation {
     constructor(public date: Date,
         public symbol: string,
         public systemId: string,
         public sentiment: number,
+        public confidence: number,
         public prediction: number,
         public lowPrediction: number,
         public previousClose: number,
         public predictedPriceTarget: number,
-        public predictedLowTarget: number) {
+        public predictedLowTarget: number,
+        public lastData: StockData) {
 
     }
 

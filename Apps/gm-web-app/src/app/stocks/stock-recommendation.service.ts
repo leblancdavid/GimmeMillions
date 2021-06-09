@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AuthenticationService } from '../users/authentication.service';
+import { StockData } from './stock-data';
 import { StockRecommendation } from './stock-recommendation';
 
 @Injectable({
@@ -20,8 +21,11 @@ export class StockRecommendationService {
       let mappedDailies = new Array<StockRecommendation>();
       for(let f of stocks) {
         mappedDailies.push(new StockRecommendation(f.date, f.symbol, f.systemId,
-          f.sentiment, f.prediction, f.lowPrediction, f.previousClose,
-          f.predictedPriceTarget, f.predictedLowTarget));
+          f.sentiment, f.confidence, f.prediction, f.lowPrediction, f.previousClose,
+          f.predictedPriceTarget, f.predictedLowTarget, 
+          new StockData(f.lastData.date, f.lastData.symbol, 
+            f.lastData.open, f.lastData.high, f.lastData.low, f.lastData.close, 
+            f.lastData.adjustedClose, f.lastData.volume, f.lastData.previousClose)));
       }
       return mappedDailies;
     }));
@@ -33,8 +37,11 @@ export class StockRecommendationService {
       let mappedFutures = new Array<StockRecommendation>();
       for(let f of futures) {
         mappedFutures.push(new StockRecommendation(f.date, f.symbol, f.systemId,
-          f.sentiment, f.prediction, f.lowPrediction, f.previousClose,
-          f.predictedPriceTarget, f.predictedLowTarget));
+          f.sentiment, f.confidence, f.prediction, f.lowPrediction, f.previousClose,
+          f.predictedPriceTarget, f.predictedLowTarget, 
+          new StockData(f.lastData.date, f.lastData.symbol, 
+            f.lastData.open, f.lastData.high, f.lastData.low, f.lastData.close, 
+            f.lastData.adjustedClose, f.lastData.volume, f.lastData.previousClose)));
       }
       return mappedFutures;
     }));
@@ -44,8 +51,11 @@ export class StockRecommendationService {
     return this.http.get<StockRecommendation>(this.url + '/stocks/' + symbol)
     .pipe(map(r => {
       return new StockRecommendation(r.date, r.symbol, r.systemId,
-        r.sentiment, r.prediction, r.lowPrediction, r.previousClose,
-        r.predictedPriceTarget, r.predictedLowTarget);
+        r.sentiment, r.confidence, r.prediction, r.lowPrediction, r.previousClose,
+        r.predictedPriceTarget, r.predictedLowTarget, 
+        new StockData(r.lastData.date, r.lastData.symbol, 
+          r.lastData.open, r.lastData.high, r.lastData.low, r.lastData.close, 
+          r.lastData.adjustedClose, r.lastData.volume, r.lastData.previousClose));
     }));
   }
 
@@ -56,8 +66,11 @@ export class StockRecommendationService {
       let mapped = new Array<StockRecommendation>();
       for(let f of picks) {
         mapped.push(new StockRecommendation(f.date, f.symbol, f.systemId,
-          f.sentiment, f.prediction, f.lowPrediction, f.previousClose,
-          f.predictedPriceTarget, f.predictedLowTarget));
+          f.sentiment, f.confidence, f.prediction, f.lowPrediction, f.previousClose,
+          f.predictedPriceTarget, f.predictedLowTarget, 
+          new StockData(f.lastData.date, f.lastData.symbol, 
+            f.lastData.open, f.lastData.high, f.lastData.low, f.lastData.close, 
+            f.lastData.adjustedClose, f.lastData.volume, f.lastData.previousClose)));
       }
       return mapped;
     }));
