@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from '../material/material.module';
+import { ChartsModule } from 'ng2-charts'
 import { FuturesComponent } from './futures/futures.component';
 import { StocksComponent } from './stocks.component';
 import { StockRecommendationItemComponent } from './stock-recommendation-item/stock-recommendation-item.component';
@@ -20,6 +21,7 @@ import { HistoryChartComponent } from './history-chart/history-chart.component';
 import { SentimentHistoryChartComponent } from './sentiment-history-chart/sentiment-history-chart.component';
 
 
+
 @NgModule({
   declarations: [
     StocksComponent, 
@@ -30,7 +32,10 @@ import { SentimentHistoryChartComponent } from './sentiment-history-chart/sentim
     StockDetailsComponent,
     DailyPredictionsComponent, 
     TrendIconComponent, 
-    ConsensusPipe, RecommendationHistoryDialogComponent, HistoryChartComponent, SentimentHistoryChartComponent
+    ConsensusPipe, 
+    RecommendationHistoryDialogComponent, 
+    HistoryChartComponent, 
+    SentimentHistoryChartComponent
   ],
   imports: [
     CommonModule,
@@ -40,7 +45,8 @@ import { SentimentHistoryChartComponent } from './sentiment-history-chart/sentim
     HttpClientModule,
     ReactiveFormsModule,
     MaterialModule,
-    ResourcesModule
+    ResourcesModule,
+    ChartsModule
   ],
   entryComponents: [
     RecommendationHistoryDialogComponent
