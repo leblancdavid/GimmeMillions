@@ -1,4 +1,5 @@
 <mat-form-field appearance="fill">
+    <mat-label>Chart Type</mat-label>
     <mat-select [(ngModel)]="selectedChart" (selectionChange)="updateChart($event)">
       <mat-option value="sentiment">Sentiment</mat-option>
       <mat-option value="confidence">Confidence</mat-option>

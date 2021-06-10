@@ -15,18 +15,6 @@
         <mat-grid-list cols="2" rowHeight="32px">
             <mat-grid-tile>
                 <div class="stock-detail-row">
-                    <span>Signal</span>
-                    <span class="stock-detail-value"
-                        [style.color]="fontColor">{{item.sentiment | number : '1.2-2'}}%</span>
-                </div>
-            </mat-grid-tile>
-            <mat-grid-tile>
-                <div class="stock-detail-row">
-                    <span class="stock-detail-value" [style.color]="fontColor">{{item.sentiment | consensus}}</span>
-                </div>
-            </mat-grid-tile>
-            <mat-grid-tile>
-                <div class="stock-detail-row">
                     <span>Gains</span>
                     <span class="stock-detail-value buy-color">{{item.prediction | number : '1.2-2'}}%</span>
                 </div>

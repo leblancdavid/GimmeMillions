@@ -1,71 +1,74 @@
-<h1 mat-dialog-title class="dialog-header" [style.background-color]="backgroundColor" [style.border-color]="fontColor">
-    <gm-trend-icon [color]="fontColor" [signal]="history.lastRecommendation.sentiment"></gm-trend-icon>
+<div class="dialog-container">
+    <h1 mat-dialog-title class="dialog-header" [style.background-color]="backgroundColor"
+        [style.border-color]="fontColor">
+        <gm-trend-icon [color]="fontColor" [signal]="history.lastRecommendation.sentiment"></gm-trend-icon>
 
-    <div class="symbol-name" [style.color]="fontColor">
-        {{history.symbol}}
-    </div>
-    <div class="sentiment-value" [style.color]="fontColor">
-        {{history.lastRecommendation.sentiment | number : '1.2-2'}}%
-    </div>
-</h1>
-<div mat-dialog-content class="dialog-content">
-    <div class="wait-spinner" *ngIf="isLoading">
-        <mat-spinner></mat-spinner>
-        <h1>Retrieving Data...</h1>
-    </div>
+        <div class="symbol-name" [style.color]="fontColor">
+            {{history.symbol}}
+        </div>
+        <div class="sentiment-value" [style.color]="fontColor">
+            {{history.lastRecommendation.sentiment | number : '1.2-2'}}%
+        </div>
+    </h1>
+    <div mat-dialog-content class="dialog-content">
+        <div class="wait-spinner" *ngIf="isLoading">
+            <mat-spinner></mat-spinner>
+            <h1>Retrieving Data...</h1>
+        </div>
 
-    <mat-tab-group *ngIf="!isLoading">
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <mat-icon class="details-tab-icon">timeline</mat-icon>
-                <span *gmMedia="'(min-width: 512px)'">Sentiment</span>
-            </ng-template>
-            <div class="details-tab-content">
-                <gm-sentiment-history-chart [history]="history"></gm-sentiment-history-chart>
-            </div>
-        </mat-tab>
-
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <mat-icon class="details-tab-icon">attach_money</mat-icon>
-                <span *gmMedia="'(min-width: 512px)'">Price</span>
-            </ng-template>
-            <div class="details-tab-content">
-            </div>
-        </mat-tab>
-
-
-        <mat-tab>
-            <ng-template mat-tab-label>
-                <mat-icon class="details-tab-icon">info</mat-icon>
-                <span *gmMedia="'(min-width: 512px)'">Stats</span>
-            </ng-template>
-            <div class="details-tab-content">
-                <div class="last-recommendation-statistics">
-                    <div>
-                        Last: {{history.lastRecommendation.lastData.close | number : '1.2-2'}}
-                        ({{history.lastRecommendation.lastData.percentChangeFromPreviousClose | number : '1.2-2'}}%)
-                    </div>
-                    <div class="buy-color">
-                        High Prediction: {{history.lastRecommendation.predictedPriceTarget | number : '1.2-2'}}
-                        ({{history.lastRecommendation.prediction | number : '1.2-2'}}%)
-                    </div>
-                    <div class="sell-color">
-                        Low Prediction: {{history.lastRecommendation.predictedLowTarget | number : '1.2-2'}}
-                        ({{history.lastRecommendation.lowPrediction | number : '1.2-2'}}%)
-                    </div>
-                    <div
-                        [ngClass]="{'sell-color' : history.lastRecommendation.confidence < 0, 'buy-color' : history.lastRecommendation.confidence >= 0}">
-                        Conf: {{history.lastRecommendation.confidence | number : '1.3-3'}}
-                    </div>
-
+        <mat-tab-group *ngIf="!isLoading">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="details-tab-icon">timeline</mat-icon>
+                    <span *gmMedia="'(min-width: 512px)'">Sentiment</span>
+                </ng-template>
+                <div class="details-tab-content">
+                    <gm-sentiment-history-chart [history]="history"></gm-sentiment-history-chart>
                 </div>
-            </div>
-        </mat-tab>
-    </mat-tab-group>
+            </mat-tab>
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="details-tab-icon">attach_money</mat-icon>
+                    <span *gmMedia="'(min-width: 512px)'">Price</span>
+                </ng-template>
+                <div class="details-tab-content">
+                </div>
+            </mat-tab>
 
 
-</div>
-<div mat-dialog-actions>
-    <button mat-button (click)="closeDialog()" cdkFocusInitial>OK</button>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="details-tab-icon">info</mat-icon>
+                    <span *gmMedia="'(min-width: 512px)'">Stats</span>
+                </ng-template>
+                <div class="details-tab-content">
+                    <div class="last-recommendation-statistics">
+                        <div>
+                            Last: {{history.lastRecommendation.lastData.close | number : '1.2-2'}}
+                            ({{history.lastRecommendation.lastData.percentChangeFromPreviousClose | number : '1.2-2'}}%)
+                        </div>
+                        <div class="buy-color">
+                            High Prediction: {{history.lastRecommendation.predictedPriceTarget | number : '1.2-2'}}
+                            ({{history.lastRecommendation.prediction | number : '1.2-2'}}%)
+                        </div>
+                        <div class="sell-color">
+                            Low Prediction: {{history.lastRecommendation.predictedLowTarget | number : '1.2-2'}}
+                            ({{history.lastRecommendation.lowPrediction | number : '1.2-2'}}%)
+                        </div>
+                        <div
+                            [ngClass]="{'sell-color' : history.lastRecommendation.confidence < 0, 'buy-color' : history.lastRecommendation.confidence >= 0}">
+                            Conf: {{history.lastRecommendation.confidence | number : '1.3-3'}}
+                        </div>
+
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+
+
+    </div>
+    <div mat-dialog-actions class="dialog-actions">
+        <button mat-button (click)="closeDialog()" cdkFocusInitial>OK</button>
+    </div>
 </div>

@@ -1,8 +1,24 @@
+:host {
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+.dialog-container {
+    max-width: 600px;
+    max-height: 600px;
+    width: 95vw;
+    height: 75vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .dialog-header {
     padding: 8px;
     border-style: solid;
     border-width: 3px;
-    border-radius: 3px;
+    border-radius: 3px 3px 0px 0px;
     box-sizing: border-box;
     display: flex;
     width: 100%;
@@ -32,6 +48,7 @@
 .dialog-content {
     display: flex;
     flex-direction: column;
+    flex: 1;
 }
 
 .wait-spinner {
@@ -68,4 +85,9 @@
         font-weight: bold;
         margin: 8px;
     }
+}
+
+.dialog-actions {
+    margin: 0 !important;
+    padding: 0 !important;
 }

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
-import { ChartDataSets, ChartOptions } from 'chart.js';
+import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import { StockRecommendationHistory } from '../stock-recommendation-history';
 
@@ -28,7 +28,7 @@ export class SentimentHistoryChartComponent implements OnInit {
   ];
   lineChartLegend = true;
   lineChartPlugins = [];
-  lineChartType = 'line';
+  lineChartType: ChartType = 'line';
   selectedChart = 'sentiment';
 
   constructor() { 
