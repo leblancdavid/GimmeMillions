@@ -81,7 +81,7 @@ export class SentimentHistoryChartComponent implements OnInit {
       this.lineChartColors = [
         {
           borderColor: '#cb5115',
-          backgroundColor: 'rgba(0,0,0,0)',
+          backgroundColor: 'rgba(203,81,21,0.25)',
         }
       ];
       this.sentimentAxis = [];
@@ -104,7 +104,7 @@ export class SentimentHistoryChartComponent implements OnInit {
       this.lineChartColors = [
         {
           borderColor: 'black',
-          backgroundColor: 'rgba(0,0,0,0)',
+          backgroundColor: 'rgba(0,0,0,0.25)',
         }
       ];
       this.sentimentAxis = [];
