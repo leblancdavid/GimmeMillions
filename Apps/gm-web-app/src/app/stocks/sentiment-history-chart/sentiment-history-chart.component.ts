@@ -21,8 +21,8 @@ export class SentimentHistoryChartComponent implements OnInit {
 
   lineChartColors: Color[] = [
     {
-      borderColor: 'black',
-      backgroundColor: 'rgba(255,255,0,0.28)',
+      borderColor: '#1b603a',
+      backgroundColor: 'rgba(196,210,83,0.5)',
     },
   ];
   lineChartLegend = true;
@@ -39,9 +39,7 @@ export class SentimentHistoryChartComponent implements OnInit {
     if(this.history) {
       const sortedR = this.history.historicalData.sort((n1,n2)=> n1.date.getDate() - n2.date.getDate());
       let s = [];
-      
-      debugger;
-
+      let c = [];
       for(let i = 0; i < sortedR.length && this.maxLength; ++i) {
         s.push(sortedR[i].sentiment);
         this.labelAxis.push((sortedR[i].date.getMonth() + 1).toString() + '/' + sortedR[i].date.getDate().toString());
