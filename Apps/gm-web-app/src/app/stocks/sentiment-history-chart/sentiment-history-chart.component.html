@@ -1,1 +1,11 @@
-<p>sentiment-history-chart works!</p>
+<div class="chart-wrapper" *ngIf="history">
+    <canvas baseChart 
+        [datasets]="sentimentAxis" 
+        [labels]="labelAxis" 
+        [options]="chartOptions"
+        [colors]="lineChartColors" 
+        [legend]="lineChartLegend" 
+        [chartType]="lineChartType" 
+        [plugins]="lineChartPlugins">
+    </canvas>
+</div>

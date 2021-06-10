@@ -74,11 +74,11 @@ export class StockRecommendationService {
   }
 
   private clone(r :StockRecommendation) : StockRecommendation {
-    return new StockRecommendation(r.date, r.symbol, r.systemId,
+    return new StockRecommendation(new Date(r.date), r.symbol, r.systemId,
       r.sentiment, r.confidence, r.prediction,
       r.lowPrediction, r.previousClose,
       r.predictedPriceTarget, r.predictedLowTarget,
-      new StockData(r.lastData.date, r.lastData.symbol,
+      new StockData(new Date(r.lastData.date), r.lastData.symbol,
         r.lastData.open, r.lastData.high, r.lastData.low, r.lastData.close,
         r.lastData.adjustedClose, r.lastData.volume, r.lastData.previousClose))
   }
@@ -89,12 +89,7 @@ export class StockRecommendationService {
     .pipe(map(picks => {
       let mapped = new Array<StockRecommendation>();
       for(let f of picks) {
-        mapped.push(new StockRecommendation(f.date, f.symbol, f.systemId,
-          f.sentiment, f.confidence, f.prediction, f.lowPrediction, f.previousClose,
-          f.predictedPriceTarget, f.predictedLowTarget, 
-          new StockData(f.lastData.date, f.lastData.symbol, 
-            f.lastData.open, f.lastData.high, f.lastData.low, f.lastData.close, 
-            f.lastData.adjustedClose, f.lastData.volume, f.lastData.previousClose)));
+        mapped.push(this.clone(f));
       }
       return mapped;
     }));
