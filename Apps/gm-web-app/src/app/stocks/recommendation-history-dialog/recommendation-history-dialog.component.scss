@@ -46,9 +46,21 @@
     }
 }
 
+.details-tab-content {
+    padding: 4px;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    display: flex;
+}
+
+.details-tab-icon { 
+    margin-right: 8px;
+}
+
 .last-recommendation-statistics {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
     flex-wrap: wrap;
 

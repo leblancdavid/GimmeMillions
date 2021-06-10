@@ -64,7 +64,6 @@ export class StockRecommendationService {
     return this.http.get<StockRecommendationHistory>(this.url + '/stocks/history/' + symbol)
     .pipe(map(h => {
       let recommendations = new Array<StockRecommendation>();
-      debugger;
       for(let r of h.historicalData) {
         recommendations.push(this.clone(r));
       }
