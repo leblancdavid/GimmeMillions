@@ -16,6 +16,8 @@ import { TrendIconComponent } from './stock-recommendation-item/trend-icon/trend
 import { ConsensusPipe } from './stock-recommendation-item/consensus.pipe';
 import { ResourcesModule } from '../resources/resources.module';
 import { RecommendationHistoryDialogComponent } from './recommendation-history-dialog/recommendation-history-dialog.component';
+import { HistoryChartComponent } from './history-chart/history-chart.component';
+import { SentimentHistoryChartComponent } from './sentiment-history-chart/sentiment-history-chart.component';
 
 
 @NgModule({
@@ -28,7 +30,7 @@ import { RecommendationHistoryDialogComponent } from './recommendation-history-d
     StockDetailsComponent,
     DailyPredictionsComponent, 
     TrendIconComponent, 
-    ConsensusPipe, RecommendationHistoryDialogComponent
+    ConsensusPipe, RecommendationHistoryDialogComponent, HistoryChartComponent, SentimentHistoryChartComponent
   ],
   imports: [
     CommonModule,
