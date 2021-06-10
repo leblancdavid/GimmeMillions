@@ -53,7 +53,7 @@ export class SentimentHistoryChartComponent implements OnInit {
 
   setToSentimentChart() {
     if(this.history) {
-      const sortedR = this.history.historicalData.sort((n1,n2)=> n1.date.getDate() - n2.date.getDate());
+      const sortedR = this.history.historicalData.sort((n1,n2)=> n1.date.getUTCDate() - n2.date.getUTCDate());
       let data = [];
       this.lineChartColors = [
         {
@@ -76,7 +76,7 @@ export class SentimentHistoryChartComponent implements OnInit {
 
   setToConfidenceChart() {
     if(this.history) {
-      const sortedR = this.history.historicalData.sort((n1,n2)=> n1.date.getDate() - n2.date.getDate());
+      const sortedR = this.history.historicalData.sort((n1,n2)=> n1.date.getUTCDate() - n2.date.getUTCDate());
       let data = [];
       this.lineChartColors = [
         {
@@ -99,7 +99,7 @@ export class SentimentHistoryChartComponent implements OnInit {
 
   setToPriceChart() {
     if(this.history) {
-      const sortedR = this.history.historicalData.sort((n1,n2)=> n1.date.getDate() - n2.date.getDate());
+      const sortedR = this.history.historicalData.sort((n1,n2)=> n1.date.getUTCDate() - n2.date.getUTCDate());
       let s = [];
       this.lineChartColors = [
         {
