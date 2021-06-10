@@ -61,7 +61,27 @@ export class StockRecommendationService {
   }
 
   public getHistoryFor(symbol: string): Observable<StockRecommendationHistory> {
-    return this.http.get<StockRecommendationHistory>(this.url + '/stocks/history/' + symbol);
+    return this.http.get<StockRecommendationHistory>(this.url + '/stocks/history/' + symbol)
+    .pipe(map(h => {
+      let recommendations = new Array<StockRecommendation>();
+      debugger;
+      for(let r of h.historicalData) {
+        recommendations.push(this.clone(r));
+      }
+      let mapped = new StockRecommendationHistory(h.systemId, h.symbol, h.lastUpdated, 
+          this.clone(h.lastRecommendation), recommendations);
+      return mapped;
+    }));
+  }
+
+  private clone(r :StockRecommendation) : StockRecommendation {
+    return new StockRecommendation(r.date, r.symbol, r.systemId,
+      r.sentiment, r.confidence, r.prediction,
+      r.lowPrediction, r.previousClose,
+      r.predictedPriceTarget, r.predictedLowTarget,
+      new StockData(r.lastData.date, r.lastData.symbol,
+        r.lastData.open, r.lastData.high, r.lastData.low, r.lastData.close,
+        r.lastData.adjustedClose, r.lastData.volume, r.lastData.previousClose))
   }
 
   public getUserWatchlistRecommendations(): Observable<Array<StockRecommendation>> {

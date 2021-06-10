@@ -100,7 +100,7 @@ namespace GimmeMillions.WebApi.Controllers
             return Ok(prediction.Value.ToDto());
         }
 
-        [HttpGet("stocks/history")]
+        [HttpGet("stocks/history/{symbol}")]
         public IActionResult GetHistory(string symbol)
         {
             var system = _provider.GetStocksRecommendations();

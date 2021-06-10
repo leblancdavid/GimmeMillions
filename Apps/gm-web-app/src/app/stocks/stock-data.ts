@@ -10,4 +10,11 @@ export class StockData {
         public previousClose: number) {
 
     }
+
+    public get percentChangeFromPreviousClose(): number {
+        if(this.previousClose == 0.0) {
+            return 0.0;
+        }
+        return 100.0 * (this.close - this.previousClose) / this.previousClose;
+    }
 }

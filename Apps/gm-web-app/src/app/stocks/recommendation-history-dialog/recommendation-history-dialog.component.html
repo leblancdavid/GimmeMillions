@@ -1,1 +1,37 @@
-<p>recommendation-history-dialog works!</p>
+<h1 mat-dialog-title class="dialog-header" 
+    [style.background-color]="backgroundColor" 
+    [style.border-color]="fontColor">
+    <gm-trend-icon [color]="fontColor" [signal]="history.lastRecommendation.sentiment"></gm-trend-icon>
+
+    <div class="symbol-name" [style.color]="fontColor">
+        {{history.symbol}}
+    </div>
+    <div class="sentiment-value" [style.color]="fontColor">
+        {{history.lastRecommendation.sentiment | number : '1.2-2'}}%
+    </div>
+</h1>
+<div mat-dialog-content class="dialog-content">
+    <div class="wait-spinner" *ngIf="isLoading">
+        <mat-spinner></mat-spinner>
+        <h1>Retrieving Data...</h1>
+    </div>
+
+    <div class="last-recommendation-statistics" *ngIf="!isLoading">
+        <div>
+            Last: {{history.lastRecommendation.lastData.close | number : '1.2-2'}} ({{history.lastRecommendation.lastData.percentChangeFromPreviousClose | number : '1.2-2'}}%)
+        </div>
+        <div class="buy-color">
+            High Prediction: {{history.lastRecommendation.predictedPriceTarget | number : '1.2-2'}} ({{history.lastRecommendation.prediction | number : '1.2-2'}}%)
+        </div>
+        <div class="sell-color">
+            Low Prediction: {{history.lastRecommendation.predictedLowTarget | number : '1.2-2'}} ({{history.lastRecommendation.lowPrediction | number : '1.2-2'}}%)
+        </div>
+        <div [ngClass]="{'sell-color' : history.lastRecommendation.confidence < 0, 'buy-color' : history.lastRecommendation.confidence >= 0}">
+            Conf: {{history.lastRecommendation.confidence | number : '1.3-3'}}
+        </div>
+        
+    </div>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="closeDialog()" cdkFocusInitial>OK</button>
+</div>
