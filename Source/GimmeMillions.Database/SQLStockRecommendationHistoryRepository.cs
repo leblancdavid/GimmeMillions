@@ -179,6 +179,7 @@ namespace GimmeMillions.Database
                     x.SystemId == systemId);
             if (history != null)
             {
+                history.LoadData();
                 var stock = history.HistoricalData.FirstOrDefault(x => x.Date.Date == dateTime.Date);
                 if(stock != null)
                 {
@@ -229,7 +230,8 @@ namespace GimmeMillions.Database
             {
                 foreach(var h in history)
                 {
-                    var r = h.HistoricalData.FirstOrDefault(x => x.Date.Date == dateTime);
+                    h.LoadData();
+                    var r = h.HistoricalData.FirstOrDefault(x => x.Date.Date == dateTime.Date);
                     if(r != null)
                     {
                         recommendations.Add(r);

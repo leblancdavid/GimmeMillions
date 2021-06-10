@@ -49,6 +49,12 @@ namespace GimmeMillions.WebApi.Controllers
             var rut = system.GetRecommendation(date, "RUT");
             if (rut.IsSuccess)
                 recommendations.Add(rut.Value);
+            var rua = system.GetRecommendation(date, "RUA");
+            if (rua.IsSuccess)
+                recommendations.Add(rua.Value);
+            var rui = system.GetRecommendation(date, "RUI");
+            if (rui.IsSuccess)
+                recommendations.Add(rui.Value);
 
             return Ok(recommendations.Select(x => x.ToDto()));
         }
