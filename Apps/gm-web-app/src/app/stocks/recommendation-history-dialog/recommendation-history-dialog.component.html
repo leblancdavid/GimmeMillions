@@ -33,6 +33,9 @@
                 </ng-template>
                 <div class="details-tab-content">
                     <div class="last-recommendation-statistics">
+                        <div style="align-self: center;">
+                            Updated: {{history.lastUpdated}}
+                        </div>
                         <div>
                             Last: {{history.lastRecommendation.lastData.close | number : '1.2-2'}}
                             ({{history.lastRecommendation.lastData.percentChangeFromPreviousClose | number : '1.2-2'}}%)
@@ -49,7 +52,7 @@
                             [ngClass]="{'sell-color' : history.lastRecommendation.confidence < 0, 'buy-color' : history.lastRecommendation.confidence >= 0}">
                             Conf: {{history.lastRecommendation.confidence | number : '1.3-3'}}
                         </div>
-
+                        
                     </div>
                 </div>
             </mat-tab>
