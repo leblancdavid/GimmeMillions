@@ -222,7 +222,7 @@ namespace GimmeMillions.Domain.Stocks
 
                     for (int i = 0; i < _historyLength; ++i)
                     {
-                        int si = stockData.Count - (i + startingIndex) - 1;
+                        int si = stockData.Count - i - 1;
                         if (si < 1)
                             break;
 
