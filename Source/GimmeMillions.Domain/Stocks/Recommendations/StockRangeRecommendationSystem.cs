@@ -101,10 +101,14 @@ namespace GimmeMillions.Domain.Stocks
 
 
                 int startingIndex = stockData.FindIndex(x => x.Date.Date == date.Date);
-
-                for(int i = 0; i < _historyLength; ++i)
+                if (startingIndex < 0)
                 {
-                    int si = stockData.Count - (i + startingIndex) - 1;
+                    startingIndex = stockData.Count;
+                }
+
+                for (int i = 0; i < _historyLength; ++i)
+                {
+                    int si = startingIndex - i;
                     if (si < 1)
                         break;
 
@@ -219,10 +223,14 @@ namespace GimmeMillions.Domain.Stocks
                     }
 
                     int startingIndex = stockData.FindIndex(x => x.Date.Date == date.Date);
+                    if(startingIndex < 0)
+                    {
+                        startingIndex = stockData.Count;
+                    }
 
                     for (int i = 0; i < _historyLength; ++i)
                     {
-                        int si = stockData.Count - i - 1;
+                        int si = startingIndex - i;
                         if (si < 1)
                             break;
 
