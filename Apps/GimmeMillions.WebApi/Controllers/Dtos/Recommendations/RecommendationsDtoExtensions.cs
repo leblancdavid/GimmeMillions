@@ -47,7 +47,7 @@ namespace GimmeMillions.WebApi.Controllers.Dtos.Recommendations
                 Symbol = history.Symbol,
                 SystemId = history.SystemId,
                 HistoricalData = history.HistoricalData.Select(x => x.ToDto()).ToList(),
-                LastUpdated = history.LastUpdated,
+                LastUpdated = history.LastRecommendation.DateUpdated,
                 LastRecommendation = history.LastRecommendation.ToDto()
             };
         }
