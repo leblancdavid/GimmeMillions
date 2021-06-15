@@ -117,7 +117,7 @@ namespace RecommendationMaker
                         $"Sentiment: {Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%, " +
                         $"High: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
                         $"Low: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                        $"Conf: {Math.Round(r.Confidence, 2, MidpointRounding.AwayFromZero)}%";
+                        $"Conf: {Math.Round(r.Confidence, 2, MidpointRounding.AwayFromZero)}";
                     Console.WriteLine(text);
                     //if(i < keepTop)
                     //{
@@ -158,7 +158,7 @@ namespace RecommendationMaker
                         $"Sentiment: {Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%, " +
                         $"High: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
                         $"Low: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                        $"Conf: {Math.Round(r.Confidence, 2, MidpointRounding.AwayFromZero)}%";
+                        $"Conf: {Math.Round(r.Confidence, 2, MidpointRounding.AwayFromZero)}";
                     Console.WriteLine(text);
                     //if(i < keepTop)
                     //{
@@ -183,7 +183,7 @@ namespace RecommendationMaker
                         $"Sentiment: {Math.Round(r.Sentiment, 2, MidpointRounding.AwayFromZero)}%, " +
                         $"High: {Math.Round(r.Prediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
                         $"Low: {Math.Round(r.LowPrediction, 2, MidpointRounding.AwayFromZero)}% - {Math.Round(r.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, " +
-                        $"Conf: {Math.Round(r.Confidence, 2, MidpointRounding.AwayFromZero)}%";
+                        $"Conf: {Math.Round(r.Confidence, 2, MidpointRounding.AwayFromZero)}";
                     Console.WriteLine(text);
                     //if(i < keepTop)
                     //{
