@@ -29,6 +29,20 @@ export class StockRecommendation {
         }
         return 'rgb(' + r + ',' + g + ',' + b + ')';
     }
+    public getRgba(intensity: number, opacity: number) {
+        const range = 255 - intensity;
+        const b = intensity;
+        let g = 0;
+        let r = 0;
+        if(this.sentiment > 50.0) {
+            r = intensity;
+            g = ((this.sentiment - 50.0) / 50.0)*range + intensity; 
+        } else {
+            g = intensity;
+            r = ((50.0 - this.sentiment) / 50.0) * range + intensity; 
+        }
+        return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
+    }
 
     public getHsl(intensity: number) {
         let h = 105;

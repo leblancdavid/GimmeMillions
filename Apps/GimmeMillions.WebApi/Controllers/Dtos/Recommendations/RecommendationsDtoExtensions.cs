@@ -1,8 +1,6 @@
 ﻿using GimmeMillions.Domain.Stocks;
-using System;
-using System.Collections.Generic;
+using GimmeMillions.Domain.Stocks.Recommendations;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace GimmeMillions.WebApi.Controllers.Dtos.Recommendations
 {
@@ -39,6 +37,18 @@ namespace GimmeMillions.WebApi.Controllers.Dtos.Recommendations
                 PredictedPriceTarget = stockRecommendation.PredictedPriceTarget,
                 PredictedLowTarget = stockRecommendation.PredictedLowTarget,
                 LastData = stockRecommendation.LastData.ToDto()
+            };
+        }
+
+        public static StockRecommendationHistoryDto ToDto(this StockRecommendationHistory history)
+        {
+            return new StockRecommendationHistoryDto()
+            {
+                Symbol = history.Symbol,
+                SystemId = history.SystemId,
+                HistoricalData = history.HistoricalData.Select(x => x.ToDto()).ToList(),
+                LastUpdated = history.LastRecommendation.DateUpdated,
+                LastRecommendation = history.LastRecommendation.ToDto()
             };
         }
     }

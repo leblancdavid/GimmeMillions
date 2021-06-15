@@ -11,19 +11,8 @@
                 {{item.sentiment | number : '1.2-2'}}%
             </div>
         </mat-expansion-panel-header>
+        
         <mat-grid-list cols="2" rowHeight="32px">
-            <mat-grid-tile>
-                <div class="stock-detail-row">
-                    <span>Signal</span>
-                    <span class="stock-detail-value"
-                        [style.color]="fontColor">{{item.sentiment | number : '1.2-2'}}%</span>
-                </div>
-            </mat-grid-tile>
-            <mat-grid-tile>
-                <div class="stock-detail-row">
-                    <span class="stock-detail-value" [style.color]="fontColor">{{item.sentiment | consensus}}</span>
-                </div>
-            </mat-grid-tile>
             <mat-grid-tile>
                 <div class="stock-detail-row">
                     <span>Gains</span>
@@ -48,11 +37,22 @@
                     <span class="stock-detail-value sell-color">${{item.predictedLowTarget | number : '1.2-2'}}</span>
                 </div>
             </mat-grid-tile>
+            <mat-grid-tile>
+                <div class="stock-detail-row">
+                    <span>Confidence</span>
+                    <span class="stock-detail-value"
+                        [ngClass]="{'sell-color' : item.confidence < 0, 'buy-color' : item.confidence >= 0}">
+                        {{item.confidence | number : '1.3-3'}}
+                    </span>
+                </div>
+            </mat-grid-tile>
         </mat-grid-list>
+
         <div class="stock-detail-actions">
-            <button mat-button disabled>DETAILS</button>
+            <button mat-button (click)="getDetails($event)">DETAILS</button>
             <button mat-raised-button color="primary" *ngIf="!isWatching" (click)="watch($event)">WATCH</button>
             <button mat-raised-button color="primary" *ngIf="isWatching" (click)="unwatch($event)">UNWATCH</button>
         </div>
+        
     </mat-expansion-panel>
 </mat-accordion>

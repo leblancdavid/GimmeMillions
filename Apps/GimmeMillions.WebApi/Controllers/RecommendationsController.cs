@@ -49,6 +49,12 @@ namespace GimmeMillions.WebApi.Controllers
             var rut = system.GetRecommendation(date, "RUT");
             if (rut.IsSuccess)
                 recommendations.Add(rut.Value);
+            var rua = system.GetRecommendation(date, "RUA");
+            if (rua.IsSuccess)
+                recommendations.Add(rua.Value);
+            var rui = system.GetRecommendation(date, "RUI");
+            if (rui.IsSuccess)
+                recommendations.Add(rui.Value);
 
             return Ok(recommendations.Select(x => x.ToDto()));
         }
@@ -94,7 +100,7 @@ namespace GimmeMillions.WebApi.Controllers
             return Ok(prediction.Value.ToDto());
         }
 
-        [HttpGet("stocks/history")]
+        [HttpGet("stocks/history/{symbol}")]
         public IActionResult GetHistory(string symbol)
         {
             var system = _provider.GetStocksRecommendations();
@@ -107,7 +113,7 @@ namespace GimmeMillions.WebApi.Controllers
                 return BadRequest(history.Error);
             }
 
-            return Ok(history.Value);
+            return Ok(history.Value.ToDto());
         }
 
         [HttpDelete()]

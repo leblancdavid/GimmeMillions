@@ -1,0 +1,13 @@
+<mat-form-field appearance="fill">
+    <mat-label>Chart Type</mat-label>
+    <mat-select [(ngModel)]="selectedChart" (selectionChange)="updateChart($event)">
+      <mat-option value="sentiment">Sentiment</mat-option>
+      <mat-option value="confidence">Confidence</mat-option>
+      <mat-option value="price">Price</mat-option>
+    </mat-select>
+  </mat-form-field>
+<div class="chart-wrapper" *ngIf="history">
+    <canvas baseChart [datasets]="sentimentAxis" [labels]="labelAxis" [options]="chartOptions"
+        [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" [plugins]="lineChartPlugins">
+    </canvas>
+</div>
