@@ -16,6 +16,7 @@ import { ResourcesModule } from './resources/resources.module';
 import { SupportModule } from './support/support.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { CryptoModule } from './crypto/crypto.module';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
     BrowserAnimationsModule,
     MaterialModule,
     UsersModule,
+    CryptoModule,
     StocksModule,
     ResourcesModule,
     SupportModule,
