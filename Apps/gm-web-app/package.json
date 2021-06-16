@@ -2,6 +2,9 @@
   "name": "gm-web-app",
   "version": "0.0.0",
   "scripts": {
+    "android": "ns run android --no-hmr",
+    "ios": "ns run ios --no-hmr",
+    "mobile": "ns run",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -11,6 +14,11 @@
   },
   "private": true,
   "dependencies": {
+    "@nativescript/angular": "~10.1.0",
+    "@nativescript/core": "~7.0.0",
+    "@nativescript/theme": "~2.5.0",
+    "reflect-metadata": "~0.1.12",
+    "tslib": "^2.0.0",
     "@angular/animations": "~11.0.1",
     "@angular/cdk": "^11.0.1",
     "@angular/common": "~11.0.1",
@@ -24,13 +32,13 @@
     "ng2-charts": "2.3.0",
     "chart.js": "2.9.3",
     "rxjs": "~6.6.0",
-    "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
+    "@nativescript/webpack": "~3.0.0",
+    "@nativescript/tslint-rules": "~0.0.5",
     "@angular-devkit/build-angular": "~0.1100.2",
-    "@angular/cli": "~11.0.2",
-    "@angular/compiler-cli": "~11.0.1",
+    "@nativescript/schematics": "^11.2.0",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
@@ -44,6 +52,8 @@
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "~4.0.2"
-  }
+    "typescript": "^4.3.2",
+    "@angular/compiler-cli": "~10.0.0"
+  },
+  "main": "main.tns.js"
 }

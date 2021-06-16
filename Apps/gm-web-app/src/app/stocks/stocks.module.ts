@@ -48,8 +48,5 @@ import { SentimentHistoryChartComponent } from './sentiment-history-chart/sentim
     ResourcesModule,
     ChartsModule
   ],
-  entryComponents: [
-    RecommendationHistoryDialogComponent
-  ],
 })
 export class StocksModule { }

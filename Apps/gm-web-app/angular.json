@@ -128,5 +128,8 @@
       }
     }
   },
-  "defaultProject": "gm-web-app"
+  "defaultProject": "gm-web-app",
+  "cli": {
+    "defaultCollection": "@nativescript/schematics"
+  }
 }
