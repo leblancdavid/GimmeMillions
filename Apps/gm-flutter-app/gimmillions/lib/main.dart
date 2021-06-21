@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:gimmillions/views/stocks/stocks.dart';
+import 'package:gimmillions/app/stocks/stocks.dart';
 
 void main() => runApp(MyApp());
 

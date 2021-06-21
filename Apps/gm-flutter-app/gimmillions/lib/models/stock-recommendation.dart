@@ -1,4 +1,4 @@
-import 'package:gimmillions/views/stocks/stock-data.dart';
+import 'package:gimmillions/models/stock-data.dart';
 
 class StockRecommendation {
   DateTime date;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gimmillions/app/stocks/futures.dart';
 
 class StocksWidget extends StatefulWidget {
   @override
@@ -37,9 +38,9 @@ class _StocksWidgetState extends State<StocksWidget>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const <Widget>[
+        children: <Widget>[
           Center(
-            child: Text("It's cloudy here"),
+            child: FuturesWidget(),
           ),
           Center(
             child: Text("It's rainy here"),
