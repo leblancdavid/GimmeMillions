@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:gimmillions/app/stocks/stock-recommendation-details.dart';
 import 'package:gimmillions/app/stocks/stocks.dart';
 import 'package:gimmillions/services/stock-recommendation-service.dart';
 import 'package:provider/provider.dart';
@@ -19,10 +20,11 @@ class MyApp extends StatelessWidget {
           ),
         ],
         child: MaterialApp(
+          routes: {
+            StockRecommendationDetails.routeName: (context) => StockRecommendationDetails(),
+          },
           title: 'Startup Name Generator',
-          theme: ThemeData(
-              primaryColor: Color.fromRGBO(27, 96, 58, 1),
-              accentColor: Colors.red),
+          theme: ThemeData(primaryColor: Color.fromRGBO(27, 96, 58, 1), accentColor: Colors.red),
           home: StocksWidget(),
         ));
   }

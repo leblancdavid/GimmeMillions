@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gimmillions/app/stocks/stock-recommendation-details.dart';
 import 'package:gimmillions/models/stock-recommendation.dart';
 
 class StockRecommendationDataTable extends StatefulWidget {
@@ -32,6 +33,7 @@ class _StockRecommendationDataTableState extends State<StockRecommendationDataTa
     return DataTable(
       sortAscending: isAscending,
       sortColumnIndex: sortColumnIndex,
+      showCheckboxColumn: false,
       columns: getColumns(columns),
       rows: getRows(_recommendations),
     );
@@ -45,7 +47,15 @@ class _StockRecommendationDataTableState extends State<StockRecommendationDataTa
       .toList();
 
   List<DataRow> getRows(List<StockRecommendation> recommendations) => recommendations.map((StockRecommendation r) {
-        return DataRow(cells: getCells(r));
+        return DataRow(
+            cells: getCells(r),
+            onSelectChanged: (bool? selected) => {
+                  if (selected!)
+                    {
+                      Navigator.pushNamed(context, StockRecommendationDetails.routeName,
+                          arguments: StockRecommendationDetailsArguments(r.symbol))
+                    }
+                });
       }).toList();
 
   List<DataCell> getCells(StockRecommendation recommendation) {
