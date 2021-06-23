@@ -6,8 +6,7 @@ class StocksWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _StocksWidgetState();
 }
 
-class _StocksWidgetState extends State<StocksWidget>
-    with TickerProviderStateMixin {
+class _StocksWidgetState extends State<StocksWidget> with TickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -26,12 +25,15 @@ class _StocksWidgetState extends State<StocksWidget>
           tabs: const <Widget>[
             Tab(
               icon: Icon(Icons.stacked_line_chart),
+              text: 'Futures',
             ),
             Tab(
               icon: Icon(Icons.online_prediction),
+              text: 'Predictions',
             ),
             Tab(
               icon: Icon(Icons.playlist_add_check),
+              text: 'Watchlist',
             ),
           ],
         ),

@@ -6,8 +6,21 @@ class StockRecommendationDetailsArguments {
   StockRecommendationDetailsArguments(this.symbol);
 }
 
-class StockRecommendationDetails extends StatelessWidget {
+class StockRecommendationDetails extends StatefulWidget {
   static const routeName = '/stockDetails';
+
+  @override
+  State<StatefulWidget> createState() => _StockRecommendationDetailsState();
+}
+
+class _StockRecommendationDetailsState extends State<StockRecommendationDetails> with TickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +31,30 @@ class StockRecommendationDetails extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(args.symbol),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const <Widget>[
+            Tab(
+              icon: Icon(Icons.timeline),
+              text: 'History',
+            ),
+            Tab(
+              icon: Icon(Icons.info),
+              text: 'Stats',
+            ),
+          ],
+        ),
       ),
-      body: Center(
-        child: Text('This is where the details will go'),
+      body: TabBarView(
+        controller: _tabController,
+        children: <Widget>[
+          Center(
+            child: Text("It's rainy here"),
+          ),
+          Center(
+            child: Text("It's sunny here"),
+          ),
+        ],
       ),
     );
   }
