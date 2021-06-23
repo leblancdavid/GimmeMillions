@@ -14,7 +14,7 @@ class StockRecommendationDataTable extends StatefulWidget {
 
 class _StockRecommendationDataTableState extends State<StockRecommendationDataTable> {
   final List<StockRecommendation> _recommendations;
-  int? sortColumnIndex;
+  int sortColumnIndex = 1;
   bool isAscending = false;
 
   _StockRecommendationDataTableState(this._recommendations);
@@ -22,6 +22,8 @@ class _StockRecommendationDataTableState extends State<StockRecommendationDataTa
   @override
   void initState() {
     super.initState();
+    sortColumnIndex = 1;
+    isAscending = false;
   }
 
   @override
@@ -29,14 +31,16 @@ class _StockRecommendationDataTableState extends State<StockRecommendationDataTa
 
   Widget buildDataTable() {
     final columns = ['Symbol', 'Sentiment', 'Confidence'];
-
-    return DataTable(
+    onSort(sortColumnIndex, isAscending);
+    var table = DataTable(
       sortAscending: isAscending,
       sortColumnIndex: sortColumnIndex,
       showCheckboxColumn: false,
       columns: getColumns(columns),
       rows: getRows(_recommendations),
     );
+
+    return table;
   }
 
   List<DataColumn> getColumns(List<String> columns) => columns
