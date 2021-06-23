@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:gimmillions/app/stocks/stock-recommendation-data-table.dart';
 import 'package:gimmillions/models/stock-recommendation.dart';
 import 'package:gimmillions/services/stock-recommendation-service.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +20,7 @@ class _FuturesState extends State<FuturesWidget> {
 
   _refreshFutures(BuildContext context) {
     try {
-      final service =
-          Provider.of<StockRecommendationService>(context, listen: false);
+      final service = Provider.of<StockRecommendationService>(context, listen: false);
       _futuresList = service.getFutures();
       setState(() {});
     } catch (e) {
@@ -35,26 +35,23 @@ class _FuturesState extends State<FuturesWidget> {
   Widget build(BuildContext context) {
     _refreshFutures(context);
 
-    return Container(
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-          PopupMenuButton<_FuturesMenuOptions>(
-              onSelected: (_FuturesMenuOptions result) {
-                if (result == _FuturesMenuOptions.refresh) {
-                  _refreshFutures(context);
-                }
-              },
-              itemBuilder: (BuildContext context) =>
-                  <PopupMenuEntry<_FuturesMenuOptions>>[
-                    PopupMenuItem(
-                        value: _FuturesMenuOptions.refresh,
-                        child: Row(
-                          children: [Icon(Icons.refresh), Text("Refresh")],
-                        ))
-                  ]),
-          FuturesDataTableBuilder(_futuresList, _refreshFutures)
-        ]));
+    return SingleChildScrollView(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+      PopupMenuButton<_FuturesMenuOptions>(
+          onSelected: (_FuturesMenuOptions result) {
+            if (result == _FuturesMenuOptions.refresh) {
+              _refreshFutures(context);
+            }
+          },
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<_FuturesMenuOptions>>[
+                PopupMenuItem(
+                    value: _FuturesMenuOptions.refresh,
+                    child: Row(
+                      children: [Icon(Icons.refresh), Text("Refresh")],
+                    ))
+              ]),
+      FuturesDataTableBuilder(_futuresList, _refreshFutures)
+    ]));
   }
 }
 
@@ -68,38 +65,16 @@ class FuturesDataTableBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: _futuresList,
-        builder: (BuildContext context,
-            AsyncSnapshot<List<StockRecommendation>> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<StockRecommendation>> snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
-            return CircularProgressIndicator(
-                color: Theme.of(context).primaryColor);
+            return CircularProgressIndicator(color: Theme.of(context).primaryColor);
           }
 
           if (snapshot.hasData) {
-            return DataTable(columns: const <DataColumn>[
-              DataColumn(
-                label: Text(
-                  'Symbol',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'Sentiment',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  'Confidence',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ], rows: _toTableRows(snapshot.data));
+            return StockRecommendationDataTable(snapshot.data!);
           }
 
-          return CircularProgressIndicator(
-              color: Theme.of(context).primaryColor);
+          return CircularProgressIndicator(color: Theme.of(context).primaryColor);
         });
   }
 

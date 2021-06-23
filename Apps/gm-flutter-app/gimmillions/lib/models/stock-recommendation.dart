@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:gimmillions/models/stock-data.dart';
 
 class StockRecommendation {
@@ -13,16 +14,21 @@ class StockRecommendation {
   double predictedLowTarget;
   StockData stockData;
 
-  StockRecommendation(
-      this.date,
-      this.symbol,
-      this.systemId,
-      this.sentiment,
-      this.confidence,
-      this.prediction,
-      this.lowPrediction,
-      this.previousClose,
-      this.predictedPriceTarget,
-      this.predictedLowTarget,
-      this.stockData);
+  StockRecommendation(this.date, this.symbol, this.systemId, this.sentiment, this.confidence, this.prediction,
+      this.lowPrediction, this.previousClose, this.predictedPriceTarget, this.predictedLowTarget, this.stockData);
+
+  Color getRgb(int intensity) {
+    var range = 255 - intensity;
+    var b = intensity.toDouble();
+    var g = 0.0;
+    var r = 0.0;
+    if (this.sentiment > 50.0) {
+      r = intensity.toDouble();
+      g = ((this.sentiment - 50.0) / 50.0) * range + intensity;
+    } else {
+      g = intensity.toDouble();
+      r = ((50.0 - this.sentiment) / 50.0) * range + intensity;
+    }
+    return Color.fromRGBO(r.toInt(), g.toInt(), b.toInt(), 1);
+  }
 }
