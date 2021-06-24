@@ -31,4 +31,19 @@ class StockRecommendation {
     }
     return Color.fromRGBO(r.toInt(), g.toInt(), b.toInt(), 1);
   }
+
+  Color getRgbo(int intensity, double opacity) {
+    var range = 255 - intensity;
+    var b = intensity.toDouble();
+    var g = 0.0;
+    var r = 0.0;
+    if (this.sentiment > 50.0) {
+      r = intensity.toDouble();
+      g = ((this.sentiment - 50.0) / 50.0) * range + intensity;
+    } else {
+      g = intensity.toDouble();
+      r = ((50.0 - this.sentiment) / 50.0) * range + intensity;
+    }
+    return Color.fromRGBO(r.toInt(), g.toInt(), b.toInt(), opacity);
+  }
 }

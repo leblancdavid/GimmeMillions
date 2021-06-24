@@ -54,7 +54,7 @@ class _StockRecommendationDetailsState extends State<StockRecommendationDetails>
             ),
             Tab(
               icon: Icon(Icons.info),
-              text: 'Stats',
+              text: 'Info',
             ),
           ],
         ),
