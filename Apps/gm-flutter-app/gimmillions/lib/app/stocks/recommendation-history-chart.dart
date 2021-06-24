@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +28,20 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
     super.initState();
   }
 
-  LineChartData _getChartData() {
+  LineChartData _getSentimentChartData() {
     const dateTextStyle = TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.bold);
+
+    var minY = history.historicalData
+            .reduce((value, element) => value.sentiment < element.sentiment ? value : element)
+            .sentiment *
+        0.9;
+    var maxY = history.historicalData
+            .reduce((value, element) => value.sentiment > element.sentiment ? value : element)
+            .sentiment *
+        1.10;
+
+    var intervalY = (maxY - minY).toInt() / 10;
+
     var barData = LineChartBarData(
         spots:
             history.historicalData.map((e) => FlSpot(e.date.millisecondsSinceEpoch.toDouble(), e.sentiment)).toList(),
@@ -38,8 +52,8 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
     return LineChartData(
       lineTouchData: LineTouchData(enabled: false),
       lineBarsData: [barData],
-      minY: 0,
-      maxY: 100,
+      minY: minY,
+      maxY: maxY,
       titlesData: FlTitlesData(
         bottomTitles: SideTitles(
             showTitles: true,
@@ -52,9 +66,9 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
             }),
         leftTitles: SideTitles(
           showTitles: true,
-          interval: 25,
+          interval: intervalY,
           getTitles: (value) {
-            return '${value}';
+            return '${value.toStringAsFixed(0)}';
           },
         ),
       ),
@@ -62,10 +76,135 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
         show: true,
         drawHorizontalLine: true,
         drawVerticalLine: true,
-        horizontalInterval: 25,
+        horizontalInterval: intervalY,
         verticalInterval: 8.64e+7,
       ),
     );
+  }
+
+  LineChartData _getPriceChartData() {
+    const dateTextStyle = TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.bold);
+    var minY = history.historicalData
+            .reduce((value, element) => value.stockData.close < element.stockData.close ? value : element)
+            .stockData
+            .close *
+        0.9;
+    var maxY = history.historicalData
+            .reduce((value, element) => value.stockData.close > element.stockData.close ? value : element)
+            .stockData
+            .close *
+        1.10;
+
+    var intervalY = (maxY - minY).toInt() / 10;
+
+    var barData = LineChartBarData(
+        spots: history.historicalData
+            .map((e) => FlSpot(e.date.millisecondsSinceEpoch.toDouble(), e.stockData.close))
+            .toList(),
+        colors: history.historicalData.map((e) => e.getRgb(25)).toList(),
+        dotData: FlDotData(show: false),
+        isCurved: true,
+        belowBarData: BarAreaData(show: true, colors: history.historicalData.map((e) => e.getRgbo(25, 0.5)).toList()));
+    return LineChartData(
+      lineTouchData: LineTouchData(enabled: false),
+      lineBarsData: [barData],
+      minY: minY,
+      maxY: maxY,
+      titlesData: FlTitlesData(
+        bottomTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 14,
+            interval: 8.64e+7,
+            getTextStyles: (value) => dateTextStyle,
+            getTitles: (value) {
+              var date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
+              return '${date.month}/${date.day}';
+            }),
+        leftTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 14,
+          interval: intervalY,
+          getTitles: (value) {
+            return '${value.toStringAsFixed(0)}';
+          },
+        ),
+      ),
+      gridData: FlGridData(
+        show: true,
+        drawHorizontalLine: true,
+        drawVerticalLine: true,
+        horizontalInterval: intervalY,
+        verticalInterval: 8.64e+7,
+      ),
+    );
+  }
+
+  LineChartData _getConfidenceChartData() {
+    const dateTextStyle = TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.bold);
+
+    var minY = history.historicalData
+        .reduce((value, element) => value.confidence < element.confidence ? value : element)
+        .confidence;
+    if (minY < 0) {
+      minY *= 1.1;
+    } else {
+      minY *= 0.9;
+    }
+    var maxY = history.historicalData
+            .reduce((value, element) => value.confidence > element.confidence ? value : element)
+            .confidence *
+        1.10;
+
+    var intervalY = (maxY - minY).toInt() / 5;
+
+    var barData = LineChartBarData(
+        spots:
+            history.historicalData.map((e) => FlSpot(e.date.millisecondsSinceEpoch.toDouble(), e.confidence)).toList(),
+        colors: history.historicalData.map((e) => e.getRgb(25)).toList(),
+        dotData: FlDotData(show: false),
+        isCurved: true,
+        belowBarData: BarAreaData(show: true, colors: history.historicalData.map((e) => e.getRgbo(25, 0.5)).toList()));
+    return LineChartData(
+      lineTouchData: LineTouchData(enabled: false),
+      lineBarsData: [barData],
+      minY: minY,
+      maxY: maxY,
+      titlesData: FlTitlesData(
+        bottomTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 14,
+            interval: 8.64e+7,
+            getTextStyles: (value) => dateTextStyle,
+            getTitles: (value) {
+              var date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
+              return '${date.month}/${date.day}';
+            }),
+        leftTitles: SideTitles(
+          showTitles: true,
+          interval: intervalY,
+          getTitles: (value) {
+            return '${value.toStringAsFixed(2)}';
+          },
+        ),
+      ),
+      gridData: FlGridData(
+        show: true,
+        drawHorizontalLine: true,
+        drawVerticalLine: true,
+        horizontalInterval: intervalY,
+        verticalInterval: 8.64e+7,
+      ),
+    );
+  }
+
+  LineChartData _getChartData() {
+    if (chartType == 'Sentiment') {
+      return _getSentimentChartData();
+    } else if (chartType == 'Confidence') {
+      return _getConfidenceChartData();
+    }
+
+    return _getPriceChartData();
   }
 
   @override
