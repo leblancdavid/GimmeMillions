@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gimmillions/app/stocks/recommendation-history-chart.dart';
+import 'package:gimmillions/models/stock-recommendation-history.dart';
+import 'package:gimmillions/services/stock-recommendation-service.dart';
+import 'package:provider/provider.dart';
 
 class StockRecommendationDetailsArguments {
   final String symbol;
@@ -22,12 +26,22 @@ class _StockRecommendationDetailsState extends State<StockRecommendationDetails>
     _tabController = TabController(length: 2, vsync: this);
   }
 
+  _getHistory(BuildContext context, String symbol) {
+    try {
+      final service = Provider.of<StockRecommendationService>(context, listen: false);
+      return service.getHistoryFor(symbol);
+    } catch (e) {
+      print(e);
+      return List.empty();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Extract the arguments from the current ModalRoute
     // settings and cast them as ScreenArguments.
     final args = ModalRoute.of(context)!.settings.arguments as StockRecommendationDetailsArguments;
-
+    var history = _getHistory(context, args.symbol);
     return Scaffold(
       appBar: AppBar(
         title: Text(args.symbol),
@@ -49,7 +63,19 @@ class _StockRecommendationDetailsState extends State<StockRecommendationDetails>
         controller: _tabController,
         children: <Widget>[
           Center(
-            child: Text("It's rainy here"),
+            child: FutureBuilder(
+                future: history,
+                builder: (BuildContext context, AsyncSnapshot<StockRecommendationHistory> snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return CircularProgressIndicator(color: Theme.of(context).primaryColor);
+                  }
+
+                  if (snapshot.hasData) {
+                    return RecommendationHistoryChart(snapshot.data!);
+                  }
+
+                  return CircularProgressIndicator(color: Theme.of(context).primaryColor);
+                }),
           ),
           Center(
             child: Text("It's sunny here"),
