@@ -65,6 +65,6 @@ class StockRecommendationService {
 
     StockRecommendationHistory history =
         StockRecommendationHistory('systemId', 'DIA', DateTime.now(), recommendations.last, recommendations);
-    return Future.delayed(Duration(seconds: 2), () => history);
+    return Future.delayed(Duration(milliseconds: 1), () => history);
   }
 }
