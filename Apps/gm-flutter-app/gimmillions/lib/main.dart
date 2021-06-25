@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
             StockRecommendationDetails.routeName: (context) => StockRecommendationDetails(),
           },
           title: 'Startup Name Generator',
-          theme: ThemeData(primaryColor: Color.fromRGBO(27, 96, 58, 1), accentColor: Colors.red),
+          theme: ThemeData(primaryColor: Color.fromRGBO(27, 96, 58, 1), accentColor: Color.fromRGBO(196, 210, 83, 1)),
           home: StocksWidget(),
         ));
   }
