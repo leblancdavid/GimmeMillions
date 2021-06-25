@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gimmillions/app/stocks/futures.dart';
 import 'package:gimmillions/app/stocks/stocks.dart';
 
 class HomeWidget extends StatefulWidget {

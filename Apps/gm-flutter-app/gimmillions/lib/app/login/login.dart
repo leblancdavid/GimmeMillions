@@ -12,13 +12,16 @@ class _LoginWidgetState extends State<LoginWidget> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Login Page"),
+        title: Image(
+          image: AssetImage('assets/images/full-logo-light.png'),
+          height: 24,
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(top: 60.0),
+              padding: const EdgeInsets.symmetric(vertical: 60.0),
               child: Center(
                 child: Container(
                     width: 200,
@@ -26,7 +29,10 @@ class _LoginWidgetState extends State<LoginWidget> {
                     /*decoration: BoxDecoration(
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(50.0)),*/
-                    child: Image.asset('asset/images/full-logo-light.png')),
+                    child: Image(
+                      image: AssetImage('assets/images/logo.png'),
+                      height: 24,
+                    )),
               ),
             ),
             Padding(
@@ -34,9 +40,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Email',
-                    hintText: 'Enter valid email id as abc@gmail.com'),
+                    border: OutlineInputBorder(), labelText: 'Username', hintText: 'Enter valid username'),
               ),
             ),
             Padding(
@@ -48,20 +52,11 @@ class _LoginWidgetState extends State<LoginWidget> {
                     border: OutlineInputBorder(), labelText: 'Password', hintText: 'Enter secure password'),
               ),
             ),
-            FlatButton(
-              onPressed: () {
-                //TODO FORGOT PASSWORD SCREEN GOES HERE
-              },
-              child: Text(
-                'Forgot Password',
-                style: TextStyle(color: Colors.blue, fontSize: 15),
-              ),
-            ),
             Container(
               height: 50,
               width: 250,
-              decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(20)),
-              child: FlatButton(
+              decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(20)),
+              child: ElevatedButton(
                 onPressed: () {
                   //Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
                 },
