@@ -68,7 +68,7 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
           showTitles: true,
           interval: intervalY,
           getTitles: (value) {
-            return '${value.toStringAsFixed(0)}';
+            return '${value.toStringAsFixed(0)}%';
           },
         ),
       ),
@@ -122,10 +122,10 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
             }),
         leftTitles: SideTitles(
           showTitles: true,
-          reservedSize: 14,
+          reservedSize: 28,
           interval: intervalY,
           getTitles: (value) {
-            return '${value.toStringAsFixed(0)}';
+            return '\$${value.toStringAsFixed(0)}';
           },
         ),
       ),

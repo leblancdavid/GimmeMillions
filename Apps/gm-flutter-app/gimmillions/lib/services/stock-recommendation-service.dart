@@ -55,7 +55,7 @@ class StockRecommendationService {
         44.44, 55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 90.0, 0.0, 0.0, 0.0)));
 
     recommendations.add(StockRecommendation(DateTime(2021, 6, 22), 'DIA', 'Test', 65, 0.77, 11.11, 22.22, 33.33, 44.44,
-        55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 120.0, 120.0, 0.0, 0.0)));
+        55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 2120.0, 120.0, 0.0, 0.0)));
 
     recommendations.add(StockRecommendation(DateTime(2021, 6, 23), 'DIA', 'Test', 86, 0.22, 11.11, 22.22, 33.33, 44.44,
         55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 60.0, 30.0, 0.0, 0.0)));
