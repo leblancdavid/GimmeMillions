@@ -35,22 +35,27 @@ class _FuturesState extends State<FuturesWidget> {
   Widget build(BuildContext context) {
     _refreshFutures(context);
 
-    return SingleChildScrollView(
+    return Container(
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-      PopupMenuButton<_FuturesMenuOptions>(
-          onSelected: (_FuturesMenuOptions result) {
-            if (result == _FuturesMenuOptions.refresh) {
-              _refreshFutures(context);
-            }
-          },
-          itemBuilder: (BuildContext context) => <PopupMenuEntry<_FuturesMenuOptions>>[
-                PopupMenuItem(
-                    value: _FuturesMenuOptions.refresh,
-                    child: Row(
-                      children: [Icon(Icons.refresh), Text("Refresh")],
-                    ))
-              ]),
-      FuturesDataTableBuilder(_futuresList, _refreshFutures)
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          PopupMenuButton<_FuturesMenuOptions>(
+              onSelected: (_FuturesMenuOptions result) {
+                if (result == _FuturesMenuOptions.refresh) {
+                  _refreshFutures(context);
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<_FuturesMenuOptions>>[
+                    PopupMenuItem(
+                        value: _FuturesMenuOptions.refresh,
+                        child: Row(
+                          children: [Icon(Icons.refresh), Text("Refresh")],
+                        ))
+                  ]),
+        ],
+      ),
+      Expanded(child: FuturesDataTableBuilder(_futuresList, _refreshFutures))
     ]));
   }
 }
@@ -67,14 +72,14 @@ class FuturesDataTableBuilder extends StatelessWidget {
         future: _futuresList,
         builder: (BuildContext context, AsyncSnapshot<List<StockRecommendation>> snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
-            return CircularProgressIndicator(color: Theme.of(context).primaryColor);
+            return Expanded(child: Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor)));
           }
 
           if (snapshot.hasData) {
             return StockRecommendationDataTable(snapshot.data!);
           }
 
-          return CircularProgressIndicator(color: Theme.of(context).primaryColor);
+          return Expanded(child: Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor)));
         });
   }
 
