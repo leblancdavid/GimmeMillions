@@ -13,14 +13,11 @@ class AuthWidgetBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('AuthWidgetBuilder rebuild');
     final authService = Provider.of<AuthenticationService>(context, listen: false);
     return StreamBuilder<User?>(
       stream: authService.onAuthStateChanged,
       builder: (context, snapshot) {
-        print('StreamBuilder: ${snapshot.connectionState}');
         var user = snapshot.data;
-        print('Current user: ${user}');
         if (user != null) {
           return MultiProvider(
             providers: [
@@ -42,17 +39,19 @@ class AuthWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(userSnapshot);
     if (userSnapshot.connectionState == ConnectionState.active) {
-      print('Current user: ${userSnapshot.data}');
       if (!userSnapshot.hasData) {
-        return Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
+        return LoginWidget();
       }
+
+      print(userSnapshot);
       return userSnapshot.hasData && userSnapshot.data != null ? HomeWidget() : LoginWidget();
     }
-    return LoginWidget();
+    return Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 }

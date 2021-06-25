@@ -1,11 +1,13 @@
+import 'dart:async';
+
 import 'package:gimmillions/models/user.dart';
 
 class AuthenticationService {
   late User? _currentUser;
 
-  Stream<User> _onAuthStateChanged = Stream.empty();
-  Stream<User> get onAuthStateChanged {
-    return _onAuthStateChanged;
+  StreamController<User?> _onAuthStateChangedController = StreamController<User?>();
+  Stream<User?> get onAuthStateChanged {
+    return _onAuthStateChangedController.stream;
   }
 
   bool get isUserAuthenticated {
@@ -17,12 +19,16 @@ class AuthenticationService {
   }
 
   Future<User?> signIn(String username, String password) async {
-    _currentUser = User(0, 'mock', 'user', username, password, UserRole.SuperUser, '');
-    Future.delayed(Duration(milliseconds: 100), () => _currentUser);
+    return await Future.delayed(Duration(milliseconds: 5000), () {
+      _currentUser = User(0, 'mock', 'user', username, password, UserRole.SuperUser, '');
+      _onAuthStateChangedController.add(_currentUser);
+    });
   }
 
   Future<void> signOut() async {
-    _currentUser = null;
-    return Future.delayed(Duration(milliseconds: 100));
+    return await Future.delayed(Duration(milliseconds: 5000), () {
+      _currentUser = null;
+      _onAuthStateChangedController.add(_currentUser);
+    });
   }
 }

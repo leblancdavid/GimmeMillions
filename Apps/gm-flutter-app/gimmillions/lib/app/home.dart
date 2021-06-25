@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gimmillions/app/stocks/stocks.dart';
+import 'package:gimmillions/services/authentication-service.dart';
+import 'package:provider/provider.dart';
 
 class HomeWidget extends StatefulWidget {
   @override
@@ -26,7 +28,10 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
               PopupMenuButton<String>(
                   icon: Icon(Icons.menu),
                   onSelected: (String result) {
-                    if (result == 'test') {}
+                    if (result == 'logout') {
+                      final service = Provider.of<AuthenticationService>(context, listen: false);
+                      service.signOut();
+                    }
                   },
                   itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                         PopupMenuItem(

@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gimmillions/models/user.dart';
+import 'package:gimmillions/services/authentication-service.dart';
+import 'package:provider/provider.dart';
 
 class LoginWidget extends StatefulWidget {
   @override
@@ -7,8 +10,32 @@ class LoginWidget extends StatefulWidget {
 }
 
 class _LoginWidgetState extends State<LoginWidget> {
+  late TextEditingController _usernameController;
+  late TextEditingController _passwordController;
+
+  Future<User?> _login() async {
+    try {
+      if (_usernameController.text == '' || _passwordController.text == '') {
+        return Future.error('Please specify a username and password');
+      }
+      print('${_usernameController.text}, ${_passwordController.text}');
+      final service = Provider.of<AuthenticationService>(context, listen: false);
+      return await service.signIn(_usernameController.text, _passwordController.text);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void initState() {
+    super.initState();
+    _usernameController = TextEditingController();
+    _passwordController = TextEditingController();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -26,9 +53,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                 child: Container(
                     width: 200,
                     height: 150,
-                    /*decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(50.0)),*/
                     child: Image(
                       image: AssetImage('assets/images/logo.png'),
                       height: 24,
@@ -39,33 +63,47 @@ class _LoginWidgetState extends State<LoginWidget> {
               //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
+                controller: _usernameController,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Username', hintText: 'Enter valid username'),
+                    focusColor: theme.accentColor,
+                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: theme.accentColor)),
+                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(color: theme.primaryColor),
+                    labelText: 'Username',
+                    hintText: 'Enter valid username'),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 15, bottom: 0),
-              //padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Password', hintText: 'Enter secure password'),
+                    focusColor: theme.accentColor,
+                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: theme.accentColor)),
+                    border: OutlineInputBorder(),
+                    labelStyle: TextStyle(color: theme.primaryColor),
+                    labelText: 'Password',
+                    hintText: 'Enter secure password'),
               ),
             ),
-            Container(
-              height: 50,
-              width: 250,
-              decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(20)),
-              child: ElevatedButton(
-                onPressed: () {
-                  //Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
-                },
-                child: Text(
-                  'Login',
-                  style: TextStyle(color: Colors.white, fontSize: 25),
-                ),
-              ),
-            ),
+            Padding(
+                padding: EdgeInsets.symmetric(vertical: 32),
+                child: Container(
+                  height: 50,
+                  width: 250,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _login();
+                      //Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
+                    },
+                    style: ElevatedButton.styleFrom(primary: theme.primaryColor),
+                    child: Text(
+                      'Login',
+                      style: TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                  ),
+                )),
             SizedBox(
               height: 130,
             ),
