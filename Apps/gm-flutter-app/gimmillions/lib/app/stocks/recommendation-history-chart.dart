@@ -1,10 +1,7 @@
-import 'dart:math';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gimmillions/models/stock-recommendation-history.dart';
-import 'package:gimmillions/models/stock-recommendation.dart';
 
 class RecommendationHistoryChart extends StatefulWidget {
   final StockRecommendationHistory history;

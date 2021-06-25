@@ -82,18 +82,4 @@ class FuturesDataTableBuilder extends StatelessWidget {
           return Expanded(child: Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor)));
         });
   }
-
-  List<DataRow> _toTableRows(List<StockRecommendation>? futures) {
-    if (futures == null) {
-      return List.empty();
-    }
-
-    return futures
-        .map((e) => DataRow(cells: [
-              DataCell(Text(e.symbol)),
-              DataCell(Text(e.sentiment.toStringAsFixed(2))),
-              DataCell(Text(e.confidence.toStringAsFixed(3))),
-            ]))
-        .toList();
-  }
 }

@@ -19,8 +19,7 @@ class _StocksWidgetState extends State<StocksWidget> with TickerProviderStateMix
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gimmillions'),
-        bottom: TabBar(
+        flexibleSpace: TabBar(
           controller: _tabController,
           tabs: const <Widget>[
             Tab(

@@ -17,18 +17,18 @@ class StockRecommendationService {
 
     recommendations.add(StockRecommendation(DateTime.now(), 'RUT', 'Test', 0, -0.77, 11.11, 22.22, 33.33, 44.44, 55.55,
         StockData(DateTime.now(), 'RUT', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)));
-    return Future.delayed(Duration(seconds: 2), () => recommendations);
+    return Future.delayed(Duration(milliseconds: 100), () => recommendations);
   }
 
   Future<List<StockRecommendation>> getDailyPicks() {
     List<StockRecommendation> recommendations = List.empty();
-    return Future.delayed(Duration(seconds: 2), () => recommendations);
+    return Future.delayed(Duration(milliseconds: 100), () => recommendations);
   }
 
   Future<StockRecommendation> getRecommendationFor(String symbol) {
     StockRecommendation recommendation = new StockRecommendation(DateTime.now(), symbol, '', 42, 42, 42, 42, 42, 42, 42,
         StockData(DateTime.now(), symbol, 42, 42, 42, 42, 42, 42, 42));
-    return Future.delayed(Duration(seconds: 2), () => recommendation);
+    return Future.delayed(Duration(milliseconds: 100), () => recommendation);
   }
 
   Future<StockRecommendationHistory> getHistoryFor(String symbol) {
@@ -65,6 +65,6 @@ class StockRecommendationService {
 
     StockRecommendationHistory history =
         StockRecommendationHistory('systemId', 'DIA', DateTime.now(), recommendations.last, recommendations);
-    return Future.delayed(Duration(milliseconds: 1), () => history);
+    return Future.delayed(Duration(milliseconds: 100), () => history);
   }
 }
