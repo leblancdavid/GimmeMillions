@@ -13,6 +13,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var theme = ThemeData(primaryColor: Color.fromRGBO(27, 96, 58, 1), accentColor: Color.fromRGBO(196, 210, 83, 1));
     return MultiProvider(
         providers: [
           Provider<StockRecommendationService>(
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
               StockRecommendationDetails.routeName: (context) => StockRecommendationDetails(),
             },
             title: 'Gimmillions',
-            theme: ThemeData(primaryColor: Color.fromRGBO(27, 96, 58, 1), accentColor: Color.fromRGBO(196, 210, 83, 1)),
+            theme: theme,
             home: Scaffold(
                 appBar: AppBar(
                   shadowColor: Colors.transparent,
@@ -37,10 +38,49 @@ class MyApp extends StatelessWidget {
                           },
                           itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                                 PopupMenuItem(
-                                    value: 'Test',
+                                    value: 'stocks',
                                     child: Row(
-                                      children: [Icon(Icons.refresh), Text("Refresh")],
-                                    ))
+                                      children: [
+                                        Icon(
+                                          Icons.show_chart,
+                                          color: theme.primaryColor,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 16),
+                                          child: Text("Stocks"),
+                                        )
+                                      ],
+                                    )),
+                                PopupMenuDivider(),
+                                PopupMenuItem(
+                                    value: 'profile',
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.person,
+                                          color: theme.primaryColor,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 16),
+                                          child: Text("Profile"),
+                                        )
+                                      ],
+                                    )),
+                                PopupMenuDivider(),
+                                PopupMenuItem(
+                                    value: 'logout',
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.login,
+                                          color: theme.primaryColor,
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 16),
+                                          child: Text("Sign Out"),
+                                        )
+                                      ],
+                                    )),
                               ]),
                       Image(
                         image: AssetImage('assets/images/full-logo-light.png'),

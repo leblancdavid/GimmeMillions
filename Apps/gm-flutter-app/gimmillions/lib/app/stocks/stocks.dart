@@ -40,9 +40,7 @@ class _StocksWidgetState extends State<StocksWidget> with TickerProviderStateMix
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          Center(
-            child: FuturesWidget(),
-          ),
+          FuturesWidget(),
           Center(
             child: Text("It's rainy here"),
           ),

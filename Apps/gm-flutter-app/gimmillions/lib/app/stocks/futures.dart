@@ -36,27 +36,37 @@ class _FuturesState extends State<FuturesWidget> {
     _refreshFutures(context);
 
     return Container(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          PopupMenuButton<_FuturesMenuOptions>(
-              onSelected: (_FuturesMenuOptions result) {
-                if (result == _FuturesMenuOptions.refresh) {
-                  _refreshFutures(context);
-                }
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<_FuturesMenuOptions>>[
-                    PopupMenuItem(
-                        value: _FuturesMenuOptions.refresh,
-                        child: Row(
-                          children: [Icon(Icons.refresh), Text("Refresh")],
-                        ))
-                  ]),
-        ],
-      ),
-      Expanded(child: FuturesDataTableBuilder(_futuresList, _refreshFutures))
-    ]));
+        constraints: BoxConstraints.expand(),
+        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              PopupMenuButton<_FuturesMenuOptions>(
+                  onSelected: (_FuturesMenuOptions result) {
+                    if (result == _FuturesMenuOptions.refresh) {
+                      _refreshFutures(context);
+                    }
+                  },
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry<_FuturesMenuOptions>>[
+                        PopupMenuItem(
+                            value: _FuturesMenuOptions.refresh,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.refresh,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 16),
+                                  child: Text("Refresh"),
+                                )
+                              ],
+                            ))
+                      ]),
+            ],
+          ),
+          FuturesDataTableBuilder(_futuresList, _refreshFutures)
+        ]));
   }
 }
 
