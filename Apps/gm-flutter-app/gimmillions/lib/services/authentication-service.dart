@@ -19,15 +19,22 @@ class AuthenticationService {
   }
 
   Future<User?> signIn(String username, String password) async {
-    return await Future.delayed(Duration(milliseconds: 5000), () {
-      _currentUser = User(0, 'mock', 'user', username, password, UserRole.SuperUser, '');
+    _onAuthStateChangedController.add(null);
+    return await Future.delayed(Duration(milliseconds: 1000), () {
+      var newUser = User(0, 'mock', 'user', username, password, UserRole.SuperUser, '');
+      newUser.isLoggedIn = true;
+      _currentUser = newUser;
       _onAuthStateChangedController.add(_currentUser);
     });
   }
 
   Future<void> signOut() async {
-    return await Future.delayed(Duration(milliseconds: 5000), () {
-      _currentUser = null;
+    _currentUser = null;
+    _onAuthStateChangedController.add(null);
+    return await Future.delayed(Duration(milliseconds: 1000), () {
+      var loggedOutUser = User(0, '', '', '', '', UserRole.Default, '');
+      loggedOutUser.isLoggedIn = false;
+      _currentUser = loggedOutUser;
       _onAuthStateChangedController.add(_currentUser);
     });
   }

@@ -39,19 +39,21 @@ class AuthWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(userSnapshot);
     if (userSnapshot.connectionState == ConnectionState.active) {
       if (!userSnapshot.hasData) {
-        return LoginWidget();
+        return Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
       }
 
-      print(userSnapshot);
-      return userSnapshot.hasData && userSnapshot.data != null ? HomeWidget() : LoginWidget();
+      if (userSnapshot.data!.isLoggedIn) {
+        return HomeWidget();
+      }
+      return LoginWidget();
     }
-    return Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
+
+    return LoginWidget();
   }
 }

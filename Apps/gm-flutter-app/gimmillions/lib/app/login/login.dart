@@ -48,14 +48,14 @@ class _LoginWidgetState extends State<LoginWidget> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 60.0),
+              padding: const EdgeInsets.symmetric(vertical: 32.0),
               child: Center(
                 child: Container(
-                    width: 200,
-                    height: 150,
+                    width: 192,
+                    height: 192,
                     child: Image(
                       image: AssetImage('assets/images/logo.png'),
-                      height: 24,
+                      height: 50,
                     )),
               ),
             ),

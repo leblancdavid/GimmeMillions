@@ -10,4 +10,6 @@ class User {
   String stocksWatchlistString;
 
   User(this.id, this.firstName, this.lastName, this.username, this.password, this.role, this.stocksWatchlistString);
+
+  late bool isLoggedIn = false;
 }
