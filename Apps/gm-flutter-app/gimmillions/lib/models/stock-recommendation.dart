@@ -46,4 +46,19 @@ class StockRecommendation {
     }
     return Color.fromRGBO(r.toInt(), g.toInt(), b.toInt(), opacity);
   }
+
+  factory StockRecommendation.fromJson(Map<String, dynamic> json) {
+    return StockRecommendation(
+        DateTime.parse(json['date']),
+        json['symbol'],
+        json['systemId'],
+        json['sentiment'],
+        json['confidence'],
+        json['prediction'],
+        json['lowPrediction'],
+        json['previousClose'],
+        json['predictedPriceTarget'],
+        json['predictedLowTarget'],
+        StockData.fromJson(json['lastData']));
+  }
 }

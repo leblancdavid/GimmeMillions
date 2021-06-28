@@ -26,8 +26,9 @@ class StockRecommendationService {
 
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body) as List;
-      print(json);
-      //recommendations = User.fromJson();
+      json.forEach((element) {
+        recommendations.add(StockRecommendation.fromJson(element));
+      });
       return recommendations;
     } else {
       throw Exception('Unable to retrieve future predictions');
