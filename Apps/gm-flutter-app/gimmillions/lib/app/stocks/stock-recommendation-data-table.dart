@@ -140,6 +140,7 @@ class _StockRecommendationDataTableState extends State<StockRecommendationDataTa
     setState(() {
       this.sortColumnIndex = columnIndex;
       this.isAscending = ascending;
+      _dataRows = getRows(_filter.filter(_recommendations));
     });
   }
 
