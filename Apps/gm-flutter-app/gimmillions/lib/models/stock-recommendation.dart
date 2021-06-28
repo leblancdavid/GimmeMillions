@@ -17,6 +17,20 @@ class StockRecommendation {
   StockRecommendation(this.date, this.symbol, this.systemId, this.sentiment, this.confidence, this.prediction,
       this.lowPrediction, this.previousClose, this.predictedPriceTarget, this.predictedLowTarget, this.stockData);
 
+  String get concensus {
+    if (sentiment > 90) {
+      return 'STRONG BUY';
+    } else if (sentiment >= 75) {
+      return "BUY";
+    } else if (sentiment > 25) {
+      return "HOLD";
+    } else if (sentiment > 10) {
+      return "SELL";
+    } else {
+      return "STRONG SELL";
+    }
+  }
+
   Color getRgb(int intensity) {
     var range = 255 - intensity;
     var b = intensity.toDouble();

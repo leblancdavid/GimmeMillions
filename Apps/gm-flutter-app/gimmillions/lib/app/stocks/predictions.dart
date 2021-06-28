@@ -25,7 +25,7 @@ class _PredictionsState extends State<PredictionsWidget> {
   _refreshPredictions(BuildContext context) {
     try {
       final service = Provider.of<StockRecommendationService>(context, listen: false);
-      _predictionList = service.getFutures();
+      _predictionList = service.getDailyPicks();
       setState(() {});
     } catch (e) {
       print(e);

@@ -117,7 +117,7 @@ class _StockRecommendationDataTableState extends State<StockRecommendationDataTa
     cells.add(DataCell(
         Text(recommendation.symbol, style: TextStyle(fontWeight: FontWeight.bold, color: recommendation.getRgb(25)))));
     cells.add(DataCell(Center(
-        child: Text(recommendation.sentiment.toStringAsFixed(2),
+        child: Text(recommendation.sentiment.toStringAsFixed(2) + '%',
             style: TextStyle(fontWeight: FontWeight.bold, color: recommendation.getRgb(25)),
             textAlign: TextAlign.center))));
     cells.add(DataCell(Center(

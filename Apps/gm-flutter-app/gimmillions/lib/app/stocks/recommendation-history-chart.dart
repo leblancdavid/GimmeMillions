@@ -17,7 +17,7 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
 
   late LineChartData chartData;
 
-  String chartType = 'Sentiment';
+  String chartType = 'Price';
   _RecommendationHistoryChartState(this.history);
 
   @override
@@ -31,11 +31,11 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
     var minY = history.historicalData
             .reduce((value, element) => value.sentiment < element.sentiment ? value : element)
             .sentiment *
-        0.9;
+        0.95;
     var maxY = history.historicalData
             .reduce((value, element) => value.sentiment > element.sentiment ? value : element)
             .sentiment *
-        1.10;
+        1.05;
 
     var intervalY = (maxY - minY).toInt() / 10;
 
@@ -139,20 +139,9 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
   LineChartData _getConfidenceChartData() {
     const dateTextStyle = TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.bold);
 
-    var minY = history.historicalData
-        .reduce((value, element) => value.confidence < element.confidence ? value : element)
-        .confidence;
-    if (minY < 0) {
-      minY *= 1.1;
-    } else {
-      minY *= 0.9;
-    }
-    var maxY = history.historicalData
-            .reduce((value, element) => value.confidence > element.confidence ? value : element)
-            .confidence *
-        1.10;
-
-    var intervalY = (maxY - minY) / 5.0;
+    var minY = -1.0;
+    var maxY = 1.0;
+    var intervalY = (maxY - minY) / 10.0;
 
     var barData = LineChartBarData(
         spots:
@@ -224,7 +213,7 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
             chartData = _getChartData();
           });
         },
-        items: <String>['Sentiment', 'Confidence', 'Price'].map<DropdownMenuItem<String>>((String value) {
+        items: <String>['Price', 'Sentiment', 'Confidence'].map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(value),

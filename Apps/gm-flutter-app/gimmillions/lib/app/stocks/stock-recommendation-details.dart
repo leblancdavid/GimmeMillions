@@ -78,6 +78,19 @@ class _StockRecommendationDetailsState extends State<StockRecommendationDetails>
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(height: infoSpacing),
+                          RichText(
+                              text: TextSpan(
+                                  text: 'Recommendation: ',
+                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20.0),
+                                  children: <TextSpan>[
+                                TextSpan(
+                                    text: '${snapshot.data!.lastRecommendation.concensus}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: snapshot.data!.lastRecommendation.getRgb(25))),
+                              ])),
+                          SizedBox(height: infoSpacing),
                           RichText(
                               text: TextSpan(
                                   text: 'Sentiment: ',

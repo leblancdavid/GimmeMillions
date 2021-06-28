@@ -1,13 +1,10 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:gimmillions/models/stock-data.dart';
 import 'package:gimmillions/models/stock-recommendation-history.dart';
 import 'package:gimmillions/models/stock-recommendation.dart';
-import 'package:gimmillions/models/user.dart';
 import 'package:gimmillions/services/authentication-service.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 
 class StockRecommendationService {
   final AuthenticationService _authenticationService;
@@ -35,9 +32,25 @@ class StockRecommendationService {
     }
   }
 
-  Future<List<StockRecommendation>> getDailyPicks() {
-    List<StockRecommendation> recommendations = List.empty();
-    return Future.delayed(Duration(milliseconds: 100), () => recommendations);
+  Future<List<StockRecommendation>> getDailyPicks() async {
+    List<StockRecommendation> recommendations = [];
+    var currentUser = _authenticationService.currentUser;
+    if (currentUser == null || !currentUser.isLoggedIn || currentUser.authdata == '') {
+      return recommendations;
+    }
+
+    final response = await http.get(Uri.parse('http://api.gimmillions.com/api/recommendations/stocks/daily'),
+        headers: {'Authorization': 'Basic ${currentUser.authdata}'});
+
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body) as List;
+      json.forEach((element) {
+        recommendations.add(StockRecommendation.fromJson(element));
+      });
+      return recommendations;
+    } else {
+      throw Exception('Unable to retrieve daily predictions');
+    }
   }
 
   Future<List<StockRecommendation>> getUserWatchlist() {
