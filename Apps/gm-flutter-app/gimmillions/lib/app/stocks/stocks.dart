@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gimmillions/app/stocks/futures.dart';
+import 'package:gimmillions/app/stocks/predictions.dart';
 
 class StocksWidget extends StatefulWidget {
   @override
@@ -41,9 +42,7 @@ class _StocksWidgetState extends State<StocksWidget> with TickerProviderStateMix
         controller: _tabController,
         children: <Widget>[
           FuturesWidget(),
-          Center(
-            child: Text("It's rainy here"),
-          ),
+          PredictionsWidget(),
           Center(
             child: Text("It's sunny here"),
           ),

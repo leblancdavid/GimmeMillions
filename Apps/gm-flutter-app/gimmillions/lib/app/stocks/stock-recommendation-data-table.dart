@@ -3,6 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:gimmillions/app/stocks/stock-recommendation-details.dart';
 import 'package:gimmillions/models/stock-recommendation.dart';
 
+class StockRecommendationDataTableBuilder extends StatelessWidget {
+  final Future<List<StockRecommendation>> _recommendations;
+  final Function onRefresh;
+
+  const StockRecommendationDataTableBuilder(this._recommendations, this.onRefresh);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: _recommendations,
+        builder: (BuildContext context, AsyncSnapshot<List<StockRecommendation>> snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Expanded(child: Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor)));
+          }
+
+          if (snapshot.hasData) {
+            return StockRecommendationDataTable(snapshot.data!);
+          }
+
+          return Expanded(child: Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor)));
+        });
+  }
+}
+
 class StockRecommendationDataTable extends StatefulWidget {
   final List<StockRecommendation> recommendations;
 
