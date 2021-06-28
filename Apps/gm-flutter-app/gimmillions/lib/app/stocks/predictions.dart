@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gimmillions/app/stocks/stock-recommendation-data-table.dart';
+import 'package:gimmillions/models/stock-recommendation-filter.dart';
 import 'package:gimmillions/models/stock-recommendation.dart';
 import 'package:gimmillions/services/stock-recommendation-service.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:provider/provider.dart';
 
 class PredictionsWidget extends StatefulWidget {
@@ -13,11 +13,19 @@ class PredictionsWidget extends StatefulWidget {
 
 class _PredictionsState extends State<PredictionsWidget> {
   late Future<List<StockRecommendation>> _predictionList;
+  late TextEditingController _searchController;
+  final StockRecommendationFilter _filter = StockRecommendationFilter();
 
-  _refreshFutures(BuildContext context) {
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+    setState(() {});
+  }
+
+  _refreshPredictions(BuildContext context) {
     try {
       final service = Provider.of<StockRecommendationService>(context, listen: false);
-      _predictionList = service.getDailyPicks();
+      _predictionList = service.getFutures();
       setState(() {});
     } catch (e) {
       print(e);
@@ -25,24 +33,47 @@ class _PredictionsState extends State<PredictionsWidget> {
     }
   }
 
+  _applySearchFilter(String value) {
+    _filter.symbolFilter = value;
+  }
+
   @override
   Widget build(BuildContext context) {
-    _refreshFutures(context);
+    _refreshPredictions(context);
+    var theme = Theme.of(context);
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return Container(
         constraints: BoxConstraints.expand(),
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+            Expanded(
+                child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: TextField(
+                      onChanged: (String value) {
+                        _applySearchFilter(value);
+                      },
+                      cursorColor: theme.primaryColor,
+                      style: TextStyle(),
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                          icon: Icon(Icons.search, color: theme.primaryColor),
+                          focusColor: theme.accentColor,
+                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: theme.accentColor)),
+                          border: OutlineInputBorder(),
+                          labelStyle: TextStyle(color: theme.primaryColor),
+                          hintText: 'Search...'),
+                    ))),
             IconButton(
                 onPressed: () {
-                  _refreshFutures(context);
+                  _refreshPredictions(context);
                 },
                 icon: Icon(
                   Icons.refresh,
                   color: Theme.of(context).primaryColor,
                 ))
           ]),
-          StockRecommendationDataTableBuilder(_predictionList, _refreshFutures)
+          StockRecommendationDataTableBuilder(_predictionList, _filter)
         ]));
   }
 }

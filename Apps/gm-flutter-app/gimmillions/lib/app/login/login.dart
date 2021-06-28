@@ -63,6 +63,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
+                cursorColor: theme.primaryColor,
                 controller: _usernameController,
                 decoration: InputDecoration(
                     focusColor: theme.accentColor,
@@ -76,6 +77,7 @@ class _LoginWidgetState extends State<LoginWidget> {
             Padding(
               padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 15, bottom: 0),
               child: TextField(
+                cursorColor: theme.primaryColor,
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(

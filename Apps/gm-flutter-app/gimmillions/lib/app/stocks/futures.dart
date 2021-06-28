@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:gimmillions/app/stocks/stock-recommendation-data-table.dart';
+import 'package:gimmillions/models/stock-recommendation-filter.dart';
 import 'package:gimmillions/models/stock-recommendation.dart';
 import 'package:gimmillions/services/stock-recommendation-service.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,7 @@ class FuturesWidget extends StatefulWidget {
 
 class _FuturesState extends State<FuturesWidget> {
   late Future<List<StockRecommendation>> _futuresList;
+  final StockRecommendationFilter _filter = StockRecommendationFilter();
 
   _refreshFutures(BuildContext context) {
     try {
@@ -42,7 +44,7 @@ class _FuturesState extends State<FuturesWidget> {
                   color: Theme.of(context).primaryColor,
                 ))
           ]),
-          StockRecommendationDataTableBuilder(_futuresList, _refreshFutures)
+          StockRecommendationDataTableBuilder(_futuresList, _filter)
         ]));
   }
 }

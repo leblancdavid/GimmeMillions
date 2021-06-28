@@ -1,13 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gimmillions/app/stocks/stock-recommendation-details.dart';
+import 'package:gimmillions/models/stock-recommendation-filter.dart';
 import 'package:gimmillions/models/stock-recommendation.dart';
+import 'package:provider/provider.dart';
 
 class StockRecommendationDataTableBuilder extends StatelessWidget {
   final Future<List<StockRecommendation>> _recommendations;
-  final Function onRefresh;
+  final StockRecommendationFilter filter;
 
-  const StockRecommendationDataTableBuilder(this._recommendations, this.onRefresh);
+  const StockRecommendationDataTableBuilder(this._recommendations, this.filter);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class StockRecommendationDataTableBuilder extends StatelessWidget {
           }
 
           if (snapshot.hasData) {
-            return StockRecommendationDataTable(snapshot.data!);
+            return StockRecommendationDataTable(snapshot.data!, filter);
           }
 
           return Expanded(child: Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor)));
@@ -29,29 +31,39 @@ class StockRecommendationDataTableBuilder extends StatelessWidget {
 
 class StockRecommendationDataTable extends StatefulWidget {
   final List<StockRecommendation> recommendations;
-
-  StockRecommendationDataTable(this.recommendations);
+  final StockRecommendationFilter filter;
+  StockRecommendationDataTable(this.recommendations, this.filter);
 
   @override
-  _StockRecommendationDataTableState createState() => _StockRecommendationDataTableState(recommendations);
+  _StockRecommendationDataTableState createState() => _StockRecommendationDataTableState(recommendations, filter);
 }
 
 class _StockRecommendationDataTableState extends State<StockRecommendationDataTable> {
   final List<StockRecommendation> _recommendations;
+  late List<DataRow> _dataRows;
+  final StockRecommendationFilter _filter;
   int sortColumnIndex = 1;
   bool isAscending = false;
 
-  _StockRecommendationDataTableState(this._recommendations);
+  _StockRecommendationDataTableState(this._recommendations, this._filter) {}
 
   @override
   void initState() {
     super.initState();
+    _dataRows = getRows(_filter.filter(_recommendations));
+    _filter.addListener(() {
+      setState(() {
+        _dataRows = getRows(_filter.filter(_recommendations));
+      });
+    });
     sortColumnIndex = 1;
     isAscending = false;
   }
 
   @override
-  Widget build(BuildContext context) => buildDataTable();
+  Widget build(BuildContext context) {
+    return buildDataTable();
+  }
 
   Widget buildDataTable() {
     final columns = ['Symbol', 'Sentiment', 'Confidence'];
@@ -61,7 +73,7 @@ class _StockRecommendationDataTableState extends State<StockRecommendationDataTa
       sortColumnIndex: sortColumnIndex,
       showCheckboxColumn: false,
       columns: getColumns(columns),
-      rows: getRows(_recommendations),
+      rows: _dataRows,
     );
 
     return table;
