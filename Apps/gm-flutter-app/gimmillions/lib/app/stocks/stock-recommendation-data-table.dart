@@ -86,17 +86,31 @@ class _StockRecommendationDataTableState extends State<StockRecommendationDataTa
           ))
       .toList();
 
-  List<DataRow> getRows(List<StockRecommendation> recommendations) => recommendations.map((StockRecommendation r) {
-        return DataRow(
-            cells: getCells(r),
-            onSelectChanged: (bool? selected) => {
-                  if (selected!)
-                    {
-                      Navigator.pushNamed(context, StockRecommendationDetails.routeName,
-                          arguments: StockRecommendationDetailsArguments(r.symbol))
-                    }
-                });
-      }).toList();
+  List<DataRow> getRows(List<StockRecommendation> recommendations) {
+    if (recommendations.isEmpty) {
+      return [
+        DataRow(cells: [
+          DataCell(Text(
+            'Not found',
+            style: TextStyle(fontStyle: FontStyle.italic),
+          )),
+          DataCell(Text('')),
+          DataCell(Text('')),
+        ])
+      ];
+    }
+    return recommendations.map((StockRecommendation r) {
+      return DataRow(
+          cells: getCells(r),
+          onSelectChanged: (bool? selected) => {
+                if (selected!)
+                  {
+                    Navigator.pushNamed(context, StockRecommendationDetails.routeName,
+                        arguments: StockRecommendationDetailsArguments(r.symbol))
+                  }
+              });
+    }).toList();
+  }
 
   List<DataCell> getCells(StockRecommendation recommendation) {
     List<DataCell> cells = [];

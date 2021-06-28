@@ -43,7 +43,9 @@ class AuthWidget extends StatelessWidget {
       if (!userSnapshot.hasData) {
         return Scaffold(
           body: Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ),
           ),
         );
       }

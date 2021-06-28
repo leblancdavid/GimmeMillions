@@ -106,10 +106,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                     ),
                   ),
                 )),
-            SizedBox(
-              height: 130,
-            ),
-            Text('New User? Create Account')
           ],
         ),
       ),

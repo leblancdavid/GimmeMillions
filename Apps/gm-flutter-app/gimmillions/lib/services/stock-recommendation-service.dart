@@ -25,6 +25,11 @@ class StockRecommendationService {
     return Future.delayed(Duration(milliseconds: 100), () => recommendations);
   }
 
+  Future<List<StockRecommendation>> getUserWatchlist() {
+    List<StockRecommendation> recommendations = List.empty();
+    return Future.delayed(Duration(milliseconds: 100), () => recommendations);
+  }
+
   Future<StockRecommendation> getRecommendationFor(String symbol) {
     StockRecommendation recommendation = new StockRecommendation(DateTime.now(), symbol, '', 42, 42, 42, 42, 42, 42, 42,
         StockData(DateTime.now(), symbol, 42, 42, 42, 42, 42, 42, 42));

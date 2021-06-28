@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gimmillions/app/stocks/futures.dart';
 import 'package:gimmillions/app/stocks/predictions.dart';
+import 'package:gimmillions/app/stocks/user-watchlist.dart';
 
 class StocksWidget extends StatefulWidget {
   @override
@@ -40,13 +41,7 @@ class _StocksWidgetState extends State<StocksWidget> with TickerProviderStateMix
       ),
       body: TabBarView(
         controller: _tabController,
-        children: <Widget>[
-          FuturesWidget(),
-          PredictionsWidget(),
-          Center(
-            child: Text("It's sunny here"),
-          ),
-        ],
+        children: <Widget>[FuturesWidget(), PredictionsWidget(), UserWatchlistWidget()],
       ),
     );
   }
