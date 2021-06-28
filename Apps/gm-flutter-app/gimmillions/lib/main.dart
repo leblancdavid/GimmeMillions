@@ -16,14 +16,15 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var authenticationService = AuthenticationService();
     var theme = ThemeData(primaryColor: Color.fromRGBO(27, 96, 58, 1), accentColor: Color.fromRGBO(196, 210, 83, 1));
     return MultiProvider(
         providers: [
           Provider<StockRecommendationService>(
-            create: (_) => StockRecommendationService(),
+            create: (_) => StockRecommendationService(authenticationService),
           ),
           Provider<AuthenticationService>(
-            create: (_) => AuthenticationService(),
+            create: (_) => authenticationService,
           )
         ],
         child: AuthWidgetBuilder(builder: (context, userSnapshot) {

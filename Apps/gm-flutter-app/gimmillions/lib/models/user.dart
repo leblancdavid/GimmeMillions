@@ -12,6 +12,7 @@ class User {
   User(this.id, this.firstName, this.lastName, this.username, this.password, this.role, this.stocksWatchlistString);
 
   late bool isLoggedIn = false;
+  late String authdata = '';
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(json['id'], json['firstName'], json['lastName'], json['username'], '', UserRole.values[json['role']],

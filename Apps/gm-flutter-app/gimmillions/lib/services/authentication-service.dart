@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 class AuthenticationService {
   late User? _currentUser;
+  Codec<String, String> _stringToBase64 = utf8.fuse(base64);
 
   StreamController<User?> _onAuthStateChangedController = StreamController<User?>();
   Stream<User?> get onAuthStateChanged {
@@ -21,16 +22,19 @@ class AuthenticationService {
   }
 
   Future<User> signIn(String username, String password) async {
-    print('Requesting sign in');
     final response = await http.post(Uri.parse('http://api.gimmillions.com/api/user/authenticate'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode({'username': username, 'password': password}));
 
-    print(response.statusCode);
     if (response.statusCode == 200) {
-      return User.fromJson(jsonDecode(response.body));
+      _currentUser = User.fromJson(jsonDecode(response.body));
+      _currentUser!.isLoggedIn = true;
+
+      _currentUser!.authdata = _stringToBase64.encode(username + ':' + password);
+      _onAuthStateChangedController.add(_currentUser);
+      return _currentUser!;
     } else {
       throw Exception('Invalid username or password');
     }

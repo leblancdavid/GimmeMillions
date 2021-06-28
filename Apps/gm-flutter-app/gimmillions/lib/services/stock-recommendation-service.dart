@@ -1,23 +1,37 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:gimmillions/models/stock-data.dart';
 import 'package:gimmillions/models/stock-recommendation-history.dart';
 import 'package:gimmillions/models/stock-recommendation.dart';
+import 'package:gimmillions/models/user.dart';
+import 'package:gimmillions/services/authentication-service.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class StockRecommendationService {
-  Future<List<StockRecommendation>> getFutures() {
+  final AuthenticationService _authenticationService;
+
+  StockRecommendationService(this._authenticationService);
+
+  Future<List<StockRecommendation>> getFutures() async {
     List<StockRecommendation> recommendations = [];
+    var currentUser = _authenticationService.currentUser;
+    if (currentUser == null || !currentUser.isLoggedIn || currentUser.authdata == '') {
+      return recommendations;
+    }
 
-    recommendations.add(StockRecommendation(DateTime.now(), 'DIA', 'Test', 50.0, 0.42, 11.11, 22.22, 33.33, 44.44,
-        55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)));
+    final response = await http.get(Uri.parse('http://api.gimmillions.com/api/recommendations/futures'),
+        headers: {'Authorization': 'Basic ${currentUser.authdata}'});
 
-    recommendations.add(StockRecommendation(DateTime.now(), 'QQQ', 'Test', 75, 0.77, 11.11, 22.22, 33.33, 44.44, 55.55,
-        StockData(DateTime.now(), 'QQQ', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)));
-
-    recommendations.add(StockRecommendation(DateTime.now(), 'SPY', 'Test', 100, 0.22, 11.11, 22.22, 33.33, 44.44, 55.55,
-        StockData(DateTime.now(), 'SPY', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)));
-
-    recommendations.add(StockRecommendation(DateTime.now(), 'RUT', 'Test', 0, -0.77, 11.11, 22.22, 33.33, 44.44, 55.55,
-        StockData(DateTime.now(), 'RUT', 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)));
-    return Future.delayed(Duration(milliseconds: 100), () => recommendations);
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body) as List;
+      print(json);
+      //recommendations = User.fromJson();
+      return recommendations;
+    } else {
+      throw Exception('Unable to retrieve future predictions');
+    }
   }
 
   Future<List<StockRecommendation>> getDailyPicks() {
