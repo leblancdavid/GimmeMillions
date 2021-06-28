@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gimmillions/models/user.dart';
@@ -12,17 +14,17 @@ class LoginWidget extends StatefulWidget {
 class _LoginWidgetState extends State<LoginWidget> {
   late TextEditingController _usernameController;
   late TextEditingController _passwordController;
-
-  Future<User?> _login() async {
+  late Future<User>? userStatus = null;
+  Future<User> _login() async {
     try {
       if (_usernameController.text == '' || _passwordController.text == '') {
         return Future.error('Please specify a username and password');
       }
-      print('${_usernameController.text}, ${_passwordController.text}');
       final service = Provider.of<AuthenticationService>(context, listen: false);
       return await service.signIn(_usernameController.text, _passwordController.text);
     } catch (e) {
       print(e);
+      return Future.error('Invalid username or password');
     }
   }
 
@@ -91,21 +93,43 @@ class _LoginWidgetState extends State<LoginWidget> {
             ),
             Padding(
                 padding: EdgeInsets.symmetric(vertical: 32),
-                child: Container(
-                  height: 50,
-                  width: 250,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _login();
-                      //Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
-                    },
-                    style: ElevatedButton.styleFrom(primary: theme.primaryColor),
-                    child: Text(
-                      'Login',
-                      style: TextStyle(color: Colors.white, fontSize: 25),
-                    ),
-                  ),
-                )),
+                child: FutureBuilder(
+                    future: userStatus,
+                    builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+                      print(snapshot);
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator(color: Theme.of(context).primaryColor);
+                      }
+
+                      var loginButton = Container(
+                        height: 50,
+                        width: 250,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              userStatus = _login();
+                            });
+
+                            //Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
+                          },
+                          style: ElevatedButton.styleFrom(primary: theme.primaryColor),
+                          child: Text(
+                            'Login',
+                            style: TextStyle(color: Colors.white, fontSize: 25),
+                          ),
+                        ),
+                      );
+
+                      if (snapshot.hasError) {
+                        return Column(children: [
+                          loginButton,
+                          Padding(
+                              padding: EdgeInsets.all(16),
+                              child: Text('${snapshot.error}', style: TextStyle(color: theme.errorColor))),
+                        ]);
+                      }
+                      return loginButton;
+                    })),
           ],
         ),
       ),
