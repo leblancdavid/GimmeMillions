@@ -55,7 +55,7 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
         bottomTitles: SideTitles(
             showTitles: true,
             reservedSize: 14,
-            interval: 8.64e+7,
+            interval: 8.64e+7 * 5,
             getTextStyles: (value) => dateTextStyle,
             getTitles: (value) {
               var date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
@@ -85,12 +85,12 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
             .reduce((value, element) => value.stockData.close < element.stockData.close ? value : element)
             .stockData
             .close *
-        0.9;
+        0.99;
     var maxY = history.historicalData
             .reduce((value, element) => value.stockData.close > element.stockData.close ? value : element)
             .stockData
             .close *
-        1.10;
+        1.01;
 
     var intervalY = (maxY - minY).toInt() / 10;
 
@@ -111,7 +111,7 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
         bottomTitles: SideTitles(
             showTitles: true,
             reservedSize: 14,
-            interval: 8.64e+7,
+            interval: 8.64e+7 * 5,
             getTextStyles: (value) => dateTextStyle,
             getTitles: (value) {
               var date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
@@ -152,7 +152,7 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
             .confidence *
         1.10;
 
-    var intervalY = (maxY - minY).toInt() / 5;
+    var intervalY = (maxY - minY) / 5.0;
 
     var barData = LineChartBarData(
         spots:
@@ -170,7 +170,7 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
         bottomTitles: SideTitles(
             showTitles: true,
             reservedSize: 14,
-            interval: 8.64e+7,
+            interval: 8.64e+7 * 5,
             getTextStyles: (value) => dateTextStyle,
             getTitles: (value) {
               var date = DateTime.fromMillisecondsSinceEpoch(value.toInt());

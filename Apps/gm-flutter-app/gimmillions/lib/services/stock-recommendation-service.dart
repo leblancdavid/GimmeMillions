@@ -51,40 +51,22 @@ class StockRecommendationService {
     return Future.delayed(Duration(milliseconds: 100), () => recommendation);
   }
 
-  Future<StockRecommendationHistory> getHistoryFor(String symbol) {
-    List<StockRecommendation> recommendations = [];
+  Future<StockRecommendationHistory> getHistoryFor(String symbol) async {
+    var currentUser = _authenticationService.currentUser;
+    if (currentUser == null || !currentUser.isLoggedIn || currentUser.authdata == '') {
+      return Future.error('User is not logged in');
+    }
 
-    recommendations.add(StockRecommendation(DateTime(2021, 6, 13), 'DIA', 'Test', 76.0, 0.42, 11.11, 22.22, 33.33,
-        44.44, 55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 10.0, 0.0, 0.0, 0.0)));
-    recommendations.add(StockRecommendation(DateTime(2021, 6, 14), 'DIA', 'Test', 55.0, 0.42, 11.11, 22.22, 33.33,
-        44.44, 55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 20.0, 0.0, 0.0, 0.0)));
-    recommendations.add(StockRecommendation(DateTime(2021, 6, 15), 'DIA', 'Test', 45.0, 0.42, 11.11, 22.22, 33.33,
-        44.44, 55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 30.0, 0.0, 0.0, 0.0)));
-    recommendations.add(StockRecommendation(DateTime(2021, 6, 16), 'DIA', 'Test', 42.0, 0.42, 11.11, 22.22, 33.33,
-        44.44, 55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 40.0, 0.0, 0.0, 0.0)));
-    recommendations.add(StockRecommendation(DateTime(2021, 6, 17), 'DIA', 'Test', 33.0, 0.42, 11.11, 22.22, 33.33,
-        44.44, 55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 50.0, 0.0, 0.0, 0.0)));
+    final response = await http.get(
+        Uri.parse('http://api.gimmillions.com/api/recommendations/stocks/history/${symbol}'),
+        headers: {'Authorization': 'Basic ${currentUser.authdata}'});
 
-    recommendations.add(StockRecommendation(DateTime(2021, 6, 18), 'DIA', 'Test', 25.0, 0.42, 11.11, 22.22, 33.33,
-        44.44, 55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 60.0, 0.0, 0.0, 0.0)));
-    recommendations.add(StockRecommendation(DateTime(2021, 6, 19), 'DIA', 'Test', 12.0, 0.42, 11.11, 22.22, 33.33,
-        44.44, 55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 70.0, 0.0, 0.0, 0.0)));
-    recommendations.add(StockRecommendation(DateTime(2021, 6, 20), 'DIA', 'Test', 22.0, 0.42, 11.11, 22.22, 33.33,
-        44.44, 55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 80.0, 0.0, 0.0, 0.0)));
-    recommendations.add(StockRecommendation(DateTime(2021, 6, 21), 'DIA', 'Test', 35.0, 0.42, 11.11, 22.22, 33.33,
-        44.44, 55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 90.0, 0.0, 0.0, 0.0)));
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body);
 
-    recommendations.add(StockRecommendation(DateTime(2021, 6, 22), 'DIA', 'Test', 65, 0.77, 11.11, 22.22, 33.33, 44.44,
-        55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 2120.0, 120.0, 0.0, 0.0)));
-
-    recommendations.add(StockRecommendation(DateTime(2021, 6, 23), 'DIA', 'Test', 86, 0.22, 11.11, 22.22, 33.33, 44.44,
-        55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 60.0, 30.0, 0.0, 0.0)));
-
-    recommendations.add(StockRecommendation(DateTime(2021, 6, 24), 'DIA', 'Test', 73, -0.77, 11.11, 22.22, 33.33, 44.44,
-        55.55, StockData(DateTime.now(), 'DIA', 0.0, 0.0, 0.0, 30.0, 20.0, 0.0, 0.0)));
-
-    StockRecommendationHistory history =
-        StockRecommendationHistory('systemId', 'DIA', DateTime.now(), recommendations.last, recommendations);
-    return Future.delayed(Duration(milliseconds: 100), () => history);
+      return StockRecommendationHistory.fromJson(json);
+    } else {
+      throw Exception('Unable to retrieve history data for ${symbol}');
+    }
   }
 }
