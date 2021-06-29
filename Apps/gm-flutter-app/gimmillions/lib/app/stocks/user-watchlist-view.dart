@@ -4,7 +4,6 @@ import 'package:gimmillions/app/stocks/stock-recommendation-data-table.dart';
 import 'package:gimmillions/models/stock-recommendation-filter.dart';
 import 'package:gimmillions/models/stock-recommendation.dart';
 import 'package:gimmillions/models/user-watchlist.dart';
-import 'package:gimmillions/services/stock-recommendation-service.dart';
 import 'package:provider/provider.dart';
 
 class UserWatchlistViewWidget extends StatefulWidget {

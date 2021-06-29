@@ -19,14 +19,16 @@ class UserWatchlist {
   Future<void> addToWatchlist(StockRecommendation r) async {
     this._watchlist.add(r);
 
+    var body = jsonEncode({
+      'username': currentUser.username,
+      'symbols': [r.symbol]
+    });
     final response = await http.put(Uri.parse('http://api.gimmillions.com/api/user/watchlist/add'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Basic ${currentUser.authdata}'
         },
-        body: jsonEncode({
-          'username': currentUser.username,
-          'symbols': [r.symbol]
-        }));
+        body: body);
 
     if (response.statusCode != 200) {
       throw Exception('Unable to update user watchlist');
@@ -38,6 +40,7 @@ class UserWatchlist {
     final response = await http.put(Uri.parse('http://api.gimmillions.com/api/user/watchlist/remove'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Basic ${currentUser.authdata}'
         },
         body: jsonEncode({
           'username': currentUser.username,
@@ -50,7 +53,7 @@ class UserWatchlist {
   }
 
   bool containsSymbol(String symbol) {
-    return this._watchlist.any((element) => element == symbol);
+    return this._watchlist.any((element) => element.symbol.toLowerCase() == symbol.toLowerCase());
   }
 
   Future<List<StockRecommendation>> refresh() async {

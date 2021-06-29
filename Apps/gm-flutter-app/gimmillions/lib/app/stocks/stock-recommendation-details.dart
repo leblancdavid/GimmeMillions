@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gimmillions/app/stocks/recommendation-history-chart.dart';
 import 'package:gimmillions/models/stock-recommendation-history.dart';
+import 'package:gimmillions/models/user-watchlist.dart';
 import 'package:gimmillions/services/stock-recommendation-service.dart';
 import 'package:provider/provider.dart';
 
@@ -19,20 +22,25 @@ class StockRecommendationDetails extends StatefulWidget {
 
 class _StockRecommendationDetailsState extends State<StockRecommendationDetails> with TickerProviderStateMixin {
   late TabController _tabController;
-  late String isWatching = 'WATCH';
+  late UserWatchlist _watchlist;
+  late Future<StockRecommendationHistory> history;
+  late StockRecommendationDetailsArguments args;
+  StreamController<String> watchStatus = StreamController<String>();
+
   @override
   void initState() {
     super.initState();
+    _watchlist = Provider.of<UserWatchlist>(context, listen: false);
     _tabController = TabController(length: 2, vsync: this);
   }
 
-  _getHistory(BuildContext context, String symbol) {
+  Future<StockRecommendationHistory> _getHistory(BuildContext context, String symbol) {
     try {
       final service = Provider.of<StockRecommendationService>(context, listen: false);
       return service.getHistoryFor(symbol);
     } catch (e) {
       print(e);
-      return List.empty();
+      return Future.error(e);
     }
   }
 
@@ -40,8 +48,16 @@ class _StockRecommendationDetailsState extends State<StockRecommendationDetails>
   Widget build(BuildContext context) {
     // Extract the arguments from the current ModalRoute
     // settings and cast them as ScreenArguments.
-    final args = ModalRoute.of(context)!.settings.arguments as StockRecommendationDetailsArguments;
-    var history = _getHistory(context, args.symbol);
+
+    args = ModalRoute.of(context)!.settings.arguments as StockRecommendationDetailsArguments;
+    history = _getHistory(context, args.symbol);
+
+    if (_watchlist.containsSymbol(args.symbol)) {
+      watchStatus.add('Unwatch');
+    } else {
+      watchStatus.add('Watch');
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -51,12 +67,6 @@ class _StockRecommendationDetailsState extends State<StockRecommendationDetails>
               args.symbol,
               style: TextStyle(fontSize: 20),
             ),
-            TextButton(
-                onPressed: () {},
-                child: Text(
-                  isWatching,
-                  style: TextStyle(fontSize: 20, color: Theme.of(context).accentColor),
-                ))
           ],
         ),
         bottom: TabBar(
@@ -92,6 +102,29 @@ class _StockRecommendationDetailsState extends State<StockRecommendationDetails>
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          SizedBox(height: infoSpacing),
+                          Align(
+                              alignment: Alignment.topRight,
+                              child: StreamBuilder<String>(
+                                  stream: watchStatus.stream,
+                                  builder: (context, watchSnapshot) {
+                                    return FloatingActionButton.extended(
+                                        onPressed: () {
+                                          if (watchSnapshot.hasData) {
+                                            if (watchSnapshot.data == 'Watch') {
+                                              _watchlist.addToWatchlist(snapshot.data!.lastRecommendation);
+                                              watchStatus.add('Unwatch');
+                                            } else {
+                                              _watchlist.removeFromWatchlist(args.symbol);
+                                              watchStatus.add('Watch');
+                                            }
+                                          }
+                                        },
+                                        backgroundColor: Theme.of(context).primaryColor,
+                                        foregroundColor: Colors.white,
+                                        icon: Icon(Icons.remove_red_eye_outlined),
+                                        label: Text(watchSnapshot.hasData ? watchSnapshot.data! : ''));
+                                  })),
                           SizedBox(height: infoSpacing),
                           RichText(
                               text: TextSpan(
@@ -179,6 +212,7 @@ class _StockRecommendationDetailsState extends State<StockRecommendationDetails>
                                     text: '(${snapshot.data!.lastRecommendation.lowPrediction.toStringAsFixed(2)}%)',
                                     style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade800)),
                               ])),
+                          SizedBox(height: infoSpacing),
                           Expanded(
                             child: Align(
                               alignment: Alignment.bottomCenter,
