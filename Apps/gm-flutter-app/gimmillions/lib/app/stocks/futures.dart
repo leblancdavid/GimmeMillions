@@ -33,8 +33,7 @@ class _FuturesState extends State<FuturesWidget> {
 
     return Padding(
         padding: EdgeInsets.only(bottom: 32),
-        child: Expanded(
-            child: ListView(children: <Widget>[
+        child: ListView(children: <Widget>[
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             IconButton(
                 onPressed: () {
@@ -46,6 +45,6 @@ class _FuturesState extends State<FuturesWidget> {
                 ))
           ]),
           StockRecommendationDataTableBuilder(_futuresList, _filter)
-        ])));
+        ]));
   }
 }

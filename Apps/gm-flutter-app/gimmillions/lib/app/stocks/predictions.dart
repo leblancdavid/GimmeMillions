@@ -44,8 +44,7 @@ class _PredictionsState extends State<PredictionsWidget> {
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return Padding(
         padding: EdgeInsets.only(bottom: 32),
-        child: Expanded(
-            child: ListView(children: <Widget>[
+        child: ListView(children: <Widget>[
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             Expanded(
                 child: Padding(
@@ -75,6 +74,6 @@ class _PredictionsState extends State<PredictionsWidget> {
                 ))
           ]),
           StockRecommendationDataTableBuilder(_predictionList, _filter)
-        ])));
+        ]));
   }
 }
