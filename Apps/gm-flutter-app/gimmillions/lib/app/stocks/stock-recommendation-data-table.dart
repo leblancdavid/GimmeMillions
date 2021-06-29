@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gimmillions/app/stocks/stock-recommendation-details.dart';
@@ -150,6 +152,7 @@ class _StockRecommendationDataTableState extends State<StockRecommendationDataTa
       sortAscending: isAscending,
       sortColumnIndex: sortColumnIndex,
       showCheckboxColumn: false,
+      rowsPerPage: min(20, _source.rowCount),
       columns: getColumns(columns),
       source: _source,
     );
@@ -179,5 +182,3 @@ class _StockRecommendationDataTableState extends State<StockRecommendationDataTa
   int compareDouble(bool ascending, double value1, double value2) =>
       ascending ? value1.compareTo(value2) : value2.compareTo(value1);
 }
-
-class ScrollableWidget {}

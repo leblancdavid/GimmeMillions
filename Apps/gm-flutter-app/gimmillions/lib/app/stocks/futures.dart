@@ -31,9 +31,10 @@ class _FuturesState extends State<FuturesWidget> {
   Widget build(BuildContext context) {
     _refreshFutures(context);
 
-    return Container(
-        constraints: BoxConstraints.expand(),
-        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+    return Padding(
+        padding: EdgeInsets.only(bottom: 32),
+        child: Expanded(
+            child: ListView(children: <Widget>[
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             IconButton(
                 onPressed: () {
@@ -45,6 +46,6 @@ class _FuturesState extends State<FuturesWidget> {
                 ))
           ]),
           StockRecommendationDataTableBuilder(_futuresList, _filter)
-        ]));
+        ])));
   }
 }

@@ -42,9 +42,10 @@ class _PredictionsState extends State<PredictionsWidget> {
     _refreshPredictions(context);
     var theme = Theme.of(context);
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    return Container(
-        constraints: BoxConstraints.expand(),
-        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+    return Padding(
+        padding: EdgeInsets.only(bottom: 32),
+        child: Expanded(
+            child: ListView(children: <Widget>[
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             Expanded(
                 child: Padding(
@@ -74,6 +75,6 @@ class _PredictionsState extends State<PredictionsWidget> {
                 ))
           ]),
           StockRecommendationDataTableBuilder(_predictionList, _filter)
-        ]));
+        ])));
   }
 }
