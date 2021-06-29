@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:gimmillions/app/login/authentication.dart';
 import 'package:gimmillions/app/stocks/stock-recommendation-details.dart';
+import 'package:gimmillions/models/user-watchlist.dart';
 import 'package:gimmillions/services/authentication-service.dart';
 import 'package:gimmillions/services/stock-recommendation-service.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,8 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var authenticationService = AuthenticationService();
+    var userWatchlist = UserWatchlist();
+    var authenticationService = AuthenticationService(userWatchlist);
     var theme = ThemeData(primaryColor: Color.fromRGBO(27, 96, 58, 1), accentColor: Color.fromRGBO(196, 210, 83, 1));
     return MultiProvider(
         providers: [
@@ -23,6 +25,9 @@ class MyApp extends StatelessWidget {
           ),
           Provider<AuthenticationService>(
             create: (_) => authenticationService,
+          ),
+          Provider<UserWatchlist>(
+            create: (_) => userWatchlist,
           )
         ],
         child: AuthWidgetBuilder(builder: (context, userSnapshot) {

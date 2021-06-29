@@ -147,11 +147,15 @@ class _StockRecommendationDataTableState extends State<StockRecommendationDataTa
   Widget buildDataTable() {
     final columns = ['Symbol', 'Sentiment', 'Confidence'];
     onSort(sortColumnIndex, isAscending);
+    var rowsPerPage = min(20, _source.rowCount);
+    if (rowsPerPage < 1) {
+      rowsPerPage = 1;
+    }
     var table = PaginatedDataTable(
       sortAscending: isAscending,
       sortColumnIndex: sortColumnIndex,
       showCheckboxColumn: false,
-      rowsPerPage: min(20, _source.rowCount),
+      rowsPerPage: rowsPerPage,
       columns: getColumns(columns),
       source: _source,
     );

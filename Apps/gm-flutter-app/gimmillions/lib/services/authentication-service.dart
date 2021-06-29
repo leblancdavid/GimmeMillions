@@ -1,12 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:gimmillions/models/user-watchlist.dart';
 import 'package:gimmillions/models/user.dart';
 import 'package:http/http.dart' as http;
 
 class AuthenticationService {
+  final UserWatchlist _watchlist;
   late User? _currentUser;
   Codec<String, String> _stringToBase64 = utf8.fuse(base64);
+
+  AuthenticationService(this._watchlist) {}
 
   StreamController<User?> _onAuthStateChangedController = StreamController<User?>();
   Stream<User?> get onAuthStateChanged {
@@ -33,6 +37,9 @@ class AuthenticationService {
       _currentUser!.isLoggedIn = true;
 
       _currentUser!.authdata = _stringToBase64.encode(username + ':' + password);
+
+      _watchlist.currentUser = _currentUser!;
+      _watchlist.refresh();
       _onAuthStateChangedController.add(_currentUser);
       return _currentUser!;
     } else {
