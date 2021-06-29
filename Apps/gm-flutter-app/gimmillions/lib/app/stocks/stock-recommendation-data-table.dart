@@ -21,7 +21,7 @@ class StockRecommendationDataTableBuilder extends StatelessWidget {
           }
 
           if (snapshot.hasData) {
-            return StockRecommendationDataTable(snapshot.data!, filter);
+            return StockRecommendationDataTable(context, snapshot.data!, filter);
           }
 
           return Expanded(child: Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor)));
@@ -29,90 +29,36 @@ class StockRecommendationDataTableBuilder extends StatelessWidget {
   }
 }
 
-class StockRecommendationDataTable extends StatefulWidget {
-  final List<StockRecommendation> recommendations;
-  final StockRecommendationFilter filter;
-  StockRecommendationDataTable(this.recommendations, this.filter);
+class StockRecommendationTableSource extends DataTableSource {
+  List<StockRecommendation> _recommendations;
+  BuildContext _context;
+  StockRecommendationTableSource(this._recommendations, this._context);
 
-  @override
-  _StockRecommendationDataTableState createState() => _StockRecommendationDataTableState(recommendations, filter);
-}
+  List<StockRecommendation> get recommendations {
+    return _recommendations;
+  }
 
-class _StockRecommendationDataTableState extends State<StockRecommendationDataTable> {
-  final List<StockRecommendation> _recommendations;
-  late List<DataRow> _dataRows;
-  final StockRecommendationFilter _filter;
-  int sortColumnIndex = 1;
-  bool isAscending = false;
-
-  _StockRecommendationDataTableState(this._recommendations, this._filter) {}
-
-  @override
-  void initState() {
-    super.initState();
-    _dataRows = getRows(_filter.filter(_recommendations));
-    _filter.addListener(() {
-      setState(() {
-        _dataRows = getRows(_filter.filter(_recommendations));
-      });
-    });
-    sortColumnIndex = 1;
-    isAscending = false;
+  void set recommendations(List<StockRecommendation> value) {
+    _recommendations = value;
+    notifyListeners();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return buildDataTable();
+  DataRow? getRow(int index) {
+    var r = recommendations[index];
+
+    return DataRow(
+        cells: _getCells(r),
+        onSelectChanged: (bool? selected) => {
+              if (selected!)
+                {
+                  Navigator.pushNamed(_context, StockRecommendationDetails.routeName,
+                      arguments: StockRecommendationDetailsArguments(r.symbol))
+                }
+            });
   }
 
-  Widget buildDataTable() {
-    final columns = ['Symbol', 'Sentiment', 'Confidence'];
-    onSort(sortColumnIndex, isAscending);
-    var table = DataTable(
-      sortAscending: isAscending,
-      sortColumnIndex: sortColumnIndex,
-      showCheckboxColumn: false,
-      columns: getColumns(columns),
-      rows: _dataRows,
-    );
-
-    return table;
-  }
-
-  List<DataColumn> getColumns(List<String> columns) => columns
-      .map((String column) => DataColumn(
-            label: Text(column),
-            onSort: onSort,
-          ))
-      .toList();
-
-  List<DataRow> getRows(List<StockRecommendation> recommendations) {
-    if (recommendations.isEmpty) {
-      return [
-        DataRow(cells: [
-          DataCell(Text(
-            'Not found',
-            style: TextStyle(fontStyle: FontStyle.italic),
-          )),
-          DataCell(Text('')),
-          DataCell(Text('')),
-        ])
-      ];
-    }
-    return recommendations.map((StockRecommendation r) {
-      return DataRow(
-          cells: getCells(r),
-          onSelectChanged: (bool? selected) => {
-                if (selected!)
-                  {
-                    Navigator.pushNamed(context, StockRecommendationDetails.routeName,
-                        arguments: StockRecommendationDetailsArguments(r.symbol))
-                  }
-              });
-    }).toList();
-  }
-
-  List<DataCell> getCells(StockRecommendation recommendation) {
+  List<DataCell> _getCells(StockRecommendation recommendation) {
     List<DataCell> cells = [];
     cells.add(DataCell(
         Text(recommendation.symbol, style: TextStyle(fontWeight: FontWeight.bold, color: recommendation.getRgb(25)))));
@@ -128,19 +74,102 @@ class _StockRecommendationDataTableState extends State<StockRecommendationDataTa
     return cells;
   }
 
-  void onSort(int columnIndex, bool ascending) {
+  void sort(int columnIndex, bool ascending) {
     if (columnIndex == 0) {
-      _recommendations.sort((r1, r2) => compareString(ascending, r1.symbol, r2.symbol));
+      recommendations.sort((r1, r2) => compareString(ascending, r1.symbol, r2.symbol));
     } else if (columnIndex == 1) {
-      _recommendations.sort((r1, r2) => compareDouble(ascending, r1.sentiment, r2.sentiment));
+      recommendations.sort((r1, r2) => compareDouble(ascending, r1.sentiment, r2.sentiment));
     } else if (columnIndex == 2) {
-      _recommendations.sort((r1, r2) => compareDouble(ascending, r1.confidence, r2.confidence));
+      recommendations.sort((r1, r2) => compareDouble(ascending, r1.confidence, r2.confidence));
     }
+
+    notifyListeners();
+  }
+
+  int compareString(bool ascending, String value1, String value2) =>
+      ascending ? value1.compareTo(value2) : value2.compareTo(value1);
+
+  int compareDouble(bool ascending, double value1, double value2) =>
+      ascending ? value1.compareTo(value2) : value2.compareTo(value1);
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => recommendations.length;
+
+  @override
+  int get selectedRowCount => 0;
+}
+
+class StockRecommendationDataTable extends StatefulWidget {
+  final List<StockRecommendation> recommendations;
+  final StockRecommendationFilter filter;
+  final BuildContext context;
+  StockRecommendationDataTable(this.context, this.recommendations, this.filter);
+
+  @override
+  _StockRecommendationDataTableState createState() =>
+      _StockRecommendationDataTableState(context, recommendations, filter);
+}
+
+class _StockRecommendationDataTableState extends State<StockRecommendationDataTable> {
+  final List<StockRecommendation> _recommendations;
+  late StockRecommendationTableSource _source;
+  final StockRecommendationFilter _filter;
+  BuildContext _context;
+  int sortColumnIndex = 1;
+  bool isAscending = false;
+
+  _StockRecommendationDataTableState(this._context, this._recommendations, this._filter) {
+    _source = StockRecommendationTableSource(_recommendations, _context);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _source.recommendations = _filter.filter(_recommendations);
+    _filter.addListener(() {
+      setState(() {
+        _source.recommendations = _filter.filter(_recommendations);
+      });
+    });
+    sortColumnIndex = 1;
+    isAscending = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return buildDataTable();
+  }
+
+  Widget buildDataTable() {
+    final columns = ['Symbol', 'Sentiment', 'Confidence'];
+    onSort(sortColumnIndex, isAscending);
+    var table = PaginatedDataTable(
+      sortAscending: isAscending,
+      sortColumnIndex: sortColumnIndex,
+      showCheckboxColumn: false,
+      columns: getColumns(columns),
+      source: _source,
+    );
+
+    return table;
+  }
+
+  List<DataColumn> getColumns(List<String> columns) => columns
+      .map((String column) => DataColumn(
+            label: Text(column),
+            onSort: onSort,
+          ))
+      .toList();
+
+  void onSort(int columnIndex, bool ascending) {
+    _source.sort(columnIndex, ascending);
 
     setState(() {
       this.sortColumnIndex = columnIndex;
       this.isAscending = ascending;
-      _dataRows = getRows(_filter.filter(_recommendations));
     });
   }
 
