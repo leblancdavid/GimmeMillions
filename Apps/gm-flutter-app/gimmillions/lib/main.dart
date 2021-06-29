@@ -3,10 +3,8 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:gimmillions/app/home.dart';
 import 'package:gimmillions/app/login/authentication.dart';
 import 'package:gimmillions/app/stocks/stock-recommendation-details.dart';
-import 'package:gimmillions/app/stocks/stocks.dart';
 import 'package:gimmillions/services/authentication-service.dart';
 import 'package:gimmillions/services/stock-recommendation-service.dart';
 import 'package:provider/provider.dart';

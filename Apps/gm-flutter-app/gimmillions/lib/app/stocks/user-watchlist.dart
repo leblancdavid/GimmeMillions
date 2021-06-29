@@ -41,7 +41,6 @@ class _UserWatchlistState extends State<UserWatchlistWidget> {
   Widget build(BuildContext context) {
     _refreshWatchlist(context);
     var theme = Theme.of(context);
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return Container(
         constraints: BoxConstraints.expand(),
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[

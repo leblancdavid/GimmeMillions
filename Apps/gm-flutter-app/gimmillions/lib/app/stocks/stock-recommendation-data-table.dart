@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:gimmillions/app/stocks/stock-recommendation-details.dart';
 import 'package:gimmillions/models/stock-recommendation-filter.dart';
 import 'package:gimmillions/models/stock-recommendation.dart';
-import 'package:provider/provider.dart';
 
 class StockRecommendationDataTableBuilder extends StatelessWidget {
   final Future<List<StockRecommendation>> _recommendations;

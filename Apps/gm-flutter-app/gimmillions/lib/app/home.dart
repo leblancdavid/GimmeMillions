@@ -9,12 +9,9 @@ class HomeWidget extends StatefulWidget {
 }
 
 class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
-  late TabController _tabController;
-
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
