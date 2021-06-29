@@ -47,12 +47,15 @@ class _StockRecommendationDetailsState extends State<StockRecommendationDetails>
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(args.symbol),
+            Text(
+              args.symbol,
+              style: TextStyle(fontSize: 20),
+            ),
             TextButton(
                 onPressed: () {},
                 child: Text(
                   isWatching,
-                  style: TextStyle(fontSize: 18, color: Theme.of(context).accentColor),
+                  style: TextStyle(fontSize: 20, color: Theme.of(context).accentColor),
                 ))
           ],
         ),
