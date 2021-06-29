@@ -31,20 +31,18 @@ class _FuturesState extends State<FuturesWidget> {
   Widget build(BuildContext context) {
     _refreshFutures(context);
 
-    return Padding(
-        padding: EdgeInsets.only(bottom: 32),
-        child: ListView(children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            IconButton(
-                onPressed: () {
-                  _refreshFutures(context);
-                },
-                icon: Icon(
-                  Icons.refresh,
-                  color: Theme.of(context).primaryColor,
-                ))
-          ]),
-          StockRecommendationDataTableBuilder(_futuresList, _filter)
-        ]));
+    return ListView(children: <Widget>[
+      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+        IconButton(
+            onPressed: () {
+              _refreshFutures(context);
+            },
+            icon: Icon(
+              Icons.refresh,
+              color: Theme.of(context).primaryColor,
+            ))
+      ]),
+      StockRecommendationDataTableBuilder(_futuresList, _filter)
+    ]);
   }
 }

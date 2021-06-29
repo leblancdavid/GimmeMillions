@@ -19,7 +19,7 @@ class StockRecommendationDetails extends StatefulWidget {
 
 class _StockRecommendationDetailsState extends State<StockRecommendationDetails> with TickerProviderStateMixin {
   late TabController _tabController;
-
+  late String isWatching = 'WATCH';
   @override
   void initState() {
     super.initState();
@@ -44,7 +44,18 @@ class _StockRecommendationDetailsState extends State<StockRecommendationDetails>
     var history = _getHistory(context, args.symbol);
     return Scaffold(
       appBar: AppBar(
-        title: Text(args.symbol),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(args.symbol),
+            TextButton(
+                onPressed: () {},
+                child: Text(
+                  isWatching,
+                  style: TextStyle(fontSize: 18, color: Theme.of(context).accentColor),
+                ))
+          ],
+        ),
         bottom: TabBar(
           controller: _tabController,
           tabs: const <Widget>[

@@ -18,14 +18,14 @@ class StockRecommendationDataTableBuilder extends StatelessWidget {
         future: _recommendations,
         builder: (BuildContext context, AsyncSnapshot<List<StockRecommendation>> snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
-            return Expanded(child: Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor)));
+            return Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor));
           }
 
           if (snapshot.hasData) {
             return StockRecommendationDataTable(context, snapshot.data!, filter);
           }
 
-          return Expanded(child: Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor)));
+          return Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor));
         });
   }
 }

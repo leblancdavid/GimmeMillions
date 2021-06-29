@@ -41,38 +41,36 @@ class _PredictionsState extends State<PredictionsWidget> {
   Widget build(BuildContext context) {
     _refreshPredictions(context);
     var theme = Theme.of(context);
-    return Padding(
-        padding: EdgeInsets.only(bottom: 32),
-        child: ListView(children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            Expanded(
-                child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: TextField(
-                      onChanged: (String value) {
-                        _applySearchFilter(value);
-                      },
-                      cursorColor: theme.primaryColor,
-                      style: TextStyle(),
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                          icon: Icon(Icons.search, color: theme.primaryColor),
-                          focusColor: theme.accentColor,
-                          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: theme.accentColor)),
-                          border: OutlineInputBorder(),
-                          labelStyle: TextStyle(color: theme.primaryColor),
-                          hintText: 'Search...'),
-                    ))),
-            IconButton(
-                onPressed: () {
-                  _refreshPredictions(context);
-                },
-                icon: Icon(
-                  Icons.refresh,
-                  color: Theme.of(context).primaryColor,
-                ))
-          ]),
-          StockRecommendationDataTableBuilder(_predictionList, _filter)
-        ]));
+    return ListView(children: <Widget>[
+      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.all(8),
+                child: TextField(
+                  onChanged: (String value) {
+                    _applySearchFilter(value);
+                  },
+                  cursorColor: theme.primaryColor,
+                  style: TextStyle(),
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                      icon: Icon(Icons.search, color: theme.primaryColor),
+                      focusColor: theme.accentColor,
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: theme.accentColor)),
+                      border: OutlineInputBorder(),
+                      labelStyle: TextStyle(color: theme.primaryColor),
+                      hintText: 'Search...'),
+                ))),
+        IconButton(
+            onPressed: () {
+              _refreshPredictions(context);
+            },
+            icon: Icon(
+              Icons.refresh,
+              color: Theme.of(context).primaryColor,
+            ))
+      ]),
+      StockRecommendationDataTableBuilder(_predictionList, _filter)
+    ]);
   }
 }
