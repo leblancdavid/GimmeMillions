@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gimmillions/app/common/watch-button.dart';
 import 'package:gimmillions/app/stocks/recommendation-history-chart.dart';
 import 'package:gimmillions/models/stock-recommendation-history.dart';
 import 'package:gimmillions/models/user-watchlist.dart';
@@ -25,7 +26,6 @@ class _StockRecommendationDetailsState extends State<StockRecommendationDetails>
   late UserWatchlist _watchlist;
   late Future<StockRecommendationHistory> history;
   late StockRecommendationDetailsArguments args;
-  StreamController<String> watchStatus = StreamController<String>();
 
   @override
   void initState() {
@@ -51,12 +51,6 @@ class _StockRecommendationDetailsState extends State<StockRecommendationDetails>
 
     args = ModalRoute.of(context)!.settings.arguments as StockRecommendationDetailsArguments;
     history = _getHistory(context, args.symbol);
-
-    if (_watchlist.containsSymbol(args.symbol)) {
-      watchStatus.add('Unwatch');
-    } else {
-      watchStatus.add('Watch');
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -105,26 +99,16 @@ class _StockRecommendationDetailsState extends State<StockRecommendationDetails>
                           SizedBox(height: infoSpacing),
                           Align(
                               alignment: Alignment.topRight,
-                              child: StreamBuilder<String>(
-                                  stream: watchStatus.stream,
-                                  builder: (context, watchSnapshot) {
-                                    return FloatingActionButton.extended(
-                                        onPressed: () {
-                                          if (watchSnapshot.hasData) {
-                                            if (watchSnapshot.data == 'Watch') {
-                                              _watchlist.addToWatchlist(snapshot.data!.lastRecommendation);
-                                              watchStatus.add('Unwatch');
-                                            } else {
-                                              _watchlist.removeFromWatchlist(args.symbol);
-                                              watchStatus.add('Watch');
-                                            }
-                                          }
-                                        },
-                                        backgroundColor: Theme.of(context).primaryColor,
-                                        foregroundColor: Colors.white,
-                                        icon: Icon(Icons.remove_red_eye_outlined),
-                                        label: Text(watchSnapshot.hasData ? watchSnapshot.data! : ''));
-                                  })),
+                              child: WatchButton(
+                                  onWatch: () {
+                                    _watchlist.addToWatchlist(snapshot.data!.lastRecommendation);
+                                  },
+                                  onUnwatch: () {
+                                    _watchlist.removeFromWatchlist(snapshot.data!.symbol);
+                                  },
+                                  initialState: _watchlist.containsSymbol(snapshot.data!.symbol)
+                                      ? WatchState.watching
+                                      : WatchState.notWatching)),
                           SizedBox(height: infoSpacing),
                           RichText(
                               text: TextSpan(
