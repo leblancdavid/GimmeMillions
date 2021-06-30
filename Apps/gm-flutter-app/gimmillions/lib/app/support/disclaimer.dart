@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:gimmillions/app/support/tutorial.dart';
 
 class DisclaimerWidget extends StatefulWidget {
   static const routeName = '/disclaimer';
@@ -22,8 +24,10 @@ class _DisclaimerState extends State<DisclaimerWidget> {
         text: 'Gimmillions',
         style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold, fontStyle: FontStyle.italic));
     var howToUseRef = TextSpan(
-        text: 'How to Use',
-        style: TextStyle(color: theme.accentColor, fontWeight: FontWeight.bold, decoration: TextDecoration.underline));
+      text: 'How to Use',
+      style: TextStyle(color: theme.accentColor, fontWeight: FontWeight.bold, decoration: TextDecoration.underline),
+      recognizer: new TapGestureRecognizer()..onTap = () => Navigator.pushNamed(context, TutorialWidget.routeName),
+    );
     return Scaffold(
       appBar: AppBar(
         title: Row(
