@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:gimmillions/models/stock-data.dart';
 import 'package:gimmillions/models/stock-recommendation-history.dart';
 import 'package:gimmillions/models/stock-recommendation.dart';
 import 'package:gimmillions/services/authentication-service.dart';
-import 'package:http/http.dart' as http;
 
 import 'gimmillions-cache-manager.dart';
 
