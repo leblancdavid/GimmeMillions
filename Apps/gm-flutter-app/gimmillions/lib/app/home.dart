@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gimmillions/app/login/reset-password.dart';
 import 'package:gimmillions/app/stocks/stocks.dart';
+import 'package:gimmillions/app/support/disclaimer.dart';
 import 'package:gimmillions/app/support/tutorial.dart';
 import 'package:gimmillions/services/authentication-service.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +35,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       Navigator.pushNamed(context, ResetPasswordWidget.routeName);
                     } else if (result == 'help') {
                       Navigator.pushNamed(context, TutorialWidget.routeName);
+                    } else if (result == 'disclaimer') {
+                      Navigator.pushNamed(context, DisclaimerWidget.routeName);
                     }
                   },
                   itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -77,6 +80,20 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                 Padding(
                                   padding: EdgeInsets.only(left: 16),
                                   child: Text("Help"),
+                                )
+                              ],
+                            )),
+                        PopupMenuItem(
+                            value: 'disclaimer',
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.warning,
+                                  color: theme.primaryColor,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 16),
+                                  child: Text("Disclaimer"),
                                 )
                               ],
                             )),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gimmillions/app/login/authentication.dart';
 import 'package:gimmillions/app/login/reset-password.dart';
 import 'package:gimmillions/app/stocks/stock-recommendation-details.dart';
+import 'package:gimmillions/app/support/disclaimer.dart';
 import 'package:gimmillions/app/support/tutorial.dart';
 import 'package:gimmillions/models/user-watchlist.dart';
 import 'package:gimmillions/services/authentication-service.dart';
@@ -36,7 +37,8 @@ class MyApp extends StatelessWidget {
           return MaterialApp(routes: {
             StockRecommendationDetails.routeName: (context) => StockRecommendationDetails(),
             ResetPasswordWidget.routeName: (context) => ResetPasswordWidget(),
-            TutorialWidget.routeName: (context) => TutorialWidget()
+            TutorialWidget.routeName: (context) => TutorialWidget(),
+            DisclaimerWidget.routeName: (context) => DisclaimerWidget()
           }, title: 'Gimmillions', theme: theme, home: AuthWidget(userSnapshot: userSnapshot));
         }));
   }
