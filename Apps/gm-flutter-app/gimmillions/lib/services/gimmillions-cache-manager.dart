@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:file/src/interface/file.dart';
 import 'dart:typed_data';
@@ -7,10 +6,7 @@ import 'dart:typed_data';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_cache_manager/src/cache_store.dart';
 import 'package:file/file.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_cache_manager/src/cache_managers/base_cache_manager.dart';
-import 'package:flutter_cache_manager/src/cache_store.dart';
 import 'package:flutter_cache_manager/src/result/download_progress.dart';
 import 'package:flutter_cache_manager/src/result/file_info.dart';
 import 'package:flutter_cache_manager/src/result/file_response.dart';
