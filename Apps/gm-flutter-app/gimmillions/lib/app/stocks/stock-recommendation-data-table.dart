@@ -61,17 +61,23 @@ class StockRecommendationTableSource extends DataTableSource {
 
   List<DataCell> _getCells(StockRecommendation recommendation) {
     List<DataCell> cells = [];
-    cells.add(DataCell(
-        Text(recommendation.symbol, style: TextStyle(fontWeight: FontWeight.bold, color: recommendation.getRgb(25)))));
+    cells.add(DataCell(Container(
+        width: 64,
+        child: Text(recommendation.symbol,
+            style: TextStyle(fontWeight: FontWeight.bold, color: recommendation.getRgb(25))))));
     cells.add(DataCell(Center(
-        child: Text(recommendation.sentiment.toStringAsFixed(2) + '%',
-            style: TextStyle(fontWeight: FontWeight.bold, color: recommendation.getRgb(25)),
-            textAlign: TextAlign.center))));
+        child: Container(
+            width: 64,
+            child: Text(recommendation.sentiment.toStringAsFixed(2) + '%',
+                style: TextStyle(fontWeight: FontWeight.bold, color: recommendation.getRgb(25)),
+                textAlign: TextAlign.center)))));
     cells.add(DataCell(Center(
-        child: Text(recommendation.confidence.toStringAsFixed(3),
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: recommendation.confidence > 0 ? Colors.green.shade800 : Colors.red.shade800)))));
+        child: Container(
+            width: 64,
+            child: Text(recommendation.confidence.toStringAsFixed(3),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: recommendation.confidence > 0 ? Colors.green.shade800 : Colors.red.shade800))))));
     return cells;
   }
 
@@ -156,11 +162,12 @@ class _StockRecommendationDataTableState extends State<StockRecommendationDataTa
       sortColumnIndex: sortColumnIndex,
       showCheckboxColumn: false,
       rowsPerPage: rowsPerPage,
+      columnSpacing: 24,
       columns: getColumns(columns),
       source: _source,
     );
 
-    return table;
+    return SingleChildScrollView(padding: EdgeInsets.all(8), child: table, scrollDirection: Axis.vertical);
   }
 
   List<DataColumn> getColumns(List<String> columns) => columns
