@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gimmillions/app/login/reset-password.dart';
 import 'package:gimmillions/app/stocks/stocks.dart';
+import 'package:gimmillions/app/support/disclaimer.dart';
+import 'package:gimmillions/app/support/tutorial.dart';
 import 'package:gimmillions/services/authentication-service.dart';
 import 'package:provider/provider.dart';
 
@@ -28,24 +31,15 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                     if (result == 'logout') {
                       final service = Provider.of<AuthenticationService>(context, listen: false);
                       service.signOut();
+                    } else if (result == 'resetPassword') {
+                      Navigator.pushNamed(context, ResetPasswordWidget.routeName);
+                    } else if (result == 'help') {
+                      Navigator.pushNamed(context, TutorialWidget.routeName);
+                    } else if (result == 'disclaimer') {
+                      Navigator.pushNamed(context, DisclaimerWidget.routeName);
                     }
                   },
                   itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                        PopupMenuItem(
-                            value: 'stocks',
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.show_chart,
-                                  color: theme.primaryColor,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 16),
-                                  child: Text("Stocks"),
-                                )
-                              ],
-                            )),
-                        PopupMenuDivider(),
                         PopupMenuItem(
                             value: 'profile',
                             child: Row(
@@ -57,6 +51,49 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                 Padding(
                                   padding: EdgeInsets.only(left: 16),
                                   child: Text("Profile"),
+                                )
+                              ],
+                            )),
+                        PopupMenuItem(
+                            value: 'resetPassword',
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.lock,
+                                  color: theme.primaryColor,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 16),
+                                  child: Text("Reset Password"),
+                                )
+                              ],
+                            )),
+                        PopupMenuDivider(),
+                        PopupMenuItem(
+                            value: 'help',
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.help,
+                                  color: theme.primaryColor,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 16),
+                                  child: Text("Help"),
+                                )
+                              ],
+                            )),
+                        PopupMenuItem(
+                            value: 'disclaimer',
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.warning,
+                                  color: theme.primaryColor,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 16),
+                                  child: Text("Disclaimer"),
                                 )
                               ],
                             )),

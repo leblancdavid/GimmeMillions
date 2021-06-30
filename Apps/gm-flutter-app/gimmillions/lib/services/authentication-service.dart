@@ -39,7 +39,6 @@ class AuthenticationService {
       _currentUser!.authdata = _stringToBase64.encode(username + ':' + password);
 
       _watchlist.currentUser = _currentUser!;
-      _watchlist.refresh();
       _onAuthStateChangedController.add(_currentUser);
       return _currentUser!;
     } else {
@@ -56,5 +55,27 @@ class AuthenticationService {
       _currentUser = loggedOutUser;
       _onAuthStateChangedController.add(_currentUser);
     });
+  }
+
+  Future<void> resetPassword(String oldPassword, String newPassword) async {
+    if (currentUser == null || !currentUser!.isLoggedIn || currentUser!.authdata == '') {
+      return Future.error('No user currently logged in');
+    }
+
+    final response = await http.put(Uri.parse('http://api.gimmillions.com/api/user/reset'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Basic ${currentUser!.authdata}'
+        },
+        body: jsonEncode({'username': _currentUser!.username, 'oldPassword': oldPassword, 'newPassword': newPassword}));
+
+    if (response.statusCode == 200) {
+      return Future.value('Ok');
+    } else {
+      if (response.reasonPhrase != null) {
+        return Future.error(response.reasonPhrase!);
+      }
+      return Future.error('Unable to reset password');
+    }
   }
 }

@@ -22,6 +22,7 @@ class _UserWatchlistViewState extends State<UserWatchlistViewWidget> {
     _searchController = TextEditingController();
     _watchlist = Provider.of<UserWatchlist>(context, listen: false);
     _watchlistFuture = _watchlist.watchlist;
+    _refreshWatchlist(context);
     setState(() {});
   }
 

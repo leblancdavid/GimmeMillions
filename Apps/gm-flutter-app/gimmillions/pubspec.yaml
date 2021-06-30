@@ -27,6 +27,7 @@ dependencies:
   fl_chart: ^0.36.2
   http: ^0.13.3
   crypto: ^3.0.1
+  flutter_cache_manager: ^3.1.2
 
 
 

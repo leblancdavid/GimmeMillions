@@ -107,8 +107,6 @@ class _LoginWidgetState extends State<LoginWidget> {
                             setState(() {
                               userStatus = _login();
                             });
-
-                            //Navigator.push(context, MaterialPageRoute(builder: (_) => HomePage()));
                           },
                           style: ElevatedButton.styleFrom(primary: theme.primaryColor),
                           child: Text(
