@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:gimmillions/models/stock-recommendation.dart';
 import 'package:gimmillions/models/user.dart';
+import 'package:gimmillions/services/gimmillions-cache-manager.dart';
 import 'package:http/http.dart' as http;
 
 class UserWatchlist {
@@ -33,6 +34,9 @@ class UserWatchlist {
     if (response.statusCode != 200) {
       throw Exception('Unable to update user watchlist');
     }
+
+    return await CacheManagerInstance.instance
+        .removeFile('http://api.gimmillions.com/api/recommendations/stocks/user/${currentUser.username}');
   }
 
   Future<void> removeFromWatchlist(String symbol) async {
@@ -50,6 +54,9 @@ class UserWatchlist {
     if (response.statusCode != 200) {
       throw Exception('Unable to update user watchlist');
     }
+
+    return await CacheManagerInstance.instance
+        .removeFile('http://api.gimmillions.com/api/recommendations/stocks/user/${currentUser.username}');
   }
 
   bool containsSymbol(String symbol) {
@@ -62,12 +69,13 @@ class UserWatchlist {
       return _watchlist;
     }
 
-    final response = await http.get(
-        Uri.parse('http://api.gimmillions.com/api/recommendations/stocks/user/${currentUser.username}'),
-        headers: {'Authorization': 'Basic ${currentUser.authdata}'});
+    final response = await CacheManagerInstance.instance.getSingleDatedFile(
+        'http://api.gimmillions.com/api/recommendations/stocks/user/${currentUser.username}',
+        headers: {'Authorization': 'Basic ${currentUser.authdata}'},
+        expiration: _getExpirationDateTime());
 
-    if (response.statusCode == 200) {
-      var json = jsonDecode(response.body) as List;
+    if (await response.exists()) {
+      var json = jsonDecode(await response.readAsString()) as List;
       json.forEach((element) {
         _watchlist.add(StockRecommendation.fromJson(element));
       });
@@ -76,5 +84,10 @@ class UserWatchlist {
     } else {
       throw Exception('Unable to retrieve user watchlist');
     }
+  }
+
+  DateTime _getExpirationDateTime() {
+    var currentTime = DateTime.now().toUtc();
+    return DateTime.utc(currentTime.year, currentTime.month, currentTime.day, 0, 0);
   }
 }

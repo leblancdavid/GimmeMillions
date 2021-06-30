@@ -39,7 +39,6 @@ class AuthenticationService {
       _currentUser!.authdata = _stringToBase64.encode(username + ':' + password);
 
       _watchlist.currentUser = _currentUser!;
-      _watchlist.refresh();
       _onAuthStateChangedController.add(_currentUser);
       return _currentUser!;
     } else {

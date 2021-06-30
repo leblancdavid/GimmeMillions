@@ -38,6 +38,9 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
         1.05;
 
     var intervalY = (maxY - minY).toInt() / 10;
+    if (intervalY == 0) {
+      intervalY = 1;
+    }
 
     var barData = LineChartBarData(
         spots:
@@ -93,7 +96,9 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
         1.01;
 
     var intervalY = (maxY - minY).toInt() / 10;
-
+    if (intervalY == 0) {
+      intervalY = 1;
+    }
     var barData = LineChartBarData(
         spots: history.historicalData
             .map((e) => FlSpot(e.date.millisecondsSinceEpoch.toDouble(), e.stockData.close))
@@ -142,7 +147,9 @@ class _RecommendationHistoryChartState extends State<RecommendationHistoryChart>
     var minY = -1.0;
     var maxY = 1.0;
     var intervalY = (maxY - minY) / 10.0;
-
+    if (intervalY == 0) {
+      intervalY = 1;
+    }
     var barData = LineChartBarData(
         spots:
             history.historicalData.map((e) => FlSpot(e.date.millisecondsSinceEpoch.toDouble(), e.confidence)).toList(),
