@@ -2,10 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gimmillions/models/stock-recommendation-history.dart';
-import 'package:gimmillions/models/user-watchlist.dart';
 import 'package:gimmillions/services/authentication-service.dart';
-import 'package:gimmillions/services/stock-recommendation-service.dart';
 import 'package:provider/provider.dart';
 
 class ResetPasswordWidget extends StatefulWidget {
@@ -163,5 +160,3 @@ class _ResetPasswordWidgetState extends State<ResetPasswordWidget> {
     );
   }
 }
-
-class HomePage {}

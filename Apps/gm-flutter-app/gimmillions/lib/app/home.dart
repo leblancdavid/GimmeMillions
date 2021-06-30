@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gimmillions/app/login/reset-password.dart';
 import 'package:gimmillions/app/stocks/stocks.dart';
+import 'package:gimmillions/app/support/tutorial.dart';
 import 'package:gimmillions/services/authentication-service.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,8 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                       service.signOut();
                     } else if (result == 'resetPassword') {
                       Navigator.pushNamed(context, ResetPasswordWidget.routeName);
+                    } else if (result == 'help') {
+                      Navigator.pushNamed(context, TutorialWidget.routeName);
                     }
                   },
                   itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -59,6 +62,21 @@ class _HomeWidgetState extends State<HomeWidget> with TickerProviderStateMixin {
                                 Padding(
                                   padding: EdgeInsets.only(left: 16),
                                   child: Text("Reset Password"),
+                                )
+                              ],
+                            )),
+                        PopupMenuDivider(),
+                        PopupMenuItem(
+                            value: 'help',
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.help,
+                                  color: theme.primaryColor,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 16),
+                                  child: Text("Help"),
                                 )
                               ],
                             )),
