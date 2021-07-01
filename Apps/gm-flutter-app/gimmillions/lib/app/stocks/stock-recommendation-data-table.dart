@@ -22,11 +22,13 @@ class StockRecommendationDataTableBuilder extends StatelessWidget {
           }
 
           if (snapshot.hasError) {
-            return Center(
-                child: Text(
-              'Error occurred: ${snapshot.error}',
-              style: TextStyle(color: Theme.of(context).errorColor, fontSize: 20),
-            ));
+            return Padding(
+                padding: EdgeInsets.all(16),
+                child: Center(
+                    child: Text(
+                  'Error occurred: ${snapshot.error}',
+                  style: TextStyle(color: Theme.of(context).errorColor, fontSize: 20),
+                )));
           }
           if (snapshot.hasData) {
             return StockRecommendationDataTable(context, snapshot.data!, filter);

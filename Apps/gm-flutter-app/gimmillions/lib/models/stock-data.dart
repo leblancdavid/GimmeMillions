@@ -23,12 +23,12 @@ class StockData {
     return StockData(
         DateTime.parse(json['date']),
         json['symbol'],
-        json['open'] as double,
-        json['high'] as double,
-        json['low'] as double,
-        json['close'] as double,
-        json['adjustedClose'] as double,
-        json['volume'] as double,
-        json['previousClose'] as double);
+        json['open'].toDouble(),
+        json['high'].toDouble(),
+        json['low'].toDouble(),
+        json['close'].toDouble(),
+        json['adjustedClose'].toDouble(),
+        json['volume'].toDouble(),
+        json['previousClose'].toDouble());
   }
 }
