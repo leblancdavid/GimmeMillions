@@ -20,7 +20,15 @@ class StockData {
   }
 
   factory StockData.fromJson(Map<String, dynamic> json) {
-    return StockData(DateTime.parse(json['date']), json['symbol'], json['open'], json['high'], json['low'],
-        json['close'], json['adjustedClose'], json['volume'] as double, json['previousClose']);
+    return StockData(
+        DateTime.parse(json['date']),
+        json['symbol'],
+        json['open'] as double,
+        json['high'] as double,
+        json['low'] as double,
+        json['close'] as double,
+        json['adjustedClose'] as double,
+        json['volume'] as double,
+        json['previousClose'] as double);
   }
 }
