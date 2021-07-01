@@ -29,7 +29,7 @@ class _PredictionsState extends State<PredictionsWidget> {
       setState(() {});
     } catch (e) {
       print(e);
-      return List.empty();
+      _predictionList = Future.error(e);
     }
   }
 

@@ -21,6 +21,13 @@ class StockRecommendationDataTableBuilder extends StatelessWidget {
             return Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor));
           }
 
+          if (snapshot.hasError) {
+            return Center(
+                child: Text(
+              'Error occurred: ${snapshot.error}',
+              style: TextStyle(color: Theme.of(context).errorColor, fontSize: 20),
+            ));
+          }
           if (snapshot.hasData) {
             return StockRecommendationDataTable(context, snapshot.data!, filter);
           }

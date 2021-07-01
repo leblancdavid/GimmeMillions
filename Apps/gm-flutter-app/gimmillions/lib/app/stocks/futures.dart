@@ -23,7 +23,7 @@ class _FuturesState extends State<FuturesWidget> {
       setState(() {});
     } catch (e) {
       print(e);
-      return List.empty();
+      _futuresList = Future.error(e);
     }
   }
 
