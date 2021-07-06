@@ -138,7 +138,7 @@ namespace RecommendationMaker
             DateTime date)
         {
             IEnumerable<StockRecommendation> recommendations;
-            var filter = new DefaultStockFilter(minPrice: 10.0m);
+            var filter = new DefaultStockFilter();
             if (stockList.Any())
             {
                 recommendations = recommendationSystem.RunRecommendationsFor(stockList, date, filter);
