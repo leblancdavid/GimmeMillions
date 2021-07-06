@@ -66,13 +66,13 @@ class StockRecommendation {
         DateTime.parse(json['date']),
         json['symbol'],
         json['systemId'],
-        json['sentiment'],
-        json['confidence'],
-        json['prediction'],
-        json['lowPrediction'],
-        json['previousClose'],
-        json['predictedPriceTarget'],
-        json['predictedLowTarget'],
+        json['sentiment'].toDouble(),
+        json['confidence'].toDouble(),
+        json['prediction'].toDouble(),
+        json['lowPrediction'].toDouble(),
+        json['previousClose'].toDouble(),
+        json['predictedPriceTarget'].toDouble(),
+        json['predictedLowTarget'].toDouble(),
         StockData.fromJson(json['lastData']));
   }
 }
