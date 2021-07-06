@@ -29,14 +29,17 @@ namespace RecommendationMaker
             public string DatabaseLocation { get; set; }
             [Option('a', "td-access", Required = true, HelpText = "The ameritrade access api key")]
             public string TdApiKey { get; set; }
+
+            [Option('l', "stock-list", Required = true, HelpText = "The .csv file containing the list of stocks symbols to scan for")]
+            public string StockListFile { get; set; }
         }
 
         static void Main(string[] args)
         {
             Console.WriteLine($"Running recommendations... args: {string.Join(" ", args)}");
             var optionsBuilder = new DbContextOptionsBuilder<GimmeMillionsContext>();
-            
-            var stockList = new StockSymbolsFile("nasdaq_screener.csv").GetStockSymbols();
+
+            var stockList = new List<string>();
             IStockRecommendationSystem<FeatureVector> recommendationSystem = null;
             IStockRecommendationSystem<FeatureVector> futuresRecommendationSystem = null;
             var date = DateTime.Today;
@@ -50,8 +53,10 @@ namespace RecommendationMaker
                        //var stockSqlDb = new SQLStockHistoryRepository(optionsBuilder.Options);
                        var recommendationRepo = new SQLStockRecommendationHistoryRepository(optionsBuilder.Options, logger);
 
+                       stockList = new StockSymbolsFile(o.StockListFile).GetStockSymbols().ToList();
+
                        var stockAccess = new TDAmeritradeStockAccessService(new TDAmeritradeApiClient(o.TdApiKey), 
-                           new StockSymbolsFile("nasdaq_screener.csv"));
+                           new StockSymbolsFile(o.StockListFile));
                        recommendationSystem = RecommendationSystemFactory.GetLambkinRecommendationSystem(stockAccess, recommendationRepo,
                             $"{o.PathToModel}/Stocks", logger);
                        if (recommendationSystem == null)
