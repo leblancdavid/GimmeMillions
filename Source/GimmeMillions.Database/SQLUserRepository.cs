@@ -121,7 +121,7 @@ namespace GimmeMillions.Database
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
