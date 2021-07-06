@@ -375,29 +375,78 @@ namespace GimmeMillions.Domain.Stocks
                 return Result.Failure<StockRecommendation>($"No stock data found for {symbol}");
             }
 
-            var lastStock = stockData.Last();
-
-            var feature = _featureDatasetService.GetData(symbol, date, stockData);
-            if (feature.IsFailure)
+            StockRecommendationHistory history = null;
+            var existingHistory = _stockRecommendationRepository.GetStockRecommendationHistory(_systemId, symbol);
+            if (existingHistory.IsSuccess)
             {
-                return Result.Failure<StockRecommendation>($"Unable to compute feature vector for {symbol}");
+                history = existingHistory.Value;
             }
-            var result = model.Predict(feature.Value);
-            var rec = new StockRecommendation(_systemId,
-                (decimal)result.PredictedHigh, (decimal)result.PredictedLow,
-                (decimal)result.Sentiment, (decimal)result.Confidence,
-                date, lastStock);
-
-            var saveLock = new object();
-            lock (saveLock)
+            else
             {
-                var addResult = _stockRecommendationRepository.AddOrUpdateRecommendation(rec);
-                if(addResult.IsFailure)
+                history = new StockRecommendationHistory(_systemId, symbol, new List<StockRecommendation>());
+            }
+
+            int startingIndex = stockData.FindIndex(x => x.Date.Date == date.Date);
+            if (startingIndex < 0)
+            {
+                startingIndex = stockData.Count;
+            }
+
+            for (int i = 0; i < _historyLength; ++i)
+            {
+                int si = startingIndex - i;
+                if (si < 1)
+                    break;
+
+                DateTime recommendationDate = date;
+                if (si < stockData.Count)
                 {
-                    _logger?.LogError($"Unable to add recommendation: '{addResult.Error}'");
+                    recommendationDate = stockData[si].Date;
+                    if (history.ContainsEntryFor(recommendationDate))
+                    {
+                        continue;
+                    }
+                }
+
+                var feature = _featureDatasetService.GetData(symbol, recommendationDate, stockData);
+                if (feature.IsFailure)
+                {
+                    _logger?.LogInformation($"{symbol}: Unable to compute the feature vector: {feature.Error}");
+                    break;
+                    //return;
+                }
+
+                var result = model.Predict(feature.Value);
+                var rec = new StockRecommendation(_systemId,
+                    (decimal)result.PredictedHigh, (decimal)result.PredictedLow, (decimal)result.Sentiment, (decimal)result.Confidence,
+                    recommendationDate, stockData[si - 1]);
+
+                history.AddOrUpdateRecommendation(rec);
+
+            }
+
+            if (history.LastRecommendation != null)
+            {
+                var text = $"{history.LastRecommendation.Symbol}, " +
+                    $"({Math.Round(history.LastRecommendation.Sentiment, 2, MidpointRounding.AwayFromZero)}%) - " +
+                   $"gain: {Math.Round(history.LastRecommendation.Prediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                   $"high: {Math.Round(history.LastRecommendation.PredictedPriceTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                   $"loss: {Math.Round(history.LastRecommendation.LowPrediction, 2, MidpointRounding.AwayFromZero)}%, " +
+                   $"low: {Math.Round(history.LastRecommendation.PredictedLowTarget, 2, MidpointRounding.AwayFromZero)}, " +
+                    $"conf: {Math.Round(history.LastRecommendation.Confidence, 2, MidpointRounding.AwayFromZero)}";
+                _logger.LogInformation($"Updating {symbol}: {text}");
+                var saveLock = new object();
+                lock (saveLock)
+                {
+                    var addResult = _stockRecommendationRepository.AddOrUpdateRecommendationHistory(history);
+                    if (addResult.IsFailure)
+                    {
+                        _logger?.LogError($"Unable to add recommendation: '{addResult.Error}'");
+                    }
                 }
             }
-            return Result.Success<StockRecommendation>(rec);
+
+            return Result.Success<StockRecommendation>(history.LastRecommendation);
         }
 
         public IEnumerable<StockRecommendation> GetRecommendations(IEnumerable<string> symbols, DateTime date)
